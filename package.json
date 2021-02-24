@@ -14,8 +14,8 @@
     "express": "^4.17.1",
     "framer-motion": "^3.7.0",
     "next": "latest",
-    "react": "^16.13.1",
-    "react-dom": "^16.13.1",
+    "react": "^17.0.1",
+    "react-dom": "^17.0.1",
     "socket.io": "^3.1.1"
   },
   "license": "MIT"
