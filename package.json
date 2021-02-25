@@ -1,5 +1,5 @@
 {
-  "name": "custom-server-express",
+  "name": "node-e-voting",
   "version": "1.0.0",
   "scripts": {
     "dev": "node server.js",
@@ -10,10 +10,13 @@
     "@chakra-ui/react": "^1.3.3",
     "@emotion/react": "^11.1.5",
     "@emotion/styled": "^11.1.5",
+    "cookie-parser": "^1.4.5",
     "cross-env": "^7.0.2",
     "express": "^4.17.1",
     "framer-motion": "^3.7.0",
+    "mongodb": "^3.6.4",
     "next": "latest",
+    "next-auth": "^3.5.1",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
     "socket.io": "^3.1.1"
