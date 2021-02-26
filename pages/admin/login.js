@@ -37,14 +37,13 @@ export default function Login() {
               <Input
                 type="email"
                 name="email"
-                placeholder="test@test.com"
+                placeholder="Masukan email"
                 ref={register({
                   required: "Bidang ini wajib diisi !",
                   pattern: {
                     value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i,
                     message: "Masukan email yang valid !",
                   },
-                  minLength: 5,
                 })}
               />
               <FormErrorMessage>
@@ -56,11 +55,16 @@ export default function Login() {
               <Input
                 type="password"
                 name="pass"
-                placeholder="*******"
-                ref={register({ required: "Bidang ini wajib diisi !" })}
+                placeholder="Masukan kata sandi"
+                ref={register({
+                  required: "Bidang ini wajib diisi !",
+                  minLength: 5,
+                })}
               />
               <FormErrorMessage>
                 {errors.pass && errors.pass.message}
+                {errors.multipleErrorInput?.type === "minLength" &&
+                  "Kata sandi minimal memiliki panjang 5 digit !"}
               </FormErrorMessage>
             </FormControl>
             <Button
