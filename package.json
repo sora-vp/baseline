@@ -1,5 +1,5 @@
 {
-  "name": "node-e-voting",
+  "name": "nva13-tweak",
   "version": "1.0.0",
   "scripts": {
     "dev": "node server.js",
