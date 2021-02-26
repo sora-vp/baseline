@@ -1,4 +1,3 @@
-import { useSession, signIn } from "next-auth/client";
 import { useForm } from "react-hook-form";
 import {
   Flex,
@@ -14,7 +13,9 @@ import {
 export default function Login() {
   const { handleSubmit, errors, register, formState } = useForm();
 
-  const onSubmit = (val) => signIn();
+  const onSubmit = (val) => {
+    console.log(val);
+  };
 
   return (
     <Flex width="full" height="100vh" align="center" justifyContent="center">
