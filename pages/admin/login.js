@@ -1,4 +1,5 @@
 import { useForm } from "react-hook-form";
+import Head from "next/head";
 import {
   Flex,
   Box,
@@ -19,12 +20,16 @@ export default function Login() {
 
   return (
     <Flex width="full" height="100vh" align="center" justifyContent="center">
+      <Head>
+        <title>Login sebagai Admin</title>
+      </Head>
       <Box
         p={8}
         maxWidth="500px"
         borderWidth={1}
         borderRadius={8}
         boxShadow="lg"
+        backgroundColor="#fff"
         top="50%"
       >
         <Box textAlign="center">
@@ -63,7 +68,7 @@ export default function Login() {
               />
               <FormErrorMessage>
                 {errors.pass && errors.pass.message}
-                {errors.multipleErrorInput?.type === "minLength" &&
+                {errors.pass?.type === "minLength" &&
                   "Kata sandi minimal memiliki panjang 5 digit !"}
               </FormErrorMessage>
             </FormControl>
@@ -82,6 +87,17 @@ export default function Login() {
           </form>
         </Box>
       </Box>
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 1440 320"
+        style={{ position: "absolute", bottom: "0%", zIndex: "-1" }}
+      >
+        <path
+          fill="#276749"
+          fillOpacity="1"
+          d="M0,32L34.3,69.3C68.6,107,137,181,206,176C274.3,171,343,85,411,64C480,43,549,85,617,117.3C685.7,149,754,171,823,181.3C891.4,192,960,192,1029,176C1097.1,160,1166,128,1234,144C1302.9,160,1371,224,1406,256L1440,288L1440,320L1405.7,320C1371.4,320,1303,320,1234,320C1165.7,320,1097,320,1029,320C960,320,891,320,823,320C754.3,320,686,320,617,320C548.6,320,480,320,411,320C342.9,320,274,320,206,320C137.1,320,69,320,34,320L0,320Z"
+        ></path>
+      </svg>
     </Flex>
   );
 }
