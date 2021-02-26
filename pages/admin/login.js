@@ -44,6 +44,7 @@ export default function Login() {
                     value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i,
                     message: "Masukan email yang valid !",
                   },
+                  minLength: 5,
                 })}
               />
               <FormErrorMessage>
