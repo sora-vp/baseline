@@ -8,11 +8,12 @@ import {
   FormLabel,
   Input,
   Button,
+  HStack,
   Heading,
 } from "@chakra-ui/react";
 
 export default function Register() {
-  const { handleSubmit, errors, register, formState } = useForm();
+  const { handleSubmit, errors, register, formState, getValues } = useForm();
 
   const onSubmit = (val) => {
     console.log(val);
@@ -73,6 +74,44 @@ export default function Register() {
                 {errors.nama && errors.nama.message}
               </FormErrorMessage>
             </FormControl>
+            <HStack mt={6}>
+              <FormControl isInvalid={errors.pass}>
+                <FormLabel htmlFor="pass">Kata Sandi</FormLabel>
+                <Input
+                  type="password"
+                  name="pass"
+                  placeholder="Masukan kata sandi"
+                  ref={register({
+                    required: "Bidang ini wajib diisi !",
+                    minLength: 5,
+                  })}
+                />
+                <FormErrorMessage>
+                  {errors.pass && errors.pass.message}
+                  {errors.pass?.type === "minLength" &&
+                    "Kata sandi minimal memiliki panjang 5 digit !"}
+                </FormErrorMessage>
+              </FormControl>
+              <FormControl isInvalid={errors.passConfirm}>
+                <FormLabel htmlFor="passConfirm">
+                  Konfirmasi kata Sandi
+                </FormLabel>
+                <Input
+                  type="password"
+                  name="passConfirm"
+                  placeholder="Masukan kata sandi"
+                  ref={register({
+                    required: "Bidang ini wajib diisi !",
+                    validate: (value) => value === getValues("pass"),
+                  })}
+                />
+                <FormErrorMessage>
+                  {errors.passConfirm && errors.passConfirm.message}
+                  {errors.passConfirm?.type === "validate" &&
+                    "Kata sandi tidak sama !"}
+                </FormErrorMessage>
+              </FormControl>
+            </HStack>
             <Button
               width="full"
               mt={4}
