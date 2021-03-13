@@ -1,6 +1,6 @@
 const cookieParser = require("cookie-parser");
+const compression = require("compression");
 const session = require("express-session");
-const bodyParser = require("body-parser");
 const socketIO = require("socket.io");
 const mongoose = require("mongoose");
 const passport = require("passport");
@@ -10,7 +10,9 @@ const next = require("next");
 const http = require("http");
 const MongoStore = require("connect-mongo").default;
 
+const isAuthenticated = require("./middlewares/isAuthenticated");
 const Local = require("./passport/local");
+const auth = require("./routes/auth");
 
 const port = parseInt(process.env.PORT, 10) || 3000;
 const dev = process.env.NODE_ENV !== "production";
@@ -34,8 +36,9 @@ mongoose.connection.on("error", (err) => {
 app.prepare().then(() => {
   const expressApp = express();
 
-  expressApp.use(bodyParser.urlencoded({ extended: true }));
-  expressApp.use(bodyParser.json());
+  expressApp.use(compression());
+  expressApp.use(express.urlencoded({ extended: true }));
+  expressApp.use(express.json());
   expressApp.use(cookieParser());
 
   expressApp.use(passport.initialize());
@@ -55,6 +58,10 @@ app.prepare().then(() => {
     })
   );
 
+  expressApp.use("/auth", auth);
+  expressApp.get("/admin", isAuthenticated, (req, res) => {
+    app.render(req, res, "/admin", null);
+  });
   expressApp.all("*", (req, res) => handle(req, res));
 
   const server = http.createServer(expressApp);

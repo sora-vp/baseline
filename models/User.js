@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const passportLocalMongoose = require("passport-local-mongoose");
 
 const UserSchema = new mongoose.Schema({
   username: {
@@ -12,10 +13,6 @@ const UserSchema = new mongoose.Schema({
     unique: true,
     match: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
   },
-  password: {
-    required: true,
-    type: String,
-  },
   date: {
     required: false,
     type: Date,
@@ -23,4 +20,5 @@ const UserSchema = new mongoose.Schema({
   },
 });
 
+UserSchema.plugin(passportLocalMongoose);
 module.exports = mongoose.model("user", UserSchema);

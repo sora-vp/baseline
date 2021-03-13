@@ -1,6 +1,14 @@
+import { useContext, useEffect } from "react";
 import { Container, Box, Text, Divider } from "@chakra-ui/react";
+import SocketContext from "../context/socket";
 
 export default function Home() {
+  const io = useContext(SocketContext);
+
+  useEffect(() => {
+    io.emit("new user", { time: Date.now() });
+  }, []);
+
   return (
     <Container>
       <Box p={4} borderWidth="1px" mt="6" borderRadius="lg">
