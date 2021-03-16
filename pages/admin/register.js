@@ -1,8 +1,10 @@
 import { useForm } from "react-hook-form";
+import Link from "next/link";
 import Head from "next/head";
 import {
   Flex,
   Box,
+  Text,
   FormErrorMessage,
   FormControl,
   FormLabel,
@@ -125,6 +127,9 @@ export default function Register() {
               Register
             </Button>
           </form>
+          <Text align="center" marginTop="10px">
+            Sudah punya akun admin ? <span style={{ color: "#3182CE" }}><Link href="/admin/login">Login</Link></span>
+          </Text>
         </Box>
       </Box>
       <svg

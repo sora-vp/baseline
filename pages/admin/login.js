@@ -1,8 +1,12 @@
+import { getBaseUrl } from "../../utils/url";
 import { useForm } from "react-hook-form";
+import { useRouter } from "next/router";
+import Link from "next/link";
 import Head from "next/head";
 import {
   Flex,
   Box,
+  Text,
   FormErrorMessage,
   FormControl,
   FormLabel,
@@ -10,12 +14,30 @@ import {
   Button,
   Heading,
 } from "@chakra-ui/react";
+import axios from "axios";
 
 export default function Login() {
-  const { handleSubmit, errors, register, formState } = useForm();
+  const router = useRouter();
+  const { handleSubmit, errors, register, formState, reset } = useForm();
 
   const onSubmit = (val) => {
-    console.log(val);
+    const baseUrl = getBaseUrl();
+
+    return axios.post(`${baseUrl}/auth/login`, val).then((response) => {
+      const { data } = response;
+
+      switch (data.type) {
+        case "SUCCESS":
+          console.log("BERHASIL, data : ", data);
+          router.push("/admin");
+          break;
+        case "USER_NOT_FOUND":
+          reset();
+          break;
+        default:
+          return;
+      }
+    });
   };
 
   return (
@@ -85,6 +107,9 @@ export default function Login() {
               Login
             </Button>
           </form>
+          <Text align="center" marginTop="10px">
+            Belum punya akun admin ? <span style={{ color: "#3182CE" }}><Link href="/admin/register">Daftar</Link></span>
+          </Text>
         </Box>
       </Box>
       <svg
