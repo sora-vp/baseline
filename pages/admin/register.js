@@ -1,4 +1,7 @@
+import Alert from "../../components/AlertSet";
+import { getBaseUrl } from "../../utils/url";
 import { useForm } from "react-hook-form";
+import { useState } from "react";
 import Link from "next/link";
 import Head from "next/head";
 import {
@@ -13,12 +16,47 @@ import {
   HStack,
   Heading,
 } from "@chakra-ui/react";
+import axios from "axios";
 
 export default function Register() {
+  const [alertShow, setAlertShow] = useState({
+    show: false,
+    typeStatus: "",
+    title: "",
+    description: "",
+  });
   const { handleSubmit, errors, register, formState, getValues } = useForm();
 
   const onSubmit = (val) => {
-    console.log(val);
+    const baseUrl = getBaseUrl();
+
+    return axios.post(`${baseUrl}/auth/register`, val).then((response) => {
+      const { data } = response;
+
+      switch (data.type) {
+        case "SUCCESS":
+          return setAlertShow((prevState) => ({
+            ...prevState,
+            show: true,
+            typeStatus: "success",
+            title: data.message,
+            description: "Silahkan login.",
+          }));
+        case "USER_EXIST":
+          return setAlertShow((prevState) => ({
+            ...prevState,
+            show: true,
+            typeStatus: "warning",
+            title: data.message,
+            description: "Buat akun dengan email yang berbeda.",
+          }));
+        case "SERVER_ERROR":
+          console.log("Error registrasi akun, data : ", data.message);
+          break;
+        default:
+          return;
+      }
+    });
   };
 
   return (
@@ -39,6 +77,13 @@ export default function Register() {
           <Heading>Register Administrator</Heading>
         </Box>
         <Box my={4} textAlign="left">
+          {alertShow.show && (
+            <Alert
+              title={alertShow.title}
+              description={alertShow.description}
+              status={alertShow.typeStatus}
+            />
+          )}
           <form onSubmit={handleSubmit(onSubmit)}>
             <FormControl isInvalid={errors.email}>
               <FormLabel htmlFor="email">Email</FormLabel>
@@ -128,7 +173,10 @@ export default function Register() {
             </Button>
           </form>
           <Text align="center" marginTop="10px">
-            Sudah punya akun admin ? <span style={{ color: "#3182CE" }}><Link href="/admin/login">Login</Link></span>
+            Sudah punya akun admin ?{" "}
+            <span style={{ color: "#3182CE" }}>
+              <Link href="/admin/login">Login</Link>
+            </span>
           </Text>
         </Box>
       </Box>

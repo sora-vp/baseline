@@ -14,14 +14,20 @@ module.exports = (passport) => {
           if (err) return done(err);
 
           if (!user)
-            return done(null, false, { message: "Akun tidak terdaftar !" });
-
-          if (!user.verifyPassword(pass))
             return done(null, false, {
-              message: "Kata sandi salah !",
+              message: "Akun tidak terdaftar !",
+              type: "USER_NOT_FOUND",
             });
 
-          return done(null, user);
+          return user.authenticate(pass, (_, same) => {
+            if (!same)
+              return done(null, false, {
+                message: "Kata sandi salah !",
+                type: "PASS_WRONG",
+              });
+
+            return done(null, user);
+          });
         });
       }
     )

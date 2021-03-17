@@ -1,6 +1,8 @@
+import Alert from "../../components/AlertSet";
 import { getBaseUrl } from "../../utils/url";
 import { useForm } from "react-hook-form";
 import { useRouter } from "next/router";
+import { useState } from "react";
 import Link from "next/link";
 import Head from "next/head";
 import {
@@ -18,7 +20,20 @@ import axios from "axios";
 
 export default function Login() {
   const router = useRouter();
-  const { handleSubmit, errors, register, formState, reset } = useForm();
+  const [alertShow, setAlertShow] = useState({
+    show: false,
+    typeStatus: "",
+    title: "",
+    description: "",
+  });
+  const {
+    handleSubmit,
+    errors,
+    register,
+    formState,
+    reset,
+    setValue,
+  } = useForm();
 
   const onSubmit = (val) => {
     const baseUrl = getBaseUrl();
@@ -31,9 +46,24 @@ export default function Login() {
           console.log("BERHASIL, data : ", data);
           router.push("/admin");
           break;
+        case "PASS_WRONG":
+          setValue("pass", "");
+          return setAlertShow((prevState) => ({
+            ...prevState,
+            show: true,
+            typeStatus: "warning",
+            title: data.message,
+            description: "",
+          }));
         case "USER_NOT_FOUND":
           reset();
-          break;
+          return setAlertShow((prevState) => ({
+            ...prevState,
+            show: true,
+            typeStatus: "danger",
+            title: data.message,
+            description: "",
+          }));
         default:
           return;
       }
@@ -58,6 +88,13 @@ export default function Login() {
           <Heading>Login Administrator</Heading>
         </Box>
         <Box my={4} textAlign="left">
+          {alertShow.show && (
+            <Alert
+              title={alertShow.title}
+              description={alertShow.description}
+              status={alertShow.typeStatus}
+            />
+          )}
           <form onSubmit={handleSubmit(onSubmit)}>
             <FormControl isInvalid={errors.email}>
               <FormLabel htmlFor="email">Email</FormLabel>
@@ -108,7 +145,10 @@ export default function Login() {
             </Button>
           </form>
           <Text align="center" marginTop="10px">
-            Belum punya akun admin ? <span style={{ color: "#3182CE" }}><Link href="/admin/register">Daftar</Link></span>
+            Belum punya akun admin ?{" "}
+            <span style={{ color: "#3182CE" }}>
+              <Link href="/admin/register">Daftar</Link>
+            </span>
           </Text>
         </Box>
       </Box>
