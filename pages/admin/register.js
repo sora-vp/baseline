@@ -1,4 +1,4 @@
-import Alert from "../../components/AlertSet";
+import Alert from "../../lib/components/AlertSet";
 import { getBaseUrl } from "../../utils/url";
 import { useForm } from "react-hook-form";
 import { useState } from "react";
