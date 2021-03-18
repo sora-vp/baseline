@@ -1,8 +1,12 @@
 import { useContext, useEffect } from "react";
-import SocketContext from "../../context/socket";
+import SocketContext from "../../lib/context/socket";
+import { useIdentity } from "../../lib/withIdentity";
 
 export default function Index() {
   const io = useContext(SocketContext);
+  const identity = useIdentity();
+
+  if (!identity) return null;
 
   useEffect(() => {
     const connect = () => {

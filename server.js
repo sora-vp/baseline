@@ -11,7 +11,7 @@ const http = require("http");
 const MongoStore = require("connect-mongo").default;
 
 const isAuthenticated = require("./middlewares/isAuthenticated");
-const Local = require("./passport/local");
+const Local = require("./lib/passport/local");
 const auth = require("./routes/auth");
 
 const port = parseInt(process.env.PORT, 10) || 3000;

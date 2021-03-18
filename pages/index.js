@@ -1,6 +1,6 @@
 import { useContext, useEffect } from "react";
 import { Container, Box, Text, Divider } from "@chakra-ui/react";
-import SocketContext from "../context/socket";
+import SocketContext from "../lib/context/socket";
 
 export default function Home() {
   const io = useContext(SocketContext);
