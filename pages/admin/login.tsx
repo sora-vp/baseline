@@ -1,5 +1,5 @@
 import * as Yup from "yup";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import Head from "next/head";
 import Router from "next/router";
@@ -66,6 +66,10 @@ const Login: NextPage = () => {
       mutate(userObj);
     }
   };
+
+  useEffect(() => {
+    if (user) Router.push("/admin");
+  }, [user]);
 
   return (
     <Flex width="full" height="100vh" align="center" justifyContent="center">
