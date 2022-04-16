@@ -10,7 +10,6 @@ const Admin: NextPage = () => {
 
   useEffect(() => {
     if (!user) Router.push("/admin/login");
-    console.log(user);
   }, [user]);
 
   return <p>Admin Page</p>;

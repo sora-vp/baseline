@@ -1,13 +1,14 @@
-import mongoose from "mongoose";
+import mongoose, { Types, Model } from "mongoose";
 
 export interface IUser {
+  _id: Types.ObjectId;
   username: string;
   email: string;
   password: string;
   date: Date;
 }
 
-const UserSchema = new mongoose.Schema<IUser>({
+const UserSchema = new mongoose.Schema<IUser, Model<IUser>>({
   username: {
     type: String,
     required: true,
@@ -30,7 +31,5 @@ const UserSchema = new mongoose.Schema<IUser>({
   },
 });
 
-const User =
-  (mongoose.models.User as IUser) || mongoose.model<IUser>("User", UserSchema);
-
-export default User;
+export default (mongoose.models.User as Model<IUser>) ||
+  mongoose.model<IUser, Model<IUser>>("User", UserSchema);

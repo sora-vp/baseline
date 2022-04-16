@@ -18,12 +18,30 @@ interface sessionInterface {
   cookie: CookieSerializeOptions;
 }
 
+interface sessionInRequest {
+  maxAge?: number;
+}
+
+interface requestInterface extends NextApiRequest {
+  session?: sessionInRequest;
+}
+
 export default function session({
   name,
   secret,
   cookie: cookieOpts,
 }: sessionInterface) {
-  return async (req, res, next) => {
+  return async (
+    req: requestInterface,
+    res: {
+      end: (...args: any[]) => Promise<void>;
+      finished: any;
+      writableEnded: any;
+      headersSent: any;
+      setHeader: (arg0: string, arg1: string) => void;
+    },
+    next: () => void
+  ) => {
     const cookies = parseCookies(req);
     const token = cookies[name];
     let unsealed = {};
@@ -44,7 +62,7 @@ export default function session({
     res.end = async function resEndProxy(...args: any[]) {
       if (res.finished || res.writableEnded || res.headersSent) return;
       if (cookieOpts.maxAge) {
-        req.session.maxAge = cookieOpts.maxAge;
+        (req.session as sessionInRequest).maxAge = cookieOpts.maxAge;
       }
 
       const token = await createLoginSession(req.session, secret);

@@ -1,10 +1,13 @@
 import bcrypt from "bcrypt";
 import passport from "passport";
-import LocalStrategy from "passport-local";
+import { Strategy as LocalStrategy } from "passport-local";
+import { Types } from "mongoose";
 
 import User from "@/models/User";
 
-passport.serializeUser((user, done) => done(null, user._id));
+passport.serializeUser((user, done) =>
+  done(null, (user as { _id: Types.ObjectId })._id)
+);
 
 passport.deserializeUser(async (id, done) => {
   const user = await User.findOne({ _id: id });
@@ -14,7 +17,7 @@ passport.deserializeUser(async (id, done) => {
 passport.use(
   new LocalStrategy(
     { usernameField: "email", passwordField: "password" },
-    async (email, password, done) => {
+    async (email: string, password: string, done) => {
       User.findOne({ email })
         .then((user) => {
           if (!user) {

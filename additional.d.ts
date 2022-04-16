@@ -1,4 +1,5 @@
 import type { AlertStatus } from "@chakra-ui/react";
+import type { safeUserTransformatorInterface } from "@/lib/valueTransformator";
 
 export {};
 
@@ -16,6 +17,12 @@ declare global {
       TOKEN_SECRET: string;
     }
   }
+
+  interface UserSuccessResponse {
+    user: safeUserTransformatorInterface;
+  }
+
+  type logInType = (user: any, done: (error: any) => void) => void;
 
   interface AlertState {
     show: boolean;

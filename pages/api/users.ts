@@ -2,18 +2,23 @@ import bcrypt from "bcrypt";
 import nextConnect from "next-connect";
 import auth from "@/middleware/auth";
 import { connectDatabase } from "@/lib/db";
+import { safeUserTransformator } from "@/lib/valueTransformator";
 
 import User from "@/models/User";
 
 import type { NextApiRequest, NextApiResponse } from "next";
 
+interface requestInterface extends NextApiRequest {
+  logIn: logInType;
+}
+
 const handler = nextConnect<
-  NextApiRequest,
-  NextApiResponse<AlertErrorResponse>
+  requestInterface,
+  NextApiResponse<AlertErrorResponse | UserSuccessResponse>
 >();
 
 handler.use(auth).post(async (req, res) => {
-  console.log(await connectDatabase());
+  await connectDatabase();
 
   const { email, password, name } = req.body;
   if (!email || !password || !name) {
@@ -51,11 +56,11 @@ handler.use(auth).post(async (req, res) => {
 
   await newUser.save();
 
-  req.logIn(newUser, (err) => {
+  req.logIn(newUser, (err: any) => {
     if (err) throw err;
 
     res.status(201).json({
-      user: newUser,
+      user: safeUserTransformator(newUser),
     });
   });
 });
