@@ -7,12 +7,13 @@ import { safeUserTransformator } from "@/lib/valueTransformator";
 import type { NextApiRequest, NextApiResponse } from "next";
 
 interface requestInterface extends NextApiRequest {
+  logIn: logInType;
   user: any;
 }
 
 const handler = nextConnect<
   requestInterface,
-  NextApiResponse<UserSuccessResponse>
+  NextApiResponse<UserSuccessResponse | { user: null } | AlertErrorResponse>
 >();
 
 handler.use(auth).post(
@@ -20,8 +21,23 @@ handler.use(auth).post(
     await connectDatabase();
     next();
   },
-  passport.authenticate("local"),
-  (req, res) => res.json({ user: safeUserTransformator(req.user?.toObject()) })
+  (req, res, next) => {
+    passport.authenticate("local", (err, user, info) => {
+      if (err) throw new Error(err);
+
+      if (info)
+        return res.status(info.status).send({ alert: true, error: info.error });
+      if (!user) return res.status(401).send({ user: null });
+
+      req.logIn(user, (error: any) => {
+        if (error) throw new Error(error);
+        next();
+      });
+    })(req, res, next);
+  },
+  (req, res) => {
+    res.json({ user: safeUserTransformator(req.user?.toObject()) });
+  }
 );
 
 export default handler;

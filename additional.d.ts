@@ -19,7 +19,7 @@ declare global {
   }
 
   interface UserSuccessResponse {
-    user: safeUserTransformatorInterface;
+    user: safeUserTransformatorInterface | null;
   }
 
   type logInType = (user: any, done: (error: any) => void) => void;
@@ -34,5 +34,11 @@ declare global {
   interface AlertErrorResponse {
     alert: boolean;
     error: AlertErrorInterface;
+  }
+
+  interface ApiErrorInterface {
+    error: boolean;
+    message: string;
+    type: "UNAUTHENTICATED";
   }
 }

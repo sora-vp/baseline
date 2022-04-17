@@ -26,6 +26,7 @@ export async function connectDatabase() {
     };
 
     cached.promise = mongoose.connect(MONGO_URL, opts).then((mongoose) => {
+      console.log("DB: Connected");
       return mongoose;
     });
   }

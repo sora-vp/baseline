@@ -1,11 +1,12 @@
 import mongoose, { Types, Model } from "mongoose";
+import { DateTime } from "luxon";
 
 export interface IUser {
   _id: Types.ObjectId;
   username: string;
   email: string;
   password: string;
-  date: Date;
+  date: DateTime;
 }
 
 const UserSchema = new mongoose.Schema<IUser, Model<IUser>>({
@@ -27,7 +28,7 @@ const UserSchema = new mongoose.Schema<IUser, Model<IUser>>({
   date: {
     required: false,
     type: Date,
-    default: Date.now,
+    default: () => DateTime.now().toUTC(),
   },
 });
 

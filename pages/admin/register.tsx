@@ -1,10 +1,10 @@
-import * as Yup from "yup";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { useForm } from "react-hook-form";
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import Head from "next/head";
 import Router from "next/router";
-import { useForm } from "react-hook-form";
-import { yupResolver } from "@hookform/resolvers/yup";
+import * as Yup from "yup";
 import {
   Flex,
   Box,
@@ -72,7 +72,7 @@ const Register: NextPage = () => {
     if (res.status === 201) {
       const userObj = await res.json();
 
-      mutate(userObj);
+      if (userObj?.user) mutate(userObj);
     } else {
       const response: AlertErrorResponse = await res.json();
 

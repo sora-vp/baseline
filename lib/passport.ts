@@ -4,13 +4,16 @@ import { Strategy as LocalStrategy } from "passport-local";
 import { Types } from "mongoose";
 
 import User from "@/models/User";
+import { connectDatabase } from "@/lib/db";
 
 passport.serializeUser((user, done) =>
   done(null, (user as { _id: Types.ObjectId })._id)
 );
 
 passport.deserializeUser(async (id, done) => {
-  const user = await User.findOne({ _id: id });
+  await connectDatabase();
+  const user = await User.findById(id);
+
   done(null, user);
 });
 
@@ -18,11 +21,18 @@ passport.use(
   new LocalStrategy(
     { usernameField: "email", passwordField: "password" },
     async (email: string, password: string, done) => {
-      User.findOne({ email })
+      await connectDatabase();
+
+      await User.findOne({ email })
         .then((user) => {
           if (!user) {
             return done(null, false, {
-              message: "Akun tidak terdaftar !",
+              status: 404,
+              error: {
+                typeStatus: "error",
+                title: "Peringatan",
+                description: "Akun tidak terdaftar!",
+              },
             });
           } else {
             bcrypt.compare(password, user.password, (err, isMatch) => {
@@ -32,14 +42,19 @@ passport.use(
                 return done(null, user);
               } else {
                 return done(null, false, {
-                  message: "Kata sandi salah !",
+                  status: 401,
+                  error: {
+                    typeStatus: "warning",
+                    title: "Pemberitahuan",
+                    description: "Kata sandi salah!",
+                  },
                 });
               }
             });
           }
         })
         .catch((err) => {
-          return done(null, false, { message: err });
+          return done(err, false);
         });
     }
   )

@@ -1,9 +1,13 @@
-import { useUser } from "@/lib/hooks";
-import type { NextPage } from "next";
+import { Text } from "@chakra-ui/react";
+import { useEffect } from "react";
 
+import { formatTime } from "@/lib/utils";
+import { useUser } from "@/lib/hooks";
 import Router from "next/router";
 
-import { useEffect } from "react";
+import Sidebar from "@/component/Sidebar";
+
+import type { NextPage } from "next";
 
 const Admin: NextPage = () => {
   const [user] = useUser();
@@ -12,7 +16,17 @@ const Admin: NextPage = () => {
     if (!user) Router.push("/admin/login");
   }, [user]);
 
-  return <p>Admin Page</p>;
+  return (
+    <Sidebar>
+      <Text>Dashboard Admin</Text>
+      <Text>Informasi Anda</Text>
+      <Text>Nama: {user?.username || "N/A"}</Text>
+      <Text>Email: {user?.email || "N/A"}</Text>
+      <Text>
+        Tanggal Pendaftaran: {(user?.date && formatTime(user.date)) || "N/A"}
+      </Text>
+    </Sidebar>
+  );
 };
 
 export default Admin;

@@ -1,9 +1,10 @@
 import type { IUser } from "@/models/User";
+import { DateTime } from "luxon";
 
 export interface safeUserTransformatorInterface {
   username: string;
   email: string;
-  date: Date;
+  date: DateTime;
 }
 
 export const safeUserTransformator = (
