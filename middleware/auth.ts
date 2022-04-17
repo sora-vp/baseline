@@ -12,7 +12,10 @@ const auth = nextConnect<NextApiRequest, NextApiResponse>()
       cookie: {
         maxAge: 60 * 60 * 8, // 8 hours,
         httpOnly: true,
-        secure: process.env.NODE_ENV === "production",
+        // secure: process.env.NODE_ENV === "production",
+        // Secure false karena jika di akses dari local tidak ada https,
+        // bisa diusahakan tetapi akan memakan waktu
+        secure: false,
         path: "/",
         sameSite: "lax",
       },
