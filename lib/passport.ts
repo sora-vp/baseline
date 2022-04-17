@@ -33,7 +33,7 @@ passport.use(
                 title: "Peringatan",
                 description: "Akun tidak terdaftar!",
               },
-            });
+            } as any);
           } else {
             bcrypt.compare(password, user.password, (err, isMatch) => {
               if (err) throw err;
@@ -48,7 +48,7 @@ passport.use(
                     title: "Pemberitahuan",
                     description: "Kata sandi salah!",
                   },
-                });
+                } as any);
               }
             });
           }

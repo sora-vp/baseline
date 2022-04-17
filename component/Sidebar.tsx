@@ -149,7 +149,7 @@ const NavItem = ({ icon, children, href, ...rest }: NavItemProps) => {
 };
 const LogoutBtn = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const cancelRef = React.useRef();
+  const cancelRef = React.useRef(null!);
   const [, { mutate }] = useUser();
 
   return (
