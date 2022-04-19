@@ -1,5 +1,6 @@
 import React, { ReactNode } from "react";
 import {
+  useColorMode,
   Button,
   IconButton,
   Box,
@@ -50,6 +51,7 @@ const LinkItems: Array<LinkItemProps> = [
 
 export default function SimpleSidebar({ children }: { children: ReactNode }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
+
   return (
     <Box minH="100vh" bg={useColorModeValue("gray.100", "gray.900")}>
       <SidebarContent
@@ -105,6 +107,7 @@ const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
         </NavItem>
       ))}
       <LogoutBtn />
+      <ModeToggler />
     </Box>
   );
 };
@@ -147,6 +150,7 @@ const NavItem = ({ icon, children, href, ...rest }: NavItemProps) => {
     </NextLink>
   );
 };
+
 const LogoutBtn = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const cancelRef = React.useRef(null!);
@@ -221,6 +225,23 @@ const LogoutBtn = () => {
         </AlertDialogOverlay>
       </AlertDialog>
     </>
+  );
+};
+
+const ModeToggler = () => {
+  return (
+    <Flex
+      align="center"
+      p="4"
+      mt={"13.5rem"}
+      mx="2"
+      borderRadius="lg"
+      role="group"
+    >
+      <Button>
+        <Icon fontSize="20" as={BsDoorOpen} />
+      </Button>
+    </Flex>
   );
 };
 

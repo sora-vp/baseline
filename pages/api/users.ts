@@ -32,7 +32,7 @@ handler.use(auth).post(async (req, res) => {
     });
   }
 
-  const isUserExist = await User.findOne({ email });
+  const isUserExist = await User.getUserByEmail(email);
 
   if (isUserExist) {
     return res.status(409).send({
@@ -45,16 +45,11 @@ handler.use(auth).post(async (req, res) => {
     });
   }
 
-  const salt = bcrypt.genSaltSync(10);
-  const hash = bcrypt.hashSync(password, salt);
-
-  const newUser = new User({
+  const newUser = await User.createNewUser({
     email,
     username: name,
-    password: hash,
+    password,
   });
-
-  await newUser.save();
 
   req.logIn(newUser, (err: any) => {
     if (err) throw err;

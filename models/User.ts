@@ -1,5 +1,12 @@
 import mongoose, { Types, Model } from "mongoose";
 import { DateTime } from "luxon";
+import bcrypt from "bcrypt";
+
+type createNewUserParam = {
+  email: string;
+  username: string;
+  password: string;
+};
 
 export interface IUser {
   _id: Types.ObjectId;
@@ -9,7 +16,16 @@ export interface IUser {
   date: DateTime;
 }
 
-const UserSchema = new mongoose.Schema<IUser, Model<IUser>>({
+export interface UserModel extends Model<IUser> {
+  getUserByEmail(email: string): Promise<IUser>;
+  createNewUser({
+    email,
+    username,
+    password,
+  }: createNewUserParam): Promise<IUser>;
+}
+
+const UserSchema = new mongoose.Schema<IUser, UserModel>({
   username: {
     type: String,
     required: true,
@@ -31,6 +47,34 @@ const UserSchema = new mongoose.Schema<IUser, Model<IUser>>({
     default: () => DateTime.now().toUTC(),
   },
 });
+UserSchema.static(
+  "getUserByEmail",
+  async function getUserByEmail(email: string) {
+    const user = await this.findOne({ email });
+    return user;
+  }
+);
+UserSchema.static(
+  "createNewUser",
+  async function createNewUser({
+    email,
+    username,
+    password,
+  }: createNewUserParam) {
+    const salt = bcrypt.genSaltSync(10);
+    const hash = bcrypt.hashSync(password, salt);
 
-export default (mongoose.models.User as Model<IUser>) ||
-  mongoose.model<IUser, Model<IUser>>("User", UserSchema);
+    const newUser = new this({
+      email,
+      username,
+      password,
+    });
+
+    await newUser.save();
+
+    return newUser;
+  }
+);
+
+export default (mongoose.models.User as UserModel) ||
+  mongoose.model<IUser, UserModel>("User", UserSchema);
