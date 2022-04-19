@@ -1,7 +1,5 @@
-import React, { ReactNode } from "react";
+import React, { ReactNode, ReactText } from "react";
 import {
-  useColorMode,
-  Button,
   IconButton,
   Box,
   CloseButton,
@@ -15,12 +13,6 @@ import {
   useDisclosure,
   BoxProps,
   FlexProps,
-  AlertDialog,
-  AlertDialogBody,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogContent,
-  AlertDialogOverlay,
 } from "@chakra-ui/react";
 import {
   FiHome,
@@ -29,11 +21,9 @@ import {
   FiSettings,
   FiMenu,
 } from "react-icons/fi";
-import { BsDoorOpen } from "react-icons/bs";
 import { IconType } from "react-icons";
-import { useUser } from "@/lib/hooks";
-import { ReactText } from "react";
-import Router from "next/router";
+
+import LogoutButton from "./LogoutButton";
 
 import NextLink from "next/link";
 
@@ -106,8 +96,7 @@ const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
           {link.name}
         </NavItem>
       ))}
-      <LogoutBtn />
-      <ModeToggler />
+      <LogoutButton />
     </Box>
   );
 };
@@ -148,100 +137,6 @@ const NavItem = ({ icon, children, href, ...rest }: NavItemProps) => {
         </Flex>
       </Link>
     </NextLink>
-  );
-};
-
-const LogoutBtn = () => {
-  const { isOpen, onOpen, onClose } = useDisclosure();
-  const cancelRef = React.useRef(null!);
-  const [, { mutate }] = useUser();
-
-  return (
-    <>
-      <button style={{ width: "100%" }} onClick={onOpen}>
-        <Flex
-          align="center"
-          p="4"
-          mx="4"
-          borderRadius="lg"
-          role="group"
-          cursor="pointer"
-          _hover={{
-            bg: "red.500",
-            color: "white",
-          }}
-        >
-          <Icon
-            mr="4"
-            fontSize="16"
-            _groupHover={{
-              color: "white",
-            }}
-            as={BsDoorOpen}
-          />
-          Logout
-        </Flex>
-      </button>
-
-      <AlertDialog
-        motionPreset="slideInBottom"
-        isOpen={isOpen}
-        leastDestructiveRef={cancelRef}
-        onClose={onClose}
-        isCentered
-      >
-        <AlertDialogOverlay>
-          <AlertDialogContent>
-            <AlertDialogHeader fontSize="lg" fontWeight="bold">
-              Konfirmasi Logout
-            </AlertDialogHeader>
-
-            <AlertDialogBody>
-              Apakah anda yakin untuk Logout? Anda masih bisa login kembali.
-            </AlertDialogBody>
-
-            <AlertDialogFooter>
-              <Button ref={cancelRef} onClick={onClose}>
-                Batal
-              </Button>
-              <Button
-                colorScheme="red"
-                onClick={() => {
-                  fetch(`/api/user`, {
-                    method: "DELETE",
-                  }).then((res) => {
-                    if (res.status === 204 || res.status === 401) {
-                      mutate({ user: null });
-                      Router.replace("/admin/login");
-                    }
-                  });
-                }}
-                ml={3}
-              >
-                Iya
-              </Button>
-            </AlertDialogFooter>
-          </AlertDialogContent>
-        </AlertDialogOverlay>
-      </AlertDialog>
-    </>
-  );
-};
-
-const ModeToggler = () => {
-  return (
-    <Flex
-      align="center"
-      p="4"
-      mt={"13.5rem"}
-      mx="2"
-      borderRadius="lg"
-      role="group"
-    >
-      <Button>
-        <Icon fontSize="20" as={BsDoorOpen} />
-      </Button>
-    </Flex>
   );
 };
 

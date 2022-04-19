@@ -13,7 +13,7 @@ import { formatTime } from "@/lib/utils";
 import { useUser } from "@/lib/hooks";
 import Router from "next/router";
 
-import Sidebar from "@/component/Sidebar";
+import Sidebar from "@/component/Sidebar/index";
 
 import type { NextPage } from "next";
 
@@ -27,7 +27,7 @@ const Admin: NextPage = () => {
   return (
     <Sidebar>
       <VStack align="stretch">
-        <HStack mb={"10px"}>
+        <HStack mb={"10px"} style={{ justifyContent: "center" }}>
           <Text fontWeight="500" fontSize="5xl">
             Dashboard Admin
           </Text>
@@ -54,12 +54,8 @@ const Admin: NextPage = () => {
               </Text>
 
               <Stack spacing={2} direction="row" align="center" mt={5}>
-                <Button size="md" colorScheme="teal">
-                  Ganti Password
-                </Button>
-                <Button size="md" colorScheme="teal">
-                  Ganti Nama
-                </Button>
+                <Button colorScheme="red">Ganti Password</Button>
+                <Button colorScheme="green">Ganti Nama</Button>
               </Stack>
             </Container>
           </Box>

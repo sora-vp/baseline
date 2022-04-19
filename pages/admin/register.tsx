@@ -6,6 +6,7 @@ import Head from "next/head";
 import Router from "next/router";
 import * as Yup from "yup";
 import {
+  useToast,
   Flex,
   Box,
   Text,
@@ -30,9 +31,18 @@ type FormValues = {
   passConfirm: string;
 };
 
+const validNameRegex = /^[a-zA-Z\s\-]+$/;
+
 const Register: NextPage = () => {
+  const toast = useToast();
+
   const validationSchema = Yup.object().shape({
-    nama: Yup.string().required("Diperlukan Nama!"),
+    nama: Yup.string()
+      .required("Diperlukan Nama!")
+      .matches(
+        validNameRegex,
+        "Nama hanya berisikan huruf alphabet yang valid!"
+      ),
     email: Yup.string()
       .required("Diperlukan Email!")
       .email("Email tidak valid!"),
@@ -72,7 +82,18 @@ const Register: NextPage = () => {
     if (res.status === 201) {
       const userObj = await res.json();
 
-      if (userObj?.user) mutate(userObj);
+      if (userObj?.user) {
+        mutate(userObj);
+
+        toast.closeAll();
+        toast({
+          description: "Berhasil mendaftarkan akun baru",
+          status: "success",
+          duration: 4500,
+          position: "top-right",
+          isClosable: false,
+        });
+      }
     } else {
       const response: AlertErrorResponse = await res.json();
 

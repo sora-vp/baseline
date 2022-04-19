@@ -1,11 +1,10 @@
-import { Text } from "@chakra-ui/react";
+import { VStack, HStack, Text } from "@chakra-ui/react";
 import { useEffect } from "react";
 
-import { formatTime } from "@/lib/utils";
 import { useUser } from "@/lib/hooks";
 import Router from "next/router";
 
-import Sidebar from "@/component/Sidebar";
+import Sidebar from "@/component/Sidebar/index";
 
 import type { NextPage } from "next";
 
@@ -18,7 +17,13 @@ const Pengaturan: NextPage = () => {
 
   return (
     <Sidebar>
-      <Text>Pengaturan</Text>
+      <VStack align="stretch">
+        <HStack mb={"10px"} style={{ justifyContent: "center" }}>
+          <Text fontWeight="500" fontSize="5xl">
+            Pengaturan
+          </Text>
+        </HStack>
+      </VStack>
     </Sidebar>
   );
 };

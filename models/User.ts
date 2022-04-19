@@ -67,7 +67,7 @@ UserSchema.static(
     const newUser = new this({
       email,
       username,
-      password,
+      password: hash,
     });
 
     await newUser.save();

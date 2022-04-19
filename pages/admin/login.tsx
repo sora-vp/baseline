@@ -6,6 +6,7 @@ import Head from "next/head";
 import Router from "next/router";
 import * as Yup from "yup";
 import {
+  useToast,
   Flex,
   Box,
   Text,
@@ -28,6 +29,8 @@ type FormValues = {
 };
 
 const Login: NextPage = () => {
+  const toast = useToast();
+
   const validationSchema = Yup.object().shape({
     email: Yup.string()
       .required("Diperlukan Email!")
@@ -63,7 +66,18 @@ const Login: NextPage = () => {
     if (res.status === 200) {
       const userObj = await res.json();
 
-      if (userObj?.user) mutate(userObj);
+      if (userObj?.user) {
+        mutate(userObj);
+
+        toast.closeAll();
+        toast({
+          description: "Berhasil login",
+          status: "success",
+          duration: 4500,
+          position: "top-right",
+          isClosable: false,
+        });
+      }
     } else {
       const response: AlertErrorResponse = await res.json();
 
