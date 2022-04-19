@@ -21,11 +21,11 @@ import {
   FiSettings,
   FiMenu,
 } from "react-icons/fi";
+import NextLink from "next/link";
 import { IconType } from "react-icons";
 
 import LogoutButton from "./LogoutButton";
-
-import NextLink from "next/link";
+import ModeToggler from "./ModeToggler";
 
 interface LinkItemProps {
   name: string;
@@ -97,6 +97,7 @@ const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
         </NavItem>
       ))}
       <LogoutButton />
+      <ModeToggler />
     </Box>
   );
 };
