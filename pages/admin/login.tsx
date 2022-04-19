@@ -6,6 +6,7 @@ import Head from "next/head";
 import Router from "next/router";
 import * as Yup from "yup";
 import {
+  useColorModeValue,
   useToast,
   Flex,
   Box,
@@ -101,12 +102,12 @@ const Login: NextPage = () => {
         <title>Login sebagai Admin</title>
       </Head>
       <Box
+        bg={useColorModeValue("white", "gray.900")}
         p={8}
         maxWidth="500px"
         borderWidth={1}
         borderRadius={8}
         boxShadow="lg"
-        backgroundColor="#fff"
         top="50%"
       >
         <Box textAlign="center">

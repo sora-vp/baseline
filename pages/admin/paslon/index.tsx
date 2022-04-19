@@ -1,4 +1,5 @@
 import {
+  useColorModeValue,
   VStack,
   HStack,
   Box,
@@ -41,7 +42,7 @@ const Paslon: NextPage = () => {
         </HStack>
         <HStack h={"80vh"}>
           <Box
-            bg="white"
+            bg={useColorModeValue("white", "gray.800")}
             borderWidth="1px"
             borderRadius="lg"
             overflow="hidden"

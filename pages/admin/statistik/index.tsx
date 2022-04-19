@@ -1,4 +1,4 @@
-import { VStack, HStack, Box, Text } from "@chakra-ui/react";
+import { useColorModeValue, VStack, HStack, Box, Text } from "@chakra-ui/react";
 import { useEffect } from "react";
 
 import { useUser } from "@/lib/hooks";
@@ -26,7 +26,7 @@ const Statistik: NextPage = () => {
 
         <HStack h={"80vh"}>
           <Box
-            bg="white"
+            bg={useColorModeValue("white", "gray.800")}
             borderWidth="1px"
             borderRadius="lg"
             overflow="hidden"

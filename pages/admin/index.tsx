@@ -1,4 +1,5 @@
 import {
+  useColorModeValue,
   Box,
   Button,
   Text,
@@ -35,7 +36,7 @@ const Admin: NextPage = () => {
 
         <HStack>
           <Box
-            bg="white"
+            bg={useColorModeValue("white", "gray.800")}
             borderWidth="1px"
             borderRadius="lg"
             overflow="hidden"
