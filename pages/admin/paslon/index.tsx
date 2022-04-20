@@ -3,7 +3,7 @@ import {
   VStack,
   HStack,
   Box,
-  Button,
+  Link,
   Text,
 
   // Table
@@ -16,11 +16,12 @@ import {
   TableContainer,
   TableCaption,
 } from "@chakra-ui/react";
+import Head from "next/head";
+import Router from "next/router";
+import NextLink from "next/link";
 import { useEffect } from "react";
 
 import { useUser } from "@/lib/hooks";
-import Router from "next/router";
-
 import Sidebar from "@/component/Sidebar/index";
 
 import type { NextPage } from "next";
@@ -34,6 +35,9 @@ const Paslon: NextPage = () => {
 
   return (
     <Sidebar>
+      <Head>
+        <title>Daftar Paslon</title>
+      </Head>
       <VStack align="stretch">
         <HStack mb={"10px"} style={{ justifyContent: "center" }}>
           <Text fontWeight="500" fontSize="5xl">
@@ -51,7 +55,20 @@ const Paslon: NextPage = () => {
           >
             <VStack align="stretch" px={2} py={2}>
               <HStack>
-                <Button w={"30%"}>Tambah Paslon Baru</Button>
+                <NextLink href="/admin/paslon/tambah" passHref>
+                  <Link
+                    borderRadius="md"
+                    bg="blue.500"
+                    color="white"
+                    px={4}
+                    pt={2}
+                    h={10}
+                    w={"30%"}
+                    style={{ textDecoration: "none", textAlign: "center" }}
+                  >
+                    Tambah Paslon Baru
+                  </Link>
+                </NextLink>
               </HStack>
               <HStack>
                 <TableContainer w="100%" h="100%">

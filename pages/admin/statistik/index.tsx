@@ -1,5 +1,6 @@
 import { useColorModeValue, VStack, HStack, Box, Text } from "@chakra-ui/react";
 import { useEffect } from "react";
+import Head from "next/head";
 
 import { useUser } from "@/lib/hooks";
 import Router from "next/router";
@@ -17,6 +18,9 @@ const Statistik: NextPage = () => {
 
   return (
     <Sidebar>
+      <Head>
+        <title>Statistik Pemilihan</title>
+      </Head>
       <VStack align="stretch">
         <HStack mb={"10px"} style={{ justifyContent: "center" }}>
           <Text fontWeight="500" fontSize="5xl">

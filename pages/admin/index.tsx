@@ -1,18 +1,20 @@
 import {
   useColorModeValue,
   Box,
-  Button,
+  Link,
   Text,
   Stack,
   VStack,
   HStack,
   Container,
 } from "@chakra-ui/react";
+import Head from "next/head";
+import NextLink from "next/link";
+import Router from "next/router";
 import { useEffect } from "react";
 
 import { formatTime } from "@/lib/utils";
 import { useUser } from "@/lib/hooks";
-import Router from "next/router";
 
 import Sidebar from "@/component/Sidebar/index";
 
@@ -27,6 +29,9 @@ const Admin: NextPage = () => {
 
   return (
     <Sidebar>
+      <Head>
+        <title>Dashboard Admin</title>
+      </Head>
       <VStack align="stretch">
         <HStack mb={"10px"} style={{ justifyContent: "center" }}>
           <Text fontWeight="500" fontSize="5xl">
@@ -40,7 +45,6 @@ const Admin: NextPage = () => {
             borderWidth="1px"
             borderRadius="lg"
             overflow="hidden"
-            h={"43vh"}
           >
             <Container mx={7} my={7}>
               <Text fontWeight={500} fontSize={"30px"} mb={5}>
@@ -55,8 +59,32 @@ const Admin: NextPage = () => {
               </Text>
 
               <Stack spacing={2} direction="row" align="center" mt={5}>
-                <Button colorScheme="red">Ganti Password</Button>
-                <Button colorScheme="green">Ganti Nama</Button>
+                <NextLink href="/admin/ubahpw">
+                  <Link
+                    borderRadius="md"
+                    bg="red"
+                    color="white"
+                    px={4}
+                    pt={2}
+                    h={10}
+                    style={{ textDecoration: "none" }}
+                  >
+                    Ganti Password
+                  </Link>
+                </NextLink>
+                <NextLink href="/admin/ubahnama">
+                  <Link
+                    borderRadius="md"
+                    bg="green"
+                    color="white"
+                    px={4}
+                    pt={2}
+                    h={10}
+                    style={{ textDecoration: "none" }}
+                  >
+                    Ganti Nama
+                  </Link>
+                </NextLink>
               </Stack>
             </Container>
           </Box>

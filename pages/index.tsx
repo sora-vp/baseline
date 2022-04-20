@@ -1,8 +1,19 @@
 import Head from "next/head";
+import Router from "next/router";
+import { useEffect } from "react";
 import type { NextPage } from "next";
 import { Container, Box, Text, Divider } from "@chakra-ui/react";
 
+import { useUser } from "@/lib/hooks";
+
 const Home: NextPage = () => {
+  const [user] = useUser();
+
+  useEffect(() => {
+    // ADMIN TIDAK BOLEH IKUT MEMILIH!
+    if (user) Router.push("/admin");
+  }, [user]);
+
   return (
     <>
       <Head>
