@@ -1,4 +1,11 @@
-import React, { ReactNode, ReactText } from "react";
+import React, {
+  useCallback,
+  useEffect,
+  useState,
+  useRef,
+  ReactNode,
+  ReactText,
+} from "react";
 import {
   IconButton,
   Box,
@@ -41,10 +48,30 @@ const LinkItems: Array<LinkItemProps> = [
 
 export default function SimpleSidebar({ children }: { children: ReactNode }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const [height, setHeight] = useState<number>(0);
+  const container = useRef<HTMLDivElement>(null!);
+
+  useEffect(() => {
+    const setSize = () => {
+      setHeight(container.current.clientHeight);
+    };
+    setSize();
+
+    window.addEventListener("resize", setSize);
+
+    return () => {
+      window.removeEventListener("resize", setSize);
+    };
+  }, []);
 
   return (
-    <Box minH="100vh" bg={useColorModeValue("gray.100", "gray.900")}>
+    <Box
+      minH="100vh"
+      bg={useColorModeValue("gray.100", "gray.900")}
+      ref={container}
+    >
       <SidebarContent
+        height={height}
         onClose={() => onClose}
         display={{ base: "none", md: "block" }}
       />
@@ -58,7 +85,7 @@ export default function SimpleSidebar({ children }: { children: ReactNode }) {
         size="full"
       >
         <DrawerContent>
-          <SidebarContent onClose={onClose} />
+          <SidebarContent onClose={onClose} height={height} />
         </DrawerContent>
       </Drawer>
       {/* mobilenav */}
@@ -72,9 +99,17 @@ export default function SimpleSidebar({ children }: { children: ReactNode }) {
 
 interface SidebarProps extends BoxProps {
   onClose: () => void;
+  height: number;
 }
 
-const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
+const SidebarContent = ({ onClose, height, ...rest }: SidebarProps) => {
+  const [clientRect, setClientRect] = useState<DOMRect | null>(null!);
+
+  const setClientRectCB = useCallback(
+    (rect: DOMRect) => setClientRect(rect),
+    [setClientRect]
+  );
+
   return (
     <Box
       bg={useColorModeValue("white", "gray.900")}
@@ -96,8 +131,8 @@ const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
           {link.name}
         </NavItem>
       ))}
-      <LogoutButton />
-      <ModeToggler />
+      <LogoutButton setClientRectCB={setClientRectCB} />
+      <ModeToggler clientRect={clientRect} height={height} />
     </Box>
   );
 };

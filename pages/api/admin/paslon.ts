@@ -78,15 +78,24 @@ handler
             .json({ error: true, message: "Gagal mengupload gambar baru" });
       });
 
-      const newPaslon = new Paslon({
-        ketua,
-        wakil,
-        imgName: newName,
-      });
+      try {
+        const newPaslon = new Paslon({
+          ketua,
+          wakil,
+          imgName: newName,
+        });
 
-      await newPaslon.save();
+        await newPaslon.save();
 
-      res.status(200).json({ error: false, message: "Paslon berhasil dibuat" });
+        res
+          .status(200)
+          .json({ error: false, message: "Paslon berhasil dibuat" });
+      } catch (e: unknown) {
+        res.status(500).json({
+          error: true,
+          message: (e as unknown as { toString(): string }).toString(),
+        });
+      }
     });
   })
   .delete(async (req, res) => {

@@ -2,6 +2,7 @@ import useSWR, { KeyedMutator } from "swr";
 import { DateTime } from "luxon";
 
 import type { IPaslon } from "@/models/Paslon";
+import type { SWRConfiguration } from "swr";
 
 type UserType = { email: string; username: string; date: DateTime };
 type useUserType = [
@@ -34,8 +35,8 @@ type usePaslonType = [
   }
 ];
 
-export function usePaslon(): usePaslonType {
-  const { data, mutate } = useSWR("/api/admin/paslon");
+export function usePaslon(swrConfig?: SWRConfiguration): usePaslonType {
+  const { data, mutate } = useSWR("/api/admin/paslon", swrConfig);
 
   const loading = !data;
   const paslon = data?.paslon;

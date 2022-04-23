@@ -1,18 +1,24 @@
 import { useColorMode, VStack, Flex, Button, Icon } from "@chakra-ui/react";
-
 import { BsMoonFill, BsSun } from "react-icons/bs";
 
-const ModeToggler = () => {
+type ModeTogglerType = {
+  height: number;
+  clientRect: DOMRect | null;
+};
+
+const ModeToggler = ({ height, clientRect }: ModeTogglerType) => {
   const { colorMode, toggleColorMode } = useColorMode();
 
   return (
     <VStack
-      h={"50%"}
-      justifyContent="center"
-      style={{ marginTop: "5.5rem", alignItems: "flex-start" }}
+      h={height - (clientRect ? clientRect?.bottom : 0)}
+      justifyContent="end"
+      style={{
+        alignItems: "flex-start",
+      }}
     >
       <Flex align="center" p="1" mx="4" role="group">
-        <Button onClick={toggleColorMode}>
+        <Button onClick={toggleColorMode} style={{ marginBottom: "15px" }}>
           <Icon fontSize="16" as={colorMode === "light" ? BsSun : BsMoonFill} />
         </Button>
       </Flex>

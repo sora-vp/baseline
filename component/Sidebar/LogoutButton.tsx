@@ -1,4 +1,4 @@
-import React from "react";
+import { useRef, useEffect } from "react";
 import {
   useDisclosure,
   useToast,
@@ -17,15 +17,35 @@ import { BsDoorOpen } from "react-icons/bs";
 
 import { useUser } from "@/lib/hooks";
 
-const LogoutButton = () => {
+type LogoutButtonType = {
+  setClientRectCB(rect: DOMRect): void;
+};
+
+const LogoutButton = ({ setClientRectCB }: LogoutButtonType) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const cancelRef = React.useRef(null!);
-  const [, { mutate }] = useUser();
   const toast = useToast();
+
+  const cancelRef = useRef<HTMLButtonElement>(null!);
+  const buttonElement = useRef<HTMLButtonElement>(null!);
+
+  const [, { mutate }] = useUser();
+
+  useEffect(() => {
+    const setSize = () => {
+      setClientRectCB(buttonElement.current.getBoundingClientRect());
+    };
+    setSize();
+
+    window.addEventListener("resize", setSize);
+
+    return () => {
+      window.removeEventListener("resize", setSize);
+    };
+  }, []);
 
   return (
     <>
-      <button style={{ width: "100%" }} onClick={onOpen}>
+      <button style={{ width: "100%" }} onClick={onOpen} ref={buttonElement}>
         <Flex
           align="center"
           p="4"

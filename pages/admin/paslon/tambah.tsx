@@ -13,10 +13,15 @@ import {
   FormLabel,
   Input,
   Button,
+
+  // Image Form
+  AspectRatio,
+  Stack,
+  Heading,
 } from "@chakra-ui/react";
 import { yupResolver } from "@hookform/resolvers/yup";
+import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
-import { useEffect } from "react";
 import Router from "next/router";
 import NextLink from "next/link";
 import Head from "next/head";
@@ -37,6 +42,7 @@ const validNameRegex = /^[a-zA-Z\s\-]+$/;
 
 const HalamanTambah: NextPage = () => {
   const toast = useToast();
+  const [imgFromInput, setIFI] = useState<string | null>(null);
 
   const validationSchema = Yup.object().shape({
     ketua: Yup.string()
@@ -80,13 +86,40 @@ const HalamanTambah: NextPage = () => {
   });
 
   const [user] = useUser();
-  const { handleSubmit, register, formState, reset } = useForm<FormValues>({
-    resolver: yupResolver(validationSchema),
-  });
+  const { handleSubmit, register, formState, reset, watch } =
+    useForm<FormValues>({
+      resolver: yupResolver(validationSchema),
+    });
 
   useEffect(() => {
     if (!user) Router.push("/admin/login");
   }, [user]);
+
+  useEffect(() => {
+    const subscription = watch((value, { name, type }) => {
+      if (name === "image" && type === "change") {
+        const image = (value.image as unknown as { [0]: File })[0];
+
+        if (image) {
+          const objectUrl = URL.createObjectURL(image);
+          setIFI(objectUrl);
+        } else {
+          if (imgFromInput !== null) URL.revokeObjectURL(imgFromInput);
+
+          setIFI(null);
+        }
+      }
+    });
+
+    return () => {
+      subscription.unsubscribe();
+
+      if (imgFromInput !== null) URL.revokeObjectURL(imgFromInput);
+
+      setIFI(null);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [watch]);
 
   const onSubmit = async (data: FormValues) => {
     let formData = new FormData();
@@ -113,8 +146,12 @@ const HalamanTambah: NextPage = () => {
       isClosable: true,
     });
 
-    if (result.error) reset();
-    else Router.push("/admin/paslon");
+    if (result.error) {
+      reset();
+
+      if (imgFromInput !== null) URL.revokeObjectURL(imgFromInput);
+      setIFI(null);
+    } else Router.push("/admin/paslon");
   };
 
   return (
@@ -172,12 +209,69 @@ const HalamanTambah: NextPage = () => {
                   mt={6}
                   isInvalid={formState.errors?.image as unknown as boolean}
                 >
-                  <FormLabel htmlFor="image">Gambar Paslon</FormLabel>
-                  <Input
-                    type="file"
-                    placeholder="Masukan gambar kedua paslon"
-                    {...register("image")}
-                  />
+                  <AspectRatio ratio={1}>
+                    <Box
+                      borderColor="gray.300"
+                      borderStyle="dashed"
+                      borderWidth="2px"
+                      rounded="md"
+                      shadow="sm"
+                      role="group"
+                      transition="all 150ms ease-in-out"
+                      _hover={{
+                        shadow: "md",
+                      }}
+                    >
+                      <Box position="relative" height="85%" width="100%">
+                        <Box
+                          position="absolute"
+                          top="0"
+                          left="0"
+                          height="100%"
+                          width="100%"
+                          display="flex"
+                          flexDirection="column"
+                        >
+                          <Stack
+                            height="100%"
+                            width="100%"
+                            display="flex"
+                            alignItems="center"
+                            justify="center"
+                            spacing="4"
+                          >
+                            {imgFromInput !== null ? (
+                              <img
+                                src={imgFromInput}
+                                alt={"Gambar input dari administrator."}
+                              />
+                            ) : (
+                              <Stack p="8" textAlign="center" spacing="1">
+                                <Heading fontSize="lg" fontWeight="bold">
+                                  Seret gambar kesini
+                                </Heading>
+                                <Text fontWeight="light">
+                                  atau klik disini untuk mengunggah
+                                </Text>
+                              </Stack>
+                            )}
+                          </Stack>
+                        </Box>
+                        <Input
+                          type="file"
+                          height="100%"
+                          width="100%"
+                          position="absolute"
+                          top="0"
+                          left="0"
+                          opacity="0"
+                          aria-hidden="true"
+                          accept="image/*"
+                          {...register("image")}
+                        />
+                      </Box>
+                    </Box>
+                  </AspectRatio>
                   <FormErrorMessage>
                     {formState.errors?.image?.message}
                   </FormErrorMessage>
