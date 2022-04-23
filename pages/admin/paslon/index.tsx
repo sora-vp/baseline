@@ -137,7 +137,10 @@ const Paslon: NextPage = () => {
                               <Td>{p.wakil}</Td>
                               <Td>{p.memilih} Orang</Td>
                               <Td>
-                                <img src={`/uploads/${p.imgName}`} />
+                                <img
+                                  src={`/uploads/${p.imgName}`}
+                                  alt={`Gambar dari pasangan calon ${p.ketua} dan ${p.wakil}.`}
+                                />
                               </Td>
                               <Td>
                                 <Button

@@ -59,7 +59,7 @@ const Admin: NextPage = () => {
               </Text>
 
               <Stack spacing={2} direction="row" align="center" mt={5}>
-                <NextLink href="/admin/ubahpw">
+                <NextLink href="/admin/ubahpw" passHref>
                   <Link
                     borderRadius="md"
                     bg="red"
@@ -72,7 +72,7 @@ const Admin: NextPage = () => {
                     Ganti Password
                   </Link>
                 </NextLink>
-                <NextLink href="/admin/ubahnama">
+                <NextLink href="/admin/ubahnama" passHref>
                   <Link
                     borderRadius="md"
                     bg="green"
