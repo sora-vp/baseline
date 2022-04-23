@@ -1,4 +1,3 @@
-import bcrypt from "bcrypt";
 import nextConnect from "next-connect";
 import auth from "@/middleware/auth";
 import { connectDatabase } from "@/lib/db";

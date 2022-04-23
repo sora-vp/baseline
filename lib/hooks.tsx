@@ -1,6 +1,8 @@
 import useSWR, { KeyedMutator } from "swr";
 import { DateTime } from "luxon";
 
+import type { IPaslon } from "@/models/Paslon";
+
 type UserType = { email: string; username: string; date: DateTime };
 type useUserType = [
   UserType | null,
@@ -20,4 +22,22 @@ export function useUser(): useUserType {
     ? { ...data.user, date: DateTime.fromISO(data.user.date).toLocal() }
     : data?.user;
   return [user, { mutate, loading }];
+}
+
+type usePaslonType = [
+  IPaslon[] | null,
+  {
+    loading: boolean;
+    mutate: KeyedMutator<{
+      paslon: IPaslon[] | null;
+    }>;
+  }
+];
+
+export function usePaslon(): usePaslonType {
+  const { data, mutate } = useSWR("/api/admin/paslon");
+
+  const loading = !data;
+  const paslon = data?.paslon;
+  return [paslon, { mutate, loading }];
 }

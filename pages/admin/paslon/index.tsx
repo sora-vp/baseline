@@ -1,10 +1,14 @@
+import { useRef, useState } from "react";
 import {
+  useToast,
   useColorModeValue,
+  useDisclosure,
   VStack,
   HStack,
   Box,
-  Link,
   Text,
+  Button,
+  Spinner,
 
   // Table
   Table,
@@ -15,19 +19,44 @@ import {
   Td,
   TableContainer,
   TableCaption,
+
+  // Alert dialog
+  AlertDialog,
+  AlertDialogBody,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogContent,
+  AlertDialogOverlay,
+  AlertDialogCloseButton,
 } from "@chakra-ui/react";
 import Head from "next/head";
 import Router from "next/router";
 import NextLink from "next/link";
+import { Types } from "mongoose";
 import { useEffect } from "react";
 
-import { useUser } from "@/lib/hooks";
+import { useUser, usePaslon } from "@/lib/hooks";
 import Sidebar from "@/component/Sidebar/index";
 
 import type { NextPage } from "next";
 
 const Paslon: NextPage = () => {
+  const toast = useToast();
   const [user] = useUser();
+  const cancelRef = useRef<HTMLButtonElement>(null!);
+
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const [paslon, { loading, mutate }] = usePaslon();
+
+  // Untuk keperluan hapus data
+  const [currentID, setID] = useState<Types.ObjectId | null>(null);
+  const [isSubmitting, setSubmit] = useState<boolean>(false);
+
+  const getNama = () => {
+    const currentPaslon = paslon && paslon!.find((p) => p._id === currentID);
+
+    return `${currentPaslon?.ketua} dan ${currentPaslon?.wakil}`;
+  };
 
   useEffect(() => {
     if (!user) Router.push("/admin/login");
@@ -44,38 +73,40 @@ const Paslon: NextPage = () => {
             Paslon
           </Text>
         </HStack>
-        <HStack h={"80vh"}>
+        <HStack>
           <Box
             bg={useColorModeValue("white", "gray.800")}
             borderWidth="1px"
             borderRadius="lg"
-            overflow="hidden"
             h={"100%"}
             w={"100%"}
+            style={{ minHeight: "80vh" }}
           >
             <VStack align="stretch" px={2} py={2}>
               <HStack>
                 <NextLink href="/admin/paslon/tambah" passHref>
-                  <Link
+                  <Button
                     borderRadius="md"
                     bg="blue.500"
                     color="white"
-                    px={4}
-                    pt={2}
-                    h={10}
-                    w={"30%"}
-                    style={{ textDecoration: "none", textAlign: "center" }}
+                    as={"a"}
                   >
                     Tambah Paslon Baru
-                  </Link>
+                  </Button>
                 </NextLink>
               </HStack>
               <HStack>
                 <TableContainer w="100%" h="100%">
                   <Table variant="simple">
-                    <TableCaption>
-                      Jumlah orang yang bersuara ada 0 orang
-                    </TableCaption>
+                    {!loading && paslon && (
+                      <TableCaption>
+                        Jumlah orang yang sudah bersuara berjumlah{" "}
+                        {paslon
+                          .map((p) => p.memilih)
+                          .reduce((curr, acc) => curr + acc, 0)}{" "}
+                        orang
+                      </TableCaption>
+                    )}
                     <Thead>
                       <Tr>
                         <Th>Nama Ketua</Th>
@@ -86,27 +117,62 @@ const Paslon: NextPage = () => {
                       </Tr>
                     </Thead>
                     <Tbody>
-                      {/* <Tr>
-                        <Td>inches</Td>
-                        <Td>millimetres (mm)</Td>
-                        <Td isNumeric>25.4</Td>
-                      </Tr>
-                      <Tr>
-                        <Td>feet</Td>
-                        <Td>centimetres (cm)</Td>
-                        <Td isNumeric>30.48</Td>
-                      </Tr>
-                      <Tr>
-                        <Td>yards</Td>
-                        <Td>metres (m)</Td>
-                        <Td isNumeric>0.91444</Td>
-                      </Tr> */}
-                      <Tr>
-                        <Td colSpan={5} style={{ textAlign: "center" }}>
-                          Tidak ada data paslon, Silahkan tambah paslon baru
-                          dengan tombol di atas.
-                        </Td>
-                      </Tr>
+                      {loading && (
+                        <Tr>
+                          <Td colSpan={5} style={{ textAlign: "center" }}>
+                            <Spinner
+                              size="xl"
+                              speed="0.95s"
+                              emptyColor="gray.200"
+                              color="blue.500"
+                            />
+                          </Td>
+                        </Tr>
+                      )}
+                      {paslon ? (
+                        <>
+                          {paslon.map((p) => (
+                            <Tr key={p.imgName}>
+                              <Td>{p.ketua}</Td>
+                              <Td>{p.wakil}</Td>
+                              <Td>{p.memilih} Orang</Td>
+                              <Td>
+                                <img src={`/uploads/${p.imgName}`} />
+                              </Td>
+                              <Td>
+                                <Button
+                                  bg="orange.500"
+                                  _hover={{ bg: "orange.700" }}
+                                  color="white"
+                                >
+                                  Edit
+                                </Button>
+                                <Button
+                                  bg="red.500"
+                                  _hover={{ bg: "red.700" }}
+                                  ml={2}
+                                  color="white"
+                                  onClick={() => {
+                                    setID(p._id);
+                                    onOpen();
+                                  }}
+                                >
+                                  Hapus
+                                </Button>
+                              </Td>
+                            </Tr>
+                          ))}
+                        </>
+                      ) : (
+                        !loading && (
+                          <Tr>
+                            <Td colSpan={5} style={{ textAlign: "center" }}>
+                              Tidak ada data paslon, Silahkan tambah paslon baru
+                              dengan tombol di atas.
+                            </Td>
+                          </Tr>
+                        )
+                      )}
                     </Tbody>
                   </Table>
                 </TableContainer>
@@ -115,6 +181,75 @@ const Paslon: NextPage = () => {
           </Box>
         </HStack>
       </VStack>
+      <AlertDialog
+        isCentered
+        isOpen={isOpen}
+        leastDestructiveRef={cancelRef}
+        onClose={() => {
+          if (!isSubmitting) {
+            setID(null);
+            onClose();
+          }
+        }}
+      >
+        <AlertDialogOverlay>
+          <AlertDialogContent>
+            {!isSubmitting && <AlertDialogCloseButton />}
+            <AlertDialogHeader fontSize="lg" fontWeight="bold">
+              Hapus Paslon
+            </AlertDialogHeader>
+
+            <AlertDialogBody>
+              Apakah anda yakin? Jika sudah terhapus maka paslon {getNama()}{" "}
+              <b>TIDAK BISA DIPILIH, DIREVISI, DAN DIKEMBALIKAN LAGI!</b>.
+            </AlertDialogBody>
+
+            <AlertDialogFooter>
+              <Button ref={cancelRef} onClick={onClose} disabled={isSubmitting}>
+                Batal
+              </Button>
+              <Button
+                bg="red.500"
+                _hover={{ bg: "red.700" }}
+                color="white"
+                disabled={isSubmitting}
+                onClick={async () => {
+                  setSubmit(true);
+
+                  let formData = new FormData();
+                  formData.append("id", currentID as unknown as string);
+
+                  const response = await fetch("/api/admin/paslon", {
+                    method: "DELETE",
+                    body: formData,
+                  });
+
+                  const result = await response.json();
+
+                  setSubmit(false);
+                  onClose();
+
+                  if (!result.error)
+                    mutate({
+                      paslon: paslon!.filter((p) => p._id !== currentID),
+                    });
+
+                  toast({
+                    description: result.message,
+                    status: result.error ? "error" : "success",
+                    duration: 6000,
+                    position: "top-right",
+                    isClosable: true,
+                  });
+                }}
+                ml={3}
+              >
+                Hapus
+              </Button>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialogOverlay>
+      </AlertDialog>
     </Sidebar>
   );
 };

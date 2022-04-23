@@ -39,6 +39,6 @@ declare global {
   interface ApiErrorInterface {
     error: boolean;
     message: string;
-    type: "UNAUTHENTICATED";
+    type?: "UNAUTHENTICATED";
   }
 }

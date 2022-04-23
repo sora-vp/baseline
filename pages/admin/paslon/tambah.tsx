@@ -1,4 +1,5 @@
 import {
+  useToast,
   useColorModeValue,
   VStack,
   HStack,
@@ -29,11 +30,14 @@ import Sidebar from "@/component/Sidebar/index";
 type FormValues = {
   ketua: string;
   wakil: string;
+  image: File;
 };
 
 const validNameRegex = /^[a-zA-Z\s\-]+$/;
 
 const HalamanTambah: NextPage = () => {
+  const toast = useToast();
+
   const validationSchema = Yup.object().shape({
     ketua: Yup.string()
       .required("Diperlukan Nama Ketua!")
@@ -47,10 +51,36 @@ const HalamanTambah: NextPage = () => {
         validNameRegex,
         "Nama hanya berisikan huruf alphabet yang valid!"
       ),
+    image: Yup.mixed()
+      .test(
+        "required",
+        "Diperlukan file gambar paslon",
+        (value) => value && value.length
+      )
+      .test(
+        "fileSize",
+        "Ukuran gambar maksimal adalah 2MB!",
+        (value) => value && value[0] && value[0].size <= 200000
+      )
+      .test(
+        "type",
+        "File harus berupa gambar yang bertipekan jpg, jpeg, png!",
+        (value) => {
+          const extensions = ["jpg", "jpeg", "png"];
+          const type = value[0]?.type;
+
+          return (
+            value &&
+            value[0] &&
+            type.includes("image/") &&
+            extensions.some((ext) => ext === type.split("image/")[1])
+          );
+        }
+      ),
   });
 
   const [user] = useUser();
-  const { handleSubmit, register, formState } = useForm<FormValues>({
+  const { handleSubmit, register, formState, reset } = useForm<FormValues>({
     resolver: yupResolver(validationSchema),
   });
 
@@ -58,8 +88,33 @@ const HalamanTambah: NextPage = () => {
     if (!user) Router.push("/admin/login");
   }, [user]);
 
-  const onSubmit = (data: FormValues) => {
-    console.log(data);
+  const onSubmit = async (data: FormValues) => {
+    let formData = new FormData();
+    const keys = Object.keys(data);
+
+    for (const key of keys) {
+      if (key === "image")
+        formData.append(key, (data[key] as unknown as { [0]: File })[0]);
+      else formData.append(key, data[key as keyof FormValues]);
+    }
+
+    const response = await fetch("/api/admin/paslon", {
+      method: "POST",
+      body: formData,
+    });
+
+    const result = await response.json();
+
+    toast({
+      description: result.message,
+      status: result.error ? "error" : "success",
+      duration: 6000,
+      position: "top-right",
+      isClosable: true,
+    });
+
+    if (result.error) reset();
+    else Router.push("/admin/paslon");
   };
 
   return (
@@ -79,7 +134,10 @@ const HalamanTambah: NextPage = () => {
             borderWidth="1px"
             borderRadius="lg"
             overflow="hidden"
-            w={"50%"}
+            w={{
+              base: "75%",
+              md: "50%",
+            }}
           >
             <Box my={4} mx={4} textAlign="left">
               <form onSubmit={handleSubmit(onSubmit)}>
@@ -108,6 +166,20 @@ const HalamanTambah: NextPage = () => {
                   />
                   <FormErrorMessage>
                     {formState.errors?.wakil?.message}
+                  </FormErrorMessage>
+                </FormControl>
+                <FormControl
+                  mt={6}
+                  isInvalid={formState.errors?.image as unknown as boolean}
+                >
+                  <FormLabel htmlFor="image">Gambar Paslon</FormLabel>
+                  <Input
+                    type="file"
+                    placeholder="Masukan gambar kedua paslon"
+                    {...register("image")}
+                  />
+                  <FormErrorMessage>
+                    {formState.errors?.image?.message}
                   </FormErrorMessage>
                 </FormControl>
                 <Button

@@ -1,4 +1,4 @@
-import mongoose, { Types, Model } from "mongoose";
+import mongoose, { Schema, Types, Model } from "mongoose";
 import { DateTime } from "luxon";
 import bcrypt from "bcrypt";
 
@@ -25,7 +25,7 @@ export interface UserModel extends Model<IUser> {
   }: createNewUserParam): Promise<IUser>;
 }
 
-const UserSchema = new mongoose.Schema<IUser, UserModel>({
+const UserSchema = new Schema<IUser, UserModel>({
   username: {
     type: String,
     required: true,
