@@ -18,20 +18,16 @@ import {
   Legend,
 } from "recharts";
 
-import { useUser, usePaslon } from "@/lib/hooks";
-import Router from "next/router";
+import { usePaslon } from "@/lib/hooks";
 import NextLink from "next/link";
 
-import Sidebar from "@/component/Sidebar/index";
+import Sidebar from "@/component/Sidebar";
 
-import type { NextPage } from "next";
-
-const Statistik: NextPage = () => {
+const Statistik = () => {
   const [width, setWidth] = useState<number>(0);
   const [height, setHeight] = useState<number>(0);
   const container = useRef<HTMLDivElement>(null!);
 
-  const [user] = useUser();
   const [paslon, { loading }] = usePaslon({ refreshInterval: 250 });
   const chartData = useMemo(
     () =>
@@ -44,10 +40,6 @@ const Statistik: NextPage = () => {
 
   const tooltipColor = useColorModeValue("white", "#171923");
   const yangMemilihColor = useColorModeValue("#2F855A", "#38A169");
-
-  useEffect(() => {
-    if (!user) Router.push("/admin/login");
-  }, [user]);
 
   useEffect(() => {
     const setSize = () => {
@@ -64,7 +56,7 @@ const Statistik: NextPage = () => {
   }, []);
 
   return (
-    <Sidebar>
+    <>
       <Head>
         <title>Statistik Pemilihan</title>
       </Head>
@@ -125,8 +117,8 @@ const Statistik: NextPage = () => {
           </Box>
         </HStack>
       </VStack>
-    </Sidebar>
+    </>
   );
 };
 
-export default Statistik;
+export default Sidebar(Statistik);

@@ -1,7 +1,7 @@
 import {
   useColorModeValue,
+  Button,
   Box,
-  Link,
   Text,
   Stack,
   VStack,
@@ -10,25 +10,17 @@ import {
 } from "@chakra-ui/react";
 import Head from "next/head";
 import NextLink from "next/link";
-import Router from "next/router";
-import { useEffect } from "react";
 
 import { formatTime } from "@/lib/utils";
 import { useUser } from "@/lib/hooks";
 
-import Sidebar from "@/component/Sidebar/index";
+import Sidebar from "@/component/Sidebar";
 
-import type { NextPage } from "next";
-
-const Admin: NextPage = () => {
+const Admin = () => {
   const [user] = useUser();
 
-  useEffect(() => {
-    if (!user) Router.push("/admin/login");
-  }, [user]);
-
   return (
-    <Sidebar>
+    <>
       <Head>
         <title>Dashboard Admin</title>
       </Head>
@@ -59,39 +51,39 @@ const Admin: NextPage = () => {
               </Text>
 
               <Stack spacing={2} direction="row" align="center" mt={5}>
-                <NextLink href="/admin/ubahpw" passHref>
-                  <Link
+                <NextLink href="/admin/ubah/password" passHref>
+                  <Button
+                    as={"a"}
                     borderRadius="md"
                     bg="red"
                     color="white"
-                    px={4}
-                    pt={2}
-                    h={10}
-                    style={{ textDecoration: "none" }}
+                    _hover={{
+                      bg: "red.800",
+                    }}
                   >
                     Ganti Password
-                  </Link>
+                  </Button>
                 </NextLink>
-                <NextLink href="/admin/ubahnama" passHref>
-                  <Link
+                <NextLink href="/admin/ubah/nama" passHref>
+                  <Button
+                    as={"a"}
                     borderRadius="md"
-                    bg="green"
+                    bg="green.600"
                     color="white"
-                    px={4}
-                    pt={2}
-                    h={10}
-                    style={{ textDecoration: "none" }}
+                    _hover={{
+                      bg: "green.800",
+                    }}
                   >
                     Ganti Nama
-                  </Link>
+                  </Button>
                 </NextLink>
               </Stack>
             </Container>
           </Box>
         </HStack>
       </VStack>
-    </Sidebar>
+    </>
   );
 };
 
-export default Admin;
+export default Sidebar(Admin);

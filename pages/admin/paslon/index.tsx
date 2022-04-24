@@ -30,19 +30,15 @@ import {
   AlertDialogCloseButton,
 } from "@chakra-ui/react";
 import Head from "next/head";
-import Router from "next/router";
 import NextLink from "next/link";
 import { Types } from "mongoose";
-import { useEffect } from "react";
 
-import { useUser, usePaslon } from "@/lib/hooks";
-import Sidebar from "@/component/Sidebar/index";
+import { usePaslon } from "@/lib/hooks";
 
-import type { NextPage } from "next";
+import Sidebar from "@/component/Sidebar";
 
-const Paslon: NextPage = () => {
+const Paslon = () => {
   const toast = useToast();
-  const [user] = useUser();
   const cancelRef = useRef<HTMLButtonElement>(null!);
 
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -58,12 +54,8 @@ const Paslon: NextPage = () => {
     return `${currentPaslon?.ketua} dan ${currentPaslon?.wakil}`;
   };
 
-  useEffect(() => {
-    if (!user) Router.push("/admin/login");
-  }, [user]);
-
   return (
-    <Sidebar>
+    <>
       <Head>
         <title>Daftar Paslon</title>
       </Head>
@@ -253,8 +245,8 @@ const Paslon: NextPage = () => {
           </AlertDialogContent>
         </AlertDialogOverlay>
       </AlertDialog>
-    </Sidebar>
+    </>
   );
 };
 
-export default Paslon;
+export default Sidebar(Paslon);

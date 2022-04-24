@@ -1,23 +1,11 @@
 import { VStack, HStack, Text } from "@chakra-ui/react";
 import Head from "next/head";
-import { useEffect } from "react";
 
-import { useUser } from "@/lib/hooks";
-import Router from "next/router";
+import Sidebar from "@/component/Sidebar";
 
-import Sidebar from "@/component/Sidebar/index";
-
-import type { NextPage } from "next";
-
-const Pengaturan: NextPage = () => {
-  const [user] = useUser();
-
-  useEffect(() => {
-    if (!user) Router.push("/admin/login");
-  }, [user]);
-
+const Pengaturan = () => {
   return (
-    <Sidebar>
+    <>
       <Head>
         <title>Pengaturan</title>
       </Head>
@@ -28,8 +16,8 @@ const Pengaturan: NextPage = () => {
           </Text>
         </HStack>
       </VStack>
-    </Sidebar>
+    </>
   );
 };
 
-export default Pengaturan;
+export default Sidebar(Pengaturan);

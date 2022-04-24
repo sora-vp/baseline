@@ -27,10 +27,7 @@ import NextLink from "next/link";
 import Head from "next/head";
 import * as Yup from "yup";
 
-import type { NextPage } from "next";
-
-import { useUser } from "@/lib/hooks";
-import Sidebar from "@/component/Sidebar/index";
+import Sidebar from "@/component/Sidebar";
 
 type FormValues = {
   ketua: string;
@@ -40,7 +37,7 @@ type FormValues = {
 
 const validNameRegex = /^[a-zA-Z\s\-]+$/;
 
-const HalamanTambah: NextPage = () => {
+const HalamanTambah = () => {
   const toast = useToast();
   const [imgFromInput, setIFI] = useState<string | null>(null);
 
@@ -85,15 +82,10 @@ const HalamanTambah: NextPage = () => {
       ),
   });
 
-  const [user] = useUser();
   const { handleSubmit, register, formState, reset, watch } =
     useForm<FormValues>({
       resolver: yupResolver(validationSchema),
     });
-
-  useEffect(() => {
-    if (!user) Router.push("/admin/login");
-  }, [user]);
 
   useEffect(() => {
     const subscription = watch((value, { name, type }) => {
@@ -155,7 +147,7 @@ const HalamanTambah: NextPage = () => {
   };
 
   return (
-    <Sidebar>
+    <>
       <Head>
         <title>Tambah Paslon</title>
       </Head>
@@ -298,8 +290,8 @@ const HalamanTambah: NextPage = () => {
           </Box>
         </HStack>
       </VStack>
-    </Sidebar>
+    </>
   );
 };
 
-export default HalamanTambah;
+export default Sidebar(HalamanTambah);
