@@ -32,11 +32,47 @@ handler
       });
     else next();
   })
-  // .put((req, res) => {
-  //   const { name } = req.body;
-  //   const user = updateUserByUsername(req, req.user.username, { name });
-  //   res.json({ user });
-  // })
+  .put(async (req, res) => {
+    const { type, body } = req.body;
+
+    if (!type || !body)
+      return res
+        .status(400)
+        .json({ error: true, message: "Tidak ada type ataupun body!" });
+
+    switch (type) {
+      case "UPDATE_USERNAME":
+        const { nama } = body;
+
+        if (!nama)
+          return res.status(400).json({
+            error: true,
+            message: "Diperlukan nama yang ingin diubah!",
+          });
+
+        try {
+          await req.user.update({ username: nama });
+
+          res
+            .status(201)
+            .json({ error: false, message: "Nama berhasil diperbarui!" });
+        } catch (e: unknown) {
+          res.status(500).json({
+            error: true,
+            message: (e as unknown as { toString(): string }).toString(),
+          });
+        }
+
+        break;
+
+      case "UPDATE_PASSWORD":
+        break;
+      default:
+        return res
+          .status(400)
+          .json({ error: true, message: "Invalid request" });
+    }
+  })
   .delete((req, res) => {
     req.logOut();
     res.status(204).end();

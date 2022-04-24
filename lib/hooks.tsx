@@ -4,8 +4,8 @@ import { DateTime } from "luxon";
 import type { IPaslon } from "@/models/Paslon";
 import type { SWRConfiguration } from "swr";
 
-type UserType = { email: string; username: string; date: DateTime };
-type useUserType = [
+export type UserType = { email: string; username: string; date: DateTime };
+export type useUserType = [
   UserType | null,
   {
     mutate: KeyedMutator<{
@@ -25,7 +25,7 @@ export function useUser(): useUserType {
   return [user, { mutate, loading }];
 }
 
-type usePaslonType = [
+export type usePaslonType = [
   IPaslon[] | null,
   {
     loading: boolean;
