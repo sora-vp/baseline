@@ -11,6 +11,8 @@ import {
 import Head from "next/head";
 import NextLink from "next/link";
 
+import { commonSSRCallback } from "@/lib/csrf";
+import { GetServerSideProps } from "next";
 import { formatTime } from "@/lib/utils";
 import { useUser } from "@/lib/hooks";
 
@@ -85,5 +87,8 @@ const Admin = () => {
     </>
   );
 };
+
+export const getServerSideProps: GetServerSideProps<commonComponentInterface> =
+  commonSSRCallback;
 
 export default Sidebar(Admin);

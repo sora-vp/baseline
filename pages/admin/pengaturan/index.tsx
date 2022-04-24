@@ -1,6 +1,8 @@
 import { VStack, HStack, Text } from "@chakra-ui/react";
 import Head from "next/head";
 
+import { commonSSRCallback } from "@/lib/csrf";
+import { GetServerSideProps } from "next";
 import Sidebar from "@/component/Sidebar";
 
 const Pengaturan = () => {
@@ -19,5 +21,8 @@ const Pengaturan = () => {
     </>
   );
 };
+
+export const getServerSideProps: GetServerSideProps<commonComponentInterface> =
+  commonSSRCallback;
 
 export default Sidebar(Pengaturan);

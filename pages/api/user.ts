@@ -1,8 +1,7 @@
 import nextConnect from "next-connect";
 import auth from "@/middleware/auth";
+import { validateCsrf } from "@/lib/csrf";
 import { safeUserTransformator } from "@/lib/valueTransformator";
-
-// import User from "@/lib/User";
 
 import type { NextApiRequest, NextApiResponse } from "next";
 
@@ -32,6 +31,7 @@ handler
       });
     else next();
   })
+  .use(validateCsrf)
   .put(async (req, res) => {
     const { type, body } = req.body;
 
@@ -75,7 +75,7 @@ handler
   })
   .delete((req, res) => {
     req.logOut();
-    res.status(204).end();
+    res.status(200).json({ error: false, message: "Berhasil logout" });
   });
 
 export default handler;

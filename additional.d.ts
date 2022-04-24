@@ -41,4 +41,8 @@ declare global {
     message: string;
     type?: "UNAUTHENTICATED";
   }
+
+  interface commonComponentInterface {
+    csrfToken: string;
+  }
 }

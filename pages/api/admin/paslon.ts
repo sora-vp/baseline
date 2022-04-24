@@ -8,6 +8,7 @@ import nextConnect from "next-connect";
 
 import auth from "@/middleware/auth";
 import Paslon from "@/models/Paslon";
+import { validateCsrf } from "@/lib/csrf";
 import { connectDatabase } from "@/lib/db";
 
 import type { IPaslon } from "@/models/Paslon";
@@ -51,6 +52,7 @@ handler
       paslon: paslon.length > 0 ? paslon : null,
     });
   })
+  .use(validateCsrf)
   .post(async (req, res) => {
     const form = new formidable.IncomingForm();
 

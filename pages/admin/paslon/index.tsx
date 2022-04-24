@@ -35,9 +35,11 @@ import { Types } from "mongoose";
 
 import { usePaslon } from "@/lib/hooks";
 
+import { commonSSRCallback } from "@/lib/csrf";
+import { GetServerSideProps } from "next";
 import Sidebar from "@/component/Sidebar";
 
-const Paslon = () => {
+const Paslon = ({ csrfToken }: commonComponentInterface) => {
   const toast = useToast();
   const cancelRef = useRef<HTMLButtonElement>(null!);
 
@@ -217,6 +219,9 @@ const Paslon = () => {
                   const response = await fetch("/api/admin/paslon", {
                     method: "DELETE",
                     body: formData,
+                    headers: {
+                      "CSRF-Token": csrfToken,
+                    },
                   });
 
                   const result = await response.json();
@@ -248,5 +253,8 @@ const Paslon = () => {
     </>
   );
 };
+
+export const getServerSideProps: GetServerSideProps<commonComponentInterface> =
+  commonSSRCallback;
 
 export default Sidebar(Paslon);

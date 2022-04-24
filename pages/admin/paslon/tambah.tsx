@@ -27,6 +27,8 @@ import NextLink from "next/link";
 import Head from "next/head";
 import * as Yup from "yup";
 
+import { commonSSRCallback } from "@/lib/csrf";
+import { GetServerSideProps } from "next";
 import Sidebar from "@/component/Sidebar";
 
 type FormValues = {
@@ -37,7 +39,7 @@ type FormValues = {
 
 const validNameRegex = /^[a-zA-Z\s\-]+$/;
 
-const HalamanTambah = () => {
+const HalamanTambah = ({ csrfToken }: commonComponentInterface) => {
   const toast = useToast();
   const [imgFromInput, setIFI] = useState<string | null>(null);
 
@@ -126,6 +128,9 @@ const HalamanTambah = () => {
     const response = await fetch("/api/admin/paslon", {
       method: "POST",
       body: formData,
+      headers: {
+        "CSRF-Token": csrfToken,
+      },
     });
 
     const result = await response.json();
@@ -293,5 +298,8 @@ const HalamanTambah = () => {
     </>
   );
 };
+
+export const getServerSideProps: GetServerSideProps<commonComponentInterface> =
+  commonSSRCallback;
 
 export default Sidebar(HalamanTambah);

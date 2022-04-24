@@ -5,6 +5,7 @@ import {
   safePaslonTransformator,
   type SafePaslonTransformatorInterface,
 } from "@/lib/valueTransformator";
+import { validateCsrf } from "@/lib/csrf";
 
 import Paslon from "@/models/Paslon";
 
@@ -29,6 +30,7 @@ handler
       paslon: paslon.length > 0 ? safePaslonTransformator(paslon) : null,
     });
   })
+  .use(validateCsrf)
   .post(async (req, res) => {
     const { id } = req.body;
 

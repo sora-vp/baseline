@@ -21,8 +21,9 @@ import NextLink from "next/link";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 
+import { commonSSRCallback } from "@/lib/csrf";
+import { GetServerSideProps } from "next";
 import { useUser } from "@/lib/hooks";
-import type { UserType } from "@/lib/hooks";
 
 import Sidebar from "@/component/Sidebar";
 
@@ -32,7 +33,7 @@ type FormValues = {
 
 const validNameRegex = /^[a-zA-Z\s\-]+$/;
 
-const UbahNama = () => {
+const UbahNama = ({ csrfToken }: commonComponentInterface) => {
   const toast = useToast();
   const [user, { mutate }] = useUser();
 
@@ -66,6 +67,7 @@ const UbahNama = () => {
       }),
       headers: {
         "Content-Type": "application/json",
+        "CSRF-Token": csrfToken,
       },
     });
 
@@ -157,5 +159,8 @@ const UbahNama = () => {
     </>
   );
 };
+
+export const getServerSideProps: GetServerSideProps<commonComponentInterface> =
+  commonSSRCallback;
 
 export default Sidebar(UbahNama);

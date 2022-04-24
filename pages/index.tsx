@@ -30,11 +30,15 @@ import {
 import type { SafePaslonTransformatorInterface } from "@/lib/valueTransformator";
 
 import { useUser } from "@/lib/hooks";
+import { getBaseUrl } from "@/lib/utils";
+import { ssrCallback } from "@/lib/csrf";
+
 type HomeType = {
   paslon: SafePaslonTransformatorInterface[];
+  csrfToken: string;
 };
 
-const Home: NextPage<HomeType> = ({ paslon }) => {
+const Home: NextPage<HomeType> = ({ paslon, csrfToken }) => {
   const { data } = useSWR<{ paslon: SafePaslonTransformatorInterface[] }>(
     "/api/vote",
     {
@@ -171,9 +175,12 @@ const Home: NextPage<HomeType> = ({ paslon }) => {
 
                       const response = await fetch("/api/vote", {
                         method: "POST",
-                        body: JSON.stringify({ id: currentID }),
+                        body: JSON.stringify({
+                          id: currentID,
+                        }),
                         headers: {
                           "Content-Type": "application/json",
+                          "CSRF-Token": csrfToken,
                         },
                       });
 
@@ -225,9 +232,10 @@ const MasihKosong = () => (
 
 export const getServerSideProps: GetServerSideProps<HomeType> = async ({
   req,
+  res,
 }) => {
-  const protocol = req.headers["x-forwarded-proto"] || "http";
-  const baseUrl = req ? `${protocol}://${req.headers.host}` : "";
+  const baseUrl = getBaseUrl(req);
+  await ssrCallback({ req, res });
 
   const response = await fetch(`${baseUrl}/api/vote`);
   const { paslon } = await response.json();
@@ -235,6 +243,7 @@ export const getServerSideProps: GetServerSideProps<HomeType> = async ({
   return {
     props: {
       paslon,
+      csrfToken: (req as unknown as { csrfToken(): string }).csrfToken(),
     },
   };
 };

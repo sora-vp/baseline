@@ -50,7 +50,8 @@ const LinkItems: Array<LinkItemProps> = [
 ];
 
 export const SimpleSidebar =
-  (WrappedComponent: ElementType) => (props: JSX.IntrinsicAttributes) => {
+  (WrappedComponent: ElementType) =>
+  (props: JSX.IntrinsicAttributes & commonComponentInterface) => {
     const [user] = useUser();
 
     const { isOpen, onOpen, onClose } = useDisclosure();
@@ -83,6 +84,7 @@ export const SimpleSidebar =
         <SidebarContent
           height={height}
           onClose={() => onClose}
+          csrfToken={props.csrfToken}
           display={{ base: "none", md: "block" }}
         />
         <Drawer
@@ -95,7 +97,11 @@ export const SimpleSidebar =
           size="full"
         >
           <DrawerContent>
-            <SidebarContent onClose={onClose} height={height} />
+            <SidebarContent
+              csrfToken={props.csrfToken}
+              onClose={onClose}
+              height={height}
+            />
           </DrawerContent>
         </Drawer>
         {/* mobilenav */}
@@ -110,9 +116,15 @@ export const SimpleSidebar =
 interface SidebarProps extends BoxProps {
   onClose: () => void;
   height: number;
+  csrfToken: string;
 }
 
-const SidebarContent = ({ onClose, height, ...rest }: SidebarProps) => {
+const SidebarContent = ({
+  onClose,
+  height,
+  csrfToken,
+  ...rest
+}: SidebarProps) => {
   const [clientRect, setClientRect] = useState<DOMRect | null>(null!);
 
   const setClientRectCB = useCallback(
@@ -141,7 +153,7 @@ const SidebarContent = ({ onClose, height, ...rest }: SidebarProps) => {
           {link.name}
         </NavItem>
       ))}
-      <LogoutButton setClientRectCB={setClientRectCB} />
+      <LogoutButton csrfToken={csrfToken} setClientRectCB={setClientRectCB} />
       <ModeToggler clientRect={clientRect} height={height} />
     </Box>
   );

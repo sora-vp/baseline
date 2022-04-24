@@ -1,6 +1,7 @@
 import nextConnect from "next-connect";
 import auth from "@/middleware/auth";
 import passport from "@/lib/passport";
+import { validateCsrf } from "@/lib/csrf";
 import { connectDatabase } from "@/lib/db";
 import { safeUserTransformator } from "@/lib/valueTransformator";
 
@@ -21,6 +22,7 @@ handler.use(auth).post(
     await connectDatabase();
     next();
   },
+  validateCsrf,
   (req, res, next) => {
     passport.authenticate("local", (err, user, info) => {
       if (err) throw new Error(err);

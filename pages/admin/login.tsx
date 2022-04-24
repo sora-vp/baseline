@@ -20,8 +20,10 @@ import {
 } from "@chakra-ui/react";
 import Alert from "@/component/Alert";
 import { useUser } from "@/lib/hooks";
+import { commonSSRCallback } from "@/lib/csrf";
 
 import type { NextPage } from "next";
+import { GetServerSideProps } from "next";
 import type { AlertStatus } from "@chakra-ui/react";
 
 type FormValues = {
@@ -29,7 +31,7 @@ type FormValues = {
   password: string;
 };
 
-const Login: NextPage = () => {
+const Login: NextPage<commonComponentInterface> = ({ csrfToken }) => {
   const toast = useToast();
 
   const validationSchema = Yup.object().shape({
@@ -60,7 +62,7 @@ const Login: NextPage = () => {
 
     const res = await fetch("/api/login", {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: { "Content-Type": "application/json", "CSRF-Token": csrfToken },
       body: JSON.stringify(body),
     });
 
@@ -80,14 +82,22 @@ const Login: NextPage = () => {
         });
       }
     } else {
-      const response: AlertErrorResponse = await res.json();
+      const response: AlertErrorResponse | ApiErrorInterface = await res.json();
 
-      if (response.alert) {
+      if ((response as AlertErrorResponse)?.alert) {
         setAlertShow((prevState) => ({
           ...prevState,
           show: true,
-          ...response.error,
+          ...(response as AlertErrorResponse)?.error,
         }));
+      } else if ((response as ApiErrorInterface)?.error) {
+        toast({
+          description: (response as ApiErrorInterface)?.message,
+          status: "error",
+          duration: 4500,
+          position: "top-right",
+          isClosable: false,
+        });
       }
     }
   };
@@ -184,5 +194,8 @@ const Login: NextPage = () => {
     </Flex>
   );
 };
+
+export const getServerSideProps: GetServerSideProps<commonComponentInterface> =
+  commonSSRCallback;
 
 export default Login;

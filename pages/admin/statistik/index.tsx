@@ -18,6 +18,8 @@ import {
   Legend,
 } from "recharts";
 
+import { commonSSRCallback } from "@/lib/csrf";
+import { GetServerSideProps } from "next";
 import { usePaslon } from "@/lib/hooks";
 import NextLink from "next/link";
 
@@ -120,5 +122,8 @@ const Statistik = () => {
     </>
   );
 };
+
+export const getServerSideProps: GetServerSideProps<commonComponentInterface> =
+  commonSSRCallback;
 
 export default Sidebar(Statistik);

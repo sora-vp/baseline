@@ -21,7 +21,10 @@ type LogoutButtonType = {
   setClientRectCB(rect: DOMRect): void;
 };
 
-const LogoutButton = ({ setClientRectCB }: LogoutButtonType) => {
+const LogoutButton = ({
+  setClientRectCB,
+  csrfToken,
+}: LogoutButtonType & commonComponentInterface) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const toast = useToast();
 
@@ -96,21 +99,26 @@ const LogoutButton = ({ setClientRectCB }: LogoutButtonType) => {
                 onClick={() => {
                   fetch(`/api/user`, {
                     method: "DELETE",
-                  }).then((res) => {
-                    if (res.status === 204 || res.status === 401) {
-                      mutate({ user: null });
-                      Router.replace("/admin/login");
-
+                    headers: {
+                      "CSRF-Token": csrfToken,
+                    },
+                  })
+                    .then((res) => res.json())
+                    .then((result) => {
                       toast.closeAll();
                       toast({
-                        description: "Berhasil logout",
-                        status: "success",
+                        description: result.message,
+                        status: result.error ? "error" : "success",
                         duration: 4500,
                         position: "top-right",
                         isClosable: false,
                       });
-                    }
-                  });
+
+                      if (!result.error) {
+                        mutate({ user: null });
+                        Router.replace("/admin/login");
+                      }
+                    });
                 }}
                 ml={3}
               >
