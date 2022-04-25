@@ -145,7 +145,7 @@ export const getServerSideProps: GetServerSideProps<StatistikType> = async ({
 
   return {
     props: {
-      paslon,
+      paslon: paslon ? paslon : null,
       csrfToken: (req as unknown as { csrfToken(): string }).csrfToken(),
     },
   };

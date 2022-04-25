@@ -15,6 +15,7 @@ import {
 } from "@chakra-ui/react";
 import * as Yup from "yup";
 import Head from "next/head";
+import { DateTime } from "luxon";
 import { Controller, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 
@@ -23,11 +24,6 @@ import { GetServerSideProps } from "next";
 import Sidebar from "@/component/Sidebar";
 
 import DatePicker from "@/component/DatePicker";
-
-/**
- * TODO: MEMBUAT HALAMAN PENGATURAN KAPAN MULAI DAN KAPAN BERAKHIR PEMILIHAN
- * https://codesandbox.io/s/o5g5x
- */
 
 const Pengaturan = () => {
   return (
@@ -49,16 +45,34 @@ const Pengaturan = () => {
   );
 };
 
+const diniHari = DateTime.fromISO(
+  DateTime.now().toFormat("yyyy-MM-dd")
+).toJSDate();
+
 type PengaturanWaktuFormValues = {
   mulai: Date;
   selesai: Date;
 };
 const PengaturanWaktu = () => {
-  const { handleSubmit, register, control, formState } =
-    useForm<PengaturanWaktuFormValues>();
+  const validationSchema = Yup.object().shape({
+    mulai: Yup.date()
+      .required("Diperlukan kapan waktu mulai pemilihan!")
+      .min(diniHari, "Minimal waktu pemilihan adalah hari ini dini hari!"),
+    selesai: Yup.date()
+      .required("Diperlukan kapan waktu selesai pemilihan!")
+      .min(
+        Yup.ref("mulai"),
+        "Waktu selesai tidak boleh kurang dari waktu mulai!"
+      ),
+  });
+
+  const { handleSubmit, getValues, control, formState } =
+    useForm<PengaturanWaktuFormValues>({
+      resolver: yupResolver(validationSchema),
+    });
 
   const onSubmit = (data: PengaturanWaktuFormValues) => {
-    console.log(data.mulai instanceof Date);
+    console.log(data);
   };
 
   return (
@@ -85,6 +99,7 @@ const PengaturanWaktu = () => {
                   placeholderText="Tetapkan waktu mulai"
                   onChange={(date) => field.onChange(date)}
                   selectedDate={field.value as Date | null}
+                  filterDate={(day) => day >= diniHari}
                   customStyles={{ width: "85%" }}
                 />
               )}
@@ -107,6 +122,14 @@ const PengaturanWaktu = () => {
                   placeholderText="Tetapkan waktu selesai"
                   onChange={(date) => field.onChange(date)}
                   selectedDate={field.value as Date | null}
+                  filterDate={(day) => day >= diniHari}
+                  filterTime={(time) => {
+                    const selectedDate = new Date(time);
+                    const startTime = getValues("mulai");
+
+                    if (!startTime) return false;
+                    return selectedDate.getTime() > startTime.getTime();
+                  }}
                   showTimeSelect
                   dateFormat="MM/dd/yyyy h:mm aa"
                   customStyles={{ width: "85%" }}

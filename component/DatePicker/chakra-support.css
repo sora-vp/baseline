@@ -199,3 +199,11 @@
 .react-datepicker__close-icon::after:hover {
   color: var(--gray);
 }
+
+.react-datepicker__day--disabled {
+  color: #ffffff70;
+}
+
+.react-datepicker__time-list-item--disabled {
+  color: #ffffff30 !important;
+}

@@ -38,7 +38,7 @@ handler
     await connectDatabase();
 
     if (!req.user)
-      res.status(401).send({
+      res.status(401).json({
         error: true,
         message: "Anda belum terautentikasi!",
         type: "UNAUTHENTICATED",
