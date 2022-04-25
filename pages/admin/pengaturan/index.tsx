@@ -1,9 +1,33 @@
-import { VStack, HStack, Text } from "@chakra-ui/react";
+import {
+  useColorModeValue,
+  Container,
+  VStack,
+  HStack,
+  Text,
+  Box,
+  Button,
+
+  // Form
+  FormErrorMessage,
+  FormControl,
+  FormLabel,
+  Input,
+} from "@chakra-ui/react";
+import * as Yup from "yup";
 import Head from "next/head";
+import { Controller, useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
 
 import { commonSSRCallback } from "@/lib/csrf";
 import { GetServerSideProps } from "next";
 import Sidebar from "@/component/Sidebar";
+
+import DatePicker from "@/component/DatePicker";
+
+/**
+ * TODO: MEMBUAT HALAMAN PENGATURAN KAPAN MULAI DAN KAPAN BERAKHIR PEMILIHAN
+ * https://codesandbox.io/s/o5g5x
+ */
 
 const Pengaturan = () => {
   return (
@@ -17,8 +41,98 @@ const Pengaturan = () => {
             Pengaturan
           </Text>
         </HStack>
+        <HStack>
+          <PengaturanWaktu />
+        </HStack>
       </VStack>
     </>
+  );
+};
+
+type PengaturanWaktuFormValues = {
+  mulai: Date;
+  selesai: Date;
+};
+const PengaturanWaktu = () => {
+  const { handleSubmit, register, control, formState } =
+    useForm<PengaturanWaktuFormValues>();
+
+  const onSubmit = (data: PengaturanWaktuFormValues) => {
+    console.log(data.mulai instanceof Date);
+  };
+
+  return (
+    <Box
+      bg={useColorModeValue("white", "gray.800")}
+      borderWidth="1px"
+      borderRadius="lg"
+    >
+      <Container mx={7} my={7}>
+        <Text fontWeight={500} fontSize={"30px"} mb={5}>
+          Waktu Pemilihan
+        </Text>
+
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <FormControl
+            isInvalid={formState.errors?.mulai as unknown as boolean}
+          >
+            <FormLabel htmlFor="mulai">Waktu Mulai</FormLabel>
+            <Controller
+              name={"mulai"}
+              control={control}
+              render={({ field }) => (
+                <DatePicker
+                  placeholderText="Tetapkan waktu mulai"
+                  onChange={(date) => field.onChange(date)}
+                  selectedDate={field.value as Date | null}
+                  customStyles={{ width: "85%" }}
+                />
+              )}
+            />
+            <FormErrorMessage>
+              {formState.errors?.mulai?.message}
+            </FormErrorMessage>
+          </FormControl>
+
+          <FormControl
+            mt={4}
+            isInvalid={formState.errors?.selesai as unknown as boolean}
+          >
+            <FormLabel htmlFor="selesai">Waktu Selesai</FormLabel>
+            <Controller
+              name={"selesai"}
+              control={control}
+              render={({ field }) => (
+                <DatePicker
+                  placeholderText="Tetapkan waktu selesai"
+                  onChange={(date) => field.onChange(date)}
+                  selectedDate={field.value as Date | null}
+                  showTimeSelect
+                  dateFormat="MM/dd/yyyy h:mm aa"
+                  customStyles={{ width: "85%" }}
+                />
+              )}
+            />
+            <FormErrorMessage>
+              {formState.errors?.selesai?.message}
+            </FormErrorMessage>
+          </FormControl>
+
+          <Button
+            mt={4}
+            bg="green.600"
+            color="white"
+            _hover={{
+              bg: "green.800",
+            }}
+            isLoading={formState.isSubmitting}
+            type="submit"
+          >
+            Simpan
+          </Button>
+        </form>
+      </Container>
+    </Box>
   );
 };
 

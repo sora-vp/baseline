@@ -3,6 +3,9 @@ import { ChakraProvider } from "@chakra-ui/react";
 
 import type { AppProps } from "next/app";
 
+import "react-datepicker/dist/react-datepicker.css";
+import "@/component/DatePicker/chakra-support.css";
+
 function MyApp({ Component, pageProps }: AppProps) {
   return (
     <SWRConfig

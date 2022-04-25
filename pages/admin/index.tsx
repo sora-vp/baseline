@@ -38,7 +38,6 @@ const Admin = () => {
             bg={useColorModeValue("white", "gray.800")}
             borderWidth="1px"
             borderRadius="lg"
-            overflow="hidden"
           >
             <Container mx={7} my={7}>
               <Text fontWeight={500} fontSize={"30px"} mb={5}>

@@ -107,7 +107,7 @@ const Home: NextPage<HomeType> = ({ paslon, csrfToken }) => {
                   textAlign={"center"}
                 >
                   <Image
-                    src={`/uploads/${paslon.imgName}`}
+                    src={`/api/uploads/${paslon.imgName}`}
                     alt={`Gambar dari pasangan calon ${paslon.ketua} dan ${paslon.wakil}.`}
                   />
                   <Heading mt={2} fontSize={"3xl"} fontFamily={"body"}>

@@ -35,16 +35,25 @@ import { Types } from "mongoose";
 
 import { usePaslon } from "@/lib/hooks";
 
-import { commonSSRCallback } from "@/lib/csrf";
+import { getBaseUrl } from "@/lib/utils";
+import { ssrCallback } from "@/lib/csrf";
 import { GetServerSideProps } from "next";
 import Sidebar from "@/component/Sidebar";
 
-const Paslon = ({ csrfToken }: commonComponentInterface) => {
+import type { IPaslon } from "@/models/Paslon";
+
+type PaslonType = commonComponentInterface & {
+  paslon: IPaslon[];
+};
+
+const Paslon = ({ csrfToken, paslon: paslonFallback }: PaslonType) => {
   const toast = useToast();
   const cancelRef = useRef<HTMLButtonElement>(null!);
 
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const [paslon, { loading, mutate }] = usePaslon();
+  const [paslon, { loading, mutate }] = usePaslon({
+    fallbackData: paslonFallback,
+  });
 
   // Untuk keperluan hapus data
   const [currentID, setID] = useState<Types.ObjectId | null>(null);
@@ -132,7 +141,7 @@ const Paslon = ({ csrfToken }: commonComponentInterface) => {
                               <Td>{p.memilih} Orang</Td>
                               <Td>
                                 <img
-                                  src={`/uploads/${p.imgName}`}
+                                  src={`/api/uploads/${p.imgName}`}
                                   alt={`Gambar dari pasangan calon ${p.ketua} dan ${p.wakil}.`}
                                 />
                               </Td>
@@ -254,7 +263,22 @@ const Paslon = ({ csrfToken }: commonComponentInterface) => {
   );
 };
 
-export const getServerSideProps: GetServerSideProps<commonComponentInterface> =
-  commonSSRCallback;
+export const getServerSideProps: GetServerSideProps<PaslonType> = async ({
+  req,
+  res,
+}) => {
+  const baseUrl = getBaseUrl(req);
+  await ssrCallback({ req, res });
+
+  const response = await fetch(`${baseUrl}/api/admin/paslon`);
+  const { paslon } = await response.json();
+
+  return {
+    props: {
+      paslon,
+      csrfToken: (req as unknown as { csrfToken(): string }).csrfToken(),
+    },
+  };
+};
 
 export default Sidebar(Paslon);

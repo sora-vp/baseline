@@ -18,19 +18,29 @@ import {
   Legend,
 } from "recharts";
 
-import { commonSSRCallback } from "@/lib/csrf";
+import { getBaseUrl } from "@/lib/utils";
+import { ssrCallback } from "@/lib/csrf";
 import { GetServerSideProps } from "next";
 import { usePaslon } from "@/lib/hooks";
 import NextLink from "next/link";
 
+import type { IPaslon } from "@/models/Paslon";
+
 import Sidebar from "@/component/Sidebar";
 
-const Statistik = () => {
+type StatistikType = commonComponentInterface & {
+  paslon: IPaslon[];
+};
+
+const Statistik = ({ paslon: paslonFallback }: StatistikType) => {
   const [width, setWidth] = useState<number>(0);
   const [height, setHeight] = useState<number>(0);
   const container = useRef<HTMLDivElement>(null!);
 
-  const [paslon, { loading }] = usePaslon({ refreshInterval: 250 });
+  const [paslon, { loading }] = usePaslon({
+    refreshInterval: 250,
+    fallbackData: paslonFallback,
+  });
   const chartData = useMemo(
     () =>
       paslon?.map((pasangan) => ({
@@ -123,7 +133,22 @@ const Statistik = () => {
   );
 };
 
-export const getServerSideProps: GetServerSideProps<commonComponentInterface> =
-  commonSSRCallback;
+export const getServerSideProps: GetServerSideProps<StatistikType> = async ({
+  req,
+  res,
+}) => {
+  const baseUrl = getBaseUrl(req);
+  await ssrCallback({ req, res });
+
+  const response = await fetch(`${baseUrl}/api/admin/paslon`);
+  const { paslon } = await response.json();
+
+  return {
+    props: {
+      paslon,
+      csrfToken: (req as unknown as { csrfToken(): string }).csrfToken(),
+    },
+  };
+};
 
 export default Sidebar(Statistik);
