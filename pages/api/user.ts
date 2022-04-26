@@ -1,3 +1,4 @@
+import bcrypt from "bcrypt";
 import nextConnect from "next-connect";
 import auth from "@/middleware/auth";
 import { validateCsrf } from "@/lib/csrf";
@@ -66,6 +67,43 @@ handler
         break;
 
       case "UPDATE_PASSWORD":
+        const { lama, baru } = body;
+
+        if (!lama || !baru)
+          return res.status(400).json({
+            error: true,
+            message: "Diperlukan password lama dan yang baru!",
+          });
+
+        bcrypt.compare(lama, req.user.password, async (err, isMatch) => {
+          if (err)
+            res.status(500).json({
+              error: true,
+              message: (err as unknown as { toString(): string }).toString(),
+            });
+
+          if (!isMatch)
+            return res
+              .status(400)
+              .json({ error: true, message: "Password lama salah!" });
+
+          const salt = bcrypt.genSaltSync(10);
+          const hash = bcrypt.hashSync(baru, salt);
+
+          try {
+            await req.user.update({ password: hash });
+
+            res
+              .status(201)
+              .json({ error: false, message: "Password berhasil diperbarui!" });
+          } catch (e: unknown) {
+            res.status(500).json({
+              error: true,
+              message: (e as unknown as { toString(): string }).toString(),
+            });
+          }
+        });
+
         break;
       default:
         return res

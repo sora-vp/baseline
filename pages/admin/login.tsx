@@ -38,9 +38,7 @@ const Login: NextPage<commonComponentInterface> = ({ csrfToken }) => {
     email: Yup.string()
       .required("Diperlukan Email!")
       .email("Email tidak valid!"),
-    password: Yup.string()
-      .required("Diperlukan Kata Sandi!")
-      .min(6, "Kata sandi setidaknya memiliki panjang 6 karakter!"),
+    password: Yup.string().required("Diperlukan Kata Sandi!"),
   });
 
   const [user, { mutate }] = useUser();
@@ -101,6 +99,10 @@ const Login: NextPage<commonComponentInterface> = ({ csrfToken }) => {
       }
     }
   };
+
+  useEffect(() => {
+    Router.prefetch("/admin");
+  }, []);
 
   useEffect(() => {
     if (user) Router.push("/admin");

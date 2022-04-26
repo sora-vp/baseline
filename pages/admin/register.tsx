@@ -119,6 +119,10 @@ const Register: NextPage<commonComponentInterface> = ({ csrfToken }) => {
   };
 
   useEffect(() => {
+    Router.prefetch("/admin");
+  }, []);
+
+  useEffect(() => {
     if (user) Router.push("/admin");
   }, [user]);
 

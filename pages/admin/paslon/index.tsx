@@ -96,13 +96,20 @@ const Paslon = ({
           >
             <VStack align="stretch" px={2} py={2}>
               <HStack>
-                <NextLink href="/admin/paslon/tambah" passHref>
+                <NextLink
+                  href="/admin/paslon/tambah"
+                  passHref={!settings?.canVote as unknown as boolean}
+                >
                   <Button
                     isDisabled={settings?.canVote as unknown as boolean}
                     borderRadius="md"
                     bg="blue.500"
                     color="white"
                     as={"a"}
+                    onClick={(e: { preventDefault: () => void }) => {
+                      if (settings?.canVote as unknown as boolean)
+                        e.preventDefault();
+                    }}
                   >
                     Tambah Paslon Baru
                   </Button>
