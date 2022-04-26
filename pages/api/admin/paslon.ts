@@ -15,12 +15,8 @@ import type { IPaslon } from "@/models/Paslon";
 
 import type { NextApiRequest, NextApiResponse } from "next";
 
-interface requestInterface extends NextApiRequest {
-  user: any;
-}
-
 const handler = nextConnect<
-  requestInterface,
+  { user: any } & NextApiRequest,
   NextApiResponse<ApiErrorInterface | { paslon: IPaslon[] | null }>
 >();
 

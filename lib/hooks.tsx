@@ -1,8 +1,9 @@
 import useSWR, { KeyedMutator } from "swr";
 import { DateTime } from "luxon";
 
-import type { IPaslon } from "@/models/Paslon";
 import type { SWRConfiguration } from "swr";
+import type { IPaslon } from "@/models/Paslon";
+import type { TModelApiResponse } from "@/lib/settings";
 
 export type UserType = { email: string; username: string; date: DateTime };
 export type useUserType = [
@@ -41,4 +42,17 @@ export function usePaslon(swrConfig?: SWRConfiguration): usePaslonType {
   const loading = !data;
   const paslon = data?.paslon;
   return [paslon, { mutate, loading }];
+}
+
+export type useSettingsType = [
+  TModelApiResponse,
+  {
+    mutate: KeyedMutator<TModelApiResponse>;
+  }
+];
+
+export function useSettings(swrConfig?: SWRConfiguration): useSettingsType {
+  const { data, mutate } = useSWR("/api/settings", swrConfig);
+
+  return [data, { mutate }];
 }
