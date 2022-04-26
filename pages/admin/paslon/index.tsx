@@ -33,7 +33,7 @@ import Head from "next/head";
 import NextLink from "next/link";
 import { Types } from "mongoose";
 
-import { usePaslon } from "@/lib/hooks";
+import { usePaslon, useSettings } from "@/lib/hooks";
 
 import { getBaseUrl } from "@/lib/utils";
 import { ssrCallback } from "@/lib/csrf";
@@ -41,18 +41,27 @@ import { GetServerSideProps } from "next";
 import Sidebar from "@/component/Sidebar";
 
 import type { IPaslon } from "@/models/Paslon";
+import type { TModelApiResponse } from "@/lib/settings";
 
 type PaslonType = commonComponentInterface & {
   paslon: IPaslon[];
+  settingsFallback: TModelApiResponse | null;
 };
 
-const Paslon = ({ csrfToken, paslon: paslonFallback }: PaslonType) => {
+const Paslon = ({
+  csrfToken,
+  paslon: paslonFallback,
+  settingsFallback,
+}: PaslonType) => {
   const toast = useToast();
   const cancelRef = useRef<HTMLButtonElement>(null!);
 
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [paslon, { loading, mutate }] = usePaslon({
     fallbackData: paslonFallback,
+  });
+  const [settings] = useSettings({
+    fallbackData: settingsFallback,
   });
 
   // Untuk keperluan hapus data
@@ -89,6 +98,7 @@ const Paslon = ({ csrfToken, paslon: paslonFallback }: PaslonType) => {
               <HStack>
                 <NextLink href="/admin/paslon/tambah" passHref>
                   <Button
+                    isDisabled={settings?.canVote as unknown as boolean}
                     borderRadius="md"
                     bg="blue.500"
                     color="white"
@@ -147,6 +157,9 @@ const Paslon = ({ csrfToken, paslon: paslonFallback }: PaslonType) => {
                               </Td>
                               <Td>
                                 <Button
+                                  isDisabled={
+                                    settings?.canVote as unknown as boolean
+                                  }
                                   bg="orange.500"
                                   _hover={{ bg: "orange.700" }}
                                   color="white"
@@ -154,6 +167,9 @@ const Paslon = ({ csrfToken, paslon: paslonFallback }: PaslonType) => {
                                   Edit
                                 </Button>
                                 <Button
+                                  isDisabled={
+                                    settings?.canVote as unknown as boolean
+                                  }
                                   bg="red.500"
                                   _hover={{ bg: "red.700" }}
                                   ml={2}
@@ -189,7 +205,7 @@ const Paslon = ({ csrfToken, paslon: paslonFallback }: PaslonType) => {
       </VStack>
       <AlertDialog
         isCentered
-        isOpen={isOpen}
+        isOpen={(!(settings?.canVote as unknown) as boolean) && isOpen}
         leastDestructiveRef={cancelRef}
         onClose={() => {
           if (!isSubmitting) {
@@ -270,11 +286,14 @@ export const getServerSideProps: GetServerSideProps<PaslonType> = async ({
   const baseUrl = getBaseUrl(req);
   await ssrCallback({ req, res });
 
-  const response = await fetch(`${baseUrl}/api/admin/paslon`);
-  const { paslon } = await response.json();
+  const [{ paslon }, pengaturan] = await Promise.all([
+    fetch(`${baseUrl}/api/vote`).then((res) => res.json()),
+    fetch(`${baseUrl}/api/settings`).then((res) => res.json()),
+  ]);
 
   return {
     props: {
+      settingsFallback: pengaturan ? pengaturan : null,
       paslon: paslon ? paslon : null,
       csrfToken: (req as unknown as { csrfToken(): string }).csrfToken(),
     },
