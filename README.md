@@ -1,39 +1,34 @@
-# Custom Express Server example
+This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
-Most of the time the default Next.js server will be enough but there are times you'll want to run your own server to customize routes or other kinds of app behavior. Next.js provides [Custom server and routing](https://github.com/vercel/next.js#custom-server-and-routing) options, so you can customize as much as you want.
+## Getting Started
 
-Because the Next.js server is just a node.js module you can combine it with any other part of the node.js ecosystem. In this case we are using express to build a custom router on top of Next.
-
-This example demonstrates a server that serves the component living in `pages/a.js` when the route `/b` is requested and `pages/b.js` when the route `/a` is accessed. This is obviously a non-standard routing strategy. You can see how this custom routing is being made inside `server.js`.
-
-## How to use
-
-Execute [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app) with [npm](https://docs.npmjs.com/cli/init) or [Yarn](https://yarnpkg.com/lang/en/docs/cli/create/) to bootstrap the example:
+First, run the development server:
 
 ```bash
-npx create-next-app --example custom-server-express custom-server-express-app
+npm run dev
 # or
-yarn create next-app --example custom-server-express custom-server-express-app
+yarn dev
 ```
 
-### Populate body property
+Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-Without the use of the body-parser package `req.body` will return undefined. To get express to populate `req.body` you need to install the body parser package and call the package within server.js.
+You can start editing the page by modifying `pages/index.tsx`. The page auto-updates as you edit the file.
 
-Install the package:
+[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.ts`.
 
-```bash
-npm install body-parser
-```
+The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
 
-Use the package within server.js:
+## Learn More
 
-```bash
-const bodyParser = require('body-parser');
+To learn more about Next.js, take a look at the following resources:
 
-app.prepare().then(() => {
-  const server = express();
-  server.use(bodyParser.urlencoded({ extended: true }))
-  server.use(bodyParser.json())
-})
-```
+- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
+- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+
+You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+
+## Deploy on Vercel
+
+The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+
+Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
