@@ -8,7 +8,9 @@ const ROOT_PATH = path.join(path.resolve(), "public/uploads");
 
 export default function handler(req: NextApiRequest, res: NextApiResponse) {
   const { filename } = req.query as unknown as { filename: string };
-  const filePath = path.join(ROOT_PATH, filename);
+
+  const safeSuffix = path.normalize(filename).replace(/^(\.\.(\/|\\|$))+/, "");
+  const filePath = path.join(ROOT_PATH, safeSuffix);
 
   if (!fs.existsSync(filePath))
     return res.status(404).json({ error: true, message: "Not Found" });
