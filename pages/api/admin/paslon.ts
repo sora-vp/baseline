@@ -78,7 +78,7 @@ handler
     });
   })
   .use(validateCsrf)
-  .post(async (req, res) => {
+  .post((req, res) => {
     const form = new formidable.IncomingForm();
 
     form.parse(req, async (err, fields, files) => {
@@ -144,7 +144,90 @@ handler
       }
     });
   })
-  .delete(async (req, res) => {
+  .put((req, res) => {
+    const form = new formidable.IncomingForm();
+
+    form.parse(req, async (err, fields, files) => {
+      const { ketua, wakil, timeZone, id } = fields as unknown as {
+        ketua: string;
+        wakil: string;
+        timeZone: string;
+        id: Types.ObjectId;
+      };
+
+      if (!id || !ketua || !wakil || !timeZone)
+        return res.status(400).json({
+          error: true,
+          message: "Diperlukan id paslon, ketua, wakil, dan zona waktu!",
+        });
+
+      if (!Types.ObjectId.isValid(id))
+        return res
+          .status(400)
+          .json({ error: true, message: "Parameter id paslon tidak valid!" });
+
+      if (!DateTime.now().setZone(timeZone).isValid) {
+        return res.status(400).json({
+          error: true,
+          message: "Zona waktu tidak valid!",
+        });
+      }
+
+      const inVoteCondition = await canVoteNow(timeZone);
+
+      if (inVoteCondition)
+        return res.status(400).json({
+          error: true,
+          message: "Tidak bisa mengubah paslon pada saat kondisi pemilihan",
+        });
+
+      try {
+        const paslon = await Paslon.findById(id);
+
+        if (!paslon)
+          return res
+            .status(404)
+            .json({ error: true, message: "Paslon tidak ditemukan!" });
+
+        const image = files.image as unknown as grabableImageType;
+
+        const splitted = image && image.originalFilename.split(".");
+        const ext = image && splitted[splitted.length - 1];
+        const newName = image && `${image.newFilename}.${ext}`;
+
+        if (image) {
+          const oldImagePath = path.join(ROOT_PATH, paslon.imgName);
+          if (fs.existsSync(oldImagePath)) await fsp.unlink(oldImagePath);
+
+          const newPath = image && path.join(ROOT_PATH, newName);
+
+          mv(image.filepath, newPath, { mkdirp: true }, (err) => {
+            if (err)
+              return res
+                .status(500)
+                .json({ error: true, message: "Gagal mengupload gambar baru" });
+          });
+        }
+
+        await paslon.update({
+          ketua,
+          wakil,
+          imgName: image ? newName : paslon.imgName,
+        });
+
+        res.status(200).json({
+          error: false,
+          message: "Berhasil mengedit paslon!",
+        });
+      } catch (e: unknown) {
+        res.status(500).json({
+          error: true,
+          message: (e as unknown as { toString(): string }).toString(),
+        });
+      }
+    });
+  })
+  .delete((req, res) => {
     const form = new formidable.IncomingForm();
 
     form.parse(req, async (err, fields) => {

@@ -39,7 +39,7 @@ const UbahNama = ({ csrfToken }: commonComponentInterface) => {
 
   const validationSchema = Yup.object().shape({
     nama: Yup.string()
-      .required("Diperlukan Nama Ketua!")
+      .required("Diperlukan Nama Lengkap!")
       .matches(
         validNameRegex,
         "Nama hanya berisikan huruf alphabet yang valid!"
