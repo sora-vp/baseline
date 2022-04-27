@@ -13,21 +13,17 @@ import {
   FormLabel,
   Input,
   Button,
-
-  // Image Form
-  AspectRatio,
-  Stack,
-  Heading,
 } from "@chakra-ui/react";
 import { yupResolver } from "@hookform/resolvers/yup";
+import { Controller, useForm } from "react-hook-form";
 import { useState, useEffect } from "react";
-import { useForm } from "react-hook-form";
 import Router from "next/router";
 import NextLink from "next/link";
 import { DateTime } from "luxon";
 import Head from "next/head";
 import * as Yup from "yup";
 
+import InputImageBox from "@/component/InputImageBox";
 import { commonSSRCallback } from "@/lib/csrf";
 import { GetServerSideProps } from "next";
 import Sidebar from "@/component/Sidebar";
@@ -85,7 +81,7 @@ const HalamanTambah = ({ csrfToken }: commonComponentInterface) => {
       ),
   });
 
-  const { handleSubmit, register, formState, reset, watch } =
+  const { handleSubmit, register, formState, control, reset, watch } =
     useForm<FormValues>({
       resolver: yupResolver(validationSchema),
     });
@@ -185,6 +181,7 @@ const HalamanTambah = ({ csrfToken }: commonComponentInterface) => {
                   <Input
                     type="text"
                     placeholder="Masukan Nama Ketua"
+                    isDisabled={formState.isSubmitting}
                     {...register("ketua")}
                   />
                   <FormErrorMessage>
@@ -198,6 +195,7 @@ const HalamanTambah = ({ csrfToken }: commonComponentInterface) => {
                   <FormLabel htmlFor="wakil">Nama Wakil Ketua</FormLabel>
                   <Input
                     type="text"
+                    isDisabled={formState.isSubmitting}
                     placeholder="Masukan Nama Wakil Ketua"
                     {...register("wakil")}
                   />
@@ -209,69 +207,23 @@ const HalamanTambah = ({ csrfToken }: commonComponentInterface) => {
                   mt={6}
                   isInvalid={formState.errors?.image as unknown as boolean}
                 >
-                  <AspectRatio ratio={1}>
-                    <Box
-                      borderColor="gray.300"
-                      borderStyle="dashed"
-                      borderWidth="2px"
-                      rounded="md"
-                      shadow="sm"
-                      role="group"
-                      transition="all 150ms ease-in-out"
-                      _hover={{
-                        shadow: "md",
-                      }}
-                    >
-                      <Box position="relative" height="85%" width="100%">
-                        <Box
-                          position="absolute"
-                          top="0"
-                          left="0"
-                          height="100%"
-                          width="100%"
-                          display="flex"
-                          flexDirection="column"
-                        >
-                          <Stack
-                            height="100%"
-                            width="100%"
-                            display="flex"
-                            alignItems="center"
-                            justify="center"
-                            spacing="4"
-                          >
-                            {imgFromInput !== null ? (
-                              <img
-                                src={imgFromInput}
-                                alt={"Gambar input dari administrator."}
-                              />
-                            ) : (
-                              <Stack p="8" textAlign="center" spacing="1">
-                                <Heading fontSize="lg" fontWeight="bold">
-                                  Seret gambar kesini
-                                </Heading>
-                                <Text fontWeight="light">
-                                  atau klik disini untuk mengunggah
-                                </Text>
-                              </Stack>
-                            )}
-                          </Stack>
-                        </Box>
-                        <Input
-                          type="file"
-                          height="100%"
-                          width="100%"
-                          position="absolute"
-                          top="0"
-                          left="0"
-                          opacity="0"
-                          aria-hidden="true"
-                          accept="image/*"
-                          {...register("image")}
-                        />
-                      </Box>
-                    </Box>
-                  </AspectRatio>
+                  <Controller
+                    name={"image"}
+                    control={control}
+                    render={({ field }) => (
+                      <InputImageBox
+                        imgFromInput={imgFromInput}
+                        isDisabled={formState.isSubmitting}
+                        count={1}
+                        onChange={(e) =>
+                          field.onChange(
+                            (e.target as unknown as { files: File }).files
+                          )
+                        }
+                        onImageDropped={(img) => field.onChange(img)}
+                      />
+                    )}
+                  />
                   <FormErrorMessage>
                     {formState.errors?.image?.message}
                   </FormErrorMessage>
