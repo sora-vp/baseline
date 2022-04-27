@@ -11,6 +11,8 @@
   --monthBackground: var(--chakra-colors-white);
   --text: var(--chakra-colors-black);
   --negative-text: var(--chakra-colors-white);
+  --disabled-date-text: #00000059;
+  --disabled-time-text: #0000005c;
 }
 .dark-theme {
   --light-gray: var(--chakra-colors-gray-600);
@@ -25,6 +27,8 @@
   --monthBackground: var(--chakra-colors-gray-700);
   --text: var(--chakra-colors-gray-200);
   --negative-text: var(--chakra-colors-black);
+  --disabled-date-text: #ffffff70;
+  --disabled-time-text: #ffffff30;
 }
 
 .light-theme-original {
@@ -201,9 +205,9 @@
 }
 
 .react-datepicker__day--disabled {
-  color: #ffffff70;
+  color: var(--disabled-date-text);
 }
 
 .react-datepicker__time-list-item--disabled {
-  color: #ffffff30 !important;
+  color: var(--disabled-date-text) !important;
 }
