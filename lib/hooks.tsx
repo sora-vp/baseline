@@ -16,8 +16,8 @@ export type useUserType = [
   }
 ];
 
-export function useUser(): useUserType {
-  const { data, mutate } = useSWR("/api/user");
+export function useUser(swrConfig?: SWRConfiguration): useUserType {
+  const { data, mutate } = useSWR("/api/user", swrConfig);
 
   const loading = !data;
   const user: UserType = data?.user

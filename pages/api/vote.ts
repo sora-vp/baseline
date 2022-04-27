@@ -1,3 +1,4 @@
+import { DateTime } from "luxon";
 import { Types } from "mongoose";
 import nextConnect from "next-connect";
 import { connectDatabase } from "@/lib/db";
@@ -6,13 +7,15 @@ import {
   type SafePaslonTransformatorInterface,
 } from "@/lib/valueTransformator";
 import { validateCsrf } from "@/lib/csrf";
+import settingsLib from "@/lib/settings";
+import auth from "@/middleware/auth";
 
 import Paslon from "@/models/Paslon";
 
 import type { NextApiRequest, NextApiResponse } from "next";
 
 const handler = nextConnect<
-  NextApiRequest,
+  NextApiRequest & { user: any },
   NextApiResponse<
     { paslon: SafePaslonTransformatorInterface[] | null } | ApiErrorInterface
   >
@@ -30,17 +33,62 @@ handler
       paslon: paslon.length > 0 ? safePaslonTransformator(paslon) : null,
     });
   })
+  .use(auth)
+  .use(async (req, res, next) => {
+    if (req.user)
+      res.status(401).json({
+        error: true,
+        message: "Anda sudah terautentikasi!",
+      });
+    else next();
+  })
   .use(validateCsrf)
   .post(async (req, res) => {
-    const { id } = req.body;
+    const { id, timeZone } = req.body;
 
-    if (!id)
+    if (!id || !timeZone)
       return res.status(400).json({
         error: true,
-        message: "Anda harus menambahkan id untuk memilih",
+        message: "Anda harus mengirimkan id dan zona waktu untuk memilih!",
+      });
+
+    if (!DateTime.now().setZone(timeZone).isValid)
+      return res.status(400).json({
+        error: true,
+        message: "Zona waktu tidak valid!",
       });
 
     if (Types.ObjectId.isValid(id)) {
+      const settings = await settingsLib.read();
+
+      const currentTime = DateTime.now().setZone(timeZone).toJSDate().getTime();
+      const timeConfig = {
+        mulai: settings?.startTime
+          ? DateTime.fromISO(settings?.startTime as unknown as string)
+              .setZone(timeZone)
+              .toJSDate()
+              .getTime()
+          : false,
+        selesai: settings?.endTime
+          ? DateTime.fromISO(settings?.endTime as unknown as string)
+              .setZone(timeZone)
+              .toJSDate()
+              .getTime()
+          : false,
+      };
+
+      const canVoteNow =
+        timeConfig?.mulai <= currentTime &&
+        timeConfig?.selesai >= currentTime &&
+        settings?.canVote !== null &&
+        settings?.canVote !== false;
+
+      if (!canVoteNow)
+        return res.status(400).json({
+          error: true,
+          message: "Belum bisa memilih untuk saat ini!",
+        });
+
       const paslon = await Paslon.findById(id);
 
       if (!paslon)

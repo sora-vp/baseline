@@ -35,7 +35,7 @@ import { IconType } from "react-icons";
 import LogoutButton from "./LogoutButton";
 import ModeToggler from "./ModeToggler";
 
-import { useUser } from "@/lib/hooks";
+import { useUser, type UserType } from "@/lib/hooks";
 
 interface LinkItemProps {
   name: string;
@@ -49,10 +49,14 @@ const LinkItems: Array<LinkItemProps> = [
   { name: "Pengaturan", icon: FiSettings, href: "/admin/pengaturan" },
 ];
 
+type SimpleSidebarType = {
+  userFallback?: UserType;
+} & JSX.IntrinsicAttributes &
+  commonComponentInterface;
+
 export const SimpleSidebar =
-  (WrappedComponent: ElementType) =>
-  (props: JSX.IntrinsicAttributes & commonComponentInterface) => {
-    const [user] = useUser();
+  (WrappedComponent: ElementType) => (props: SimpleSidebarType) => {
+    const [user] = useUser({ fallbackData: props?.userFallback });
 
     const { isOpen, onOpen, onClose } = useDisclosure();
     const [height, setHeight] = useState<number>(0);

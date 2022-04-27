@@ -2,12 +2,14 @@ import fs from "fs";
 import mv from "mv";
 import path from "path";
 import fsp from "fs/promises";
+import { DateTime } from "luxon";
 import { Types } from "mongoose";
 import formidable from "formidable";
 import nextConnect from "next-connect";
 
 import auth from "@/middleware/auth";
 import Paslon from "@/models/Paslon";
+import settingsLib from "@/lib/settings";
 import { validateCsrf } from "@/lib/csrf";
 import { connectDatabase } from "@/lib/db";
 
@@ -27,6 +29,33 @@ type grabableImageType = {
 };
 
 const ROOT_PATH = path.join(path.resolve(), "public/uploads");
+
+const canVoteNow = async (timeZone: string) => {
+  const settings = await settingsLib.read();
+
+  const currentTime = DateTime.now().setZone(timeZone).toJSDate().getTime();
+  const timeConfig = {
+    mulai: settings?.startTime
+      ? DateTime.fromISO(settings?.startTime as unknown as string)
+          .setZone(timeZone)
+          .toJSDate()
+          .getTime()
+      : false,
+    selesai: settings?.endTime
+      ? DateTime.fromISO(settings?.endTime as unknown as string)
+          .setZone(timeZone)
+          .toJSDate()
+          .getTime()
+      : false,
+  };
+
+  return (
+    timeConfig?.mulai <= currentTime &&
+    timeConfig?.selesai >= currentTime &&
+    settings?.canVote !== null &&
+    settings?.canVote !== false
+  );
+};
 
 handler
   .use(auth)
@@ -53,12 +82,31 @@ handler
     const form = new formidable.IncomingForm();
 
     form.parse(req, async (err, fields, files) => {
-      const { ketua, wakil } = fields;
+      const { ketua, wakil, timeZone } = fields as {
+        ketua: string;
+        wakil: string;
+        timeZone: string;
+      };
 
-      if (!ketua || !wakil || !files.image)
+      if (!ketua || !wakil || !files.image || !timeZone)
         return res.status(400).json({
           error: true,
-          message: "Diperlukan nama ketua, wakil, dan gambarnya!",
+          message: "Diperlukan nama ketua, wakil, gambar, dan zona waktu!",
+        });
+
+      if (!DateTime.now().setZone(timeZone).isValid) {
+        return res.status(400).json({
+          error: true,
+          message: "Zona waktu tidak valid!",
+        });
+      }
+
+      const inVoteCondition = await canVoteNow(timeZone);
+
+      if (inVoteCondition)
+        return res.status(400).json({
+          error: true,
+          message: "Tidak bisa menambahkan paslon pada saat kondisi pemilihan",
         });
 
       const image = files.image as unknown as grabableImageType;
@@ -100,12 +148,30 @@ handler
     const form = new formidable.IncomingForm();
 
     form.parse(req, async (err, fields) => {
-      const { id } = fields;
+      const { id, timeZone } = fields as unknown as {
+        id: Types.ObjectId;
+        timeZone: string;
+      };
 
-      if (!id)
+      if (!id || !timeZone)
         return res.status(400).json({
           error: true,
-          message: "Diperlukan id paslon!",
+          message: "Diperlukan id paslon dan zona waktu!",
+        });
+
+      if (!DateTime.now().setZone(timeZone).isValid) {
+        return res.status(400).json({
+          error: true,
+          message: "Zona waktu tidak valid!",
+        });
+      }
+
+      const inVoteCondition = await canVoteNow(timeZone);
+
+      if (inVoteCondition)
+        return res.status(400).json({
+          error: true,
+          message: "Tidak bisa menghapus paslon pada saat kondisi pemilihan",
         });
 
       if (Types.ObjectId.isValid(id as unknown as string)) {

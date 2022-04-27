@@ -6,7 +6,6 @@ export interface IPaslon {
   wakil: string;
   imgName: string;
   memilih: number;
-  color: string;
 }
 
 export interface PaslonModel extends Model<IPaslon> {
@@ -36,11 +35,6 @@ const PaslonSchema = new Schema<IPaslon, PaslonModel>({
     required: false,
     default: 0,
   },
-  color: {
-    type: String,
-    required: false,
-    default: () => getRandomColor(),
-  },
 });
 PaslonSchema.static("upvote", async function upvote(paslon_id: Types.ObjectId) {
   const paslon = await this.findByIdAndUpdate(paslon_id, {
@@ -48,13 +42,6 @@ PaslonSchema.static("upvote", async function upvote(paslon_id: Types.ObjectId) {
   });
   return paslon;
 });
-
-function getRandomColor() {
-  const letters = "0123456789ABCDEF";
-  return `#${Array.from({ length: 6 })
-    .map(() => letters[Math.floor(Math.random() * 16)])
-    .join("")}`;
-}
 
 export default (mongoose.models.Paslon as PaslonModel) ||
   mongoose.model<IPaslon, PaslonModel>("Paslon", PaslonSchema);

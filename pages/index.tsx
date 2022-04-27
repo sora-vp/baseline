@@ -35,10 +35,12 @@ import { ssrCallback } from "@/lib/csrf";
 
 import type { SafePaslonTransformatorInterface } from "@/lib/valueTransformator";
 import type { TModelApiResponse } from "@/lib/settings";
+import type { UserType } from "@/lib/hooks";
 
 type HomeType = {
   paslon: SafePaslonTransformatorInterface[];
   settingsFallback: TModelApiResponse | null;
+  userFallback: UserType | null;
 };
 
 let rafID: number;
@@ -46,6 +48,7 @@ let rafID: number;
 const Home: NextPage<HomeType & commonComponentInterface> = ({
   paslon,
   csrfToken,
+  userFallback,
   settingsFallback,
 }) => {
   const { data } = useSWR<{ paslon: SafePaslonTransformatorInterface[] }>(
@@ -56,7 +59,9 @@ const Home: NextPage<HomeType & commonComponentInterface> = ({
       },
     }
   );
-  const [user] = useUser();
+  const [user] = useUser({
+    fallbackData: userFallback,
+  });
   const [settings] = useSettings({
     fallbackData: settingsFallback,
   });
@@ -227,6 +232,7 @@ const Home: NextPage<HomeType & commonComponentInterface> = ({
                         method: "POST",
                         body: JSON.stringify({
                           id: currentID,
+                          timeZone: DateTime.local().zoneName,
                         }),
                         headers: {
                           "Content-Type": "application/json",
@@ -249,7 +255,7 @@ const Home: NextPage<HomeType & commonComponentInterface> = ({
 
                       sendRef.current.setAttribute("disabled", "");
 
-                      if (settings?.reloadAfterVote)
+                      if (!result.error && settings?.reloadAfterVote)
                         setTimeout(() => Router.reload(), 500);
                     }}
                     ml={3}
@@ -313,13 +319,20 @@ export const getServerSideProps: GetServerSideProps<
   const baseUrl = getBaseUrl(req);
   await ssrCallback({ req, res });
 
-  const [{ paslon }, pengaturan] = await Promise.all([
+  const [{ paslon }, pengaturan, { user }] = await Promise.all([
     fetch(`${baseUrl}/api/vote`).then((res) => res.json()),
     fetch(`${baseUrl}/api/settings`).then((res) => res.json()),
+    fetch(`${baseUrl}/api/user`, {
+      credentials: "include",
+      headers: {
+        Cookie: req.headers.cookie ? req.headers.cookie : "",
+      },
+    }).then((res) => res.json()),
   ]);
 
   return {
     props: {
+      userFallback: user,
       settingsFallback: pengaturan ? pengaturan : null,
       paslon,
       csrfToken: (req as unknown as { csrfToken(): string }).csrfToken(),

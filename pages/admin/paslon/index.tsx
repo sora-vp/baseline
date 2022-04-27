@@ -32,6 +32,7 @@ import {
 import Head from "next/head";
 import NextLink from "next/link";
 import { Types } from "mongoose";
+import { DateTime } from "luxon";
 
 import { usePaslon, useSettings } from "@/lib/hooks";
 
@@ -105,11 +106,6 @@ const Paslon = ({
                     borderRadius="md"
                     bg="blue.500"
                     color="white"
-                    as={"a"}
-                    onClick={(e: { preventDefault: () => void }) => {
-                      if (settings?.canVote as unknown as boolean)
-                        e.preventDefault();
-                    }}
                   >
                     Tambah Paslon Baru
                   </Button>
@@ -163,16 +159,23 @@ const Paslon = ({
                                 />
                               </Td>
                               <Td>
-                                <Button
-                                  isDisabled={
-                                    settings?.canVote as unknown as boolean
+                                <NextLink
+                                  href={`/admin/paslon/edit/${p._id}`}
+                                  passHref={
+                                    !settings?.canVote as unknown as boolean
                                   }
-                                  bg="orange.500"
-                                  _hover={{ bg: "orange.700" }}
-                                  color="white"
                                 >
-                                  Edit
-                                </Button>
+                                  <Button
+                                    isDisabled={
+                                      settings?.canVote as unknown as boolean
+                                    }
+                                    bg="orange.500"
+                                    _hover={{ bg: "orange.700" }}
+                                    color="white"
+                                  >
+                                    Edit
+                                  </Button>
+                                </NextLink>
                                 <Button
                                   isDisabled={
                                     settings?.canVote as unknown as boolean
@@ -182,8 +185,10 @@ const Paslon = ({
                                   ml={2}
                                   color="white"
                                   onClick={() => {
-                                    setID(p._id);
-                                    onOpen();
+                                    if (!settings.canVote) {
+                                      setID(p._id);
+                                      onOpen();
+                                    }
                                   }}
                                 >
                                   Hapus
@@ -243,36 +248,42 @@ const Paslon = ({
                 color="white"
                 disabled={isSubmitting}
                 onClick={async () => {
-                  setSubmit(true);
+                  if (!settings.canVote) {
+                    setSubmit(true);
 
-                  let formData = new FormData();
-                  formData.append("id", currentID as unknown as string);
+                    let formData = new FormData();
 
-                  const response = await fetch("/api/admin/paslon", {
-                    method: "DELETE",
-                    body: formData,
-                    headers: {
-                      "CSRF-Token": csrfToken,
-                    },
-                  });
+                    formData.append("id", currentID as unknown as string);
+                    formData.append("timeZone", DateTime.local().zoneName);
 
-                  const result = await response.json();
-
-                  setSubmit(false);
-                  onClose();
-
-                  if (!result.error)
-                    mutate({
-                      paslon: paslon!.filter((p) => p._id !== currentID),
+                    const response = await fetch("/api/admin/paslon", {
+                      method: "DELETE",
+                      body: formData,
+                      headers: {
+                        "CSRF-Token": csrfToken,
+                      },
                     });
 
-                  toast({
-                    description: result.message,
-                    status: result.error ? "error" : "success",
-                    duration: 6000,
-                    position: "top-right",
-                    isClosable: true,
-                  });
+                    const result = await response.json();
+
+                    setSubmit(false);
+                    onClose();
+
+                    if (!result.error)
+                      mutate({
+                        paslon: paslon!.filter((p) => p._id !== currentID),
+                      });
+
+                    toast({
+                      description: result.message,
+                      status: result.error ? "error" : "success",
+                      duration: 6000,
+                      position: "top-right",
+                      isClosable: true,
+                    });
+                  } else {
+                    setSubmit(false);
+                  }
                 }}
                 ml={3}
               >

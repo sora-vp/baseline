@@ -11,15 +11,20 @@ import {
 import Head from "next/head";
 import NextLink from "next/link";
 
-import { commonSSRCallback } from "@/lib/csrf";
+import { getBaseUrl } from "@/lib/utils";
+import { ssrCallback } from "@/lib/csrf";
 import { GetServerSideProps } from "next";
 import { formatTime } from "@/lib/utils";
-import { useUser } from "@/lib/hooks";
+import { useUser, type UserType } from "@/lib/hooks";
 
 import Sidebar from "@/component/Sidebar";
 
-const Admin = () => {
-  const [user] = useUser();
+type DashboardType = {
+  userFallback: UserType;
+} & commonComponentInterface;
+
+const Admin = ({ userFallback }: DashboardType) => {
+  const [user] = useUser({ fallbackData: userFallback });
 
   return (
     <>
@@ -87,7 +92,36 @@ const Admin = () => {
   );
 };
 
-export const getServerSideProps: GetServerSideProps<commonComponentInterface> =
-  commonSSRCallback;
+export const getServerSideProps: GetServerSideProps<DashboardType> = async ({
+  req,
+  res,
+}) => {
+  const baseUrl = getBaseUrl(req);
+  await ssrCallback({ req, res });
+
+  const response = await fetch(`${baseUrl}/api/user`, {
+    credentials: "include",
+    headers: {
+      Cookie: req.headers.cookie ? req.headers.cookie : "",
+    },
+  });
+  const { user } = await response.json();
+
+  if (!user) {
+    return {
+      redirect: {
+        permanent: false,
+        destination: "/admin/login",
+      },
+    };
+  }
+
+  return {
+    props: {
+      userFallback: user,
+      csrfToken: (req as unknown as { csrfToken(): string }).csrfToken(),
+    },
+  };
+};
 
 export default Sidebar(Admin);

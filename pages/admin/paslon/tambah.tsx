@@ -24,6 +24,7 @@ import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import Router from "next/router";
 import NextLink from "next/link";
+import { DateTime } from "luxon";
 import Head from "next/head";
 import * as Yup from "yup";
 
@@ -118,6 +119,8 @@ const HalamanTambah = ({ csrfToken }: commonComponentInterface) => {
   const onSubmit = async (data: FormValues) => {
     let formData = new FormData();
     const keys = Object.keys(data);
+
+    formData.append("timeZone", DateTime.local().zoneName);
 
     for (const key of keys) {
       if (key === "image")
