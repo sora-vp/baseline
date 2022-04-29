@@ -52,7 +52,7 @@ handler
           });
 
         try {
-          await req.user.update({ username: nama });
+          await req.user.updateOne({ username: nama });
 
           res
             .status(201)
@@ -91,7 +91,7 @@ handler
           const hash = bcrypt.hashSync(baru, salt);
 
           try {
-            await req.user.update({ password: hash });
+            await req.user.updateOne({ password: hash });
 
             res
               .status(201)

@@ -209,7 +209,7 @@ handler
           });
         }
 
-        await paslon.update({
+        await paslon.updateOne({
           ketua,
           wakil,
           imgName: image ? newName : paslon.imgName,

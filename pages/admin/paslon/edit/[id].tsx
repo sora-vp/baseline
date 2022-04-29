@@ -82,7 +82,7 @@ const EditPaslonWithID = ({
     image: Yup.mixed()
       .test("fileSize", "Ukuran gambar maksimal adalah 2MB!", (value) => {
         // Gakpapa kalo gambarnya kosong
-        if (value && value.length < 1) return true;
+        if (value === undefined) return true;
         else
           return (
             value && value.length > 0 && value[0] && value[0].size <= 200000
@@ -93,9 +93,9 @@ const EditPaslonWithID = ({
         "File harus berupa gambar yang bertipekan jpg, jpeg, png!",
         (value) => {
           const extensions = ["jpg", "jpeg", "png"];
-          const type = value[0]?.type;
+          const type = value !== undefined ? value[0]?.type : false;
 
-          if (value && value.length < 1) return true;
+          if (value === undefined) return true;
           else
             return (
               value &&
@@ -155,12 +155,8 @@ const EditPaslonWithID = ({
     formData.append("id", currentPaslon?._id as unknown as string);
 
     for (const key of keys) {
-      if (key === "image")
-        formData.append(
-          key,
-          (data[key] as unknown as { [0]: File })[0] &&
-            (data[key] as unknown as { [0]: File })[0]
-        );
+      if (key === "image" && data.image)
+        formData.append(key, (data[key] as unknown as { [0]: File })[0]);
       else formData.append(key, data[key as keyof FormValues]);
     }
 
