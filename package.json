@@ -1,12 +1,13 @@
 {
-  "name": "nva13-tweak",
+  "name": "sora",
   "version": "0.1.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "prepare": "husky install"
   },
   "dependencies": {
     "@chakra-ui/react": "^1.8.8",
@@ -19,12 +20,12 @@
     "cookie": "^0.5.0",
     "csurf": "^1.11.0",
     "formidable": "^2.0.1",
-    "framer-motion": "^6.3.1",
+    "framer-motion": "^6.3.3",
     "fs-json-store": "^8.0.1",
     "fs-json-store-encryption-adapter": "^3.0.4",
-    "luxon": "^2.3.1",
+    "luxon": "^2.3.2",
     "mime-types": "^2.1.35",
-    "mongoose": "^6.3.0",
+    "mongoose": "^6.3.2",
     "mv": "^2.1.1",
     "next": "12.1.5",
     "next-connect": "^0.12.2",
@@ -33,7 +34,7 @@
     "react": "^17.0.2",
     "react-datepicker": "^4.7.0",
     "react-dom": "^17.0.2",
-    "react-hook-form": "^7.29.0",
+    "react-hook-form": "^7.30.0",
     "react-icons": "^4.3.1",
     "recharts": "^2.1.9",
     "swr": "^1.3.0",
@@ -41,20 +42,24 @@
     "yup": "^0.32.11"
   },
   "devDependencies": {
+    "@commitlint/cli": "^16.2.4",
+    "@commitlint/config-conventional": "^16.2.4",
     "@types/bcrypt": "^5.0.0",
-    "@types/cookie": "^0.5.0",
+    "@types/cookie": "^0.5.1",
     "@types/csurf": "^1.11.2",
-    "@types/formidable": "^2.0.4",
-    "@types/luxon": "^2.3.1",
+    "@types/formidable": "^2.0.5",
+    "@types/luxon": "^2.3.2",
     "@types/mime-types": "^2.1.1",
     "@types/mv": "^2.1.2",
     "@types/node": "17.0.24",
     "@types/passport": "^1.0.7",
     "@types/passport-local": "^1.0.34",
-    "@types/react": "^17.0.2",
-    "@types/react-dom": "^17.0.2",
+    "@types/react": "^17.0.44",
+    "@types/react-dom": "^17.0.16",
     "eslint": "8.13.0",
     "eslint-config-next": "12.1.5",
+    "husky": "^7.0.4",
+    "prettier": "^2.6.2",
     "typescript": "4.6.3"
   },
   "pnpm": {
@@ -64,5 +69,9 @@
         "prop-types"
       ]
     }
+  },
+  "lint-staged": {
+    "*.{js,ts,tsx}": "eslint --cache --fix",
+    "*.{js,ts,tsx,css,md}": "prettier --write"
   }
 }

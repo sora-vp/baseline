@@ -310,7 +310,7 @@ export const getServerSideProps: GetServerSideProps<PaslonType> = async ({
 }) => {
   const { id } = params as unknown as { id: Types.ObjectId };
 
-  const baseUrl = getBaseUrl(req);
+  const baseUrl = getBaseUrl();
   await ssrCallback({ req, res });
 
   const [{ paslon }, pengaturan] = await Promise.all([

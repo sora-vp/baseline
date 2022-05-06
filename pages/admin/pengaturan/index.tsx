@@ -45,7 +45,7 @@ export const getServerSideProps: GetServerSideProps<PengaturanType> = async ({
   req,
   res,
 }) => {
-  const baseUrl = getBaseUrl(req);
+  const baseUrl = getBaseUrl();
   await ssrCallback({ req, res });
 
   const response = await fetch(`${baseUrl}/api/settings`);
