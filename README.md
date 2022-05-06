@@ -49,6 +49,7 @@ Keterangan `.env`:
 - `SESS_NAME`: Nama session cookie yang nantinya akan digunakan selama aplikasi berjalan
 - `TOKEN_SECRET`: Secret token yang akan mengencrypt cookie session administrator
 - `SETTINGS_PASSWORD`: Secret token yang akan mengencrypt file pengaturan agar tidak mudah diubah-ubah
+- `PRODUCTION_URL`: URL yang nantinya akan digunakan pada saat production. Semisal mendapatkan IP Local `192.168.100.2` kira-kira valuenya menjadi `http://192.168.100.2:3000/`
 
 Untuk mengenerate secret `TOKEN_SECRET` dan `SETTINGS_PASSWORD` bisa menggunakan snippet dibawah ini, jalankan di REPL Node.js dan tempel hasilnya. Token harus berbeda satu sama lain jadi harus dijalankan dua kali.
 
