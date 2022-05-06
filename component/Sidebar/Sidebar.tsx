@@ -148,7 +148,7 @@ const SidebarContent = ({
     >
       <Flex h="20" alignItems="center" mx="8" justifyContent="space-between">
         <Text fontSize="2xl" fontFamily="monospace" fontWeight="bold">
-          NVA 13
+          ᮞᮧᮛ
         </Text>
         <CloseButton display={{ base: "flex", md: "none" }} onClick={onClose} />
       </Flex>
@@ -226,7 +226,7 @@ const MobileNav = ({ onOpen, ...rest }: MobileProps) => {
       />
 
       <Text fontSize="2xl" ml="8" fontFamily="monospace" fontWeight="bold">
-        NVA 13
+        ᮞᮧᮛ
       </Text>
     </Flex>
   );

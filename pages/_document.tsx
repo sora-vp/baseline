@@ -17,7 +17,9 @@ class MyDocument extends Document {
   render() {
     return (
       <Html>
-        <Head />
+        <Head>
+          <link rel="shortcut icon" href="/sora.png" />
+        </Head>
         <body>
           <ColorModeScript initialColorMode={"light"} />
           <Main />
