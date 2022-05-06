@@ -301,7 +301,7 @@ export const getServerSideProps: GetServerSideProps<PaslonType> = async ({
   req,
   res,
 }) => {
-  const baseUrl = getBaseUrl(req);
+  const baseUrl = getBaseUrl();
   await ssrCallback({ req, res });
 
   const [{ paslon }, pengaturan] = await Promise.all([

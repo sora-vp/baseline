@@ -316,7 +316,7 @@ const TidakDiizinkanMemilih = () => (
 export const getServerSideProps: GetServerSideProps<
   HomeType & commonComponentInterface
 > = async ({ req, res }) => {
-  const baseUrl = getBaseUrl(req);
+  const baseUrl = getBaseUrl();
   await ssrCallback({ req, res });
 
   const [{ paslon }, pengaturan, { user }] = await Promise.all([

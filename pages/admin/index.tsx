@@ -96,7 +96,7 @@ export const getServerSideProps: GetServerSideProps<DashboardType> = async ({
   req,
   res,
 }) => {
-  const baseUrl = getBaseUrl(req);
+  const baseUrl = getBaseUrl();
   await ssrCallback({ req, res });
 
   const response = await fetch(`${baseUrl}/api/user`, {
