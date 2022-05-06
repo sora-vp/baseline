@@ -1,11 +1,11 @@
 <p align="center">
-   <img width="150" height="150" src="./public/sora.png">
+   <img width="150" height="150" src="./public/sora.png" />
    <h2 align="center">SORA</h2>
 </p>
 
 ᮞᮧᮛ (Sora) yang berarti suara adalah aplikasi yang dapat menyuarakan aspirasi masyarakat untuk memilih kandidat pemimpin yang baru.
 
-Project ini adalah hasil rebuild [nva13](https://github.com/sekilas13/nva13) yang awalnya dibuat dengan [Node.js](https://nodejs.org/en/) dengan templating engine [ejs](https://ejs.co/) digantikan dengan [Next.js](https://nextjs.org/) yang lebih modular.
+Project ini adalah hasil rebuild [NVA13](https://github.com/sekilas13/nva13) yang awalnya dibuat dengan [Node.js](https://nodejs.org/en/) dengan templating engine [EJS](https://ejs.co/) digantikan dengan [Next.js](https://nextjs.org/) yang lebih modular. Tujuan utama dari aplikasi ini untuk mengurangi biaya karena penggunaan kertas dan juga waktu penghitungan yang manual.
 
 ## Prerequisites
 
@@ -78,4 +78,45 @@ npm start
 pnpm start
 ```
 
-Anda bisa membukanya di http://localhost:3000
+Anda bisa membukanya di http://localhost:3000, setelah itu bisa menyiapkan hal lain yang akan dijelaskan setelah ini.
+
+### Mekanisme Pemilihan
+
+#### 1. Menyiapkan Perangkat Pemilihan
+
+Yang pertama-tama jika sudah di test dapat berjalan, disiapkan terlebih dahulu komputer-komputer yang nantinya akan dipakai untuk pemilihan. Kira-kira jika ada 5 komputer, 1 komputer dijadikan server dan 4 komputer dijadikan pemilih akan terlihat seperti ini.
+
+<p align="center">
+   <image width="500" src="./examples/readme/mempersiapkan-perangkat.png" />
+</p>
+
+#### 2. Mengkonfigurasi Koneksi dan Menyiapkan Browser Pemilih
+
+Periksa koneksi jaringan lokal komputer pemilih dengan server sekaligus mengakses halaman pemilihan di browser pemilih. Seperti contoh dibawah ini, komputer server berada di IP `192.168.100.2`, jadi saya bisa mengaksesnya http://192.168.100.2:3000/. Tampilan awal jika baru pertama dijalankan akan muncul seperti ini.
+
+<p align="center">
+   <image width="1000" src="./examples/readme/membuka-browser.png" />
+</p>
+
+#### 3. Mendaftarkan Administrator
+
+Di komputer server, kunjungi halaman http://localhost:3000/admin/register untuk mendaftarkan akun administrator, contohnya seperti dibawah ini.
+
+Keterangan Form:
+
+- `Email`: Harus berupa format email yang valid (tidak perlu email pribadi, asal tak apa tapi harus ingat)
+- `Nama Lengkap`: Hanya diperbolehkan huruf alphabet
+- `Kata Sandi`: Minimal memiliki panjang 6 karakter
+- `Konfirmasi Kata Sandi`: Harus sama seperti `Kata Sandi`
+
+> Jika nanti berada di halaman [login](http://localhost:3000/admin/register) aturannya juga sama, tetapi hanya terdapat `Email` dan `Kata Sandi` saja.
+
+<p align="center">
+   <image width="1000" src="./examples/readme/mendaftarkan-akun.png" />
+</p>
+
+Jika sudah berhasil daftar nanti akan dialihkan halaman dashboard dan ada pesan akun berhasil didaftarkan.
+
+<p align="center">
+   <image width="1000" src="./examples/readme/berhasil-daftar.png" />
+</p>
