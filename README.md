@@ -120,3 +120,43 @@ Jika sudah berhasil daftar nanti akan dialihkan halaman dashboard dan ada pesan 
 <p align="center">
    <image width="1000" src="./examples/readme/berhasil-daftar.png" />
 </p>
+
+#### 4. Mengatur Waktu Pemilihan
+
+Setelah mendaftar, atur waktu pemilihan terlebih dahulu supaya jika sudah waktu pemilihan tinggal menyalakan mode pemilihan.
+
+<p align="center">
+   <image width="1000" src="./examples/readme/halaman-pengaturan-set-waktu.png" />
+</p>
+
+<p align="center">
+   <image width="1000" src="./examples/readme/halaman-pengaturan-set-waktu-terset.png" />
+</p>
+
+#### 5. Menambahkan Kandidat
+
+Kandidat yang ada ditambahkan ke aplikasi, klik tombol `Paslon` => `Tambah Paslon Baru` dan tambahkan kandidat yang sudah ada. Masukkan nama ketua dan wakil kandidat beserta foto mereka. Disarankan foto memiliki dimensi `1366x768` pixel. Masukan kandidat berurutan sesuai nomor urut yang sudah ditetapkan panitia.
+
+<p align="center">
+   <image width="1000" src="./examples/readme/tambah-paslon.png" />
+</p>
+
+Semisal saya memiliki contoh kandidat nomor urut 1 yaitu `Ubuntu` dan `Mint`, kandidat nomor urut 2 yaitu `Manjaro` dan `Arch`, terlebih dahulu saya masukan paslon `Ubuntu` dan `Mint` lalu `Manjaro` dan `Arch`. Maka hasilnya nanti akan seperti ini.
+
+<p align="center">
+   <image width="1000" src="./examples/readme/berhasil-tambah-paslon.png" />
+</p>
+
+#### 6. Mengubah Status Sudah Boleh Memilih
+
+Jika sudah dirasa siap, status `Sudah Boleh Memilih` bisa dinyalakan.
+
+<p align="center">
+   <image width="1000" src="./examples/readme/sudah-boleh-memilih.png" />
+</p>
+
+Selama sudah bisa memilih dan masih dalam waktu pemilihan, pemilih bisa memilih paslon sesuai apa yang ingin mereka pilih. Jika waktu sudah melewati tenggat pemilihan atau `sudah boleh memilih` dimatikan maka pemilih tidak bisa memilih lagi kandidat yang tersedia.
+
+<p align="center">
+   <image width="1000" src="./examples/readme/halaman-depan.png" />
+</p>
