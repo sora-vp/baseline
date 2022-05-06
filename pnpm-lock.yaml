@@ -4,6 +4,7 @@ specifiers:
   '@chakra-ui/react': ^1.8.8
   '@commitlint/cli': ^16.2.4
   '@commitlint/config-conventional': ^16.2.4
+  '@commitlint/types': ^16.2.1
   '@emotion/react': ^11.9.0
   '@emotion/styled': ^11.8.1
   '@hapi/iron': ^6.0.0
@@ -86,6 +87,7 @@ dependencies:
 devDependencies:
   '@commitlint/cli': 16.2.4
   '@commitlint/config-conventional': 16.2.4
+  '@commitlint/types': 16.2.1
   '@types/bcrypt': 5.0.0
   '@types/cookie': 0.5.1
   '@types/csurf': 1.11.2
