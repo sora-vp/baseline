@@ -1,34 +1,81 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+<p align="center">
+   <img width="150" height="150" src="./public/sora.png">
+   <h2 align="center">SORA</h2>
+</p>
 
-## Getting Started
+ᮞᮧᮛ (Sora) yang berarti suara adalah aplikasi yang dapat menyuarakan aspirasi masyarakat untuk memilih kandidat pemimpin yang baru.
 
-First, run the development server:
+Project ini adalah hasil rebuild [nva13](https://github.com/sekilas13/nva13) yang awalnya dibuat dengan [Node.js](https://nodejs.org/en/) dengan templating engine [ejs](https://ejs.co/) digantikan dengan [Next.js](https://nextjs.org/) yang lebih modular.
 
-```bash
-npm run dev
-# or
-yarn dev
+## Prerequisites
+
+Anda butuh
+
+- Node.js dan NPM (atau Package Manager lainnya)
+- MongoDB untuk menyimpan data
+
+## Pemakaian
+
+### Cloning Dari Github
+
+Jalankan perintah ini Command Line.
+
+```sh
+# HTTPS
+git clone https://github.com/reacto11mecha/sora.git
+
+# SSH
+git clone git@github.com:reacto11mecha/sora.git
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### Menginstall package
 
-You can start editing the page by modifying `pages/index.tsx`. The page auto-updates as you edit the file.
+Anda ke root directory project dan menginstall package yang diperlukan.
 
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.ts`.
+```sh
+npm install
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
+# atau menggunakan pnpm
+pnpm install
+```
 
-## Learn More
+### Menjalankan Aplikasinya
 
-To learn more about Next.js, take a look at the following resources:
+Pertama-tama, copy file `env.example` menjadi `.env` dan isikan value yang sesuai.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Keterangan `.env`:
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+- `MONGO_URL`: URL Database MongoDB yang akan dijadikan penyimpanan data
+- `SESS_NAME`: Nama session cookie yang nantinya akan digunakan selama aplikasi berjalan
+- `TOKEN_SECRET`: Secret token yang akan mengencrypt cookie session administrator
+- `SETTINGS_PASSWORD`: Secret token yang akan mengencrypt file pengaturan agar tidak mudah diubah-ubah
 
-## Deploy on Vercel
+Untuk mengenerate secret `TOKEN_SECRET` dan `SETTINGS_PASSWORD` bisa menggunakan snippet dibawah ini, jalankan di REPL Node.js dan tempel hasilnya. Token harus berbeda satu sama lain jadi harus dijalankan dua kali.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+```js
+// Bisa menggunakan base64
+console.log(require("crypto").randomBytes(50).toString("base64"));
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+// Atau menggunakan hex
+console.log(require("crypto").randomBytes(50).toString("hex"));
+```
+
+Sebelum langsung menjalankan, terlebih dahulu membuild kode Next.js supaya bisa dijalankan di production mode.
+
+```sh
+npm run build
+
+# atau menggunakan pnpm
+pnpm build
+```
+
+Selesai membuild aplikasi, **jangan lupa menjalankan MongoDB sebelum sora berjalan**. Jika sudah berjalan baru bisa menggunakan sora dengan mengetikkan
+
+```sh
+npm start
+
+# atau menggunakan pnpm
+pnpm start
+```
+
+Anda bisa membukanya di http://localhost:3000
