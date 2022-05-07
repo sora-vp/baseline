@@ -166,7 +166,7 @@ Selama sudah bisa memilih dan masih dalam waktu pemilihan, pemilih bisa memilih 
 
 Kedua perilaku dibawah ini setelah pemilih memilih kandidat yang mereka inginkan akan ada popup `Paslon berhasil terpilih!`, tetapi dapat diubah di pengaturan. Dibawah ini adalah kedua perilaku yang dapat diterapkan dalam pemilihan.
 
-#### 1. Tanpa Refresh
+#### Tanpa Refresh
 
 Opsi ini adalah opsi default ketika aplikasi ini baru dijalankan, kira-kira akan jadi seperti ini setelah seseorang memilih salah satu kandidat.
 
@@ -174,7 +174,7 @@ Opsi ini adalah opsi default ketika aplikasi ini baru dijalankan, kira-kira akan
    <image width="1000" src="./examples/readme/tanpa-refresh.gif" />
 </p>
 
-#### 2. Tanpa Refresh
+#### Dengan Refresh
 
 Opsi ini adalah opsi ketika user telah memilih dan halaman otomatis terefresh ketika berhasil terpilihnya seorang kandidat, pertama-tama nyalakan dulu pengaturan `Refresh halaman setelh memilih` dan simpan.
 
@@ -186,4 +186,28 @@ Ketika berhasil dinyalakan, halaman pemilih akan terefresh setelah kandidat berh
 
 <p align="center">
    <image width="1000" src="./examples/readme/dengan-refresh.gif" />
+</p>
+
+### Statistik Pemilihan
+
+Statistik perkembangan pemilihan bisa dilihat dihalaman statistik. Data akan diperbarui secara real-time seiiring pemilih memilih kandidat yang mereka inginkan.
+
+<p align="center">
+   <image width="1000" src="./examples/readme/halaman-statistik.png" />
+</p>
+
+### Tampilan Administrator
+
+Terdapat dua mode tampilan administrator yang bisa dipilih, yaitu mode terang dan mode gelap.
+
+<p align="center">
+   <image width="1000" src="./examples/readme/mode-terang.png" />
+   <small>Mode Terang</small>
+</p>
+
+<br />
+
+<p align="center">
+   <image width="1000" src="./examples/readme/mode-gelap.png" />
+   <small>Mode Gelap</small>
 </p>
