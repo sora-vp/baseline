@@ -99,7 +99,7 @@ handler
 
       res
         .status(200)
-        .json({ error: false, message: "Paslon berhasil terpilih" });
+        .json({ error: false, message: "Paslon berhasil terpilih!" });
     } else {
       res
         .status(400)
