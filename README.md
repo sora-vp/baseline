@@ -1,5 +1,5 @@
 <p align="center">
-   <img width="150" height="150" src="./public/sora.png" />
+   <img width="250" height="250" src="./public/sora.png" />
    <h2 align="center">SORA</h2>
 </p>
 
@@ -160,4 +160,30 @@ Selama sudah bisa memilih dan masih dalam waktu pemilihan, pemilih bisa memilih 
 
 <p align="center">
    <image width="1000" src="./examples/readme/halaman-depan.png" />
+</p>
+
+### Perilaku Pemilihan
+
+Kedua perilaku dibawah ini setelah pemilih memilih kandidat yang mereka inginkan akan ada popup `Paslon berhasil terpilih!`, tetapi dapat diubah di pengaturan. Dibawah ini adalah kedua perilaku yang dapat diterapkan dalam pemilihan.
+
+#### 1. Tanpa Refresh
+
+Opsi ini adalah opsi default ketika aplikasi ini baru dijalankan, kira-kira akan jadi seperti ini setelah seseorang memilih salah satu kandidat.
+
+<p align="center">
+   <image width="1000" src="./examples/readme/tanpa-refresh.gif" />
+</p>
+
+#### 2. Tanpa Refresh
+
+Opsi ini adalah opsi ketika user telah memilih dan halaman otomatis terefresh ketika berhasil terpilihnya seorang kandidat, pertama-tama nyalakan dulu pengaturan `Refresh halaman setelh memilih` dan simpan.
+
+<p align="center">
+   <image src="./examples/readme/menyalakan-opsi-refresh.png" />
+</p>
+
+Ketika berhasil dinyalakan, halaman pemilih akan terefresh setelah kandidat berhasil terpilih.
+
+<p align="center">
+   <image width="1000" src="./examples/readme/dengan-refresh.gif" />
 </p>
