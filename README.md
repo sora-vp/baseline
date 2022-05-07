@@ -261,6 +261,15 @@ pnpm install
 
 Ketiga, menyalin file `env.example` menjadi `.env` dan isikan sesuai field yang telah dijelaskan sebelumnya di [Menjalankan Aplikasinya](#menjalankan-aplikasinya).
 
+Setelah menginstall dependensi yang diperlukan, jalankan MongoDB bersamaan dengan menjalankan mode development dari Next.js dengan mengetikkan.
+
+```sh
+npm run dev
+
+# atau menggunakan pnpm
+pnpm dev
+```
+
 ### Disclaimer
 
 Penegasan, **saya tidak bertanggung jawab atas hal-hal yang tidak anda inginkan, gunakan dengan bijak dan tepat!**
