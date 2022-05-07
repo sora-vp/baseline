@@ -211,3 +211,60 @@ Terdapat dua mode tampilan administrator yang bisa dipilih, yaitu mode terang da
    <image width="1000" src="./examples/readme/mode-gelap.png" />
    <small>Mode Gelap</small>
 </p>
+
+<br />
+
+### Panduan Penggunaan
+
+Aplikasi ini ketika sudah dijalankan maka siapapun user bisa mendaftar sebagai administrator dan dapat memilih berulang kali. Jadi berikut ini adalah rekomendasi panduan penggunaan sora.
+
+#### 1. **Pilihlah Panitia yang Benar-Benar Jujur!**
+
+Terlepas dari aplikasi apa yang dipakai, jika panitia yang dipilih tidak jujur maka dengan mudah mereka mencurangi sebuah sistem.
+
+Administrator yang sudah login memang tidak bisa memilih kandidat, tetapi mereka **bisa membuka tab incognito di browser** mereka. Jadi jangan sampai mereka membuka window browser incognito.
+
+Panitia pengawas komputer hanya boleh mengawasi jalannya pelaksanaan pemilihan dan melaporkan jika ditemukan adanya masalah. Popup pemilihan akan berwarna merah dan berisikan pesan error. Selain itu tidak boleh pengawas memilih kecuali pada saat giliran mereka untuk memilih.
+
+#### 2. **Tidak Menjalankan Aplikasi Pada Layanan Hosting!**
+
+Pada dasarnya aplikasi ini bisa di upload ke layanan hosting dan dapat diakses di internet, tetapi sebaiknya tidak melakukan itu. Akan ada oknum yang tidak bertanggung jawab yang mendaftarkan akun administrator untuk kepentingan pribadi. Pemilih juga dapat memilih berkali-kali kandidat yang mereka dukung.
+
+#### 3. **Menjalankan Aplikasi pada Jaringan Lokal (LAN)!**
+
+Menyambung poin sebelumnya, aplikasi ini dirancang untuk pemilihan langsung di lapangan dengan jaringan lokal, oleh karena itu diperlukan komputer administrator dan pemilih dalam jaringan yang terisolasi dari jaringan internet.
+
+#### 4. **Menggunakan Mode Layar Penuh (Fullscreen) Browser pada Komputer Pemilih!**
+
+Untuk meminimalisir lebih kecurangan, browser yang ada di komputer yang digunakan untuk pemilihan harus pada kondisi fullscreen supaya address bar alamat web tidak dapat diketahui pemilih.
+
+### Local Development
+
+Langkah pertama, fork atau clone terlebih dahulu.
+
+```sh
+# HTTPS
+git clone https://github.com/reacto11mecha/sora.git
+
+# SSH
+git clone git@github.com:reacto11mecha/sora.git
+```
+
+Kedua, menginstall seluruh package yang dibutuhkan.
+
+```sh
+npm install
+
+# atau menggunakan pnpm
+pnpm install
+```
+
+Ketiga, menyalin file `env.example` menjadi `.env` dan isikan sesuai field yang telah dijelaskan sebelumnya di [Menjalankan Aplikasinya](#menjalankan-aplikasinya).
+
+### Disclaimer
+
+Penegasan, **saya tidak bertanggung jawab atas hal-hal yang tidak anda inginkan, gunakan dengan bijak dan tepat!**
+
+### Lisensi
+
+Semua kode yang ada di repositori ini bernaung dibawah [MIT License](LICENSE).
