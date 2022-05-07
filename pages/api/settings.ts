@@ -22,9 +22,9 @@ handler
     res.status(200).json({
       startTime: data?.startTime ? data.startTime : null,
       endTime: data?.endTime ? data.endTime : null,
-      canVote: data?.canVote !== undefined ? data.canVote : null,
+      canVote: data?.canVote !== undefined ? data.canVote : false,
       reloadAfterVote:
-        data?.reloadAfterVote !== undefined ? data.reloadAfterVote : null,
+        data?.reloadAfterVote !== undefined ? data.reloadAfterVote : false,
     });
   })
   .use(auth)
