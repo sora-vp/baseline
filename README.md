@@ -1,5 +1,5 @@
 <p align="center">
-   <img width="250" height="250" src="./public/sora.png" />
+   <img width="300" height="300" src="./public/sora.png" />
    <h2 align="center">SORA</h2>
 </p>
 
@@ -45,11 +45,10 @@ Pertama-tama, copy file `env.example` menjadi `.env` dan isikan value yang sesua
 
 Keterangan `.env`:
 
-- `MONGO_URL`: URL Database MongoDB yang akan dijadikan penyimpanan data
-- `SESS_NAME`: Nama session cookie yang nantinya akan digunakan selama aplikasi berjalan
-- `TOKEN_SECRET`: Secret token yang akan mengencrypt cookie session administrator
-- `SETTINGS_PASSWORD`: Secret token yang akan mengencrypt file pengaturan agar tidak mudah diubah-ubah
-- `PRODUCTION_URL`: URL yang nantinya akan digunakan pada saat production. Semisal mendapatkan IP Local `192.168.100.2` kira-kira valuenya menjadi `http://192.168.100.2:3000/`
+- `MONGODB_URI`: URL Database MongoDB yang akan dijadikan penyimpanan data
+- `NEXTAUTH_SECRET`: Secret token yang akan mengencrypt cookie session administrator
+- `NEXTAUTH_URL`: URL yang nantinya akan digunakan pada saat production. Semisal mendapatkan IP Local `192.168.100.2` kira-kira valuenya menjadi `http://192.168.100.2:3000/`
+- `SETTINGS_SECRET`: Secret token yang akan mengencrypt file pengaturan agar tidak mudah diubah-ubah
 
 Untuk mengenerate secret `TOKEN_SECRET` dan `SETTINGS_PASSWORD` bisa menggunakan snippet dibawah ini, jalankan di REPL Node.js dan tempel hasilnya. Token harus berbeda satu sama lain jadi harus dijalankan dua kali.
 
@@ -88,7 +87,7 @@ Anda bisa membukanya di http://localhost:3000, setelah itu bisa menyiapkan hal l
 Yang pertama-tama jika sudah di test dapat berjalan, disiapkan terlebih dahulu komputer-komputer yang nantinya akan dipakai untuk pemilihan. Kira-kira jika ada 5 komputer, 1 komputer dijadikan server dan 4 komputer dijadikan pemilih akan terlihat seperti ini.
 
 <p align="center">
-   <image width="500" src="./examples/readme/mempersiapkan-perangkat.png" />
+   <image src="./examples/readme/mempersiapkan-perangkat.png" />
 </p>
 
 #### 2. Mengkonfigurasi Koneksi dan Menyiapkan Browser Pemilih
@@ -176,7 +175,7 @@ Opsi ini adalah opsi default ketika aplikasi ini baru dijalankan, kira-kira akan
 
 #### Dengan Refresh
 
-Opsi ini adalah opsi ketika user telah memilih dan halaman otomatis terefresh ketika berhasil terpilihnya seorang kandidat, pertama-tama nyalakan dulu pengaturan `Refresh halaman setelh memilih` dan simpan.
+Opsi ini adalah opsi ketika user telah memilih dan halaman otomatis terefresh ketika berhasil terpilihnya seorang kandidat, pertama-tama nyalakan dulu pengaturan `Refresh halaman setelah memilih` dan simpan.
 
 <p align="center">
    <image src="./examples/readme/menyalakan-opsi-refresh.png" />
@@ -269,6 +268,10 @@ npm run dev
 # atau menggunakan pnpm
 pnpm dev
 ```
+
+### Ucapan Terimakasih
+
+Saya sebelumnya berterima kasih kepada tim [t3-oss](https://github.com/t3-oss) yang sudah membuat [`create-t3-app`](https://github.com/t3-oss/create-t3-app), project ini menggunakan template mereka yang sudah membantu saya dalam pembuatan project ini.
 
 ### Disclaimer
 
