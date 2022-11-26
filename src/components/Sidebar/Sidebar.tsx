@@ -32,6 +32,7 @@ import {
 } from "react-icons/fi";
 import NextLink from "next/link";
 import { IconType } from "react-icons";
+import localFont from "@next/font/local";
 
 import LogoutButton from "./LogoutButton";
 import ModeToggler from "./ModeToggler";
@@ -47,6 +48,10 @@ const LinkItems: Array<LinkItemProps> = [
   { name: "Statistik", icon: FiTrendingUp, href: "/admin/statistik" },
   { name: "Pengaturan", icon: FiSettings, href: "/admin/pengaturan" },
 ];
+
+const sundaneseFont = localFont({
+  src: "./fonts/NotoSansSundanese-Regular.ttf",
+});
 
 type SimpleSidebarType = JSX.IntrinsicAttributes;
 
@@ -127,7 +132,12 @@ const SidebarContent = ({ onClose, height, ...rest }: SidebarProps) => {
       {...rest}
     >
       <Flex h="20" alignItems="center" mx="8" justifyContent="space-between">
-        <Text fontSize="2xl" fontFamily="monospace" fontWeight="bold">
+        <Text
+          fontSize="2xl"
+          fontFamily="monospace"
+          fontWeight="bold"
+          className={sundaneseFont.className}
+        >
           ᮞᮧᮛ
         </Text>
         <CloseButton display={{ base: "flex", md: "none" }} onClick={onClose} />
