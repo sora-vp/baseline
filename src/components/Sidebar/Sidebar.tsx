@@ -134,7 +134,6 @@ const SidebarContent = ({ onClose, height, ...rest }: SidebarProps) => {
       <Flex h="20" alignItems="center" mx="8" justifyContent="space-between">
         <Text
           fontSize="2xl"
-          fontFamily="monospace"
           fontWeight="bold"
           className={sundaneseFont.className}
         >
