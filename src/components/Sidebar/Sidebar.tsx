@@ -214,7 +214,12 @@ const MobileNav = ({ onOpen, ...rest }: MobileProps) => {
         icon={<FiMenu />}
       />
 
-      <Text fontSize="2xl" ml="8" fontFamily="monospace" fontWeight="bold">
+      <Text
+        fontSize="2xl"
+        ml="8"
+        fontWeight="bold"
+        className={sundaneseFont.className}
+      >
         ᮞᮧᮛ
       </Text>
     </Flex>
