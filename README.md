@@ -7,6 +7,26 @@
 
 Project ini adalah hasil rebuild [NVA13](https://github.com/sekilas13/nva13) yang awalnya dibuat dengan [Node.js](https://nodejs.org/en/) dengan templating engine [EJS](https://ejs.co/) digantikan dengan [Next.js](https://nextjs.org/) yang lebih modular. Tujuan utama dari aplikasi ini untuk mengurangi biaya karena penggunaan kertas dan juga waktu penghitungan yang manual.
 
+## Kenapa Harus Menggunakan SORA?
+
+Aplikasi ini sudah digunakan dalam pemilihan ketua osis yang baru di SMA Negeri 12 Kota Bekasi periode 2022/2023 pada hari Kamis, 1 Desember 2022. Dengan kata lain aplikasi ini sudah Battle Proven.
+
+<p align="center">
+   <image width="1000" src="./examples/readme/pada-saat-pemilihan-1.jpg" />
+</p>
+
+<p align="center">
+   <image width="1000" src="./examples/readme/pada-saat-pemilihan-2.jpg" />
+</p>
+
+<p align="center">
+   <image width="1000" src="./examples/readme/pada-saat-pemilihan-3.jpg" />
+</p>
+
+<p align="center">
+   <image width="1000" src="./examples/readme/pada-saat-pemilihan-4.jpg" />
+</p>
+
 ## Prerequisites
 
 Anda butuh
@@ -28,7 +48,7 @@ git clone https://github.com/reacto11mecha/sora.git
 git clone git@github.com:reacto11mecha/sora.git
 ```
 
-### Menginstall package
+### Menginstall package dan [`pm2`](https://npm.im/pm2)
 
 Anda ke root directory project dan menginstall package yang diperlukan.
 
@@ -37,6 +57,15 @@ npm install
 
 # atau menggunakan pnpm
 pnpm install
+```
+
+Kemudian install package [`pm2`](https://npm.im/pm2) secara global.
+
+```sh
+npm install -g pm2
+
+# atau menggunakan pnpm
+pnpm install -g pm2
 ```
 
 ### Menjalankan Aplikasinya
@@ -72,10 +101,7 @@ pnpm build
 Selesai membuild aplikasi, **jangan lupa menjalankan MongoDB sebelum sora berjalan**. Jika sudah berjalan baru bisa menggunakan sora dengan mengetikkan
 
 ```sh
-npm start
-
-# atau menggunakan pnpm
-pnpm start
+pm2 start ecosystem.config.js
 ```
 
 Anda bisa membukanya di http://localhost:3000, setelah itu bisa menyiapkan hal lain yang akan dijelaskan setelah ini.
@@ -85,6 +111,10 @@ Anda bisa membukanya di http://localhost:3000, setelah itu bisa menyiapkan hal l
 #### 1. Menyiapkan Perangkat Pemilihan
 
 Yang pertama-tama jika sudah di test dapat berjalan, disiapkan terlebih dahulu komputer-komputer yang nantinya akan dipakai untuk pemilihan. Kira-kira jika ada 5 komputer, 1 komputer dijadikan server dan 4 komputer dijadikan pemilih akan terlihat seperti ini.
+
+> Jika ingin menggunakan lebih dari lima komputer, itu dipersilahkan karena sesuai dengan ketersedian komputer juga dengan lebih banyak jumlah komputer, maka lebih cepat waktu pemilihan.
+
+> Di bawah ini menggunakan switch, tetapi jika menggunakan router yang tersambung ke Router WiFi itu tidak masalah, yang terpenting nama wifi dan password tidak mudah diketahui orang lain.
 
 <p align="center">
    <image src="./examples/readme/mempersiapkan-perangkat.png" />
@@ -176,6 +206,8 @@ Opsi ini adalah opsi default ketika aplikasi ini baru dijalankan, kira-kira akan
 #### Dengan Refresh
 
 Opsi ini adalah opsi ketika user telah memilih dan halaman otomatis terefresh ketika berhasil terpilihnya seorang kandidat, pertama-tama nyalakan dulu pengaturan `Refresh halaman setelah memilih` dan simpan.
+
+> Opsi ini digunakan pada saat pemilihan ketua osis di SMA Negeri 12 Kota Bekasi karena akan mememerlukan waktu yang lama untuk merefresh halaman dan membuat perhatian pemilih teralihkan.
 
 <p align="center">
    <image src="./examples/readme/menyalakan-opsi-refresh.png" />
@@ -272,6 +304,8 @@ pnpm dev
 ### Ucapan Terimakasih
 
 Saya sebelumnya berterima kasih kepada tim [t3-oss](https://github.com/t3-oss) yang sudah membuat [`create-t3-app`](https://github.com/t3-oss/create-t3-app), project ini menggunakan template mereka yang sudah membantu saya dalam pembuatan project ini.
+
+Saya juga berterima kasih terhadap MPK (Majelis Permusyawaratan Kelas) SMA Negeri 12 Kota Bekasi yang mau dan percaya untuk menggunakan aplikasi ini. Banyak kritik dan saran yang masuk dan itu akan menjadi bahan evaluasi untuk aplikasi ini untuk kedepannya.
 
 ### Disclaimer
 

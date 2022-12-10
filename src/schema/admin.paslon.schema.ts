@@ -1,5 +1,6 @@
 import { z } from "zod";
 
+const TwoMegs = 2_000_000;
 const validNameRegex = /^[a-zA-Z\s\-]+$/;
 const ACCEPTED_IMAGE_TYPES = [
   "image/jpeg",
@@ -29,7 +30,7 @@ export const TambahPaslonValidationSchema = baseAddAndEditForm.merge(
       .any()
       .refine((files) => files?.length == 1, "Diperlukan gambar paslon!")
       .refine(
-        (files) => files?.[0]?.size <= 200000,
+        (files) => files?.[0]?.size <= TwoMegs,
         `Ukuran maksimal gambar adalah 2MB!`
       )
       .refine(
@@ -63,7 +64,7 @@ export const EditPaslonValidationSchema = baseAddAndEditForm.merge(
         "Diperlukan gambar paslon!"
       )
       .refine(
-        (files) => (files === undefined ? true : files?.[0]?.size <= 200000),
+        (files) => (files === undefined ? true : files?.[0]?.size <= TwoMegs),
         `Ukuran maksimal gambar adalah 2MB!`
       )
       .refine(
