@@ -8,17 +8,6 @@
 # testing
 /coverage
 
-# database
-/prisma/db.sqlite
-/prisma/db.sqlite-journal
-
-# next.js
-/.next/
-/out/
-
-# production
-/build
-
 # misc
 .DS_Store
 *.pem
@@ -29,21 +18,5 @@ yarn-debug.log*
 yarn-error.log*
 .pnpm-debug.log*
 
-# local env files
-.env
-.env*.local
-
-# vercel
-.vercel
-
-# typescript
-*.tsbuildinfo
-
-# uploads
-/public/uploads/
-
-# settings
-settings.bin
-
-# eslint
-.eslintcache
+# turbo
+.turbo
