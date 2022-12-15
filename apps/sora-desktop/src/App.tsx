@@ -1,73 +1,76 @@
-import { useState } from 'react'
-import styles from 'styles/app.module.scss'
+import QrScanner from "qr-scanner";
+import { useEffect, useRef } from "react";
+
+import { soraTRPC } from "@/utils/trpc";
+
+const arrayValidator = "1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
+
+const validateInput = (input: string) =>
+  input
+    .split("")
+    .map((char) => arrayValidator.includes(char))
+    .every((item) => item === true);
 
 const App: React.FC = () => {
-  const [count, setCount] = useState(0)
+  const hello = soraTRPC.settings.getSettings.useQuery();
+
+  const videoRef = useRef<HTMLVideoElement>(null!);
+
+  useEffect(() => {
+    const qrScanner = new QrScanner(videoRef.current, (result) => {
+      qrScanner.stop();
+
+      const isValid = validateInput(result);
+
+      console.log(isValid);
+    });
+
+    qrScanner.start();
+
+    return () => {
+      qrScanner.destroy();
+    };
+  }, []);
 
   return (
-    <div className={styles.app}>
-      <header className={styles.appHeader}>
-        <div className={styles.logos}>
-          <div className={styles.imgBox}>
-            <img
-              src='./electron.png'
-              style={{ height: '24vw' }}
-              className={styles.appLogo}
-              alt="electron"
-            />
+    <section
+      style={{
+        width: "100%",
+        height: "100vh",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+      }}
+    >
+      <article
+        className="card"
+        style={{
+          width: "75%",
+          height: "90%",
+          display: "flex",
+          justifyContent: "center",
+        }}
+      >
+        <div
+          style={{
+            display: "flex",
+            height: "100%",
+            width: "80%",
+            justifyContent: "center",
+            alignItems: "center",
+            flexDirection: "column",
+          }}
+        >
+          <div style={{ height: "85%" }}>
+            <video ref={videoRef}></video>
           </div>
-          <div className={styles.imgBox}>
-            <img
-              src='./vite.svg'
-              style={{ height: '19vw' }}
-              alt="vite"
-            />
-          </div>
-          <div className={styles.imgBox}>
-            <img
-              src='./react.svg'
-              style={{ maxWidth: '100%' }}
-              className={styles.appLogo}
-              alt="logo"
-            />
-          </div>
-        </div>
-        <p>Hello Electron + Vite + React!</p>
-        <p>
-          <button onClick={() => setCount((count) => count + 1)}>
-            count is: {count}
-          </button>
-        </p>
-        <p>
-          Edit <code>App.tsx</code> and save to test HMR updates.
-        </p>
-        <div>
-          <a
-            className={styles.appLink}
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
-          {' | '}
-          <a
-            className={styles.appLink}
-            href="https://vitejs.dev/guide/features.html"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Vite Docs
-          </a>
-          <div className={styles.staticPublic}>
-            Place static files into the{' '}
-            <code>/public</code> folder
-            <img style={{ width: 77 }} src="./node.png" />
+          <div style={{ height: "auto" }}>
+            <h3>Scan Barcode ID Mu!</h3>
           </div>
         </div>
-      </header>
-    </div>
-  )
-}
+      </article>
+    </section>
+  );
+};
 
-export default App
+export default App;

@@ -14,7 +14,6 @@ export default defineConfig({
   resolve: {
     alias: {
       '@': path.join(__dirname, 'src'),
-      'styles': path.join(__dirname, 'src/assets/styles'),
     },
   },
   plugins: [
