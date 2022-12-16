@@ -14,7 +14,6 @@
     "@trpc/next": "^10.0.0",
     "@trpc/react-query": "^10.0.0",
     "@trpc/server": "^10.0.0",
-    "nanoid": "3.x.x",
     "next": "13.0.6",
     "next-auth": "^4.18.3",
     "react": "18.2.0",

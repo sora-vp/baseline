@@ -1,0 +1,11 @@
+{
+  "name": "id-generator",
+  "private": true,
+  "types": "index.ts",
+  "main": "index.ts",
+  "author": "Ezra Khairan Permana",
+  "license": "MIT",
+  "dependencies": {
+    "nanoid": "3.x.x"
+  }
+}

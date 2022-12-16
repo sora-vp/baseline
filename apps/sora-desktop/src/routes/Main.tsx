@@ -1,5 +1,6 @@
 import QrScanner from "qr-scanner";
-import { useEffect, useRef } from "react";
+import { validateId } from "id-generator";
+import { useState, useRef, useEffect } from "react";
 
 import styles from "@/styles/routes/Main.module.css";
 
@@ -9,8 +10,12 @@ const Main = () => {
   const videoRef = useRef<HTMLVideoElement>(null!);
 
   useEffect(() => {
-    const qrScanner = new QrScanner(videoRef.current, () => {
+    const qrScanner = new QrScanner(videoRef.current, (result) => {
       qrScanner.stop();
+
+      const isValid = validateId(result);
+
+      console.log(isValid);
     });
 
     qrScanner.start();
@@ -25,7 +30,7 @@ const Main = () => {
       <article className={`card ${styles.card}`}>
         <div className={styles.cardContainer}>
           <div className={styles.upperItem}>
-            <video className={styles.video}  ref={videoRef}></video>
+            <video className={styles.video} ref={videoRef}></video>
           </div>
           <div className={styles.lowerItem}>
             <h3>Scan Barcode ID Mu!</h3>

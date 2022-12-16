@@ -8,6 +8,7 @@ import { createHashRouter, RouterProvider } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 import { soraTRPC } from "@/utils/trpc";
+import { SettingProvider } from "@/context/SettingContext";
 
 import Main from "./routes/Main";
 
@@ -34,7 +35,9 @@ const RenderedElement = () => {
   return (
     <soraTRPC.Provider client={soraTRPCClient} queryClient={soraQueryClient}>
       <QueryClientProvider client={soraQueryClient}>
-        <RouterProvider router={router} />
+        <SettingProvider>
+          <RouterProvider router={router} />
+        </SettingProvider>
       </QueryClientProvider>
     </soraTRPC.Provider>
   );
