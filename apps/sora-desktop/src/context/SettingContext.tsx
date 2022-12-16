@@ -63,7 +63,7 @@ export const SettingProvider: React.FC<{ children: React.ReactNode }> = ({
   );
 
   const isCandidatesExist = useMemo(
-    () => paslonQuery!.data!.length > 1,
+    () => paslonQuery.data && paslonQuery.data.length > 1 || false,
     [paslonQuery.data]
   );
 
@@ -99,4 +99,4 @@ export const SettingProvider: React.FC<{ children: React.ReactNode }> = ({
   );
 };
 
-export const useSetting = useContext(SettingContext) as ISettingContext;
+export const useSetting = () => useContext(SettingContext) as ISettingContext;

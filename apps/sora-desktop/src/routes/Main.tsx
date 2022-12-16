@@ -4,9 +4,23 @@ import { useState, useRef, useEffect } from "react";
 
 import styles from "@/styles/routes/Main.module.css";
 
+import { useSetting } from "@/context/SettingContext";
 import { soraTRPC } from "@/utils/trpc";
 
 const Main = () => {
+  const { isLoading, isCandidatesExist, canVoteNow, paslon } = useSetting();
+
+  console.log("isLoading", isLoading);
+  console.log("isCandidatesExist", isCandidatesExist);
+  console.log("canVoteNow: ", canVoteNow)
+  console.log("paslon:", paslon)
+
+  return (
+  <></>
+  )
+};
+
+const AnotherWorld = () => {
   const videoRef = useRef<HTMLVideoElement>(null!);
 
   useEffect(() => {
@@ -39,6 +53,6 @@ const Main = () => {
       </article>
     </section>
   );
-};
+  }
 
 export default Main;

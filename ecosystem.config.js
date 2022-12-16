@@ -2,7 +2,7 @@ module.exports = {
   apps: [
     {
       name: "sora",
-      script: "node_modules/next/dist/bin/next",
+      script: "./apps/sora/node_modules/next/dist/bin/next",
       args: "start -p 3000",
     },
   ],
