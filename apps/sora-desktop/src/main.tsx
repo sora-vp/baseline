@@ -9,12 +9,12 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 import { soraTRPC } from "@/utils/trpc";
 
-import App from "./App";
+import Main from "./routes/Main";
 
 const router = createHashRouter([
   {
     path: "/",
-    element: <App />,
+    element: <Main />,
   },
 ]);
 
