@@ -9,12 +9,12 @@
     "start": "next start"
   },
   "dependencies": {
-    "@tanstack/react-query": "^4.20.2",
+    "@tanstack/react-query": "^4.20.4",
     "@trpc/client": "^10.0.0",
     "@trpc/next": "^10.0.0",
     "@trpc/react-query": "^10.0.0",
     "@trpc/server": "^10.0.0",
-    "next": "13.0.6",
+    "next": "13.0.7",
     "next-auth": "^4.18.3",
     "react": "18.2.0",
     "react-dom": "18.2.0",
@@ -22,13 +22,13 @@
     "zod": "^3.18.0"
   },
   "devDependencies": {
-    "@types/node": "^18.0.0",
+    "@types/node": "^18.11.17",
     "@types/react": "^18.0.14",
     "@types/react-dom": "^18.0.5",
     "@typescript-eslint/eslint-plugin": "^5.33.0",
     "@typescript-eslint/parser": "^5.33.0",
-    "eslint": "^8.26.0",
-    "eslint-config-next": "13.0.6",
+    "eslint": "^8.30.0",
+    "eslint-config-next": "13.0.7",
     "typescript": "^4.8.4"
   },
   "ct3aMetadata": {
