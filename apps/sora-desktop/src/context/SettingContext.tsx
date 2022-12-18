@@ -1,4 +1,5 @@
 import { createContext, useContext, useEffect, useState, useMemo } from "react";
+import { useToast } from "@chakra-ui/react";
 import { DateTime } from "luxon";
 
 import { soraTRPC, type SoraRouterOutput } from "@/utils/trpc";
@@ -6,6 +7,7 @@ import { soraTRPC, type SoraRouterOutput } from "@/utils/trpc";
 interface ISettingContext {
   canVoteNow: boolean;
   isLoading: boolean;
+  isError: boolean;
   isCandidatesExist: boolean;
   paslon: SoraRouterOutput["paslon"]["candidateList"] | undefined;
 }
@@ -19,6 +21,8 @@ let intervalID: NodeJS.Timeout;
 export const SettingProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
+  const toast = useToast();
+
   const [canVote, setCanVote] = useState<boolean>(false);
   const [currentTime, setCurrentTime] = useState<number>(new Date().getTime());
 
@@ -27,6 +31,15 @@ export const SettingProvider: React.FC<{ children: React.ReactNode }> = ({
 
   const paslonQuery = soraTRPC.paslon.candidateList.useQuery(undefined, {
     refetchOnWindowFocus: false,
+
+    onError(error: {name: string, message: string}) {
+      toast({
+        description: `Error | ${error.name}: ${error.message}`,
+        status: "error",
+        duration: 5000,
+        position: "top-right",
+      });
+    },
   });
 
   const settingsQuery = soraTRPC.settings.getSettings.useQuery(undefined, {
@@ -52,6 +65,15 @@ export const SettingProvider: React.FC<{ children: React.ReactNode }> = ({
       );
       setCanVote(result.canVote);
     },
+
+    onError(error: {name: string, message: string}) {
+      toast({
+        description: `Error | ${error.name}: ${error.message}`,
+        status: "error",
+        duration: 5000,
+        position: "top-right",
+      });
+    },
   });
 
   const canVoteNow = useMemo(
@@ -63,7 +85,7 @@ export const SettingProvider: React.FC<{ children: React.ReactNode }> = ({
   );
 
   const isCandidatesExist = useMemo(
-    () => paslonQuery.data && paslonQuery.data.length > 1 || false,
+    () => (paslonQuery.data && paslonQuery.data.length > 1) || false,
     [paslonQuery.data]
   );
 
@@ -72,13 +94,15 @@ export const SettingProvider: React.FC<{ children: React.ReactNode }> = ({
     [paslonQuery.isLoading, settingsQuery.isLoading]
   );
 
+  const isError = useMemo(() => paslonQuery.isError || settingsQuery.isError, [paslonQuery.isError, settingsQuery.isError]);
+
   useEffect(() => {
     function updateTime() {
       setCurrentTime(new Date().getTime());
     }
     updateTime();
 
-    intervalID = setInterval(updateTime, 5000);
+    intervalID = setInterval(updateTime, 5_000);
 
     return () => {
       clearInterval(intervalID);
@@ -90,6 +114,7 @@ export const SettingProvider: React.FC<{ children: React.ReactNode }> = ({
       value={{
         canVoteNow,
         isLoading,
+        isError,
         isCandidatesExist,
         paslon: paslonQuery.data,
       }}

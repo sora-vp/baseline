@@ -15,6 +15,9 @@
     "node": "^14.18.0 || >=16.0.0"
   },
   "devDependencies": {
+    "@chakra-ui/react": "^2.4.1",
+    "@emotion/react": "^11.10.5",
+    "@emotion/styled": "^11.10.5",
     "@tanstack/react-query": "^4.20.2",
     "@trpc/client": "^10.5.0",
     "@trpc/react-query": "^10.5.0",
@@ -24,6 +27,7 @@
     "@vitejs/plugin-react": "^3.0.0",
     "electron": "^22.0.0",
     "electron-builder": "^23.6.0",
+    "framer-motion": "^7.8.1",
     "picnic": "^7.1.0",
     "qr-scanner": "^1.4.2",
     "react": "^18.2.0",
