@@ -47,5 +47,8 @@
       "VITE_DEV_SERVER_URL": "http://127.0.0.1:7777"
     }
   },
-  "homepage": "https://github.com/reacto11mecha/sora#readme"
+  "homepage": "https://github.com/reacto11mecha/sora#readme",
+  "dependencies": {
+    "electron-store": "^8.1.0"
+  }
 }
