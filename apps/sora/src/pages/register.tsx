@@ -26,9 +26,9 @@ import { useRouter } from "next/router";
 import {
   ClientRegisterSchemaValidator,
   type ClientRegisterType,
-} from "../../schema/auth.schema";
+} from "../schema/auth.schema";
 
-import { trpc } from "../../utils/trpc";
+import { trpc } from "../utils/trpc";
 
 import type { NextPage } from "next";
 
@@ -65,7 +65,7 @@ const Register: NextPage = () => {
           isClosable: false,
         });
 
-        router.push("/admin/login");
+        router.push("/login");
       }
     },
     onError(error) {
@@ -91,11 +91,11 @@ const Register: NextPage = () => {
     });
 
   useEffect(() => {
-    router.prefetch("/admin");
+    router.prefetch("/");
 
     getSession().then((session) => {
       if (session) {
-        router.replace("/admin");
+        router.replace("/");
       } else {
         setLoading(false);
       }
@@ -221,7 +221,7 @@ const Register: NextPage = () => {
           <Text align="center" marginTop="10px">
             Sudah punya akun admin ?{" "}
             <span style={{ color: "#3182CE" }}>
-              <Link href="/admin/login">Login</Link>
+              <Link href="/login">Login</Link>
             </span>
           </Text>
         </Box>

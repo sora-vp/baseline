@@ -22,15 +22,15 @@ import NextLink from "next/link";
 import { DateTime } from "luxon";
 import Head from "next/head";
 
-import InputImageBox from "../../../components/InputImageBox";
-import Sidebar from "../../../components/Sidebar";
+import InputImageBox from "../../components/InputImageBox";
+import Sidebar from "../../components/Sidebar";
 
-import { trpc } from "../../../utils/trpc";
+import { trpc } from "../../utils/trpc";
 
 import {
   TambahPaslonValidationSchema as validationSchema,
   type TambahFormValues as FormValues,
-} from "../../../schema/admin.paslon.schema";
+} from "../../schema/admin.paslon.schema";
 
 const HalamanTambah = () => {
   const toast = useToast();
@@ -38,7 +38,7 @@ const HalamanTambah = () => {
 
   const settingsQuery = trpc.settings.getSettings.useQuery(undefined, {
     onSuccess(result) {
-      if (result.canVote) Router.push("/admin/paslon");
+      if (result.canVote) Router.push("/paslon");
     },
   });
 
@@ -109,7 +109,7 @@ const HalamanTambah = () => {
 
       if (imgFromInput !== null) URL.revokeObjectURL(imgFromInput);
       setIFI(null);
-    } else Router.push("/admin/paslon");
+    } else Router.push("/paslon");
   };
 
   return (
@@ -217,7 +217,7 @@ const HalamanTambah = () => {
                 >
                   Tambah
                 </Button>
-                <NextLink href="/admin/paslon" legacyBehavior passHref>
+                <NextLink href="/paslon" legacyBehavior passHref>
                   <Link display={"flex"} justifyContent="center" mt={2} mb={3}>
                     Kembali
                   </Link>

@@ -20,9 +20,9 @@ import {
 } from "recharts";
 import NextLink from "next/link";
 
-import { trpc } from "../../utils/trpc";
+import { trpc } from "../utils/trpc";
 
-import Sidebar from "../../components/Sidebar";
+import Sidebar from "../components/Sidebar";
 
 const Statistik = () => {
   const [width, setWidth] = useState<number>(0);
@@ -100,7 +100,7 @@ const Statistik = () => {
                   <HStack>
                     <Text fontSize={"3xl"} style={{ textAlign: "center" }}>
                       Belum ada paslon, buat terlebih dahulu di{" "}
-                      <NextLink href={"/admin/paslon"} passHref>
+                      <NextLink href={"/paslon"} passHref>
                         <Link color="teal.500">halaman paslon</Link>
                       </NextLink>
                       !

@@ -23,11 +23,11 @@ import Head from "next/head";
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
-import Sidebar from "../../../../components/Sidebar";
-import InputImageBox from "../../../../components/InputImageBox";
+import Sidebar from "../../../components/Sidebar";
+import InputImageBox from "../../../components/InputImageBox";
 
-import { trpc } from "../../../../utils/trpc";
-import { EditPaslonValidationSchema as validationSchema } from "../../../../schema/admin.paslon.schema";
+import { trpc } from "../../../utils/trpc";
+import { EditPaslonValidationSchema as validationSchema } from "../../../schema/admin.paslon.schema";
 
 type FormValues = {
   ketua: string;
@@ -48,7 +48,7 @@ const EditPaslonWithID = () => {
 
   const settingsQuery = trpc.settings.getSettings.useQuery(undefined, {
     onSuccess(result) {
-      if (result.canVote) router.push("/admin/paslon");
+      if (result.canVote) router.push("/paslon");
     },
   });
   const paslonQuery = trpc.paslon.getSpecificCandidate.useQuery(
@@ -131,7 +131,7 @@ const EditPaslonWithID = () => {
       if (imgFromInput !== null) URL.revokeObjectURL(imgFromInput);
       setIFI(null);
     } else {
-      router.push("/admin/paslon");
+      router.push("/paslon");
     }
   };
 
@@ -239,7 +239,7 @@ const EditPaslonWithID = () => {
                 >
                   Edit
                 </Button>
-                <NextLink href="/admin/paslon" legacyBehavior passHref>
+                <NextLink href="/paslon" legacyBehavior passHref>
                   <Link display={"flex"} justifyContent="center" mt={2} mb={3}>
                     Kembali
                   </Link>

@@ -103,7 +103,7 @@ const LogoutButton = ({ setClientRectCB }: LogoutButtonType) => {
                     redirect: false,
                   })
                     .then(() => {
-                      Router.push("/admin/login");
+                      Router.push("/login");
 
                       toast.closeAll();
                       toast({

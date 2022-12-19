@@ -64,6 +64,8 @@ export const SettingProvider: React.FC<{ children: React.ReactNode }> = ({
           : null
       );
       setCanVote(result.canVote);
+
+      if (paslonQuery.isError) paslonQuery.refetch();
     },
 
     onError(error) {

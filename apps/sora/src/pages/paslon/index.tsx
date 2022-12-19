@@ -33,8 +33,8 @@ import Head from "next/head";
 import NextLink from "next/link";
 import { DateTime } from "luxon";
 
-import { trpc } from "../../../utils/trpc";
-import Sidebar from "../../../components/Sidebar";
+import { trpc } from "../../utils/trpc";
+import Sidebar from "../../components/Sidebar";
 
 const Paslon = () => {
   const toast = useToast();
@@ -107,7 +107,7 @@ const Paslon = () => {
             <VStack align="stretch" px={2} py={2}>
               <HStack>
                 <NextLink
-                  href="/admin/paslon/tambah"
+                  href="/paslon/tambah"
                   passHref={
                     !settingsQuery.isLoading ||
                     !(settingsQuery.data as unknown as { canVote?: boolean })
@@ -187,7 +187,7 @@ const Paslon = () => {
                             </Td>
                             <Td>
                               <NextLink
-                                href={`/admin/paslon/edit/${p._id}`}
+                                href={`/paslon/edit/${p._id}`}
                                 passHref={
                                   !settingsQuery.isLoading ||
                                   !(

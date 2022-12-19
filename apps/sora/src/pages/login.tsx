@@ -22,7 +22,7 @@ import {
 import { getSession, signIn } from "next-auth/react";
 import { useRouter } from "next/router";
 
-import { LoginSchemaValidator, type LoginType } from "../../schema/auth.schema";
+import { LoginSchemaValidator, type LoginType } from "../schema/auth.schema";
 
 import type { NextPage } from "next";
 
@@ -67,7 +67,7 @@ const Login: NextPage = () => {
         isClosable: false,
       });
 
-      if (!router.query?.callbackUrl) return router.replace("/admin");
+      if (!router.query?.callbackUrl) return router.replace("/");
 
       const url = new URL(router.query?.callbackUrl as string);
       router.replace(url.pathname as string);
@@ -83,11 +83,11 @@ const Login: NextPage = () => {
   };
 
   useEffect(() => {
-    router.prefetch("/admin");
+    router.prefetch("/");
 
     getSession().then((session) => {
       if (session) {
-        router.replace("/admin");
+        router.replace("/");
       } else {
         setLoading(false);
       }
@@ -181,7 +181,7 @@ const Login: NextPage = () => {
           <Text align="center" marginTop="10px">
             Belum punya akun admin ?{" "}
             <span style={{ color: "#3182CE" }}>
-              <Link href="/admin/register">Daftar</Link>
+              <Link href="/register">Daftar</Link>
             </span>
           </Text>
         </Box>

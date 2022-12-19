@@ -43,10 +43,10 @@ interface LinkItemProps {
   href: string;
 }
 const LinkItems: Array<LinkItemProps> = [
-  { name: "Dashboard", icon: FiHome, href: "/admin" },
-  { name: "Paslon", icon: FiUser, href: "/admin/paslon" },
-  { name: "Statistik", icon: FiTrendingUp, href: "/admin/statistik" },
-  { name: "Pengaturan", icon: FiSettings, href: "/admin/pengaturan" },
+  { name: "Dashboard", icon: FiHome, href: "/" },
+  { name: "Paslon", icon: FiUser, href: "/paslon" },
+  { name: "Statistik", icon: FiTrendingUp, href: "/statistik" },
+  { name: "Pengaturan", icon: FiSettings, href: "/pengaturan" },
 ];
 
 const sundaneseFont = localFont({
