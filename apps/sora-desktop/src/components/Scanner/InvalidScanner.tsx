@@ -1,27 +1,37 @@
-import styles from "@/styles/components/Scanner.module.css";
+import { Box, Button, Text, HStack, Heading } from "@chakra-ui/react";
 
 const ErrorScanner: React.FC<{ setInvalidQr: Function }> = ({
   setInvalidQr,
 }) => {
   return (
-    <section className={styles.container}>
-      <article className={`card ${styles.card}`}>
-        <div className={styles.cardContainer}>
-          <div>
-            <h2 style={{ padding: "0" }}>QR Tidak Valid!</h2>
-          </div>
-          <div style={{ textAlign: "center", margin: "1rem" }}>
-            <p>QR Code yang anda tunjukkan tidak valid.</p>
-            <p>Mohon hubungi panitia untuk kesalahan ini.</p>
-          </div>
-          <div>
-            <button className="warning" onClick={() => setInvalidQr(false)}>
-              Coba Scan Ulang
-            </button>
-          </div>
-        </div>
-      </article>
-    </section>
+    <HStack h={"100vh"} justifyContent="center">
+      <Box
+        borderWidth="2px"
+        borderRadius="lg"
+        w="85%"
+        h="90%"
+        display="flex"
+        flexDirection="column"
+        boxShadow="rgba(99, 99, 99, 0.2) 0px 2px 8px 0px"
+        alignItems="center"
+        justifyContent="center"
+      >
+        <Heading as="h2" size="3xl">
+          QR Tidak Valid!
+        </Heading>
+
+        <Box margin="1.3em" style={{ textAlign: "center" }}>
+          <Text fontSize="xl">QR Code yang anda tunjukkan tidak valid.</Text>
+          <Text fontSize="xl">
+            Mohon hubungi panitia untuk memperbaiki masalah ini.
+          </Text>
+        </Box>
+
+        <Button colorScheme="yellow" onClick={() => setInvalidQr(false)}>
+          Coba Scan Ulang
+        </Button>
+      </Box>
+    </HStack>
   );
 };
 

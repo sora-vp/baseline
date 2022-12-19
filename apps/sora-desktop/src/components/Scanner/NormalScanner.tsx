@@ -2,6 +2,7 @@ import QrScanner from "qr-scanner";
 import { validateId } from "id-generator";
 import { useRef, useEffect } from "react";
 
+import { Box, Text, HStack } from "@chakra-ui/react";
 import styles from "@/styles/components/Scanner.module.css";
 
 const NormalScanner: React.FC<{ setInvalidQr: Function }> = ({
@@ -33,18 +34,35 @@ const NormalScanner: React.FC<{ setInvalidQr: Function }> = ({
   }, []);
 
   return (
-    <section className={styles.container}>
-      <article className={`card ${styles.card}`}>
-        <div className={styles.cardContainer}>
-          <div className={styles.upperItem}>
+    <HStack h="100vh" justifyContent="center">
+      <Box
+        borderWidth="2px"
+        borderRadius="lg"
+        w="85%"
+        h="90%"
+        display="flex"
+        boxShadow="rgba(99, 99, 99, 0.2) 0px 2px 8px 0px"
+        alignItems="center"
+        justifyContent="center"
+      >
+        <HStack
+          flexDirection="column"
+          h="100%"
+          w="80%"
+          alignItems="center"
+          justifyContent="center"
+        >
+          <Box h="85%">
             <video className={styles.video} ref={videoRef}></video>
-          </div>
-          <div className={styles.lowerItem}>
-            <h3>Scan Barcode ID Mu!</h3>
-          </div>
-        </div>
-      </article>
-    </section>
+          </Box>
+          <Box h="auto">
+            <Text fontWeight="bold" p={"1em"} fontSize="1.2em">
+              Scan Barcode ID Mu!
+            </Text>
+          </Box>
+        </HStack>
+      </Box>
+    </HStack>
   );
 };
 

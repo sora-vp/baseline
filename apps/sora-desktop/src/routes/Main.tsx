@@ -1,21 +1,25 @@
 import { useSetting } from "@/context/SettingContext";
 
 import Scanner from "@/components/Scanner";
-import { Loading, CantVote, InvalidCandidate } from "@/components/PreScan";
+import { ErrorOcurred, Loading, CantVote, InvalidCandidate } from "@/components/PreScan";
 
-const Main = () => {
-  const { isLoading, isCandidatesExist, canVoteNow } = useSetting();
+const Main: React.FC = () => {
+  const { isLoading, isError, isCandidatesExist, canVoteNow } = useSetting();
 
-  return <></>
+  if (isError) return <ErrorOcurred />;
 
-  if (isLoading) return <Loading />;
+  if (isLoading && !isError) return <Loading />;
 
-  if (!isLoading && !canVoteNow) return <CantVote />;
+  if (!isLoading && !canVoteNow && !isError) return <CantVote />;
 
-  if (!isLoading && canVoteNow && !isCandidatesExist)
+  if (!isLoading && canVoteNow && !isCandidatesExist && !isError)
     return <InvalidCandidate />;
 
-  if (!isLoading && canVoteNow && isCandidatesExist) return <Scanner />;
+  if (!isLoading && canVoteNow && isCandidatesExist && !isError)
+    return <Scanner />;
+
+  // Fallback
+  return <>ERR:INVALID_ELEMENT</>;
 };
 
 export default Main;

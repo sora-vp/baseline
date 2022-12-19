@@ -32,9 +32,9 @@ export const SettingProvider: React.FC<{ children: React.ReactNode }> = ({
   const paslonQuery = soraTRPC.paslon.candidateList.useQuery(undefined, {
     refetchOnWindowFocus: false,
 
-    onError(error: {name: string, message: string}) {
+    onError(error) {
       toast({
-        description: `Error | ${error.name}: ${error.message}`,
+        description: `Error: ${error.message}`,
         status: "error",
         duration: 5000,
         position: "top-right",
@@ -66,9 +66,9 @@ export const SettingProvider: React.FC<{ children: React.ReactNode }> = ({
       setCanVote(result.canVote);
     },
 
-    onError(error: {name: string, message: string}) {
+    onError(error) {
       toast({
-        description: `Error | ${error.name}: ${error.message}`,
+        description: `Error: ${error.message}`,
         status: "error",
         duration: 5000,
         position: "top-right",
@@ -94,7 +94,10 @@ export const SettingProvider: React.FC<{ children: React.ReactNode }> = ({
     [paslonQuery.isLoading, settingsQuery.isLoading]
   );
 
-  const isError = useMemo(() => paslonQuery.isError || settingsQuery.isError, [paslonQuery.isError, settingsQuery.isError]);
+  const isError = useMemo(
+    () => paslonQuery.isError || settingsQuery.isError,
+    [paslonQuery.isError, settingsQuery.isError]
+  );
 
   useEffect(() => {
     function updateTime() {
