@@ -1,6 +1,6 @@
 import { Box, Text, HStack, Spinner } from "@chakra-ui/react";
 
-export const Loading = () => (
+const Loading = () => (
   <HStack h={"100vh"} justifyContent="center">
     <Box
       borderWidth="2px"
@@ -17,3 +17,5 @@ export const Loading = () => (
     </Box>
   </HStack>
 );
+
+export default Loading;

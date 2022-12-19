@@ -1,6 +1,6 @@
 import { Box, Text, HStack, Heading } from "@chakra-ui/react";
 
-export const InvalidCandidate = () => (
+const InvalidCandidate = () => (
   <HStack h={"100vh"} justifyContent="center">
     <Box
       borderWidth="2px"
@@ -15,7 +15,9 @@ export const InvalidCandidate = () => (
       alignItems="center"
       justifyContent="center"
     >
-      <Heading p={".6em"} color="red.500">Profil Pemilihan Tidak Valid</Heading>
+      <Heading p={".6em"} color="red.500">
+        Profil Pemilihan Tidak Valid
+      </Heading>
 
       <Text fontSize="1.3em">
         Sekurang-kurangnya sebuah pemilihan harus memiliki dua kandidat.
@@ -26,3 +28,5 @@ export const InvalidCandidate = () => (
     </Box>
   </HStack>
 );
+
+export default InvalidCandidate;

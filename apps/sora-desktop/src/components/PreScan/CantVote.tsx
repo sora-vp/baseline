@@ -1,6 +1,6 @@
 import { Box, Text, HStack, Heading } from "@chakra-ui/react";
 
-export const CantVote: React.FC = () => (
+const CantVote: React.FC = () => (
   <HStack h={"100vh"} justifyContent="center">
     <Box
       borderWidth="2px"
@@ -21,3 +21,5 @@ export const CantVote: React.FC = () => (
     </Box>
   </HStack>
 );
+
+export default CantVote;

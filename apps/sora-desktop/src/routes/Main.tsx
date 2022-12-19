@@ -1,7 +1,14 @@
+import { lazy } from "react";
 import { useSetting } from "@/context/SettingContext";
 
-import Scanner from "@/components/Scanner";
-import { ErrorOcurred, Loading, CantVote, InvalidCandidate } from "@/components/PreScan";
+const ErrorOcurred = lazy(() => import("@/components/PreScan/ErrorOccured"));
+const Loading = lazy(() => import("@/components/PreScan/Loading"));
+const CantVote = lazy(() => import("@/components/PreScan/CantVote"));
+const InvalidCandidate = lazy(
+  () => import("@/components/PreScan/InvalidCandidate")
+);
+
+const Scanner = lazy(() => import("@/components/Scanner"));
 
 const Main: React.FC = () => {
   const { isLoading, isError, isCandidatesExist, canVoteNow } = useSetting();
