@@ -1,5 +1,5 @@
 const Vote: React.FC = () => {
-  return <></>;
+  return <>Vote</>;
 };
 
 export default Vote;

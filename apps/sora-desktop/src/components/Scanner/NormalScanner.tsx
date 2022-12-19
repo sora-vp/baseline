@@ -2,12 +2,16 @@ import QrScanner from "qr-scanner";
 import { validateId } from "id-generator";
 import { useRef, useEffect } from "react";
 
-import { Box, Text, HStack } from "@chakra-ui/react";
+import { useNavigate } from "react-router-dom";
+import { useToast, Box, Text, HStack } from "@chakra-ui/react";
 import styles from "@/styles/components/Scanner.module.css";
 
 const NormalScanner: React.FC<{ setInvalidQr: Function }> = ({
   setInvalidQr,
 }) => {
+  const navigate = useNavigate();
+  const toast = useToast();
+
   const videoRef = useRef<HTMLVideoElement>(null!);
 
   useEffect(() => {
@@ -19,10 +23,21 @@ const NormalScanner: React.FC<{ setInvalidQr: Function }> = ({
         const isValidQr = validateId(data);
 
         if (!isValidQr) return setInvalidQr(true);
+
+        navigate("/vote");
       },
       {
         highlightCodeOutline: true,
         highlightScanRegion: true,
+        onDecodeError: (error) => {
+          if (error instanceof Error)
+            toast({
+              description: `Error: ${error.message}`,
+              status: "error",
+              duration: 5000,
+              position: "top-right",
+            });
+        },
       }
     );
 

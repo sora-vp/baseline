@@ -1,4 +1,4 @@
-import { lazy, useState } from "react";
+import { useState } from "react";
 
 import superjson from "superjson";
 import { httpBatchLink } from "@trpc/client";
@@ -8,12 +8,17 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { soraTRPC } from "@/utils/trpc";
 import { SettingProvider } from "@/context/SettingContext";
 
-const Main = lazy(() => import("./routes/Main"));
+import Main from "./routes/Main";
+import Vote from "./routes/Vote";
 
 const router = createHashRouter([
   {
     path: "/",
     element: <Main />,
+  },
+  {
+    path: "/vote",
+    element: <Vote />,
   },
 ]);
 
