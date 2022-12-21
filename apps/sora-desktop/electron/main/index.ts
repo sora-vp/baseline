@@ -15,8 +15,11 @@ process.env.PUBLIC = app.isPackaged
   : join(process.env.DIST_ELECTRON, "../public");
 
 import { app, BrowserWindow, shell, ipcMain } from "electron";
+import Store from "electron-store";
 import { release } from "os";
 import { join } from "path";
+
+Store.initRenderer();
 
 // Disable GPU Acceleration for Windows 7
 if (release().startsWith("6.1")) app.disableHardwareAcceleration();
@@ -37,7 +40,7 @@ const indexHtml = join(process.env.DIST, "index.html");
 
 async function createWindow() {
   win = new BrowserWindow({
-    title: "Main window",
+    title: "Aplikasi Voting | SORA",
     icon: join(process.env.PUBLIC, "favicon.svg"),
     webPreferences: {
       preload,

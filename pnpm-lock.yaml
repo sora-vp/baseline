@@ -220,12 +220,23 @@ importers:
       '@types/react': ^18.0.25
       '@types/react-dom': ^18.0.9
       '@vitejs/plugin-react': ^3.0.0
+      atomically: ^2.0.0
+      conf: ^10.2.0
+      dot-prop: ^6.0.1
       electron: ^22.0.0
       electron-builder: ^23.6.0
       electron-store: ^8.1.0
+      env-paths: 2.2.1
+      find-up: 5.0.0
       framer-motion: ^7.10.2
       id-generator: workspace:*
+      is-obj: 2.0.0
+      locate-path: 6.0.0
       luxon: ^3.1.1
+      p-limit: 3.1.0
+      p-locate: 5.0.0
+      path-exists: 4.0.0
+      pkg-up: 3.1.0
       qr-scanner: ^1.4.2
       react: ^18.2.0
       react-dom: ^18.2.0
@@ -236,8 +247,21 @@ importers:
       vite: ^4.0.2
       vite-electron-plugin: ^0.5.2
       vite-plugin-electron-renderer: ^0.11.3
+      yocto-queue: 0.1.0
     dependencies:
+      atomically: 2.0.0
+      conf: 10.2.0
+      dot-prop: 6.0.1
       electron-store: 8.1.0
+      env-paths: 2.2.1
+      find-up: 5.0.0
+      is-obj: 2.0.0
+      locate-path: 6.0.0
+      p-limit: 3.1.0
+      p-locate: 5.0.0
+      path-exists: 4.0.0
+      pkg-up: 3.1.0
+      yocto-queue: 0.1.0
     devDependencies:
       '@chakra-ui/react': 2.4.4_przcunyodmsiq2duiyjrphchze
       '@emotion/react': 11.10.5_kzbn2opkn2327fwg5yzwzya5o4
@@ -3722,6 +3746,13 @@ packages:
     engines: {node: '>=10.12.0'}
     dev: false
 
+  /atomically/2.0.0:
+    resolution: {integrity: sha512-KpioFPR6tOK/u3z1tFplHI9l2yK3Nu8cl47gAsTfPT6i2UClTXoqOk8dZqGIwWWopen4bSP5HnlaPUDWC7IfKw==}
+    dependencies:
+      stubborn-fs: 1.2.1
+      when-exit: 2.0.0
+    dev: false
+
   /axe-core/4.6.1:
     resolution: {integrity: sha512-lCZN5XRuOnpG4bpMq8v0khrWtUOn+i8lZSb6wHZH56ZfbIEv6XwJV84AAueh9/zi7qPVJ/E4yz6fmsiyOmXR4w==}
     engines: {node: '>=4'}
@@ -5039,7 +5070,6 @@ packages:
     dependencies:
       locate-path: 6.0.0
       path-exists: 4.0.0
-    dev: true
 
   /flat-cache/3.0.4:
     resolution: {integrity: sha512-dm9s5Pw7Jc0GvMYbshN6zchCA9RgQlzzEZX3vylR9IqFfS8XciblUXOKfW6SiuJ0e13eDYZoZV5wdrev7P3Nwg==}
@@ -5867,7 +5897,6 @@ packages:
     engines: {node: '>=10'}
     dependencies:
       p-locate: 5.0.0
-    dev: true
 
   /lodash._baseiteratee/4.7.0:
     resolution: {integrity: sha512-nqB9M+wITz0BX/Q2xg6fQ8mLkyfF7MU7eE+MNBNjTHFKeKaZAPEzEg+E8LWxKWf1DQVflNEn9N49yAuqKh2mWQ==}
@@ -6453,7 +6482,6 @@ packages:
     engines: {node: '>=10'}
     dependencies:
       yocto-queue: 0.1.0
-    dev: true
 
   /p-locate/3.0.0:
     resolution: {integrity: sha512-x+12w/To+4GFfgJhBEpiDcLozRJGegY+Ei7/z0tSLkMmxGZNybVMSfWj9aJn8Z5Fc7dBUNJOOVgPv2H7IwulSQ==}
@@ -6467,7 +6495,6 @@ packages:
     engines: {node: '>=10'}
     dependencies:
       p-limit: 3.1.0
-    dev: true
 
   /p-try/2.2.0:
     resolution: {integrity: sha512-R4nPAVTAU0B9D35/Gk3uJf/7XYbQcyohSKdvAxIRSNghFl4e71hVoGnBNQz9cWaXxO2I10KTC+3jMdvvoKw6dQ==}
@@ -6497,7 +6524,6 @@ packages:
   /path-exists/4.0.0:
     resolution: {integrity: sha512-ak9Qy5Q7jYb2Wwcey5Fpvg2KoAc/ZIhLSLOSBmRmygPsGwkVVt0fZa0qrtMz+m6tJTAHfZQ8FnmB4MG4LWy7/w==}
     engines: {node: '>=8'}
-    dev: true
 
   /path-is-absolute/1.0.1:
     resolution: {integrity: sha512-AVbw3UJ2e9bq64vSaS9Am0fje1Pa8pbGqTTsmXfaIiMpnr5DlDhfJOuLj9Sf95ZPVDAUerDfEk88MPmPe7UCQg==}
@@ -7336,6 +7362,10 @@ packages:
     dev: false
     optional: true
 
+  /stubborn-fs/1.2.1:
+    resolution: {integrity: sha512-IgTveO0OGXMMi9iZtfPoYQY6IpeZR3ILtSsjMapFgLxofWaHG1sNlInV7yTRDV06YiNdwiKrK7505Fxq8ly+YA==}
+    dev: false
+
   /styled-jsx/5.1.0_react@18.2.0:
     resolution: {integrity: sha512-/iHaRJt9U7T+5tp6TRelLnqBqiaIT0HsO0+vgyj8hK2KUk7aejFqRrumqPUlAqDwAj8IbS/1hk3IhBAAK/FCUQ==}
     engines: {node: '>= 12.0.0'}
@@ -7789,6 +7819,10 @@ packages:
       webidl-conversions: 3.0.1
     dev: false
 
+  /when-exit/2.0.0:
+    resolution: {integrity: sha512-17lB0PWIgOuil9dgC/vdQY0aq5lwT0umemaIsOTNDBsc1TwclvocXOvkwenwUXEawN5mW3F64X52xPkTFnihDw==}
+    dev: false
+
   /which-boxed-primitive/1.0.2:
     resolution: {integrity: sha512-bwZdv0AKLpplFY2KZRX6TvyuN7ojjr7lwkg6ml0roIy9YeuSr7JS372qlNW18UQYzgYK9ziGcerWqZOmEn9VNg==}
     dependencies:
@@ -7876,7 +7910,6 @@ packages:
   /yocto-queue/0.1.0:
     resolution: {integrity: sha512-rVksvsnNCdJ/ohGc6xgPwyN8eheCxsiLM8mxuE/t/mOVqJewPuO1miLpTHQiRgTKCLexL4MeAFVagts7HmNZ2Q==}
     engines: {node: '>=10'}
-    dev: true
 
   /zod/3.20.2:
     resolution: {integrity: sha512-1MzNQdAvO+54H+EaK5YpyEy0T+Ejo/7YLHS93G3RnYWh5gaotGHwGeN/ZO687qEDU2y4CdStQYXVHIgrUl5UVQ==}

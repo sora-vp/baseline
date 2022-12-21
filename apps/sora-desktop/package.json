@@ -49,6 +49,18 @@
   },
   "homepage": "https://github.com/reacto11mecha/sora#readme",
   "dependencies": {
-    "electron-store": "^8.1.0"
+    "atomically": "^2.0.0",
+    "conf": "^10.2.0",
+    "dot-prop": "^6.0.1",
+    "electron-store": "^8.1.0",
+    "env-paths": "2.2.1",
+    "find-up": "5.0.0",
+    "is-obj": "2.0.0",
+    "locate-path": "6.0.0",
+    "p-limit": "3.1.0",
+    "p-locate": "5.0.0",
+    "path-exists": "4.0.0",
+    "pkg-up": "3.1.0",
+    "yocto-queue": "0.1.0"
   }
 }

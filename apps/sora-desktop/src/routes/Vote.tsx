@@ -23,6 +23,7 @@ import { DateTime } from "luxon";
 import { useNavigate } from "react-router-dom";
 
 import Loading from "@/components/PreScan/Loading";
+import { useAppSetting } from "@/context/AppSetting";
 import { useSetting } from "@/context/SettingContext";
 
 import { soraTRPC } from "@/utils/trpc";
@@ -30,6 +31,7 @@ import { soraTRPC } from "@/utils/trpc";
 const Vote: React.FC = () => {
   const toast = useToast();
   const navigate = useNavigate();
+  const { serverURL } = useAppSetting();
   const { isLoading, isError, canVoteNow, paslon } = useSetting();
 
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -105,7 +107,7 @@ const Vote: React.FC = () => {
                 textAlign={"center"}
               >
                 <Image
-                  src={`http://localhost:3000/api/uploads/${kandidat.imgName}`}
+                  src={`${serverURL}/api/uploads/${kandidat.imgName}`}
                   alt={`Gambar dari pasangan calon ${kandidat.namaKetua} dan ${kandidat.namaWakil}.`}
                 />
                 <Heading mt={2} fontSize={"3xl"} fontFamily={"body"}>

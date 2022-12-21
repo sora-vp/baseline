@@ -6,6 +6,7 @@ import { createHashRouter, RouterProvider } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 import { soraTRPC } from "@/utils/trpc";
+import { useAppSetting } from "@/context/AppSetting";
 import { SettingProvider } from "@/context/SettingContext";
 
 import Main from "./routes/Main";
@@ -22,14 +23,16 @@ const router = createHashRouter([
   },
 ]);
 
-const App: React.FC = () => {
+const ActualApp: React.FC = () => {
+  const { serverURL } = useAppSetting();
+
   const [soraQueryClient] = useState(() => new QueryClient());
   const [soraTRPCClient] = useState(() =>
     soraTRPC.createClient({
       transformer: superjson,
       links: [
         httpBatchLink({
-          url: "http://localhost:3000/api/trpc",
+          url: `${serverURL as string}/api/trpc`,
         }),
       ],
     })
@@ -44,6 +47,13 @@ const App: React.FC = () => {
       </QueryClientProvider>
     </soraTRPC.Provider>
   );
+};
+
+const App: React.FC = () => {
+  const { serverURL } = useAppSetting();
+
+  if (!serverURL) return <>SET DULU CUY</>;
+  return <ActualApp />;
 };
 
 export default App;
