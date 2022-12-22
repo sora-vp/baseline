@@ -1,7 +1,6 @@
 import { initTRPC, TRPCError } from "@trpc/server";
+import type { Context } from "./context";
 import superjson from "superjson";
-
-import { type Context } from "./context";
 
 const t = initTRPC.context<Context>().create({
   transformer: superjson,
@@ -37,3 +36,20 @@ const isAuthed = t.middleware(({ ctx, next }) => {
  * Protected procedure
  **/
 export const protectedProcedure = t.procedure.use(isAuthed);
+
+/**
+ * Reusable middleware to ensure
+ * users are not logged in
+ */
+const isNotAuthed = t.middleware(({ ctx, next }) => {
+  if (ctx.session) {
+    throw new TRPCError({ code: "UNAUTHORIZED" });
+  }
+
+  return next({ ctx });
+});
+
+/**
+ * Unprotected procedure
+ **/
+export const unprotectedProcedure = t.procedure.use(isNotAuthed);

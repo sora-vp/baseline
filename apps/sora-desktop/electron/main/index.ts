@@ -15,6 +15,7 @@ process.env.PUBLIC = app.isPackaged
   : join(process.env.DIST_ELECTRON, "../public");
 
 import { app, BrowserWindow, shell, ipcMain } from "electron";
+import Store from "electron-store";
 import { release } from "os";
 import { join } from "path";
 
@@ -36,6 +37,8 @@ const url = process.env.VITE_DEV_SERVER_URL;
 const indexHtml = join(process.env.DIST, "index.html");
 
 async function createWindow() {
+  Store.initRenderer();
+
   win = new BrowserWindow({
     title: "Aplikasi Voting | SORA",
     icon: join(process.env.PUBLIC, "favicon.svg"),
