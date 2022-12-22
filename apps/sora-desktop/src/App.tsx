@@ -6,11 +6,12 @@ import { createHashRouter, RouterProvider } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 import { soraTRPC } from "@/utils/trpc";
-import { useAppSetting } from "@/context/AppSetting";
 import { SettingProvider } from "@/context/SettingContext";
+import { useAppSetting, ensureHasAppSetting } from "@/context/AppSetting";
 
 import Main from "./routes/Main";
 import Vote from "./routes/Vote";
+import Setting from "./routes/Setting";
 
 const router = createHashRouter([
   {
@@ -21,9 +22,13 @@ const router = createHashRouter([
     path: "/vote",
     element: <Vote />,
   },
+  {
+    path: "/setting",
+    element: <Setting />,
+  },
 ]);
 
-const ActualApp: React.FC = () => {
+const App: React.FC = () => {
   const { serverURL } = useAppSetting();
 
   const [soraQueryClient] = useState(() => new QueryClient());
@@ -49,11 +54,4 @@ const ActualApp: React.FC = () => {
   );
 };
 
-const App: React.FC = () => {
-  const { serverURL } = useAppSetting();
-
-  if (!serverURL) return <>SET DULU CUY</>;
-  return <ActualApp />;
-};
-
-export default App;
+export default ensureHasAppSetting(App);

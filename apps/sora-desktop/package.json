@@ -28,6 +28,7 @@
     "@vitejs/plugin-react": "^3.0.0",
     "electron": "^22.0.0",
     "electron-builder": "^23.6.0",
+    "electron-store": "^8.1.0",
     "framer-motion": "^7.10.2",
     "id-generator": "workspace:*",
     "luxon": "^3.1.1",
@@ -47,20 +48,5 @@
       "VITE_DEV_SERVER_URL": "http://127.0.0.1:7777"
     }
   },
-  "homepage": "https://github.com/reacto11mecha/sora#readme",
-  "dependencies": {
-    "atomically": "^2.0.0",
-    "conf": "^10.2.0",
-    "dot-prop": "^6.0.1",
-    "electron-store": "^8.1.0",
-    "env-paths": "2.2.1",
-    "find-up": "5.0.0",
-    "is-obj": "2.0.0",
-    "locate-path": "6.0.0",
-    "p-limit": "3.1.0",
-    "p-locate": "5.0.0",
-    "path-exists": "4.0.0",
-    "pkg-up": "3.1.0",
-    "yocto-queue": "0.1.0"
-  }
+  "homepage": "https://github.com/reacto11mecha/sora#readme"
 }
