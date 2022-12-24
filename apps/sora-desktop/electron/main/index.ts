@@ -19,6 +19,9 @@ import Store from "electron-store";
 import { release } from "os";
 import { join } from "path";
 
+// Init store
+Store.initRenderer();
+
 // Disable GPU Acceleration for Windows 7
 if (release().startsWith("6.1")) app.disableHardwareAcceleration();
 
@@ -37,8 +40,6 @@ const url = process.env.VITE_DEV_SERVER_URL;
 const indexHtml = join(process.env.DIST, "index.html");
 
 async function createWindow() {
-  Store.initRenderer();
-
   win = new BrowserWindow({
     title: "Aplikasi Voting | SORA",
     icon: join(process.env.PUBLIC, "favicon.svg"),

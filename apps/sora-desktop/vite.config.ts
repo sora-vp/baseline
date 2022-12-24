@@ -43,10 +43,6 @@ export default defineConfig({
     // Use Node.js API in the Renderer-process
     renderer({
       nodeIntegration: true,
-
-      optimizeDeps: {
-        include: ["electron-store"],
-      },
     }),
   ],
   server: process.env.VSCODE_DEBUG

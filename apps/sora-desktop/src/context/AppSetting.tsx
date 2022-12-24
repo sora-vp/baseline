@@ -4,18 +4,21 @@ import {
   useMemo,
   useState,
   useCallback,
+  useEffect,
 } from "react";
 import Store from "electron-store";
 import { useToast } from "@chakra-ui/react";
 
 import Setting from "@/routes/Setting";
-
 interface IAppSetting {
   serverURL?: string;
   setServerUrl: (newUrl: string) => void;
 }
 
 const store = new Store<IAppSetting>();
+
+// @ts-ignore
+window.store = store;
 
 export const AppSettingContext = createContext<IAppSetting>({} as IAppSetting);
 
@@ -62,8 +65,6 @@ export const AppSettingProvider: React.FC<{ children: React.ReactNode }> = ({
 export const useAppSetting = () => useContext(AppSettingContext) as IAppSetting;
 
 export const ensureHasAppSetting = (Element: React.FC) => () => {
-  const { serverURL } = useAppSetting();
-
-  if (!serverURL) return <Setting />;
+  if (!store.get("serverURL")) return <Setting />;
   return <Element />;
 };
