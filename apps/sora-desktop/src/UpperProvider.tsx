@@ -1,16 +1,15 @@
-import { Suspense, lazy } from "react";
+import { ChakraProvider } from "@chakra-ui/react";
 
 import { AppSettingProvider } from "@/context/AppSetting";
-import Loading from "@/components/PreScan/Loading";
 
-const App = lazy(() => import("./App"));
+import App from "./App";
 
 const UpperProvider = () => (
-  <AppSettingProvider>
-    {/* <Suspense fallback={<Loading />}>
+  <ChakraProvider>
+    <AppSettingProvider>
       <App />
-    </Suspense> */}
-  </AppSettingProvider>
+    </AppSettingProvider>
+  </ChakraProvider>
 );
 
 export default UpperProvider;
