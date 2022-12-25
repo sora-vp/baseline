@@ -5,9 +5,9 @@ import type { Session } from "next-auth";
 import type { AppType } from "next/app";
 
 import "react-datepicker/dist/react-datepicker.css";
-import "../components/DatePicker/chakra-support.css";
+import "@components/DatePicker/chakra-support.css";
 
-import { trpc } from "../utils/trpc";
+import { trpc } from "@utils/trpc";
 
 const MyApp: AppType<{ session: Session | null }> = ({
   Component,

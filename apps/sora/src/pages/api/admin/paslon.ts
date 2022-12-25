@@ -7,11 +7,11 @@ import { Types } from "mongoose";
 import formidable from "formidable";
 import nextConnect from "next-connect";
 
-import { PaslonModel } from "../../../models";
-import { canVoteNow } from "../../../utils/canVote";
+import { PaslonModel } from "@model";
+import { canVoteNow } from "@utils/canVote";
 
-import { connectDatabase } from "../../../utils/database";
-import { getServerAuthSession } from "../../../server/common/get-server-auth-session";
+import { connectDatabase } from "@utils/database";
+import { getServerAuthSession } from "@server/common/get-server-auth-session";
 
 import type { NextApiRequest, NextApiResponse } from "next";
 

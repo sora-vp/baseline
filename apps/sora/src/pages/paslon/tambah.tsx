@@ -22,15 +22,15 @@ import NextLink from "next/link";
 import { DateTime } from "luxon";
 import Head from "next/head";
 
-import InputImageBox from "../../components/InputImageBox";
-import Sidebar from "../../components/Sidebar";
+import InputImageBox from "@components/InputImageBox";
+import Sidebar from "@components/Sidebar";
 
-import { trpc } from "../../utils/trpc";
+import { trpc } from "@utils/trpc";
 
 import {
   TambahPaslonValidationSchema as validationSchema,
   type TambahFormValues as FormValues,
-} from "../../schema/admin.paslon.schema";
+} from "@schema/admin.paslon.schema";
 
 const HalamanTambah = () => {
   const toast = useToast();

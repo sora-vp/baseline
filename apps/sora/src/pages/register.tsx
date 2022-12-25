@@ -26,9 +26,9 @@ import { useRouter } from "next/router";
 import {
   ClientRegisterSchemaValidator,
   type ClientRegisterType,
-} from "../schema/auth.schema";
+} from "@schema/auth.schema";
 
-import { trpc } from "../utils/trpc";
+import { trpc } from "@utils/trpc";
 
 import type { NextPage } from "next";
 

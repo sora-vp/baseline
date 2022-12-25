@@ -20,9 +20,9 @@ import {
 } from "recharts";
 import NextLink from "next/link";
 
-import { trpc } from "../utils/trpc";
+import { trpc } from "@utils/trpc";
 
-import Sidebar from "../components/Sidebar";
+import Sidebar from "@components/Sidebar";
 
 const Statistik = () => {
   const [width, setWidth] = useState<number>(0);

@@ -23,11 +23,11 @@ import Head from "next/head";
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
-import Sidebar from "../../../components/Sidebar";
-import InputImageBox from "../../../components/InputImageBox";
+import Sidebar from "@components/Sidebar";
+import InputImageBox from "@components/InputImageBox";
 
-import { trpc } from "../../../utils/trpc";
-import { EditPaslonValidationSchema as validationSchema } from "../../../schema/admin.paslon.schema";
+import { trpc } from "@utils/trpc";
+import { EditPaslonValidationSchema as validationSchema } from "@schema/admin.paslon.schema";
 
 type FormValues = {
   ketua: string;
