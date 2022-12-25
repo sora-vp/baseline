@@ -7,7 +7,7 @@ import {
   unprotectedProcedure,
 } from "../trpc";
 
-import { PaslonModel, Paslon as PaslonType } from "@model";
+import { PaslonModel, Paslon as PaslonType } from "@models/index";
 import {
   adminDeleteCandidateAndUpvoteValidationSchema,
   adminGetSpecificCandidateValidationSchema,

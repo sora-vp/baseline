@@ -5,7 +5,8 @@
     "useDefineForClassFields": true,
     "lib": ["DOM", "DOM.Iterable", "ESNext"],
     "paths": {
-      "@/*": ["src/*"]
+      "@/*": ["src/*"],
+      "@*": ["../sora/src/*"]
     },
     "allowJs": true,
     "skipLibCheck": true,

@@ -3,7 +3,7 @@ import NextAuth, { type NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { connectDatabase } from "@utils/database";
 
-import { UserModel } from "@model";
+import { UserModel } from "@models/index";
 
 export const authOptions: NextAuthOptions = {
   pages: {

@@ -23,7 +23,6 @@
     "paths": {
       "@components/*": ["src/components/*"],
       "@env/*": ["src/env/*"],
-      "@model": ["src/models/index.ts"],
       "@models/*": ["src/models/*"],
       "@pages/*": ["src/pages/*"],
       "@schema/*": ["src/schema/*"],

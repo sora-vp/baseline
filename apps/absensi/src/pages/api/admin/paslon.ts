@@ -7,7 +7,7 @@ import { Types } from "mongoose";
 import formidable from "formidable";
 import nextConnect from "next-connect";
 
-import { PaslonModel } from "@model";
+import { PaslonModel } from "@models/index";
 import { canVoteNow } from "@utils/canVote";
 
 import { connectDatabase } from "@utils/database";

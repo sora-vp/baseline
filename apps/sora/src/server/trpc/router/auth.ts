@@ -8,7 +8,7 @@ import {
   ServerChangePasswordSchemaValidator,
 } from "@schema/auth.schema";
 
-import { UserModel } from "@model";
+import { UserModel } from "@models/index";
 
 export const authRouter = router({
   me: protectedProcedure.query(async ({ ctx }) => {
