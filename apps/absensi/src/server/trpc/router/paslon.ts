@@ -7,13 +7,13 @@ import {
   unprotectedProcedure,
 } from "../trpc";
 
-import { PaslonModel, Paslon as PaslonType } from "../../../models";
+import { PaslonModel, Paslon as PaslonType } from "@model";
 import {
   adminDeleteCandidateAndUpvoteValidationSchema,
   adminGetSpecificCandidateValidationSchema,
-} from "../../../schema/admin.paslon.schema";
+} from "@schema/admin.paslon.schema";
 
-import { canVoteNow } from "../../../utils/canVote";
+import { canVoteNow } from "@utils/canVote";
 
 export const paslonRouter = router({
   candidateList: publicProcedure.query(async () => {
