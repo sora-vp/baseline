@@ -19,7 +19,7 @@ export async function connectDatabase() {
       bufferCommands: false,
     };
 
-    mongoose.set('strictQuery', true);
+    mongoose.set("strictQuery", true);
     cached.promise = mongoose.connect(MONGODB_URI, opts).then((mongoose) => {
       console.log("DB: Connected");
       return mongoose;

@@ -1,3 +1,4 @@
+import * as React from "react";
 import { useState, useRef, useEffect } from "react";
 import {
   useDisclosure,
@@ -75,7 +76,9 @@ const LogoutButton = ({ setClientRectCB }: LogoutButtonType) => {
         motionPreset="slideInBottom"
         isOpen={isOpen}
         leastDestructiveRef={cancelRef}
-        onClose={onClose}
+        onClose={() => {
+          if (!isLoading) onClose();
+        }}
         isCentered
       >
         <AlertDialogOverlay>

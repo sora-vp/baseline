@@ -21,4 +21,5 @@ export default defineNextConfig({
     locales: ["id"],
     defaultLocale: "id",
   },
+  transpilePackages: ["ui"]
 });

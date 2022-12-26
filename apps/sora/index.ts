@@ -1,1 +1,1 @@
-export type { AppRouter as SoraAppRouter} from "./src/server/trpc/router/index";
+export type { AppRouter as SoraAppRouter } from "./src/server/trpc/router/index";

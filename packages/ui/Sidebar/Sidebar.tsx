@@ -1,11 +1,13 @@
 /* eslint-disable react-hooks/rules-of-hooks */
-import React, {
+import * as React from "react";
+
+import {
   useCallback,
   useEffect,
   useState,
   useRef,
   ElementType,
-  ReactText,
+  ReactNode,
   memo,
 } from "react";
 import {
@@ -23,13 +25,7 @@ import {
   BoxProps,
   FlexProps,
 } from "@chakra-ui/react";
-import {
-  FiHome,
-  FiUser,
-  FiTrendingUp,
-  FiSettings,
-  FiMenu,
-} from "react-icons/fi";
+import { FiMenu } from "react-icons/fi";
 import NextLink from "next/link";
 import { IconType } from "react-icons";
 import localFont from "@next/font/local";
@@ -42,12 +38,6 @@ interface LinkItemProps {
   icon: IconType;
   href: string;
 }
-const LinkItems: Array<LinkItemProps> = [
-  { name: "Dashboard", icon: FiHome, href: "/" },
-  { name: "Paslon", icon: FiUser, href: "/paslon" },
-  { name: "Statistik", icon: FiTrendingUp, href: "/statistik" },
-  { name: "Pengaturan", icon: FiSettings, href: "/pengaturan" },
-];
 
 const sundaneseFont = localFont({
   src: "./fonts/NotoSansSundanese-Regular.ttf",
@@ -55,65 +45,77 @@ const sundaneseFont = localFont({
 
 type SimpleSidebarType = JSX.IntrinsicAttributes;
 
-export const SimpleSidebar = (WrappedComponent: ElementType) =>
-  // eslint-disable-next-line react/display-name
-  memo((props: SimpleSidebarType) => {
-    const { isOpen, onOpen, onClose } = useDisclosure();
-    const [height, setHeight] = useState<number>(0);
-    const container = useRef<HTMLDivElement>(null!);
+export const SidebarWrapper =
+  (LinkItems: Array<LinkItemProps>) => (WrappedComponent: ElementType) =>
+    // eslint-disable-next-line react/display-name
+    memo((props: SimpleSidebarType) => {
+      const { isOpen, onOpen, onClose } = useDisclosure();
+      const [height, setHeight] = useState<number>(0);
+      const container = useRef<HTMLDivElement>(null!);
 
-    useEffect(() => {
-      const setSize = () => {
-        setHeight(container.current.clientHeight);
-      };
-      setSize();
+      useEffect(() => {
+        const setSize = () => {
+          setHeight(container.current.clientHeight);
+        };
+        setSize();
 
-      window.addEventListener("resize", setSize);
+        window.addEventListener("resize", setSize);
 
-      return () => {
-        window.removeEventListener("resize", setSize);
-      };
-    }, []);
+        return () => {
+          window.removeEventListener("resize", setSize);
+        };
+      }, []);
 
-    return (
-      <Box
-        minH="100vh"
-        bg={useColorModeValue("gray.100", "gray.900")}
-        ref={container}
-      >
-        <SidebarContent
-          height={height}
-          onClose={() => onClose}
-          display={{ base: "none", md: "block" }}
-        />
-        <Drawer
-          autoFocus={false}
-          isOpen={isOpen}
-          placement="left"
-          onClose={onClose}
-          returnFocusOnClose={false}
-          onOverlayClick={onClose}
-          size="full"
+      return (
+        <Box
+          minH="100vh"
+          bg={useColorModeValue("gray.100", "gray.900")}
+          ref={container}
         >
-          <DrawerContent>
-            <SidebarContent onClose={onClose} height={height} />
-          </DrawerContent>
-        </Drawer>
-        {/* mobilenav */}
-        <MobileNav display={{ base: "flex", md: "none" }} onOpen={onOpen} />
-        <Box ml={{ base: 0, md: 60 }} p="4">
-          <WrappedComponent {...props} />
+          <SidebarContent
+            height={height}
+            LinkItems={LinkItems}
+            onClose={() => onClose}
+            display={{ base: "none", md: "block" }}
+          />
+          <Drawer
+            autoFocus={false}
+            isOpen={isOpen}
+            placement="left"
+            onClose={onClose}
+            returnFocusOnClose={false}
+            onOverlayClick={onClose}
+            size="full"
+          >
+            <DrawerContent>
+              <SidebarContent
+                onClose={onClose}
+                height={height}
+                LinkItems={LinkItems}
+              />
+            </DrawerContent>
+          </Drawer>
+          {/* mobilenav */}
+          <MobileNav display={{ base: "flex", md: "none" }} onOpen={onOpen} />
+          <Box ml={{ base: 0, md: 60 }} p="4">
+            <WrappedComponent {...props} />
+          </Box>
         </Box>
-      </Box>
-    );
-  });
+      );
+    });
 
 interface SidebarProps extends BoxProps {
   onClose: () => void;
   height: number;
+  LinkItems: Array<LinkItemProps>;
 }
 
-const SidebarContent = ({ onClose, height, ...rest }: SidebarProps) => {
+const SidebarContent = ({
+  LinkItems,
+  onClose,
+  height,
+  ...rest
+}: SidebarProps) => {
   const [clientRect, setClientRect] = useState<DOMRect | null>(null!);
 
   const setClientRectCB = useCallback(
@@ -154,7 +156,7 @@ const SidebarContent = ({ onClose, height, ...rest }: SidebarProps) => {
 
 interface NavItemProps extends FlexProps {
   icon: IconType;
-  children: ReactText;
+  children: ReactNode;
   href: string;
 }
 const NavItem = ({ icon, children, href, ...rest }: NavItemProps) => {

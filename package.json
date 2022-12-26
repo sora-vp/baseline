@@ -10,6 +10,8 @@
     "dev": "turbo run dev --parallel",
     "lint": "turbo run lint",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
+    "dev:sora": "turbo run dev --scope sora",
+    "dev:absensi": "turbo run dev --scope absensi",
     "dev:sora-desktop": "turbo run dev --scope sora-desktop",
     "dev:absensi-desktop": "turbo run dev --scope absensi-desktop"
   },

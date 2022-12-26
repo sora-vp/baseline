@@ -13,5 +13,11 @@ module.exports = {
       cwd: path.join(appDir, "sora"), 
       args: "start -p 3000",
     },
+    {
+      name: "absensi",
+      script: path.join(nodeModuleDir, "next/dist/bin/next"),
+      cwd: path.join(appDir, "absensi"),
+      args: "start -p 3001",
+    },
   ],
 };
