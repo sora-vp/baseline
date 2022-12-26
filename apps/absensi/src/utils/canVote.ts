@@ -23,7 +23,7 @@ export const canVoteNow = async (timeZone: string) => {
   return (
     timeConfig?.mulai <= currentTime &&
     timeConfig?.selesai >= currentTime &&
-    settings?.canVote !== null &&
-    settings?.canVote !== false
+    settings?.canAttend !== null &&
+    settings?.canAttend !== false
   );
 };

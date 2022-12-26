@@ -5,16 +5,10 @@ import { EncryptionAdapter } from "fs-json-store-encryption-adapter";
 import { env } from "@env/server.mjs";
 
 export type TModelApiResponse = {
-  startTime: Date | null;
-  endTime: Date | null;
-  canVote: boolean | null;
-  reloadAfterVote: boolean | null;
+  canAttend: boolean | null;
 };
 export interface DataModel extends Partial<Model.StoreEntity> {
-  startTime: Date;
-  endTime: Date;
-  canVote: boolean;
-  reloadAfterVote: boolean;
+  canAttend: boolean;
 }
 
 const file = path.join(path.resolve(), "settings.bin");
