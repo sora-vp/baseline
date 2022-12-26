@@ -17,11 +17,7 @@ import Router from "next/router";
 import { BsDoorOpen } from "react-icons/bs";
 import { signOut } from "next-auth/react";
 
-type LogoutButtonType = {
-  setClientRectCB(rect: DOMRect): void;
-};
-
-const LogoutButton = ({ setClientRectCB }: LogoutButtonType) => {
+const LogoutButton = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const toast = useToast();
 
@@ -29,21 +25,6 @@ const LogoutButton = ({ setClientRectCB }: LogoutButtonType) => {
 
   const cancelRef = useRef<HTMLButtonElement>(null!);
   const buttonElement = useRef<HTMLButtonElement>(null!);
-
-  useEffect(() => {
-    const setSize = () => {
-      setClientRectCB(buttonElement.current.getBoundingClientRect());
-    };
-    setSize();
-
-    window.addEventListener("resize", setSize);
-
-    return () => {
-      window.removeEventListener("resize", setSize);
-    };
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
   return (
     <>

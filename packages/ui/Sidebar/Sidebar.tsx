@@ -24,6 +24,7 @@ import {
   useDisclosure,
   BoxProps,
   FlexProps,
+  VStack,
 } from "@chakra-ui/react";
 import { FiMenu } from "react-icons/fi";
 import NextLink from "next/link";
@@ -50,21 +51,7 @@ export const SidebarWrapper =
     // eslint-disable-next-line react/display-name
     memo((props: SimpleSidebarType) => {
       const { isOpen, onOpen, onClose } = useDisclosure();
-      const [height, setHeight] = useState<number>(0);
       const container = useRef<HTMLDivElement>(null!);
-
-      useEffect(() => {
-        const setSize = () => {
-          setHeight(container.current.clientHeight);
-        };
-        setSize();
-
-        window.addEventListener("resize", setSize);
-
-        return () => {
-          window.removeEventListener("resize", setSize);
-        };
-      }, []);
 
       return (
         <Box
@@ -73,7 +60,6 @@ export const SidebarWrapper =
           ref={container}
         >
           <SidebarContent
-            height={height}
             LinkItems={LinkItems}
             onClose={() => onClose}
             display={{ base: "none", md: "block" }}
@@ -106,23 +92,10 @@ export const SidebarWrapper =
 
 interface SidebarProps extends BoxProps {
   onClose: () => void;
-  height: number;
   LinkItems: Array<LinkItemProps>;
 }
 
-const SidebarContent = ({
-  LinkItems,
-  onClose,
-  height,
-  ...rest
-}: SidebarProps) => {
-  const [clientRect, setClientRect] = useState<DOMRect | null>(null!);
-
-  const setClientRectCB = useCallback(
-    (rect: DOMRect) => setClientRect(rect),
-    [setClientRect]
-  );
-
+const SidebarContent = ({ LinkItems, onClose, ...rest }: SidebarProps) => {
   return (
     <Box
       bg={useColorModeValue("white", "gray.900")}
@@ -148,8 +121,8 @@ const SidebarContent = ({
           {link.name}
         </NavItem>
       ))}
-      <LogoutButton setClientRectCB={setClientRectCB} />
-      <ModeToggler clientRect={clientRect} height={height} />
+      <LogoutButton />
+      <ModeToggler />
     </Box>
   );
 };
