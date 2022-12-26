@@ -18,6 +18,7 @@ importers:
       '@hookform/resolvers': ^2.9.10
       '@next/font': ^13.1.1
       '@tanstack/react-query': ^4.20.4
+      '@tanstack/react-table': ^8.7.4
       '@trpc/client': 10.7.0
       '@trpc/next': 10.7.0
       '@trpc/react-query': ^10.7.0
@@ -69,6 +70,7 @@ importers:
       '@hookform/resolvers': 2.9.10_react-hook-form@7.41.1
       '@next/font': 13.1.1
       '@tanstack/react-query': 4.20.4_biqbaboplfbrettd7655fr4n2y
+      '@tanstack/react-table': 8.7.4_biqbaboplfbrettd7655fr4n2y
       '@trpc/client': 10.7.0_@trpc+server@10.7.0
       '@trpc/next': 10.7.0_gmaturtqmtlrknaw65ek5pmv2i
       '@trpc/react-query': 10.7.0_x4ie6nhblo2vtx2aafrgzlfqy4
@@ -3092,6 +3094,23 @@ packages:
       react: 18.2.0
       react-dom: 18.2.0_react@18.2.0
       use-sync-external-store: 1.2.0_react@18.2.0
+
+  /@tanstack/react-table/8.7.4_biqbaboplfbrettd7655fr4n2y:
+    resolution: {integrity: sha512-4Q1OV3kUSxbtekclS3sqjCyCDowqCPruUCfHm1nGoPSmVLRCHoQ1E2rmzTVGeocEKgV9TDnj39tOgGwcADPuPA==}
+    engines: {node: '>=12'}
+    peerDependencies:
+      react: '>=16'
+      react-dom: '>=16'
+    dependencies:
+      '@tanstack/table-core': 8.7.4
+      react: 18.2.0
+      react-dom: 18.2.0_react@18.2.0
+    dev: false
+
+  /@tanstack/table-core/8.7.4:
+    resolution: {integrity: sha512-OPhzca7e83KGukxLpZ+4F9OBp9CZXi9b/OGJBH8dlC3wpffcSSDczYGUGJKG7wirXQ6cUVYL+9G6UrrdnblKNQ==}
+    engines: {node: '>=12'}
+    dev: false
 
   /@tootallnate/once/2.0.0:
     resolution: {integrity: sha512-XCuKFP5PS55gnMVu3dty8KPatLqUoy/ZYzDzAGCQ8JNFCkLXzmI7vNHCR+XpbZaMWQK/vQubr7PkYq8g470J/A==}

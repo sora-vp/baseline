@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import {
   useToast,
   useColorModeValue,
@@ -18,29 +18,58 @@ import {
   Th,
   Td,
   TableContainer,
-  TableCaption,
+  // TableCaption,
 
   // Alert dialog
-  AlertDialog,
-  AlertDialogBody,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogContent,
-  AlertDialogOverlay,
-  AlertDialogCloseButton,
+  // AlertDialog,
+  // AlertDialogBody,
+  // AlertDialogFooter,
+  // AlertDialogHeader,
+  // AlertDialogContent,
+  // AlertDialogOverlay,
+  // AlertDialogCloseButton,
 } from "@chakra-ui/react";
 import Head from "next/head";
 import NextLink from "next/link";
-import { DateTime } from "luxon";
 
-import { trpc } from "@utils/trpc";
+import { trpc, type allParticipantOutput } from "@utils/trpc";
 import Sidebar from "@components/Sidebar";
+
+import {
+  PaginationState,
+  useReactTable,
+  getCoreRowModel,
+  ColumnDef,
+  flexRender,
+  createColumnHelper,
+} from "@tanstack/react-table";
+
+const columnHelper = createColumnHelper<allParticipantOutput[number]>();
+
+const columns = [
+  columnHelper.accessor((row) => row.nama, {
+    id: "Nama",
+  }),
+];
 
 const Paslon = () => {
   const toast = useToast();
   const cancelRef = useRef<HTMLButtonElement>(null!);
 
   const { isOpen, onOpen, onClose } = useDisclosure();
+
+  const [{ pageIndex, pageSize }, setPagination] = useState<PaginationState>({
+    pageIndex: 0,
+    pageSize: 10,
+  });
+
+  const pagination = useMemo(
+    () => ({
+      pageIndex,
+      pageSize,
+    }),
+    [pageIndex, pageSize]
+  );
 
   const participantQuery = trpc.participant.allParticipants.useQuery(
     undefined,
@@ -77,6 +106,19 @@ const Paslon = () => {
   //     });
   //   },
   // });
+
+  const table = useReactTable({
+    data: participantQuery.data ?? [],
+    columns,
+    pageCount: participantQuery.data?.pageCount ?? -1,
+    state: {
+      pagination,
+    },
+    onPaginationChange: setPagination,
+    getCoreRowModel: getCoreRowModel(),
+    manualPagination: true,
+    debugTable: true,
+  });
 
   // Untuk keperluan hapus data
   const [currentID, setID] = useState<string | null>(null);

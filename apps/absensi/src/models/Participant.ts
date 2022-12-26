@@ -5,7 +5,7 @@ const nameRegExp = /^[a-zA-Z\s\-]+$/;
 
 export class Participant {
   @prop({ required: true, unique: true, match: nameRegExp })
-  public namaKetua!: string;
+  public nama!: string;
 
   @prop({ required: true })
   public keterangan!: string;
