@@ -1,7 +1,8 @@
 import { z } from "zod";
 
 const TwoMegs = 2_000_000;
-const validNameRegex = /^[a-zA-Z\s\-]+$/;
+const validNameRegex =
+  /^(?![ -.&,_'":?!])(?!.*[- &_'":]$)(?!.*[-.#@&,:?!]{2})[a-zA-Z- .,']+$/;
 const ACCEPTED_IMAGE_TYPES = [
   "image/jpeg",
   "image/jpg",

@@ -1,6 +1,7 @@
 import { z } from "zod";
 
-const validNameRegex = /^[a-zA-Z\s\-]+$/;
+const validNameRegex =
+  /^(?![ -.&,_'":?!])(?!.*[- &_'":]$)(?!.*[-.#@&,:?!]{2})[a-zA-Z- .,']+$/;
 
 const email = z
   .string()

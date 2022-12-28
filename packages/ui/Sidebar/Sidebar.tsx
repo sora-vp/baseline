@@ -1,15 +1,7 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 import * as React from "react";
 
-import {
-  useCallback,
-  useEffect,
-  useState,
-  useRef,
-  ElementType,
-  ReactNode,
-  memo,
-} from "react";
+import { useRef, ElementType, ReactNode, memo } from "react";
 import {
   IconButton,
   Box,
@@ -24,7 +16,6 @@ import {
   useDisclosure,
   BoxProps,
   FlexProps,
-  VStack,
 } from "@chakra-ui/react";
 import { FiMenu } from "react-icons/fi";
 import NextLink from "next/link";
@@ -74,11 +65,7 @@ export const SidebarWrapper =
             size="full"
           >
             <DrawerContent>
-              <SidebarContent
-                onClose={onClose}
-                height={height}
-                LinkItems={LinkItems}
-              />
+              <SidebarContent onClose={onClose} LinkItems={LinkItems} />
             </DrawerContent>
           </Drawer>
           {/* mobilenav */}

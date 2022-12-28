@@ -14,11 +14,12 @@ import {
   Table,
   Thead,
   Tbody,
+  Tfoot,
   Tr,
   Th,
   Td,
   TableContainer,
-  // TableCaption,
+  TableCaption,
 
   // Alert dialog
   // AlertDialog,
@@ -28,6 +29,17 @@ import {
   // AlertDialogContent,
   // AlertDialogOverlay,
   // AlertDialogCloseButton,
+
+  //
+  Flex,
+  Tooltip,
+  IconButton,
+  NumberInput,
+  NumberInputField,
+  NumberIncrementStepper,
+  NumberDecrementStepper,
+  NumberInputStepper,
+  Select,
 } from "@chakra-ui/react";
 import Head from "next/head";
 import NextLink from "next/link";
@@ -58,10 +70,10 @@ const columns = [
 ];
 
 const Paslon = () => {
-  const toast = useToast();
-  const cancelRef = useRef<HTMLButtonElement>(null!);
+  // const toast = useToast();
+  // const cancelRef = useRef<HTMLButtonElement>(null!);
 
-  const { isOpen, onOpen, onClose } = useDisclosure();
+  // const { isOpen, onOpen, onClose } = useDisclosure();
 
   const [{ pageIndex, pageSize }, setPagination] = useState<PaginationState>({
     pageIndex: 0,
@@ -76,9 +88,13 @@ const Paslon = () => {
     [pageIndex, pageSize]
   );
 
-  const participantQuery = trpc.participant.allParticipants.useQuery(
-    undefined,
+  const participantQuery = trpc.participant.getParticipantPaginated.useQuery(
     {
+      pageIndex,
+      pageSize,
+    },
+    {
+      keepPreviousData: true,
       refetchInterval: 2500,
       refetchIntervalInBackground: true,
     }
@@ -113,9 +129,9 @@ const Paslon = () => {
   // });
 
   const table = useReactTable({
-    data: participantQuery.data ?? [],
+    data: participantQuery.data?.data ?? [],
     columns,
-    // pageCount: participantQuery.data?.pageCount ?? -1,
+    pageCount: participantQuery.data?.paging.pages ?? -1,
     state: {
       pagination,
     },
@@ -126,7 +142,7 @@ const Paslon = () => {
   });
 
   // Untuk keperluan hapus data
-  const [currentID, setID] = useState<string | null>(null);
+  // const [currentID, setID] = useState<string | null>(null);
 
   // const getNama = () => {
   //   const currentPaslon = participantQuery.data?.find((p) => p._id === currentID);
@@ -179,25 +195,16 @@ const Paslon = () => {
               <HStack>
                 <TableContainer w="100%" h="100%">
                   <Table variant="simple">
-                    {/* {!participantQuery.isLoading &&
+                    {!participantQuery.isLoading &&
                       !participantQuery.isError && (
                         <TableCaption>
-                          {participantQuery.data.length > 0 ? (
-                            <>
-                              Jumlah orang yang sudah bersuara berjumlah{" "}
-                              {participantQuery.data
-                                .map((p) => p.dipilih)
-                                .reduce((curr, acc) => curr + acc, 0)}{" "}
-                              orang
-                            </>
+                          {participantQuery.data.data.length > 0 ? (
+                            <></>
                           ) : (
-                            <>
-                              Tidak ada paslon yang tersedia, silahkan tambahkan
-                              paslon terlebih dahulu.
-                            </>
+                            <></>
                           )}
                         </TableCaption>
-                      )} */}
+                      )}
 
                     <Thead>
                       {table.getHeaderGroups().map((headerGroup) => (
@@ -310,7 +317,7 @@ const Paslon = () => {
                       {(!participantQuery.isLoading &&
                         !participantQuery.data) ||
                         (participantQuery.data &&
-                          participantQuery.data.length < 1 && (
+                          participantQuery.data.data.length < 1 && (
                             <Tr>
                               <Td colSpan={5} style={{ textAlign: "center" }}>
                                 Tidak ada data peserta, Silahkan tambah peserta
@@ -319,91 +326,101 @@ const Paslon = () => {
                             </Tr>
                           ))}
                     </Tbody>
+                    <Tfoot></Tfoot>
                   </Table>
+
+                  {participantQuery.data &&
+                    participantQuery.data.data.length > 0 && (
+                      <Flex
+                        justifyContent="space-between"
+                        marginTop={5}
+                        alignItems="center"
+                      >
+                        <Flex>
+                          <Tooltip label="Halaman Pertama">
+                            <IconButton
+                              onClick={() => table.setPageIndex(0)}
+                              isDisabled={!table.getCanPreviousPage()}
+                              // icon={<ArrowLeftIcon h={3} w={3} />}
+                              mr={4}
+                            />
+                          </Tooltip>
+                          <Tooltip label="Halaman Sebelumnya">
+                            <IconButton
+                              onClick={table.previousPage}
+                              isDisabled={!table.getCanPreviousPage()}
+                              // icon={<ChevronLeftIcon h={6} w={6} />}
+                            />
+                          </Tooltip>
+                        </Flex>
+
+                        <Flex alignItems="center">
+                          <Text flexShrink="0" mr={8}>
+                            Page{" "}
+                            <Text fontWeight="bold" as="span">
+                              {pageIndex + 1}
+                            </Text>{" "}
+                            of{" "}
+                            <Text fontWeight="bold" as="span">
+                              {table.getPageOptions.length + 1}
+                            </Text>
+                          </Text>
+                          <Text flexShrink="0">Ke halaman:</Text>{" "}
+                          <NumberInput
+                            ml={2}
+                            mr={8}
+                            w={28}
+                            min={1}
+                            max={table.getPageOptions.length + 1}
+                            onChange={(value) => {
+                              const page = value ? Number(value) - 1 : 0;
+                              table.setPageIndex(page);
+                            }}
+                            defaultValue={pageIndex + 1}
+                          >
+                            <NumberInputField />
+                            <NumberInputStepper>
+                              <NumberIncrementStepper />
+                              <NumberDecrementStepper />
+                            </NumberInputStepper>
+                          </NumberInput>
+                          <Select
+                            w={32}
+                            value={pageSize}
+                            onChange={(e) =>
+                              table.setPageSize(Number(e.target.value))
+                            }
+                          >
+                            {[10, 20, 30, 40, 50].map((pageSize) => (
+                              <option key={pageSize} value={pageSize}>
+                                Show {pageSize}
+                              </option>
+                            ))}
+                          </Select>
+                        </Flex>
+
+                        <Flex>
+                          <Tooltip label="Halaman Selanjutnya">
+                            <IconButton
+                              onClick={table.nextPage}
+                              isDisabled={!table.getCanNextPage()}
+                              // icon={<ChevronRightIcon h={6} w={6} />}
+                            />
+                          </Tooltip>
+                          <Tooltip label="Halaman Terakhir">
+                            <IconButton
+                              onClick={() =>
+                                table.setPageIndex(table.getPageCount() - 1)
+                              }
+                              isDisabled={!table.getCanNextPage()}
+                              // icon={<ArrowRightIcon h={3} w={3} />}
+                              ml={4}
+                            />
+                          </Tooltip>
+                        </Flex>
+                      </Flex>
+                    )}
                 </TableContainer>
-
-                <Flex justifyContent="space-between" m={4} alignItems="center">
-                  <Flex>
-                    <Tooltip label="First Page">
-                      <IconButton
-                        onClick={() => gotoPage(0)}
-                        isDisabled={!canPreviousPage}
-                        icon={<ArrowLeftIcon h={3} w={3} />}
-                        mr={4}
-                      />
-                    </Tooltip>
-                    <Tooltip label="Previous Page">
-                      <IconButton
-                        onClick={previousPage}
-                        isDisabled={!canPreviousPage}
-                        icon={<ChevronLeftIcon h={6} w={6} />}
-                      />
-                    </Tooltip>
-                  </Flex>
-
-                  <Flex alignItems="center">
-                    <Text flexShrink="0" mr={8}>
-                      Page{" "}
-                      <Text fontWeight="bold" as="span">
-                        {pageIndex + 1}
-                      </Text>{" "}
-                      of{" "}
-                      <Text fontWeight="bold" as="span">
-                        {pageOptions.length}
-                      </Text>
-                    </Text>
-                    <Text flexShrink="0">Go to page:</Text>{" "}
-                    <NumberInput
-                      ml={2}
-                      mr={8}
-                      w={28}
-                      min={1}
-                      max={pageOptions.length}
-                      onChange={(value) => {
-                        const page = value ? value - 1 : 0;
-                        gotoPage(page);
-                      }}
-                      defaultValue={pageIndex + 1}
-                    >
-                      <NumberInputField />
-                      <NumberInputStepper>
-                        <NumberIncrementStepper />
-                        <NumberDecrementStepper />
-                      </NumberInputStepper>
-                    </NumberInput>
-                    <Select
-                      w={32}
-                      value={pageSize}
-                      onChange={(e) => {
-                        setPageSize(Number(e.target.value));
-                      }}
-                    >
-                      {[10, 20, 30, 40, 50].map((pageSize) => (
-                        <option key={pageSize} value={pageSize}>
-                          Show {pageSize}
-                        </option>
-                      ))}
-                    </Select>
-                  </Flex>
-
-                  <Flex>
-                    <Tooltip label="Next Page">
-                      <IconButton
-                        onClick={nextPage}
-                        isDisabled={!canNextPage}
-                        icon={<ChevronRightIcon h={6} w={6} />}
-                      />
-                    </Tooltip>
-                    <Tooltip label="Last Page">
-                      <IconButton
-                        onClick={() => gotoPage(pageCount - 1)}
-                        isDisabled={!canNextPage}
-                        icon={<ArrowRightIcon h={3} w={3} />}
-                        ml={4}
-                      />
-                    </Tooltip>
-                  </Flex>
-                </Flex>
               </HStack>
             </VStack>
           </Box>
