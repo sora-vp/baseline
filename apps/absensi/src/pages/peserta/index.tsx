@@ -2,7 +2,7 @@ import { useMemo, useRef, useState } from "react";
 import {
   useToast,
   useColorModeValue,
-  useDisclosure,
+  // useDisclosure,
   VStack,
   HStack,
   Box,
@@ -14,12 +14,10 @@ import {
   Table,
   Thead,
   Tbody,
-  Tfoot,
   Tr,
   Th,
   Td,
   TableContainer,
-  TableCaption,
 
   // Alert dialog
   // AlertDialog,
@@ -43,6 +41,8 @@ import {
 } from "@chakra-ui/react";
 import Head from "next/head";
 import NextLink from "next/link";
+import { BiFirstPage, BiLastPage } from "react-icons/bi";
+import { GrPrevious, GrNext } from "react-icons/gr";
 
 import { trpc, type allParticipantOutput } from "@utils/trpc";
 import Sidebar from "@components/Sidebar";
@@ -70,7 +70,7 @@ const columns = [
 ];
 
 const Paslon = () => {
-  // const toast = useToast();
+  const toast = useToast();
   // const cancelRef = useRef<HTMLButtonElement>(null!);
 
   // const { isOpen, onOpen, onClose } = useDisclosure();
@@ -90,11 +90,19 @@ const Paslon = () => {
 
   const participantQuery = trpc.participant.getParticipantPaginated.useQuery(
     {
-      pageIndex,
+      pageIndex: pageIndex > 0 ? pageIndex * pageSize : 0,
       pageSize,
     },
     {
-      keepPreviousData: true,
+      onError(result) {
+        toast({
+          description: result.message,
+          status: "error",
+          duration: 6000,
+          position: "top-right",
+          isClosable: true,
+        });
+      },
       refetchInterval: 2500,
       refetchIntervalInBackground: true,
     }
@@ -102,6 +110,15 @@ const Paslon = () => {
   const settingsQuery = trpc.settings.getSettings.useQuery(undefined, {
     refetchInterval: 2500,
     refetchIntervalInBackground: true,
+    onError(result) {
+      toast({
+        description: result.message,
+        status: "error",
+        duration: 6000,
+        position: "top-right",
+        isClosable: true,
+      });
+    },
   });
 
   // const paslonDeleteMutation = trpc.paslon.adminDeleteCandidate.useMutation({
@@ -129,16 +146,15 @@ const Paslon = () => {
   // });
 
   const table = useReactTable({
-    data: participantQuery.data?.data ?? [],
+    data: participantQuery.data?.docs ?? [],
     columns,
-    pageCount: participantQuery.data?.paging.pages ?? -1,
+    pageCount: participantQuery.data?.totalPages ?? -1,
     state: {
       pagination,
     },
     onPaginationChange: setPagination,
     getCoreRowModel: getCoreRowModel(),
     manualPagination: true,
-    debugTable: true,
   });
 
   // Untuk keperluan hapus data
@@ -155,6 +171,19 @@ const Paslon = () => {
       <Head>
         <title>Peserta Pemilih</title>
       </Head>
+
+      <style>{`
+        .prev-gr polyline,
+        .next-gr polyline {
+          stroke: ${useColorModeValue("black", "white")};
+        }
+
+        .first-page, .last-page {
+          width:1.7em; 
+          height:1.7em;
+        }
+      `}</style>
+
       <VStack align="stretch">
         <HStack mb={"10px"} style={{ justifyContent: "center" }}>
           <Text fontWeight="500" fontSize="5xl">
@@ -195,17 +224,6 @@ const Paslon = () => {
               <HStack>
                 <TableContainer w="100%" h="100%">
                   <Table variant="simple">
-                    {!participantQuery.isLoading &&
-                      !participantQuery.isError && (
-                        <TableCaption>
-                          {participantQuery.data.data.length > 0 ? (
-                            <></>
-                          ) : (
-                            <></>
-                          )}
-                        </TableCaption>
-                      )}
-
                     <Thead>
                       {table.getHeaderGroups().map((headerGroup) => (
                         <Tr key={headerGroup.id}>
@@ -247,77 +265,10 @@ const Paslon = () => {
                         </Tr>
                       ))}
 
-                      {/* {!participantQuery.isLoading &&
-                        !participantQuery.isError &&
-                        participantQuery.data &&
-                        participantQuery.data.map((p) => (
-                          <Tr key={p._id}>
-                            <Td>{p.namaKetua}</Td>
-                            <Td>{p.namaWakil}</Td>
-                            <Td>{p.dipilih} Orang</Td>
-                            <Td>
-                              <img
-                                src={`/api/uploads/${p.imgName}`}
-                                alt={`Gambar dari pasangan calon ${p.namaKetua} dan ${p.namaWakil}.`}
-                              />
-                            </Td>
-                            <Td>
-                              <NextLink
-                                href={`/paslon/edit/${p._id}`}
-                                passHref={
-                                  !settingsQuery.isLoading ||
-                                  !(
-                                    settingsQuery.data as unknown as {
-                                      canAttend?: boolean;
-                                    }
-                                  )?.canAttend
-                                }
-                              >
-                                <Button
-                                  isDisabled={
-                                    settingsQuery.isLoading ||
-                                    settingsQuery.data?.canAttend
-                                  }
-                                  bg="orange.500"
-                                  _hover={{ bg: "orange.700" }}
-                                  color="white"
-                                >
-                                  Edit
-                                </Button>
-                              </NextLink>
-                              <Button
-                                isDisabled={
-                                  settingsQuery.isLoading ||
-                                  settingsQuery.data?.canAttend
-                                }
-                                bg="red.500"
-                                _hover={{ bg: "red.700" }}
-                                ml={2}
-                                color="white"
-                                onClick={() => {
-                                  if (
-                                    !settingsQuery.isLoading ||
-                                    !(
-                                      settingsQuery.data as unknown as {
-                                        canAttend?: boolean;
-                                      }
-                                    )?.canAttend
-                                  ) {
-                                    setID(p._id);
-                                    onOpen();
-                                  }
-                                }}
-                              >
-                                Hapus
-                              </Button>
-                            </Td>
-                          </Tr>
-                        ))} */}
-
                       {(!participantQuery.isLoading &&
                         !participantQuery.data) ||
                         (participantQuery.data &&
-                          participantQuery.data.data.length < 1 && (
+                          participantQuery.data.docs.length < 1 && (
                             <Tr>
                               <Td colSpan={5} style={{ textAlign: "center" }}>
                                 Tidak ada data peserta, Silahkan tambah peserta
@@ -326,11 +277,10 @@ const Paslon = () => {
                             </Tr>
                           ))}
                     </Tbody>
-                    <Tfoot></Tfoot>
                   </Table>
 
                   {participantQuery.data &&
-                    participantQuery.data.data.length > 0 && (
+                    participantQuery.data.docs.length > 0 && (
                       <Flex
                         justifyContent="space-between"
                         marginTop={5}
@@ -339,30 +289,32 @@ const Paslon = () => {
                         <Flex>
                           <Tooltip label="Halaman Pertama">
                             <IconButton
+                              aria-label={"Halaman Pertama"}
                               onClick={() => table.setPageIndex(0)}
                               isDisabled={!table.getCanPreviousPage()}
-                              // icon={<ArrowLeftIcon h={3} w={3} />}
+                              icon={<BiFirstPage className="first-page" />}
                               mr={4}
                             />
                           </Tooltip>
                           <Tooltip label="Halaman Sebelumnya">
                             <IconButton
+                              aria-label={"Halaman Sebelumnya"}
                               onClick={table.previousPage}
                               isDisabled={!table.getCanPreviousPage()}
-                              // icon={<ChevronLeftIcon h={6} w={6} />}
+                              icon={<GrPrevious className={"prev-gr"} />}
                             />
                           </Tooltip>
                         </Flex>
 
                         <Flex alignItems="center">
                           <Text flexShrink="0" mr={8}>
-                            Page{" "}
+                            Halaman{" "}
                             <Text fontWeight="bold" as="span">
                               {pageIndex + 1}
                             </Text>{" "}
-                            of{" "}
+                            dari{" "}
                             <Text fontWeight="bold" as="span">
-                              {table.getPageOptions.length + 1}
+                              {table.getPageCount()}
                             </Text>
                           </Text>
                           <Text flexShrink="0">Ke halaman:</Text>{" "}
@@ -371,12 +323,12 @@ const Paslon = () => {
                             mr={8}
                             w={28}
                             min={1}
-                            max={table.getPageOptions.length + 1}
+                            max={table.getPageCount()}
                             onChange={(value) => {
                               const page = value ? Number(value) - 1 : 0;
                               table.setPageIndex(page);
                             }}
-                            defaultValue={pageIndex + 1}
+                            value={pageIndex + 1}
                           >
                             <NumberInputField />
                             <NumberInputStepper>
@@ -402,18 +354,20 @@ const Paslon = () => {
                         <Flex>
                           <Tooltip label="Halaman Selanjutnya">
                             <IconButton
+                              aria-label={"Halaman Selanjutnya"}
                               onClick={table.nextPage}
                               isDisabled={!table.getCanNextPage()}
-                              // icon={<ChevronRightIcon h={6} w={6} />}
+                              icon={<GrNext className={"next-gr"} />}
                             />
                           </Tooltip>
                           <Tooltip label="Halaman Terakhir">
                             <IconButton
+                              aria-label={"Halaman Terakhir"}
                               onClick={() =>
                                 table.setPageIndex(table.getPageCount() - 1)
                               }
                               isDisabled={!table.getCanNextPage()}
-                              // icon={<ArrowRightIcon h={3} w={3} />}
+                              icon={<BiLastPage className="last-page" />}
                               ml={4}
                             />
                           </Tooltip>
