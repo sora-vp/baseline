@@ -26,6 +26,7 @@
     "@types/react": "^18.0.25",
     "@types/react-dom": "^18.0.10",
     "@vitejs/plugin-react": "^3.0.0",
+    "absensi": "workspace:*",
     "electron": "22.0.0",
     "electron-builder": "^23.6.0",
     "framer-motion": "^8.0.2",

@@ -290,6 +290,7 @@ importers:
       '@types/react': ^18.0.25
       '@types/react-dom': ^18.0.10
       '@vitejs/plugin-react': ^3.0.0
+      absensi: workspace:*
       electron: 22.0.0
       electron-builder: ^23.6.0
       electron-store: 8.1.0
@@ -320,6 +321,7 @@ importers:
       '@types/react': 18.0.26
       '@types/react-dom': 18.0.10
       '@vitejs/plugin-react': 3.0.0_vite@4.0.3
+      absensi: link:../absensi
       electron: 22.0.0
       electron-builder: 23.6.0
       framer-motion: 8.0.2_biqbaboplfbrettd7655fr4n2y

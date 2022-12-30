@@ -4,18 +4,18 @@ import {
   useMemo,
   useState,
   useCallback,
-  useEffect,
 } from "react";
 import Store from "electron-store";
 import { useToast } from "@chakra-ui/react";
 
 import Setting from "@/routes/Setting";
 interface IAppSetting {
-  serverURL?: string;
-  setServerUrl: (newUrl: string) => void;
+  soraURL?: string;
+  absensiURL?: string;
+  setServerUrl: ({ sora, absensi }: { sora: string; absensi: string }) => void;
 }
 
-const store = new Store<IAppSetting>();
+const store = new Store<Omit<IAppSetting, "setServerUrl">>();
 
 // @ts-ignore
 window.store = store;
@@ -27,33 +27,42 @@ export const AppSettingProvider: React.FC<{ children: React.ReactNode }> = ({
 }) => {
   const toast = useToast();
 
-  const [serverURL] = useState<string | undefined>(store.get("serverURL"));
+  const [soraURL] = useState<string | undefined>(store.get("soraURL"));
+  const [absensiURL] = useState<string | undefined>(store.get("absensiURL"));
 
-  const setServerUrl = useCallback((newUrl: string) => {
-    try {
-      const url = new URL(newUrl);
+  const setServerUrl = useCallback(
+    ({ sora, absensi }: { sora: string; absensi: string }) => {
+      try {
+        const soraURL = new URL(sora);
+        const absensiURL = new URL(absensi);
 
-      store.set("serverURL", url.origin);
+        store.set("soraURL", soraURL.origin);
+        store.set("absensiURL", absensiURL.origin);
 
-      toast({
-        description: "Berhasil memperbarui pengaturan alamat server!",
-        status: "success",
-        duration: 4500,
-        position: "top-right",
-      });
+        toast({
+          description: "Berhasil memperbarui pengaturan alamat server!",
+          status: "success",
+          duration: 4500,
+          position: "top-right",
+        });
 
-      setTimeout(() => location.reload(), 3000);
-    } catch (error: any) {
-      toast({
-        description: `Gagal memperbarui url | ${error.message}`,
-        status: "error",
-        duration: 5000,
-        position: "top-right",
-      });
-    }
-  }, []);
+        setTimeout(() => location.reload(), 3000);
+      } catch (error: any) {
+        toast({
+          description: `Gagal memperbarui url | ${error.message}`,
+          status: "error",
+          duration: 5000,
+          position: "top-right",
+        });
+      }
+    },
+    []
+  );
 
-  const valueProps = useMemo(() => ({ serverURL, setServerUrl }), [serverURL]);
+  const valueProps = useMemo(
+    () => ({ soraURL, absensiURL, setServerUrl }),
+    [soraURL, absensiURL]
+  );
 
   return (
     <AppSettingContext.Provider value={valueProps}>
@@ -65,6 +74,7 @@ export const AppSettingProvider: React.FC<{ children: React.ReactNode }> = ({
 export const useAppSetting = () => useContext(AppSettingContext) as IAppSetting;
 
 export const ensureHasAppSetting = (Element: React.FC) => () => {
-  if (!store.get("serverURL")) return <Setting />;
+  if (!store.get("soraURL") || !store.get("absensiURL")) return <Setting />;
+
   return <Element />;
 };

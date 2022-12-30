@@ -14,9 +14,14 @@ import {
 import { useAppSetting } from "@/context/AppSetting";
 
 const Setting: React.FC = () => {
-  const { serverURL, setServerUrl } = useAppSetting();
+  const {
+    soraURL: soraServerURL,
+    absensiURL: absensiServerURL,
+    setServerUrl,
+  } = useAppSetting();
 
-  const [url, setUrl] = useState(serverURL ?? "");
+  const [soraURL, setSoraURL] = useState(soraServerURL ?? "");
+  const [absensiURL, setAbsensiURL] = useState(absensiServerURL ?? "");
 
   return (
     <HStack h={"100vh"} justifyContent="center">
@@ -36,25 +41,49 @@ const Setting: React.FC = () => {
             onSubmit={(e) => {
               e.preventDefault();
 
-              setServerUrl(url);
+              setServerUrl({ sora: soraURL, absensi: absensiURL });
             }}
           >
             <FormControl
               marginTop="1.3rem"
               marginBottom="1.3rem"
               isRequired
-              isInvalid={url === ""}
+              isInvalid={soraURL === ""}
             >
-              <FormLabel>Alamat Server</FormLabel>
+              <FormLabel>Alamat Server Sora</FormLabel>
               <Input
                 type="url"
-                value={url}
+                value={soraURL}
                 placeholder="Semisal http://localhost:3000"
-                onChange={(e) => setUrl(e.target.value)}
+                onChange={(e) => setSoraURL(e.target.value)}
               />
-              {url !== "" ? (
+              {soraURL !== "" ? (
                 <FormHelperText>
-                  Masukan alamat server utama supaya aplikasi ini bisa berjalan.
+                  Masukan alamat server utama aplikasi sora supaya aplikasi ini
+                  bisa berjalan.
+                </FormHelperText>
+              ) : (
+                <FormErrorMessage>Diperlukan alamat server.</FormErrorMessage>
+              )}
+            </FormControl>
+
+            <FormControl
+              marginTop="1.3rem"
+              marginBottom="1.3rem"
+              isRequired
+              isInvalid={absensiURL === ""}
+            >
+              <FormLabel>Alamat Server Absensi</FormLabel>
+              <Input
+                type="url"
+                value={absensiURL}
+                placeholder="Semisal http://localhost:3001"
+                onChange={(e) => setAbsensiURL(e.target.value)}
+              />
+              {absensiURL !== "" ? (
+                <FormHelperText>
+                  Masukan alamat server utama aplikasi sora supaya aplikasi ini
+                  bisa berjalan.
                 </FormHelperText>
               ) : (
                 <FormErrorMessage>Diperlukan alamat server.</FormErrorMessage>
