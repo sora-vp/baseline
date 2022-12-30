@@ -18,6 +18,7 @@ export const authOptions: NextAuthOptions = {
         password: { label: "Password", type: "password" },
       },
 
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
       async authorize(credentials: Record<"email" | "password", string>) {
         await connectDatabase();

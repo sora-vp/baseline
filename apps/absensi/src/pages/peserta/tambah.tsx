@@ -96,7 +96,7 @@ const HalamanTambah = () => {
                 <FormControl
                   isInvalid={formState.errors?.nama as unknown as boolean}
                 >
-                  <FormLabel htmlFor="ketua">Nama Peserta</FormLabel>
+                  <FormLabel htmlFor="nama">Nama Peserta</FormLabel>
                   <Input
                     type="text"
                     placeholder="Masukan Nama Peserta"
@@ -114,9 +114,9 @@ const HalamanTambah = () => {
 
                 <FormControl
                   mt={6}
-                  isInvalid={formState.errors?.keterangan as unknown as boolean}
+                  isInvalid={formState.errors?.status as unknown as boolean}
                 >
-                  <FormLabel htmlFor="wakil">Keterangan Peserta</FormLabel>
+                  <FormLabel htmlFor="status">Status Peserta</FormLabel>
                   <Input
                     type="text"
                     isDisabled={
@@ -124,11 +124,11 @@ const HalamanTambah = () => {
                       settingsQuery.data?.canAttend ||
                       participantMutation.isLoading
                     }
-                    placeholder="Masukan Keterangan Peserta"
-                    {...register("keterangan")}
+                    placeholder="Masukan Status Peserta"
+                    {...register("status")}
                   />
                   <FormErrorMessage>
-                    {formState.errors?.keterangan?.message}
+                    {formState.errors?.status?.message}
                   </FormErrorMessage>
                 </FormControl>
 

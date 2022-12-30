@@ -33,4 +33,4 @@ export const trpc = createTRPCNext<AppRouter>({
 type RouterOutput = inferRouterOutputs<AppRouter>;
 
 export type allParticipantOutput =
-  RouterOutput["participant"]["allParticipants"];
+  RouterOutput["participant"]["getParticipantPaginated"];

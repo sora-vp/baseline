@@ -1,3 +1,4 @@
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-nocheck
 import mongoose from "mongoose";
 import { env } from "@env/server.mjs";

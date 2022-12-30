@@ -17,7 +17,7 @@ export class Participant {
   public nama!: string;
 
   @prop({ required: true })
-  public keterangan!: string;
+  public status!: string;
 
   @prop({ required: true, unique: true, default: () => nanoid(15) })
   public qrId!: string;

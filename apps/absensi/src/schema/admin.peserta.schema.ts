@@ -10,9 +10,7 @@ export const TambahPesertaValidationSchema = z.object({
     .regex(validNameRegex, {
       message: "Bidang nama harus berupa nama yang valid!",
     }),
-  keterangan: z
-    .string()
-    .min(1, { message: "Diperlukan keterangan partisipan!" }),
+  status: z.string().min(1, { message: "Diperlukan status partisipan!" }),
 });
 
 export type TambahFormValues = z.infer<typeof TambahPesertaValidationSchema>;

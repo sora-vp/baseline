@@ -55,17 +55,26 @@ import {
   createColumnHelper,
 } from "@tanstack/react-table";
 
-const columnHelper = createColumnHelper<allParticipantOutput[number]>();
+const columnHelper = createColumnHelper<allParticipantOutput["docs"][number]>();
 
 const columns = [
   columnHelper.accessor((row) => row.nama, {
     id: "Nama",
   }),
-  columnHelper.accessor((row) => row.keterangan, {
-    id: "Keterangan",
+  columnHelper.accessor((row) => row.status, {
+    id: "Status",
   }),
   columnHelper.accessor((row) => row.qrId, {
     id: "QR ID",
+  }),
+  columnHelper.accessor("sudahAbsen", {
+    cell: (info) => (info.getValue() ? "Sudah" : "Belum"),
+    header: "Sudah Absen",
+  }),
+
+  columnHelper.accessor("sudahMemilih", {
+    cell: (info) => (info.getValue() ? "Sudah" : "Belum"),
+    header: "Sudah Memilih",
   }),
 ];
 
@@ -100,15 +109,14 @@ const Paslon = () => {
           status: "error",
           duration: 6000,
           position: "top-right",
-          isClosable: true,
         });
       },
-      refetchInterval: 2500,
-      refetchIntervalInBackground: true,
+      refetchInterval: 5000,
+      refetchOnWindowFocus: false,
     }
   );
   const settingsQuery = trpc.settings.getSettings.useQuery(undefined, {
-    refetchInterval: 2500,
+    refetchInterval: 5000,
     refetchIntervalInBackground: true,
     onError(result) {
       toast({
@@ -116,7 +124,6 @@ const Paslon = () => {
         status: "error",
         duration: 6000,
         position: "top-right",
-        isClosable: true,
       });
     },
   });
@@ -179,8 +186,8 @@ const Paslon = () => {
         }
 
         .first-page, .last-page {
-          width:1.7em; 
-          height:1.7em;
+          width: 1.7em; 
+          height: 1.7em;
         }
       `}</style>
 

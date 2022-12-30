@@ -13,21 +13,18 @@ export const participantRouter = router({
         pageIndex: z.number().min(0),
       })
     )
-    .query(async ({ input: { pageSize: limit, pageIndex: offset } }) => {
-      try {
-        const participants = await ParticipantModel.paginate(
-          {},
-          { offset, limit }
-        );
-
-        return participants;
-      } catch (e: any) {
-        throw new TRPCError({
-          code: "INTERNAL_SERVER_ERROR",
-          message: e.message,
-        });
-      }
-    }),
+    .query(
+      async ({ input: { pageSize: limit, pageIndex: offset } }) =>
+        await ParticipantModel.paginate({}, { offset, limit }).catch(
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          (e: any) => {
+            throw new TRPCError({
+              code: "INTERNAL_SERVER_ERROR",
+              message: e.message,
+            });
+          }
+        )
+    ),
 
   createNewParticipant: protectedProcedure
     .input(TambahPesertaValidationSchema)

@@ -14,7 +14,7 @@
     "dev:absensi": "turbo run dev --scope absensi",
     "dev:sora-desktop": "turbo run dev --scope sora-desktop",
     "dev:absensi-desktop": "turbo run dev --scope absensi-desktop",
-    "build:web": "turbo run build --filter sora absensi",
+    "build:web": "turbo run build --filter sora && turbo run build --filter absensi",
     "build:desktop": "turbo run build --filter *-desktop"
   },
   "devDependencies": {
