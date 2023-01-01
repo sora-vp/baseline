@@ -10,7 +10,6 @@ import { SettingProvider } from "@/context/SettingContext";
 import { useAppSetting, ensureHasAppSetting } from "@/context/AppSetting";
 
 import Main from "./routes/Main";
-import Vote from "./routes/Vote";
 import Setting from "./routes/Setting";
 
 const router = createHashRouter([
@@ -19,52 +18,22 @@ const router = createHashRouter([
     element: <Main />,
   },
   {
-    path: "/vote",
-    element: <Vote />,
-  },
-  {
     path: "/setting",
     element: <Setting />,
   },
 ]);
 
 const App: React.FC = () => {
-  const { soraURL, absensiURL } = useAppSetting();
+  const { serverURL } = useAppSetting();
 
   const [queryClient] = useState(() => new QueryClient());
   const [trpcClient] = useState(() =>
     trpc.createClient({
       transformer: superjson,
       links: [
-        (runtime) => {
-          const servers = {
-            sora: httpBatchLink({ url: `${soraURL as string}/api/trpc` })(
-              runtime
-            ),
-            absensi: httpBatchLink({ url: `${absensiURL as string}/api/trpc` })(
-              runtime
-            ),
-          };
-          return (ctx) => {
-            const { op } = ctx;
-            const pathParts = op.path.split(".");
-
-            const serverName =
-              pathParts.shift() as string as keyof typeof servers;
-
-            const path = pathParts.join(".");
-
-            const link = servers[serverName];
-
-            return link({
-              ...ctx,
-              op: {
-                ...op,
-                path,
-              },
-            });
-          };
-        },
+        httpBatchLink({
+          url: `${serverURL as string}/api/trpc`,
+        }),
       ],
     })
   );

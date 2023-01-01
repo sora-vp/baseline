@@ -1,10 +1,8 @@
 import type { inferRouterOutputs } from "@trpc/server";
 import { createTRPCReact } from "@trpc/react-query";
-import type { SoraAppRouter } from "sora";
-import type { AbsensiAppRouter } from "absensi";
+import type { AppRouter } from "trpc-glue";
 
-export const soraTRPC = createTRPCReact<SoraAppRouter>();
-export const absensiTRPC = createTRPCReact<AbsensiAppRouter>();
+export const trpc = createTRPCReact<AppRouter>();
 
-export type SoraRouterOutput = inferRouterOutputs<SoraAppRouter>;
-export type AbsensiRouterOutput = inferRouterOutputs<AbsensiAppRouter>;
+export type SoraRouterOutput = inferRouterOutputs<AppRouter>["sora"];
+export type AbsensiRouterOutput = inferRouterOutputs<AppRouter>["absensi"];

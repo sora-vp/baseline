@@ -1,18 +1,16 @@
-import { router, protectedProcedure } from "../trpc";
-import { z } from "zod";
+import { router, protectedProcedure, publicProcedure } from "../trpc";
 
 import { ParticipantModel } from "@models/index";
-import { TambahPesertaValidationSchema } from "@schema/admin.peserta.schema";
+import {
+  PaginatedParticipantValidationSchema,
+  ParticipantAttendValidationSchema,
+  TambahPesertaValidationSchema,
+} from "@schema/admin.peserta.schema";
 import { TRPCError } from "@trpc/server";
 
 export const participantRouter = router({
   getParticipantPaginated: protectedProcedure
-    .input(
-      z.object({
-        pageSize: z.number().min(10),
-        pageIndex: z.number().min(0),
-      })
-    )
+    .input(PaginatedParticipantValidationSchema)
     .query(
       async ({ input: { pageSize: limit, pageIndex: offset } }) =>
         await ParticipantModel.paginate({}, { offset, limit }).catch(
@@ -34,5 +32,28 @@ export const participantRouter = router({
       await newParticipant.save();
 
       return { message: "Berhasil menambahkan peserta baru!" };
+    }),
+
+  participantAttend: publicProcedure
+    .input(ParticipantAttendValidationSchema)
+    .mutation(async ({ input }) => {
+      const participant = await ParticipantModel.findOne({ qrId: input });
+
+      if (!participant)
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Peserta pemilihan tidak dapat ditemukan!",
+        });
+
+      if (participant.sudahAbsen)
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "Kamu sudah absen!",
+        });
+
+      participant.sudahAbsen = true;
+      await participant.save();
+
+      return { message: "Berhasil melakukan absensi!" };
     }),
 });

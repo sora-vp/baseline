@@ -2,7 +2,7 @@ import { createContext, useContext, useEffect, useState, useMemo } from "react";
 import { useToast } from "@chakra-ui/react";
 import { DateTime } from "luxon";
 
-import { soraTRPC, type SoraRouterOutput } from "@/utils/trpc";
+import { trpc, type SoraRouterOutput } from "@/utils/trpc";
 
 interface ISettingContext {
   canVoteNow: boolean;
@@ -29,7 +29,7 @@ export const SettingProvider: React.FC<{ children: React.ReactNode }> = ({
   const [waktuMulai, setWaktuMulai] = useState<number | null>(null);
   const [waktuSelesai, setWaktuSelesai] = useState<number | null>(null);
 
-  const paslonQuery = soraTRPC.paslon.candidateList.useQuery(undefined, {
+  const paslonQuery = trpc.sora.paslon.candidateList.useQuery(undefined, {
     refetchOnWindowFocus: false,
 
     onError(error) {
@@ -42,7 +42,7 @@ export const SettingProvider: React.FC<{ children: React.ReactNode }> = ({
     },
   });
 
-  const settingsQuery = soraTRPC.settings.getSettings.useQuery(undefined, {
+  const settingsQuery = trpc.sora.settings.getSettings.useQuery(undefined, {
     refetchInterval: 2500,
     refetchIntervalInBackground: true,
 

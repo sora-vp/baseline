@@ -26,7 +26,6 @@
     "@types/react": "^18.0.25",
     "@types/react-dom": "^18.0.10",
     "@vitejs/plugin-react": "^3.0.0",
-    "absensi": "workspace:*",
     "electron": "22.0.0",
     "electron-builder": "^23.6.0",
     "framer-motion": "^8.0.2",
@@ -36,9 +35,9 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.6.1",
-    "sora": "workspace:*",
     "superjson": "1.12.1",
     "typescript": "^4.9.3",
+    "trpc-glue": "workspace:*",
     "vite": "^4.0.3",
     "vite-electron-plugin": "^0.6.1",
     "vite-plugin-electron-renderer": "^0.11.3"

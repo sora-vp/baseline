@@ -68,12 +68,20 @@ const columns = [
     id: "QR ID",
   }),
   columnHelper.accessor("sudahAbsen", {
-    cell: (info) => (info.getValue() ? "Sudah" : "Belum"),
+    cell: (info) => (
+      <span style={{ fontSize: "1.4rem" }}>
+        {info.getValue() ? "✅" : "❌"}
+      </span>
+    ),
     header: "Sudah Absen",
   }),
 
   columnHelper.accessor("sudahMemilih", {
-    cell: (info) => (info.getValue() ? "Sudah" : "Belum"),
+    cell: (info) => (
+      <span style={{ fontSize: "1.4rem" }}>
+        {info.getValue() ? "✅" : "❌"}
+      </span>
+    ),
     header: "Sudah Memilih",
   }),
 ];

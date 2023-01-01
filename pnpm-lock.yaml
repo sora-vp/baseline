@@ -131,11 +131,12 @@ importers:
       '@types/react': ^18.0.25
       '@types/react-dom': ^18.0.10
       '@vitejs/plugin-react': ^3.0.0
-      electron: ^22.0.0
+      absensi: workspace:*
+      electron: 22.0.0
       electron-builder: ^23.6.0
       electron-store: ^8.1.0
       framer-motion: ^8.0.2
-      picnic: ^7.1.0
+      id-generator: workspace:*
       qr-scanner: ^1.4.2
       react: ^18.2.0
       react-dom: ^18.2.0
@@ -158,10 +159,11 @@ importers:
       '@types/react': 18.0.26
       '@types/react-dom': 18.0.10
       '@vitejs/plugin-react': 3.0.0_vite@4.0.3
+      absensi: link:../absensi
       electron: 22.0.0
       electron-builder: 23.6.0
       framer-motion: 8.0.2_biqbaboplfbrettd7655fr4n2y
-      picnic: 7.1.0
+      id-generator: link:../../packages/id-generator
       qr-scanner: 1.4.2
       react: 18.2.0
       react-dom: 18.2.0_react@18.2.0
@@ -290,7 +292,6 @@ importers:
       '@types/react': ^18.0.25
       '@types/react-dom': ^18.0.10
       '@vitejs/plugin-react': ^3.0.0
-      absensi: workspace:*
       electron: 22.0.0
       electron-builder: ^23.6.0
       electron-store: 8.1.0
@@ -301,8 +302,8 @@ importers:
       react: ^18.2.0
       react-dom: ^18.2.0
       react-router-dom: ^6.6.1
-      sora: workspace:*
       superjson: 1.12.1
+      trpc-glue: workspace:*
       typescript: ^4.9.3
       vite: ^4.0.3
       vite-electron-plugin: ^0.6.1
@@ -321,7 +322,6 @@ importers:
       '@types/react': 18.0.26
       '@types/react-dom': 18.0.10
       '@vitejs/plugin-react': 3.0.0_vite@4.0.3
-      absensi: link:../absensi
       electron: 22.0.0
       electron-builder: 23.6.0
       framer-motion: 8.0.2_biqbaboplfbrettd7655fr4n2y
@@ -331,12 +331,32 @@ importers:
       react: 18.2.0
       react-dom: 18.2.0_react@18.2.0
       react-router-dom: 6.6.1_biqbaboplfbrettd7655fr4n2y
-      sora: link:../sora
       superjson: 1.12.1
+      trpc-glue: link:../trpc-glue
       typescript: 4.9.4
       vite: 4.0.3
       vite-electron-plugin: 0.6.4_esbuild@0.16.12
       vite-plugin-electron-renderer: 0.11.3_esbuild@0.16.12
+
+  apps/trpc-glue:
+    specifiers:
+      '@tanstack/react-query': ^4.20.4
+      '@trpc/client': ^10.7.0
+      '@trpc/react-query': ^10.7.0
+      '@trpc/server': ^10.7.0
+      absensi: workspace:*
+      sora: workspace:*
+      superjson: 1.12.1
+      typescript: ^4.9.3
+    devDependencies:
+      '@tanstack/react-query': 4.20.4_biqbaboplfbrettd7655fr4n2y
+      '@trpc/client': 10.7.0_@trpc+server@10.7.0
+      '@trpc/react-query': 10.7.0_x4ie6nhblo2vtx2aafrgzlfqy4
+      '@trpc/server': 10.7.0
+      absensi: link:../absensi
+      sora: link:../sora
+      superjson: 1.12.1
+      typescript: 4.9.4
 
   packages/id-generator:
     specifiers:
@@ -3222,7 +3242,7 @@ packages:
     dependencies:
       '@types/http-cache-semantics': 4.0.1
       '@types/keyv': 3.1.4
-      '@types/node': 16.18.11
+      '@types/node': 18.11.18
       '@types/responselike': 1.0.0
     dev: true
 
@@ -3304,7 +3324,7 @@ packages:
   /@types/keyv/3.1.4:
     resolution: {integrity: sha512-BQ5aZNSCpj7D6K2ksrRCTmKRLEpnPvWDiLPfoGyhZ++8YtiK9d/3DBKPJgry359X/P1PfruyYwvnvwFjuEiEIg==}
     dependencies:
-      '@types/node': 16.18.11
+      '@types/node': 18.11.18
     dev: true
 
   /@types/lodash.mergewith/4.6.6:
@@ -3390,7 +3410,7 @@ packages:
   /@types/responselike/1.0.0:
     resolution: {integrity: sha512-85Y2BjiufFzaMIlvJDvTTB8Fxl2xfLo4HgmHzVBz08w4wDePCTjYw66PdrolO0kzli3yam/YCgRufyo1DdQVTA==}
     dependencies:
-      '@types/node': 16.18.11
+      '@types/node': 18.11.18
     dev: true
 
   /@types/scheduler/0.16.2:
@@ -3431,7 +3451,7 @@ packages:
     resolution: {integrity: sha512-Cn6WYCm0tXv8p6k+A8PvbDG763EDpBoTzHdA+Q/MF6H3sapGjCm9NzoaJncJS9tUKSuCoDs9XHxYYsQDgxR6kw==}
     requiresBuild: true
     dependencies:
-      '@types/node': 16.18.11
+      '@types/node': 18.11.18
     dev: true
     optional: true
 
@@ -6657,11 +6677,6 @@ packages:
 
   /pend/1.2.0:
     resolution: {integrity: sha512-F3asv42UuXchdzt+xXqfW1OGlVBe+mxa2mqI0pg5yAHZPvFmY3Y6drSf/GQ1A86WgWEN9Kzh/WrgKa6iGcHXLg==}
-    dev: true
-
-  /picnic/7.1.0:
-    resolution: {integrity: sha512-OFoJClCDSaCnavs7QZPMIIjrodUO8m6V+GBNOWaIN4kk3IjzSAd2kp/RfkpZRwXK2u71q5mJ3UQaQjHJRr3dnw==}
-    engines: {node: '>=4.0.0'}
     dev: true
 
   /picocolors/1.0.0:

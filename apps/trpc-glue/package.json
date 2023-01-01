@@ -1,0 +1,19 @@
+{
+  "name": "trpc-glue",
+  "version": "0.0.1",
+  "description": "Package yang menjembatani antara dua server trpc yang berbeda",
+  "main": "index.ts",
+  "types": "index.ts",
+  "author": "Ezra Khairan Permana",
+  "license": "MIT",
+  "devDependencies": {
+    "@tanstack/react-query": "^4.20.4",
+    "@trpc/client": "^10.7.0",
+    "@trpc/react-query": "^10.7.0",
+    "@trpc/server": "^10.7.0",
+    "absensi": "workspace:*",
+    "sora": "workspace:*",
+    "superjson": "1.12.1",
+    "typescript": "^4.9.3"
+  }
+}
