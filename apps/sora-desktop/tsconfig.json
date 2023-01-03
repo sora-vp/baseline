@@ -6,7 +6,8 @@
     "lib": ["DOM", "DOM.Iterable", "ESNext"],
     "paths": {
       "@/*": ["src/*"],
-      "@*": ["../sora/src/*"]
+      "@*": ["../sora/src/*"],
+      "~*": ["../absensi/src/*"]
     },
     "allowJs": true,
     "skipLibCheck": true,

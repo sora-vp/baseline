@@ -2,29 +2,40 @@ import QrScanner from "qr-scanner";
 import { validateId } from "id-generator";
 import { useRef, useEffect } from "react";
 
+import { trpc } from "@/utils/trpc";
 import { useNavigate } from "react-router-dom";
+import { useParticipant } from "@/context/ParticipantContext";
 import { useToast, Box, Text, HStack } from "@chakra-ui/react";
 import styles from "@/styles/components/Scanner.module.css";
 
 const NormalScanner: React.FC<{ setInvalidQr: Function }> = ({
   setInvalidQr,
 }) => {
-  const navigate = useNavigate();
   const toast = useToast();
+  const navigate = useNavigate();
+
+  const { qrId, setQRCode } = useParticipant();
 
   const videoRef = useRef<HTMLVideoElement>(null!);
+
+  const checkParticipantMutation =
+    trpc.absensi.participant.isParticipantAlreadyAttended.useMutation({
+      onError: console.log,
+    });
 
   useEffect(() => {
     const qrScanner = new QrScanner(
       videoRef.current,
-      ({ data }) => {
+      async ({ data }) => {
         qrScanner.stop();
 
         const isValidQr = validateId(data);
 
         if (!isValidQr) return setInvalidQr(true);
 
-        navigate("/vote");
+        const status = await checkParticipantMutation.mutateAsync(data);
+
+        if (status.success) setQRCode(data);
       },
       {
         highlightCodeOutline: true,
@@ -47,6 +58,10 @@ const NormalScanner: React.FC<{ setInvalidQr: Function }> = ({
       qrScanner.destroy();
     };
   }, []);
+
+  useEffect(() => {
+    if (qrId) navigate("/vote");
+  }, [qrId]);
 
   return (
     <HStack h="100vh" justifyContent="center">

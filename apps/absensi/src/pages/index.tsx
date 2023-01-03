@@ -12,8 +12,8 @@ import Head from "next/head";
 import NextLink from "next/link";
 import { DateTime } from "luxon";
 
-import { trpc } from "@utils/trpc";
-import Sidebar from "@components/Sidebar";
+import { trpc } from "~utils/trpc";
+import Sidebar from "~components/Sidebar";
 
 const Admin = () => {
   const userInfo = trpc.auth.me.useQuery();

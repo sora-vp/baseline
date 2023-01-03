@@ -19,8 +19,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import {
   PengaturanPerilakuValidationSchema as validationSchema,
   type PengaturanPerilakuFormValues as FormValues,
-} from "@schema/admin.settings.schema";
-import { trpc } from "@utils/trpc";
+} from "~schema/admin.settings.schema";
+import { trpc } from "~utils/trpc";
 
 const PengaturanPerilaku = () => {
   const toast = useToast();

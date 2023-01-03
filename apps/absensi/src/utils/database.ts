@@ -1,7 +1,7 @@
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-nocheck
 import mongoose from "mongoose";
-import { env } from "@env/server.mjs";
+import { env } from "~env/server.mjs";
 
 const { MONGODB_URI } = env;
 let cached = global.mongoose;

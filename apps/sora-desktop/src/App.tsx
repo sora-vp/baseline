@@ -7,6 +7,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 import { trpc } from "@/utils/trpc";
 import { SettingProvider } from "@/context/SettingContext";
+import { ParticipantProvider } from "@/context/ParticipantContext";
 import { useAppSetting, ensureHasAppSetting } from "@/context/AppSetting";
 
 import Main from "./routes/Main";
@@ -73,7 +74,9 @@ const App: React.FC = () => {
     <trpc.Provider client={trpcClient} queryClient={queryClient}>
       <QueryClientProvider client={queryClient}>
         <SettingProvider>
-          <RouterProvider router={router} />
+          <ParticipantProvider>
+            <RouterProvider router={router} />
+          </ParticipantProvider>
         </SettingProvider>
       </QueryClientProvider>
     </trpc.Provider>

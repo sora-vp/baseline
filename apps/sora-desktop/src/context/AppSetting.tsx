@@ -17,9 +17,6 @@ interface IAppSetting {
 
 const store = new Store<Omit<IAppSetting, "setServerUrl">>();
 
-// @ts-ignore
-window.store = store;
-
 export const AppSettingContext = createContext<IAppSetting>({} as IAppSetting);
 
 export const AppSettingProvider: React.FC<{ children: React.ReactNode }> = ({

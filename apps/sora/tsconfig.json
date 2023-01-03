@@ -11,7 +11,8 @@
       "@schema/*": ["src/schema/*"],
       "@server/*": ["src/server/*"],
       "@types/*": ["src/types/*"],
-      "@utils/*": ["src/utils/*"]
+      "@utils/*": ["src/utils/*"],
+      "~*": ["../absensi/src/*"]
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "**/*.cjs", "**/*.mjs"],

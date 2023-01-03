@@ -1,11 +1,11 @@
 import { router, protectedProcedure, publicProcedure } from "../trpc";
 
-import { ParticipantModel } from "@models/index";
+import { ParticipantModel } from "~models/index";
 import {
   PaginatedParticipantValidationSchema,
   ParticipantAttendValidationSchema,
   TambahPesertaValidationSchema,
-} from "@schema/admin.peserta.schema";
+} from "~schema/admin.peserta.schema";
 import { TRPCError } from "@trpc/server";
 
 export const participantRouter = router({
@@ -55,5 +55,48 @@ export const participantRouter = router({
       await participant.save();
 
       return { message: "Berhasil melakukan absensi!" };
+    }),
+
+  isParticipantAlreadyAttended: publicProcedure
+    .input(ParticipantAttendValidationSchema)
+    .mutation(async ({ input }) => {
+      const participant = await ParticipantModel.findOne({ qrId: input });
+
+      if (!participant)
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Peserta pemilihan tidak dapat ditemukan!",
+        });
+
+      if (participant.sudahMemilih)
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "Kamu sudah memilih kandidat!",
+        });
+
+      if (!participant.sudahAbsen)
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "Kamu belum absen!",
+        });
+
+      return { success: true };
+    }),
+
+  getParticipantStatus: publicProcedure
+    .input(ParticipantAttendValidationSchema)
+    .query(async ({ input }) => {
+      const participant = await ParticipantModel.findOne({ qrId: input });
+
+      if (!participant)
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Peserta pemilihan tidak dapat ditemukan!",
+        });
+
+      return {
+        sudahAbsen: participant.sudahAbsen,
+        sudahMemilih: participant.sudahMemilih,
+      };
     }),
 });

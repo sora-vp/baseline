@@ -21,13 +21,13 @@ import Router from "next/router";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
-import Sidebar from "@components/Sidebar";
-import { trpc } from "@utils/trpc";
+import Sidebar from "~components/Sidebar";
+import { trpc } from "~utils/trpc";
 
 import {
   ClientChangePasswordSchemaValidator as validationSchema,
   type ClientChangePasswordType as FormValues,
-} from "@schema/auth.schema";
+} from "~schema/auth.schema";
 
 const UbahPassword = () => {
   const toast = useToast();

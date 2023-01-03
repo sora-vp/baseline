@@ -22,7 +22,7 @@ import {
 import { getSession, signIn } from "next-auth/react";
 import { useRouter } from "next/router";
 
-import { LoginSchemaValidator, type LoginType } from "@schema/auth.schema";
+import { LoginSchemaValidator, type LoginType } from "~schema/auth.schema";
 
 import type { NextPage } from "next";
 

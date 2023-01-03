@@ -20,13 +20,13 @@ import NextLink from "next/link";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
-import Sidebar from "@components/Sidebar";
+import Sidebar from "~components/Sidebar";
 
 import {
   ChangeNameSchemaValidator as validationSchema,
   type ChangeNameType as FormValues,
-} from "@schema/auth.schema";
-import { trpc } from "@utils/trpc";
+} from "~schema/auth.schema";
+import { trpc } from "~utils/trpc";
 
 const UbahNama = () => {
   const toast = useToast();

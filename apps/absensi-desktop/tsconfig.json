@@ -1,14 +1,15 @@
 {
   "compilerOptions": {
-		"baseUrl": ".",
+    "baseUrl": ".",
     "target": "ESNext",
     "useDefineForClassFields": true,
     "lib": ["DOM", "DOM.Iterable", "ESNext"],
-		"paths": {
-			"@/*": ["src/*"],
-      "styles/*": ["src/assets/styles/*"]
-		},
-    "allowJs": false,
+    "paths": {
+      "@/*": ["src/*"],
+      "styles/*": ["src/assets/styles/*"],
+      "~*": ["../absensi/src/*"]
+    },
+    "allowJs": true,
     "skipLibCheck": true,
     "esModuleInterop": false,
     "allowSyntheticDefaultImports": true,
@@ -19,9 +20,9 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,
-    "jsx": "react-jsx"
+    "jsx": "react-jsx",
+    "experimentalDecorators": true
   },
   "include": ["src"],
   "references": [{ "path": "./tsconfig.node.json" }]
 }
-

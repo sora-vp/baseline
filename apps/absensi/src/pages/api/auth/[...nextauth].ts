@@ -1,9 +1,9 @@
 import bcrypt from "bcrypt";
 import NextAuth, { type NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
-import { connectDatabase } from "@utils/database";
+import { connectDatabase } from "~utils/database";
 
-import { UserModel } from "@models/index";
+import { UserModel } from "~models/index";
 
 export const authOptions: NextAuthOptions = {
   pages: {

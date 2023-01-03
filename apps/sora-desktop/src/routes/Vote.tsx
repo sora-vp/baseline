@@ -26,6 +26,8 @@ import Loading from "@/components/PreScan/Loading";
 import { useAppSetting } from "@/context/AppSetting";
 import { useSetting } from "@/context/SettingContext";
 
+import { ensureParticipantIsValidVoter } from "@/context/ParticipantContext";
+
 import { trpc } from "@/utils/trpc";
 
 const Vote: React.FC = () => {
@@ -77,26 +79,26 @@ const Vote: React.FC = () => {
 
   if (isLoading) return <Loading />;
 
-  if (canVoteNow && paslon && !isError)
-    return (
-      <VStack align="stretch" mt={3}>
-        <HStack style={{ justifyContent: "center" }}>
-          <Text fontWeight="500" fontSize="4xl">
-            Pilih Ketua Barumu!
-          </Text>
-        </HStack>
-        <HStack
-          spacing={4}
-          style={{
-            paddingLeft: "9px",
-            paddingRight: "9px",
-            paddingTop: "15px",
-            margin: "0 auto",
-            justifyContent: "center",
-            flexWrap: "wrap",
-          }}
-        >
-          {paslon.map((kandidat) => (
+  return (
+    <VStack align="stretch" mt={3}>
+      <HStack style={{ justifyContent: "center" }}>
+        <Text fontWeight="500" fontSize="4xl">
+          Pilih Ketua Barumu!
+        </Text>
+      </HStack>
+      <HStack
+        spacing={4}
+        style={{
+          paddingLeft: "9px",
+          paddingRight: "9px",
+          paddingTop: "15px",
+          margin: "0 auto",
+          justifyContent: "center",
+          flexWrap: "wrap",
+        }}
+      >
+        {paslon &&
+          paslon.map((kandidat) => (
             <Center key={kandidat.imgName} py={6}>
               <Box
                 maxW={"320px"}
@@ -134,59 +136,56 @@ const Vote: React.FC = () => {
               </Box>
             </Center>
           ))}
-        </HStack>
+      </HStack>
 
-        <AlertDialog
-          isCentered
-          isOpen={isOpen}
-          leastDestructiveRef={cancelRef}
-          onClose={() => {
-            if (!paslonMutation.isLoading) {
-              setID(null);
-              onClose();
-            }
-          }}
-        >
-          <AlertDialogOverlay>
-            <AlertDialogContent>
-              <AlertDialogHeader fontSize="lg" fontWeight="bold">
-                Pilih Paslon
-              </AlertDialogHeader>
+      <AlertDialog
+        isCentered
+        isOpen={isOpen}
+        leastDestructiveRef={cancelRef}
+        onClose={() => {
+          if (!paslonMutation.isLoading) {
+            setID(null);
+            onClose();
+          }
+        }}
+      >
+        <AlertDialogOverlay>
+          <AlertDialogContent>
+            <AlertDialogHeader fontSize="lg" fontWeight="bold">
+              Pilih Paslon
+            </AlertDialogHeader>
 
-              <AlertDialogBody>
-                Apakah anda yakin untuk memilih paslon atas nama {getNama()}?
-              </AlertDialogBody>
+            <AlertDialogBody>
+              Apakah anda yakin untuk memilih paslon atas nama {getNama()}?
+            </AlertDialogBody>
 
-              <AlertDialogFooter>
-                <Button
-                  ref={cancelRef}
-                  onClick={onClose}
-                  disabled={paslonMutation.isLoading}
-                >
-                  Batal
-                </Button>
-                <Button
-                  colorScheme="green"
-                  disabled={paslonMutation.isLoading}
-                  onClick={() => {
-                    paslonMutation.mutate({
-                      id: currentID as string,
-                      timeZone: DateTime.now().zoneName,
-                    });
-                  }}
-                  ml={3}
-                >
-                  Pilih
-                </Button>
-              </AlertDialogFooter>
-            </AlertDialogContent>
-          </AlertDialogOverlay>
-        </AlertDialog>
-      </VStack>
-    );
-
-  // Fallback
-  return <>ERR:INVALID_ELEMENT</>;
+            <AlertDialogFooter>
+              <Button
+                ref={cancelRef}
+                onClick={onClose}
+                disabled={paslonMutation.isLoading}
+              >
+                Batal
+              </Button>
+              <Button
+                colorScheme="green"
+                disabled={paslonMutation.isLoading}
+                onClick={() => {
+                  paslonMutation.mutate({
+                    id: currentID as string,
+                    timeZone: DateTime.now().zoneName,
+                  });
+                }}
+                ml={3}
+              >
+                Pilih
+              </Button>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialogOverlay>
+      </AlertDialog>
+    </VStack>
+  );
 };
 
-export default Vote;
+export default ensureParticipantIsValidVoter(Vote);

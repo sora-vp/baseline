@@ -1,8 +1,12 @@
 // src/utils/trpc.ts
-import { httpBatchLink, loggerLink } from "@trpc/client";
+import { createTRPCProxyClient, httpBatchLink, loggerLink } from "@trpc/client";
 import { createTRPCNext } from "@trpc/next";
-import type { AppRouter } from "@server/trpc/router";
 import superjson from "superjson";
+
+import type { AppRouter } from "@server/trpc/router";
+import type { AbsensiAppRouter } from "absensi";
+
+import { env } from "@env/server.mjs";
 
 const getBaseUrl = () => {
   if (typeof window !== "undefined") return ""; // browser should use relative url
@@ -27,4 +31,13 @@ export const trpc = createTRPCNext<AppRouter>({
     };
   },
   ssr: false,
+});
+
+export const trpcAbsensi = createTRPCProxyClient<AbsensiAppRouter>({
+  transformer: superjson,
+  links: [
+    httpBatchLink({
+      url: `${env.ABSENSI_URI}/api/trpc`,
+    }),
+  ],
 });

@@ -16,6 +16,10 @@ export const serverSchema = z.object({
     process.env.VERCEL ? z.string() : z.string().url()
   ),
   MONGODB_URI: z.string().min(5),
+  ABSENSI_URI: z
+    .string()
+    .url()
+    .transform((url) => new URL(url).origin),
   SETTINGS_SECRET: z.string().min(5),
 });
 

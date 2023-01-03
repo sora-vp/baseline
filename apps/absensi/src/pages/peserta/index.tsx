@@ -44,8 +44,8 @@ import NextLink from "next/link";
 import { BiFirstPage, BiLastPage } from "react-icons/bi";
 import { GrPrevious, GrNext } from "react-icons/gr";
 
-import { trpc, type allParticipantOutput } from "@utils/trpc";
-import Sidebar from "@components/Sidebar";
+import { trpc, type allParticipantOutput } from "~utils/trpc";
+import Sidebar from "~components/Sidebar";
 
 import {
   PaginationState,
