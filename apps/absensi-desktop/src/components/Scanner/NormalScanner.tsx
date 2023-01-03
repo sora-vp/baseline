@@ -5,6 +5,8 @@ import { useRef, useState, useEffect } from "react";
 import { useToast, Box, Text, HStack } from "@chakra-ui/react";
 import styles from "@/styles/components/Scanner.module.css";
 
+import SuccessScan from "./SuccessScan";
+
 import { trpc } from "@/utils/trpc";
 
 const NormalScanner: React.FC<{ setInvalidQr: Function }> = ({
@@ -26,6 +28,7 @@ const NormalScanner: React.FC<{ setInvalidQr: Function }> = ({
       });
 
       setSuccess(true);
+      setTimeout(() => location.reload(), 2500);
     },
     onError(result) {
       toast({
@@ -35,6 +38,8 @@ const NormalScanner: React.FC<{ setInvalidQr: Function }> = ({
         duration: 8000,
         isClosable: false,
       });
+
+      setInvalidQr(true);
     },
   });
 
@@ -72,7 +77,7 @@ const NormalScanner: React.FC<{ setInvalidQr: Function }> = ({
     };
   }, []);
 
-  if (isSuccess) return <></>;
+  if (isSuccess) return <SuccessScan />;
 
   return (
     <HStack h="100vh" justifyContent="center">
