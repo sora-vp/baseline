@@ -16,10 +16,6 @@ export const serverSchema = z.object({
     process.env.VERCEL ? z.string() : z.string().url()
   ),
   MONGODB_URI: z.string().min(5),
-  ABSENSI_URI: z
-    .string()
-    .url()
-    .transform((url) => new URL(url).origin),
   SETTINGS_SECRET: z.string().min(5),
 });
 
@@ -30,6 +26,10 @@ export const serverSchema = z.object({
  */
 export const clientSchema = z.object({
   // NEXT_PUBLIC_BAR: z.string(),
+  NEXT_PUBLIC_ABSENSI_URI: z
+    .string()
+    .url()
+    .transform((url) => new URL(url).origin),
 });
 
 /**
@@ -40,4 +40,5 @@ export const clientSchema = z.object({
  */
 export const clientEnv = {
   // NEXT_PUBLIC_BAR: process.env.NEXT_PUBLIC_BAR,
+  NEXT_PUBLIC_ABSENSI_URI: process.env.NEXT_PUBLIC_ABSENSI_URI,
 };

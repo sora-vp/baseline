@@ -6,7 +6,7 @@ import superjson from "superjson";
 import type { AppRouter } from "@server/trpc/router";
 import type { AbsensiAppRouter } from "absensi";
 
-import { env } from "@env/server.mjs";
+import { env } from "@env/client.mjs";
 
 const getBaseUrl = () => {
   if (typeof window !== "undefined") return ""; // browser should use relative url
@@ -37,7 +37,7 @@ export const trpcAbsensi = createTRPCProxyClient<AbsensiAppRouter>({
   transformer: superjson,
   links: [
     httpBatchLink({
-      url: `${env.ABSENSI_URI}/api/trpc`,
+      url: `${env.NEXT_PUBLIC_ABSENSI_URI}/api/trpc`,
     }),
   ],
 });

@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useRef } from "react";
 import {
   useToast,
   useDisclosure,
@@ -20,19 +20,23 @@ import {
   AlertDialogOverlay,
 } from "@chakra-ui/react";
 import { DateTime } from "luxon";
-import { useNavigate } from "react-router-dom";
+import { Navigate } from "react-router-dom";
 
 import Loading from "@/components/PreScan/Loading";
 import { useAppSetting } from "@/context/AppSetting";
 import { useSetting } from "@/context/SettingContext";
 
-import { ensureParticipantIsValidVoter } from "@/context/ParticipantContext";
+import {
+  useParticipant,
+  ensureParticipantIsValidVoter,
+} from "@/context/ParticipantContext";
 
 import { trpc } from "@/utils/trpc";
 
 const Vote: React.FC = () => {
   const toast = useToast();
-  const navigate = useNavigate();
+
+  const { qrId, setQRCode } = useParticipant();
   const { soraURL } = useAppSetting();
   const { isLoading, isError, canVoteNow, paslon } = useSetting();
 
@@ -53,7 +57,7 @@ const Vote: React.FC = () => {
       });
 
       onClose();
-      navigate("/");
+      setQRCode(null);
     },
 
     onError(result) {
@@ -73,11 +77,9 @@ const Vote: React.FC = () => {
     return `${currentPaslon?.namaKetua} dan ${currentPaslon?.namaWakil}`;
   };
 
-  useEffect(() => {
-    if (!canVoteNow || isError) navigate("/");
-  }, [canVoteNow, isError]);
-
   if (isLoading) return <Loading />;
+
+  if (!canVoteNow || isError) return <Navigate to={"/"} />;
 
   return (
     <VStack align="stretch" mt={3}>
@@ -172,6 +174,7 @@ const Vote: React.FC = () => {
                 disabled={paslonMutation.isLoading}
                 onClick={() => {
                   paslonMutation.mutate({
+                    qrId,
                     id: currentID as string,
                     timeZone: DateTime.now().zoneName,
                   });

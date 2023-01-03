@@ -99,4 +99,21 @@ export const participantRouter = router({
         sudahMemilih: participant.sudahMemilih,
       };
     }),
+
+  updateUserUpvoteStatus: publicProcedure
+    .input(ParticipantAttendValidationSchema)
+    .mutation(async ({ input }) => {
+      const participant = await ParticipantModel.findOne({ qrId: input });
+
+      if (!participant)
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Peserta pemilihan tidak dapat ditemukan!",
+        });
+
+      participant.sudahMemilih = true;
+      await participant.save();
+
+      return { success: true };
+    }),
 });

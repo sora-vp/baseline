@@ -20,7 +20,16 @@ const NormalScanner: React.FC<{ setInvalidQr: Function }> = ({
 
   const checkParticipantMutation =
     trpc.absensi.participant.isParticipantAlreadyAttended.useMutation({
-      onError: console.log,
+      onError(error) {
+        toast({
+          description: `Error: ${error.message}`,
+          status: "error",
+          duration: 5000,
+          position: "top-right",
+        });
+
+        setInvalidQr(true);
+      },
     });
 
   useEffect(() => {

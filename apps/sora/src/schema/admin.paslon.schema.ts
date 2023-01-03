@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { validateId } from "id-generator";
 
 const TwoMegs = 2_000_000;
 const validNameRegex =
@@ -47,10 +48,17 @@ export type TambahFormValues = {
   image: File;
 };
 
-export const adminDeleteCandidateAndUpvoteValidationSchema = z.object({
+export const adminDeleteCandidateValidationSchema = z.object({
   id: z.string().min(1),
   timeZone: z.string().min(1),
 });
+
+export const upvoteValidationSchema =
+  adminDeleteCandidateValidationSchema.merge(
+    z.object({
+      qrId: z.string().refine(validateId),
+    })
+  );
 
 export const adminGetSpecificCandidateValidationSchema = z.object({
   id: z.string().min(1),
