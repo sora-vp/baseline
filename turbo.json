@@ -3,7 +3,7 @@
   "pipeline": {
     "build": {
       "dependsOn": ["^build"],
-      "outputs": [".next/**", "dist", "dist-electron/**"]
+      "outputs": [".next/**", "dist/**", "dist-electron/**"]
     },
     "lint": {
       "outputs": []

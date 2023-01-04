@@ -2,7 +2,7 @@
  * @see https://www.electron.build/configuration/configuration
  */
 {
-  appId: "SoraAbsensi",
+  appId: "my.id.rmecha.absensi",
   productName: "Sora Absensi",
   copyright: "Copyright © 2022 ${author}",
   asar: true,

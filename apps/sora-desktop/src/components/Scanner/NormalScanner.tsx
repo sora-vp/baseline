@@ -36,6 +36,9 @@ const NormalScanner: React.FC<{ setInvalidQr: Function }> = ({
     const qrScanner = new QrScanner(
       videoRef.current,
       async ({ data }) => {
+        // Bug from QR Scanner
+        if (!data || data === "") return;
+        
         qrScanner.stop();
 
         const isValidQr = validateId(data);

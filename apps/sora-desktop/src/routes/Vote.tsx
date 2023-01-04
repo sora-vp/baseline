@@ -174,7 +174,7 @@ const Vote: React.FC = () => {
                 disabled={paslonMutation.isLoading}
                 onClick={() => {
                   paslonMutation.mutate({
-                    qrId,
+                    qrId: qrId as string,
                     id: currentID as string,
                     timeZone: DateTime.now().zoneName,
                   });

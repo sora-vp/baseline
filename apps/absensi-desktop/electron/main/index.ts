@@ -32,7 +32,7 @@ const indexHtml = join(process.env.DIST, "index.html");
 async function createWindow() {
   win = new BrowserWindow({
     title: "Absensi App",
-    icon: join(process.env.PUBLIC, "favicon.svg"),
+    icon: join(process.env.PUBLIC, "icon.png"),
     webPreferences: {
       preload,
       nodeIntegration: true,
@@ -48,11 +48,6 @@ async function createWindow() {
   } else {
     win.loadFile(indexHtml);
   }
-
-  // Test actively push message to the Electron-Renderer
-  win.webContents.on("did-finish-load", () => {
-    win?.webContents.send("main-process-message", new Date().toLocaleString());
-  });
 
   // Make all links open with the browser, not with the application
   win.webContents.setWindowOpenHandler(({ url }) => {
