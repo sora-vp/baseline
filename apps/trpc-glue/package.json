@@ -7,13 +7,13 @@
   "author": "Ezra Khairan Permana",
   "license": "MIT",
   "devDependencies": {
-    "@tanstack/react-query": "^4.20.9",
-    "@trpc/client": "^10.7.0",
-    "@trpc/react-query": "^10.7.0",
-    "@trpc/server": "^10.7.0",
+    "@tanstack/react-query": "^4.24.10",
+    "@trpc/client": "^10.13.2",
+    "@trpc/react-query": "^10.13.2",
+    "@trpc/server": "^10.13.2",
     "absensi": "workspace:*",
     "sora": "workspace:*",
-    "superjson": "1.12.1",
-    "typescript": "^4.9.3"
+    "superjson": "1.12.2",
+    "typescript": "^4.9.5"
   }
 }
