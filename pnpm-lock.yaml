@@ -16,7 +16,6 @@ importers:
       '@emotion/react': ^11.10.6
       '@emotion/styled': ^11.10.6
       '@hookform/resolvers': ^2.9.11
-      '@next/font': ^13.2.3
       '@tanstack/react-query': ^4.24.10
       '@tanstack/react-table': ^8.7.9
       '@trpc/client': 10.13.2
@@ -69,7 +68,6 @@ importers:
       '@emotion/react': 11.10.6_pmekkgnqduwlme35zpnqhenc34
       '@emotion/styled': 11.10.6_oouaibmszuch5k64ms7uxp2aia
       '@hookform/resolvers': 2.9.11_react-hook-form@7.43.3
-      '@next/font': 13.2.3
       '@tanstack/react-query': 4.24.10_biqbaboplfbrettd7655fr4n2y
       '@tanstack/react-table': 8.7.9_biqbaboplfbrettd7655fr4n2y
       '@trpc/client': 10.13.2_@trpc+server@10.13.2
@@ -180,7 +178,6 @@ importers:
       '@emotion/react': ^11.10.6
       '@emotion/styled': ^11.10.6
       '@hookform/resolvers': ^2.9.11
-      '@next/font': ^13.2.3
       '@tanstack/react-query': ^4.24.10
       '@trpc/client': 10.13.2
       '@trpc/next': 10.13.2
@@ -233,7 +230,6 @@ importers:
       '@emotion/react': 11.10.6_pmekkgnqduwlme35zpnqhenc34
       '@emotion/styled': 11.10.6_oouaibmszuch5k64ms7uxp2aia
       '@hookform/resolvers': 2.9.11_react-hook-form@7.43.3
-      '@next/font': 13.2.3
       '@tanstack/react-query': 4.24.10_biqbaboplfbrettd7655fr4n2y
       '@trpc/client': 10.13.2_@trpc+server@10.13.2
       '@trpc/next': 10.13.2_ksxvnacv7m4xnsdybedevecyxm
