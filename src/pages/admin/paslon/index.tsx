@@ -31,6 +31,7 @@ import {
 } from "@chakra-ui/react";
 import Head from "next/head";
 import NextLink from "next/link";
+import { Types } from "mongoose";
 import { DateTime } from "luxon";
 
 import { trpc } from "../../../utils/trpc";
@@ -76,7 +77,7 @@ const Paslon = () => {
   });
 
   // Untuk keperluan hapus data
-  const [currentID, setID] = useState<string | null>(null);
+  const [currentID, setID] = useState<Types.ObjectId | null>(null);
 
   const getNama = () => {
     const currentPaslon = paslonQuery.data?.find((p) => p._id === currentID);
@@ -175,7 +176,7 @@ const Paslon = () => {
                         !paslonQuery.isError &&
                         paslonQuery.data &&
                         paslonQuery.data.map((p) => (
-                          <Tr key={p._id}>
+                          <Tr key={p._id as unknown as string}>
                             <Td>{p.namaKetua}</Td>
                             <Td>{p.namaWakil}</Td>
                             <Td>{p.dipilih} Orang</Td>
@@ -299,7 +300,7 @@ const Paslon = () => {
                       ?.canVote
                   )
                     paslonDeleteMutation.mutate({
-                      id: currentID as string,
+                      id: currentID as unknown as string,
                       timeZone: DateTime.now().zoneName,
                     });
                 }}

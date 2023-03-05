@@ -26,6 +26,7 @@ import {
   AlertDialogOverlay,
 } from "@chakra-ui/react";
 import { DateTime } from "luxon";
+import { Types } from "mongoose";
 
 import { trpc } from "../utils/trpc";
 
@@ -38,7 +39,7 @@ const Home: NextPage = () => {
   const sendRef = useRef<HTMLButtonElement>(null!);
 
   // Untuk keperluan pemilihan
-  const [currentID, setID] = useState<string | null>(null);
+  const [currentID, setID] = useState<Types.ObjectId | null>(null);
 
   const [canVote, setCanVote] = useState<boolean>(false);
   const [currentTime, setCurrentTime] = useState<number>(new Date().getTime());
@@ -271,7 +272,7 @@ const Home: NextPage = () => {
                     onClick={() => {
                       sendRef.current.setAttribute("disabled", "disabled");
                       paslonMutation.mutate({
-                        id: currentID as string,
+                        id: currentID as unknown as string,
                         timeZone: DateTime.now().zoneName,
                       });
                     }}

@@ -19,7 +19,7 @@ export const paslonRouter = router({
   candidateList: publicProcedure.query(async () => {
     const data = await PaslonModel.find({}).lean();
 
-    return data.map((kandidat: PaslonType & { _id: string }) => ({
+    return data.map((kandidat) => ({
       id: kandidat._id,
       namaKetua: kandidat.namaKetua,
       namaWakil: kandidat.namaWakil,
