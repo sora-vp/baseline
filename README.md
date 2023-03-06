@@ -42,10 +42,10 @@ Jalankan perintah ini Command Line.
 
 ```sh
 # HTTPS
-git clone https://github.com/reacto11mecha/sora.git
+git clone https://github.com/reacto11mecha/sora.git --branch v1
 
 # SSH
-git clone git@github.com:reacto11mecha/sora.git
+git clone git@github.com:reacto11mecha/sora.git --branch v1
 ```
 
 ### Menginstall package dan [`pm2`](https://npm.im/pm2)
