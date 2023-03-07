@@ -96,7 +96,7 @@ const Candidate = () => {
       <VStack align="stretch">
         <HStack mb={"10px"} style={{ justifyContent: "center" }}>
           <Text fontWeight="500" fontSize="5xl">
-            Kanidat
+            Kandidat
           </Text>
         </HStack>
         <HStack>

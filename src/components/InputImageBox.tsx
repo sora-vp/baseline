@@ -50,10 +50,7 @@ export default function InputImageBox({
 
       if (
         Array.from(files).some(
-          (file: File) =>
-            !extensions.some((format) =>
-              file.name.toLowerCase().endsWith(format.toLowerCase())
-            )
+          (file: File) => !extensions.some((format) => file.type === format)
         )
       ) {
         toast({

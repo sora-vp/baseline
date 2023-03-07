@@ -10,17 +10,11 @@ const ACCEPTED_IMAGE_TYPES = [
 ];
 
 const baseAddAndEditForm = z.object({
-  ketua: z
+  kandidat: z
     .string()
-    .min(1, { message: "Diperlukan nama ketua!" })
+    .min(1, { message: "Diperlukan nama kandidat!" })
     .regex(validNameRegex, {
-      message: "Bidang nama harus berupa nama yang valid!",
-    }),
-  wakil: z
-    .string()
-    .min(1, { message: "Diperlukan nama wakil!" })
-    .regex(validNameRegex, {
-      message: "Bidang nama harus berupa nama yang valid!",
+      message: "Nama kandidat harus berupa nama yang valid!",
     }),
 });
 
@@ -41,8 +35,7 @@ export const TambahPaslonValidationSchema = baseAddAndEditForm.merge(
 );
 
 export type TambahFormValues = {
-  ketua: string;
-  wakil: string;
+  kandidat: string;
   image: File;
 };
 
@@ -76,3 +69,8 @@ export const EditPaslonValidationSchema = baseAddAndEditForm.merge(
       ),
   })
 );
+
+export type TEditPaslonValidationSchema = {
+  kandidat: string;
+  image: File;
+};

@@ -11,7 +11,7 @@ import { KandidatModel, Kandidat as KandidatType } from "../../../models";
 import {
   adminDeleteCandidateAndUpvoteValidationSchema,
   adminGetSpecificCandidateValidationSchema,
-} from "../../../schema/admin.paslon.schema";
+} from "../../../schema/admin.candidate.schema";
 
 import { canVoteNow } from "../../../utils/canVote";
 
