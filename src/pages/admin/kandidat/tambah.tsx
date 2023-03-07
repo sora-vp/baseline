@@ -38,7 +38,7 @@ const HalamanTambah = () => {
 
   const settingsQuery = trpc.settings.getSettings.useQuery(undefined, {
     onSuccess(result) {
-      if (result.canVote) Router.push("/admin/paslon");
+      if (result.canVote) Router.push("/admin/kandidat");
     },
   });
 
@@ -109,7 +109,7 @@ const HalamanTambah = () => {
 
       if (imgFromInput !== null) URL.revokeObjectURL(imgFromInput);
       setIFI(null);
-    } else Router.push("/admin/paslon");
+    } else Router.push("/admin/kandidat");
   };
 
   return (
@@ -217,7 +217,7 @@ const HalamanTambah = () => {
                 >
                   Tambah
                 </Button>
-                <NextLink href="/admin/paslon" legacyBehavior passHref>
+                <NextLink href="/admin/kandidat" legacyBehavior passHref>
                   <Link display={"flex"} justifyContent="center" mt={2} mb={3}>
                     Kembali
                   </Link>

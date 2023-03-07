@@ -177,7 +177,7 @@ const Home: NextPage = () => {
   return (
     <>
       <Head>
-        <title>Pilih Paslon Mu | ᮞᮧᮛ</title>
+        <title>Pilih Kandidat Mu | ᮞᮧᮛ</title>
       </Head>
 
       {candidateQuery.data && candidateQuery.data.length > 0 ? (
@@ -253,7 +253,8 @@ const Home: NextPage = () => {
                 </AlertDialogHeader>
 
                 <AlertDialogBody>
-                  Apakah anda yakin untuk memilih paslon atas nama {getNama()}?
+                  Apakah anda yakin untuk memilih kandidat atas nama {getNama()}
+                  ?
                 </AlertDialogBody>
 
                 <AlertDialogFooter>
@@ -298,7 +299,7 @@ const MasihKosong = () => (
       </Text>
       <Divider orientation="horizontal" mt="1" mb="1" />
       <Text>
-        Tidak ada data paslon yang ada, mohon hubungi admin untuk menambahkan
+        Tidak ada data kandidat yang ada, mohon hubungi admin untuk menambahkan
         data paslon.
       </Text>
     </Box>

@@ -48,7 +48,7 @@ const EditPaslonWithID = () => {
 
   const settingsQuery = trpc.settings.getSettings.useQuery(undefined, {
     onSuccess(result) {
-      if (result.canVote) router.push("/admin/paslon");
+      if (result.canVote) router.push("/admin/kandidat");
     },
   });
   const candidateQuery = trpc.candidate.getSpecificCandidate.useQuery(
@@ -131,7 +131,7 @@ const EditPaslonWithID = () => {
       if (imgFromInput !== null) URL.revokeObjectURL(imgFromInput);
       setIFI(null);
     } else {
-      router.push("/admin/paslon");
+      router.push("/admin/kandidat");
     }
   };
 
@@ -239,7 +239,7 @@ const EditPaslonWithID = () => {
                 >
                   Edit
                 </Button>
-                <NextLink href="/admin/paslon" legacyBehavior passHref>
+                <NextLink href="/admin/kandidat" legacyBehavior passHref>
                   <Link display={"flex"} justifyContent="center" mt={2} mb={3}>
                     Kembali
                   </Link>

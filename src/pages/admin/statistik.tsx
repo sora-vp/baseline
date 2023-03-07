@@ -102,7 +102,7 @@ const Statistik = () => {
                   <HStack>
                     <Text fontSize={"3xl"} style={{ textAlign: "center" }}>
                       Belum ada paslon, buat terlebih dahulu di{" "}
-                      <NextLink href={"/admin/paslon"} passHref>
+                      <NextLink href={"/admin/kandidat"} passHref>
                         <Link color="teal.500">halaman paslon</Link>
                       </NextLink>
                       !
