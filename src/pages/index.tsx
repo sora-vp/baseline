@@ -119,7 +119,7 @@ const Home: NextPage = () => {
     const currentPaslon =
       paslonQuery.data && paslonQuery.data?.find((p) => p.id === currentID);
 
-    return `${currentPaslon?.namaKetua} dan ${currentPaslon?.namaWakil}`;
+    return currentPaslon?.namaKandidat;
   };
 
   useEffect(() => {
@@ -209,16 +209,13 @@ const Home: NextPage = () => {
                 >
                   <Image
                     src={`/api/uploads/${paslon.imgName}`}
-                    alt={`Gambar dari pasangan calon ${paslon.namaKetua} dan ${paslon.namaWakil}.`}
+                    alt={`Gambar dari pasangan calon ${paslon.namaKandidat}.`}
                   />
                   <Heading mt={2} fontSize={"3xl"} fontFamily={"body"}>
                     Pasangan Calon
                   </Heading>
                   <Text fontSize={"1.4rem"} mt={2}>
-                    {paslon.namaKetua}
-                  </Text>
-                  <Text fontSize={"1.4rem"} mb={4}>
-                    {paslon.namaWakil}
+                    {paslon.namaKandidat}
                   </Text>
 
                   <Button

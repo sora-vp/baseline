@@ -36,9 +36,9 @@ const Statistik = () => {
 
   const chartData = useMemo(
     () =>
-      paslonQuery.data?.map((pasangan) => ({
-        name: `${pasangan.namaKetua} - ${pasangan.namaWakil}`,
-        ["Yang Memilih"]: pasangan.dipilih,
+      paslonQuery.data?.map((kandidat) => ({
+        name: kandidat.namaKandidat,
+        ["Yang Memilih"]: kandidat.dipilih,
       })),
     [paslonQuery.data]
   );

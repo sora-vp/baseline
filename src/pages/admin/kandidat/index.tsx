@@ -37,7 +37,7 @@ import { DateTime } from "luxon";
 import { trpc } from "../../../utils/trpc";
 import Sidebar from "../../../components/Sidebar";
 
-const Paslon = () => {
+const Candidate = () => {
   const toast = useToast();
   const cancelRef = useRef<HTMLButtonElement>(null!);
 
@@ -82,7 +82,7 @@ const Paslon = () => {
   const getNama = () => {
     const currentPaslon = paslonQuery.data?.find((p) => p._id === currentID);
 
-    return `${currentPaslon?.namaKetua} dan ${currentPaslon?.namaWakil}`;
+    return currentPaslon?.namaKandidat;
   };
 
   return (
@@ -93,7 +93,7 @@ const Paslon = () => {
       <VStack align="stretch">
         <HStack mb={"10px"} style={{ justifyContent: "center" }}>
           <Text fontWeight="500" fontSize="5xl">
-            Paslon
+            Kanidat
           </Text>
         </HStack>
         <HStack>
@@ -108,7 +108,7 @@ const Paslon = () => {
             <VStack align="stretch" px={2} py={2}>
               <HStack>
                 <NextLink
-                  href="/admin/paslon/tambah"
+                  href="/admin/kandidat/tambah"
                   passHref={
                     !settingsQuery.isLoading ||
                     !(settingsQuery.data as unknown as { canVote?: boolean })
@@ -123,7 +123,7 @@ const Paslon = () => {
                     bg="blue.500"
                     color="white"
                   >
-                    Tambah Paslon Baru
+                    Tambah Kandidat Baru
                   </Button>
                 </NextLink>
               </HStack>
@@ -151,8 +151,8 @@ const Paslon = () => {
 
                     <Thead>
                       <Tr>
-                        <Th>Nama Ketua</Th>
-                        <Th>Nama Wakil</Th>
+                        <Th>#</Th>
+                        <Th>Nama Kandidat</Th>
                         <Th>Yang Memilih</Th>
                         <Th>Gambar</Th>
                         <Th>Aksi</Th>
@@ -175,15 +175,15 @@ const Paslon = () => {
                       {!paslonQuery.isLoading &&
                         !paslonQuery.isError &&
                         paslonQuery.data &&
-                        paslonQuery.data.map((p) => (
+                        paslonQuery.data.map((p, idx) => (
                           <Tr key={p._id as unknown as string}>
-                            <Td>{p.namaKetua}</Td>
-                            <Td>{p.namaWakil}</Td>
+                            <Td>{++idx}</Td>
+                            <Td>{p.namaKandidat}</Td>
                             <Td>{p.dipilih} Orang</Td>
                             <Td>
                               <img
                                 src={`/api/uploads/${p.imgName}`}
-                                alt={`Gambar dari pasangan calon ${p.namaKetua} dan ${p.namaWakil}.`}
+                                alt={`Gambar dari kandidat ${p.namaKandidat}.`}
                               />
                             </Td>
                             <Td>
