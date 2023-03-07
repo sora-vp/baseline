@@ -50,7 +50,7 @@ const Home: NextPage = () => {
   const userInfo = trpc.auth.me.useQuery(undefined, {
     refetchOnWindowFocus: false,
   });
-  const paslonQuery = trpc.paslon.candidateList.useQuery(undefined, {
+  const candidateQuery = trpc.candidate.candidateList.useQuery(undefined, {
     refetchOnWindowFocus: false,
   });
   const settingsQuery = trpc.settings.getSettings.useQuery(undefined, {
@@ -78,7 +78,7 @@ const Home: NextPage = () => {
     },
   });
 
-  const paslonMutation = trpc.paslon.upvote.useMutation({
+  const candidateMutation = trpc.candidate.upvote.useMutation({
     onSuccess(result) {
       toast({
         description: result.message,
@@ -116,10 +116,11 @@ const Home: NextPage = () => {
   );
 
   const getNama = () => {
-    const currentPaslon =
-      paslonQuery.data && paslonQuery.data?.find((p) => p.id === currentID);
+    const currentCandidate =
+      candidateQuery.data &&
+      candidateQuery.data?.find((p) => p.id === currentID);
 
-    return currentPaslon?.namaKandidat;
+    return currentCandidate?.namaKandidat;
   };
 
   useEffect(() => {
@@ -135,7 +136,7 @@ const Home: NextPage = () => {
     };
   }, []);
 
-  if (userInfo.isLoading || paslonQuery.isLoading)
+  if (userInfo.isLoading || candidateQuery.isLoading)
     return (
       <>
         <Head>
@@ -179,7 +180,7 @@ const Home: NextPage = () => {
         <title>Pilih Paslon Mu | ᮞᮧᮛ</title>
       </Head>
 
-      {paslonQuery.data && paslonQuery.data.length > 0 ? (
+      {candidateQuery.data && candidateQuery.data.length > 0 ? (
         <VStack align="stretch" mt={3}>
           <HStack style={{ justifyContent: "center" }}>
             <Text fontWeight="500" fontSize="4xl">
@@ -197,7 +198,7 @@ const Home: NextPage = () => {
               flexWrap: "wrap",
             }}
           >
-            {paslonQuery.data?.map((paslon) => (
+            {candidateQuery.data?.map((paslon) => (
               <Center key={paslon.imgName} py={6}>
                 <Box
                   maxW={"320px"}
@@ -239,7 +240,7 @@ const Home: NextPage = () => {
             isOpen={isOpen}
             leastDestructiveRef={cancelRef}
             onClose={() => {
-              if (!paslonMutation.isLoading) {
+              if (!candidateMutation.isLoading) {
                 setID(null);
                 onClose();
               }
@@ -259,7 +260,7 @@ const Home: NextPage = () => {
                   <Button
                     ref={cancelRef}
                     onClick={onClose}
-                    disabled={paslonMutation.isLoading}
+                    disabled={candidateMutation.isLoading}
                   >
                     Batal
                   </Button>
@@ -268,7 +269,7 @@ const Home: NextPage = () => {
                     ref={sendRef}
                     onClick={() => {
                       sendRef.current.setAttribute("disabled", "disabled");
-                      paslonMutation.mutate({
+                      candidateMutation.mutate({
                         id: currentID as unknown as string,
                         timeZone: DateTime.now().zoneName,
                       });

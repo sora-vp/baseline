@@ -51,7 +51,7 @@ const EditPaslonWithID = () => {
       if (result.canVote) router.push("/admin/paslon");
     },
   });
-  const paslonQuery = trpc.paslon.getSpecificCandidate.useQuery(
+  const candidateQuery = trpc.candidate.getSpecificCandidate.useQuery(
     { id: router.query.id as string },
     {
       onSuccess: reset,
@@ -166,7 +166,7 @@ const EditPaslonWithID = () => {
                   <Input
                     type="text"
                     isDisabled={
-                      paslonQuery.isLoading ||
+                      candidateQuery.isLoading ||
                       settingsQuery.isLoading ||
                       settingsQuery.data?.canVote ||
                       formState.isSubmitting
@@ -186,7 +186,7 @@ const EditPaslonWithID = () => {
                   <Input
                     type="text"
                     isDisabled={
-                      paslonQuery.isLoading ||
+                      candidateQuery.isLoading ||
                       settingsQuery.isLoading ||
                       settingsQuery.data?.canVote ||
                       formState.isSubmitting
@@ -231,7 +231,7 @@ const EditPaslonWithID = () => {
                   color="white"
                   isLoading={formState.isSubmitting}
                   isDisabled={
-                    paslonQuery.isLoading ||
+                    candidateQuery.isLoading ||
                     settingsQuery.isLoading ||
                     settingsQuery.data?.canVote
                   }

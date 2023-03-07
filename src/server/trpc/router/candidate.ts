@@ -15,7 +15,7 @@ import {
 
 import { canVoteNow } from "../../../utils/canVote";
 
-export const paslonRouter = router({
+export const candidateRouter = router({
   candidateList: publicProcedure.query(async () => {
     const data = await KandidatModel.find({}).lean();
 

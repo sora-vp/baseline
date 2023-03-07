@@ -43,7 +43,7 @@ const Candidate = () => {
 
   const { isOpen, onOpen, onClose } = useDisclosure();
 
-  const paslonQuery = trpc.paslon.adminCandidateList.useQuery(undefined, {
+  const candidateQuery = trpc.candidate.adminCandidateList.useQuery(undefined, {
     refetchInterval: 2500,
     refetchIntervalInBackground: true,
   });
@@ -52,37 +52,40 @@ const Candidate = () => {
     refetchIntervalInBackground: true,
   });
 
-  const paslonDeleteMutation = trpc.paslon.adminDeleteCandidate.useMutation({
-    onSuccess(result) {
-      onClose();
+  const candidateDeleteMutation =
+    trpc.candidate.adminDeleteCandidate.useMutation({
+      onSuccess(result) {
+        onClose();
 
-      toast({
-        description: result.message,
-        status: "success",
-        duration: 6000,
-        position: "top-right",
-        isClosable: true,
-      });
-    },
+        toast({
+          description: result.message,
+          status: "success",
+          duration: 6000,
+          position: "top-right",
+          isClosable: true,
+        });
+      },
 
-    onError(result) {
-      toast({
-        description: result.message,
-        status: "error",
-        duration: 6000,
-        position: "top-right",
-        isClosable: true,
-      });
-    },
-  });
+      onError(result) {
+        toast({
+          description: result.message,
+          status: "error",
+          duration: 6000,
+          position: "top-right",
+          isClosable: true,
+        });
+      },
+    });
 
   // Untuk keperluan hapus data
   const [currentID, setID] = useState<Types.ObjectId | null>(null);
 
   const getNama = () => {
-    const currentPaslon = paslonQuery.data?.find((p) => p._id === currentID);
+    const currentCandidate = candidateQuery.data?.find(
+      (p) => p._id === currentID
+    );
 
-    return currentPaslon?.namaKandidat;
+    return currentCandidate?.namaKandidat;
   };
 
   return (
@@ -130,20 +133,20 @@ const Candidate = () => {
               <HStack>
                 <TableContainer w="100%" h="100%">
                   <Table variant="simple">
-                    {!paslonQuery.isLoading && !paslonQuery.isError && (
+                    {!candidateQuery.isLoading && !candidateQuery.isError && (
                       <TableCaption>
-                        {paslonQuery.data.length > 0 ? (
+                        {candidateQuery.data.length > 0 ? (
                           <>
                             Jumlah orang yang sudah bersuara berjumlah{" "}
-                            {paslonQuery.data
+                            {candidateQuery.data
                               .map((p) => p.dipilih)
                               .reduce((curr, acc) => curr + acc, 0)}{" "}
                             orang
                           </>
                         ) : (
                           <>
-                            Tidak ada paslon yang tersedia, silahkan tambahkan
-                            paslon terlebih dahulu.
+                            Tidak ada kandidat yang tersedia, silahkan tambahkan
+                            kandidat terlebih dahulu.
                           </>
                         )}
                       </TableCaption>
@@ -159,7 +162,7 @@ const Candidate = () => {
                       </Tr>
                     </Thead>
                     <Tbody>
-                      {paslonQuery.isLoading && (
+                      {candidateQuery.isLoading && (
                         <Tr>
                           <Td colSpan={5} style={{ textAlign: "center" }}>
                             <Spinner
@@ -172,10 +175,10 @@ const Candidate = () => {
                         </Tr>
                       )}
 
-                      {!paslonQuery.isLoading &&
-                        !paslonQuery.isError &&
-                        paslonQuery.data &&
-                        paslonQuery.data.map((p, idx) => (
+                      {!candidateQuery.isLoading &&
+                        !candidateQuery.isError &&
+                        candidateQuery.data &&
+                        candidateQuery.data.map((p, idx) => (
                           <Tr key={p._id as unknown as string}>
                             <Td>{++idx}</Td>
                             <Td>{p.namaKandidat}</Td>
@@ -188,7 +191,7 @@ const Candidate = () => {
                             </Td>
                             <Td>
                               <NextLink
-                                href={`/admin/paslon/edit/${p._id}`}
+                                href={`/admin/kandidat/edit/${p._id}`}
                                 passHref={
                                   !settingsQuery.isLoading ||
                                   !(
@@ -239,11 +242,11 @@ const Candidate = () => {
                           </Tr>
                         ))}
 
-                      {!paslonQuery.isLoading && !paslonQuery.data && (
+                      {!candidateQuery.isLoading && !candidateQuery.data && (
                         <Tr>
                           <Td colSpan={5} style={{ textAlign: "center" }}>
-                            Tidak ada data paslon, Silahkan tambah paslon baru
-                            dengan tombol di atas.
+                            Tidak ada data kandidat, Silahkan tambah kandidat
+                            baru dengan tombol di atas.
                           </Td>
                         </Tr>
                       )}
@@ -262,7 +265,7 @@ const Candidate = () => {
         }
         leastDestructiveRef={cancelRef}
         onClose={() => {
-          if (!paslonDeleteMutation.isLoading) {
+          if (!candidateDeleteMutation.isLoading) {
             setID(null);
             onClose();
           }
@@ -270,13 +273,13 @@ const Candidate = () => {
       >
         <AlertDialogOverlay>
           <AlertDialogContent>
-            {!paslonDeleteMutation.isLoading && <AlertDialogCloseButton />}
+            {!candidateDeleteMutation.isLoading && <AlertDialogCloseButton />}
             <AlertDialogHeader fontSize="lg" fontWeight="bold">
-              Hapus Paslon
+              Hapus Kandidat
             </AlertDialogHeader>
 
             <AlertDialogBody>
-              Apakah anda yakin? Jika sudah terhapus maka paslon {getNama()}{" "}
+              Apakah anda yakin? Jika sudah terhapus maka kandidat {getNama()}{" "}
               <b>TIDAK BISA DIPILIH, DIREVISI, DAN DIKEMBALIKAN LAGI!</b>
             </AlertDialogBody>
 
@@ -284,7 +287,7 @@ const Candidate = () => {
               <Button
                 ref={cancelRef}
                 onClick={onClose}
-                disabled={paslonDeleteMutation.isLoading}
+                disabled={candidateDeleteMutation.isLoading}
               >
                 Batal
               </Button>
@@ -292,14 +295,14 @@ const Candidate = () => {
                 bg="red.500"
                 _hover={{ bg: "red.700" }}
                 color="white"
-                disabled={paslonDeleteMutation.isLoading}
+                disabled={candidateDeleteMutation.isLoading}
                 onClick={async () => {
                   if (
                     !settingsQuery.isLoading ||
                     !(settingsQuery.data as unknown as { canVote?: boolean })
                       ?.canVote
                   )
-                    paslonDeleteMutation.mutate({
+                    candidateDeleteMutation.mutate({
                       id: currentID as unknown as string,
                       timeZone: DateTime.now().zoneName,
                     });
@@ -316,4 +319,4 @@ const Candidate = () => {
   );
 };
 
-export default Sidebar(Paslon);
+export default Sidebar(Candidate);
