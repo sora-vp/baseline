@@ -86,7 +86,7 @@ const HalamanTambah = () => {
       else formData.append(key, data[key as keyof FormValues]);
     }
 
-    const response = await fetch("/api/admin/paslon", {
+    const response = await fetch("/api/admin/kandidat", {
       method: "POST",
       body: formData,
       headers: {
