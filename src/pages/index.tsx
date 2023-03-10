@@ -86,7 +86,7 @@ const Home: NextPage = () => {
         if (settingsQuery.data?.reloadAfterVote)
           setTimeout(() => Router.reload(), 500);
         else candidateMutation.reset();
-      }, 10_000);
+      }, 12_000);
     },
   });
 
@@ -171,7 +171,7 @@ const Home: NextPage = () => {
       {candidateQuery.data && candidateQuery.data.length > 0 ? (
         <VStack align="stretch" mt={3}>
           <HStack style={{ justifyContent: "center" }}>
-            <Text fontWeight="500" fontSize="4xl">
+            <Text fontWeight="500" fontSize="5xl">
               Pilih Kandidatmu!
             </Text>
           </HStack>
@@ -200,10 +200,10 @@ const Home: NextPage = () => {
                     src={`/api/uploads/${kandidat.imgName}`}
                     alt={`Gambar dari kandidat ${kandidat.namaKandidat}.`}
                   />
-                  <Heading mt={2} as="h4" size="md" fontFamily={"body"}>
+                  <Heading mt={2} as="h3" size="lg" fontFamily={"body"}>
                     Nomor Urut {++idx}
                   </Heading>
-                  <Text fontSize={"1.2rem"} mt={2}>
+                  <Text fontSize={"1.4rem"} mt={2}>
                     {kandidat.namaKandidat}
                   </Text>
 
@@ -212,10 +212,12 @@ const Home: NextPage = () => {
                       setID(kandidat.id);
                       onOpen();
                     }}
+                    w="90%"
                     colorScheme="green"
                     variant="solid"
                     mb={4}
-                    mt={"1.2rem"}
+                    fontSize={"1.3rem"}
+                    mt={"1.7rem"}
                   >
                     Pilih
                   </Button>
@@ -237,17 +239,18 @@ const Home: NextPage = () => {
           >
             <AlertDialogOverlay>
               <AlertDialogContent>
-                <AlertDialogHeader fontSize="lg" fontWeight="bold">
+                <AlertDialogHeader fontSize="3xl" fontWeight="bold">
                   Pilih Kandidat
                 </AlertDialogHeader>
 
-                <AlertDialogBody>
+                <AlertDialogBody fontSize="xl">
                   Apakah anda yakin untuk memilih kandidat atas nama {getNama()}
                   ?
                 </AlertDialogBody>
 
                 <AlertDialogFooter>
                   <Button
+                    fontSize="xl"
                     ref={cancelRef}
                     onClick={onClose}
                     disabled={candidateMutation.isLoading}
@@ -255,6 +258,7 @@ const Home: NextPage = () => {
                     Batal
                   </Button>
                   <Button
+                    fontSize="xl"
                     colorScheme="green"
                     ref={sendRef}
                     onClick={() => {
