@@ -30,7 +30,7 @@ import { trpc } from "../../../utils/trpc";
 import {
   TambahPaslonValidationSchema as validationSchema,
   type TambahFormValues as FormValues,
-} from "../../../schema/admin.paslon.schema";
+} from "../../../schema/admin.candidate.schema";
 
 const HalamanTambah = () => {
   const toast = useToast();
@@ -38,7 +38,7 @@ const HalamanTambah = () => {
 
   const settingsQuery = trpc.settings.getSettings.useQuery(undefined, {
     onSuccess(result) {
-      if (result.canVote) Router.push("/admin/paslon");
+      if (result.canVote) Router.push("/admin/kandidat");
     },
   });
 
@@ -86,7 +86,7 @@ const HalamanTambah = () => {
       else formData.append(key, data[key as keyof FormValues]);
     }
 
-    const response = await fetch("/api/admin/paslon", {
+    const response = await fetch("/api/admin/kandidat", {
       method: "POST",
       body: formData,
       headers: {
@@ -109,18 +109,18 @@ const HalamanTambah = () => {
 
       if (imgFromInput !== null) URL.revokeObjectURL(imgFromInput);
       setIFI(null);
-    } else Router.push("/admin/paslon");
+    } else Router.push("/admin/kandidat");
   };
 
   return (
     <>
       <Head>
-        <title>Tambah Paslon</title>
+        <title>Tambah Kandidat</title>
       </Head>
       <VStack align="stretch">
         <HStack mb={"10px"} style={{ justifyContent: "center" }}>
           <Text fontWeight="500" fontSize="5xl">
-            Tambah Paslon Baru
+            Tambah Kandidat Baru
           </Text>
         </HStack>
         <HStack justifyContent="center">
@@ -137,40 +137,21 @@ const HalamanTambah = () => {
             <Box my={4} mx={4} textAlign="left">
               <form onSubmit={handleSubmit(onSubmit)}>
                 <FormControl
-                  isInvalid={formState.errors?.ketua as unknown as boolean}
+                  isInvalid={formState.errors?.kandidat as unknown as boolean}
                 >
-                  <FormLabel htmlFor="ketua">Nama Ketua</FormLabel>
+                  <FormLabel htmlFor="ketua">Nama Kandidat</FormLabel>
                   <Input
                     type="text"
-                    placeholder="Masukan Nama Ketua"
+                    placeholder="Masukan Nama Kandidat"
                     isDisabled={
                       settingsQuery.isLoading ||
                       settingsQuery.data?.canVote ||
                       formState.isSubmitting
                     }
-                    {...register("ketua")}
+                    {...register("kandidat")}
                   />
                   <FormErrorMessage>
-                    {formState.errors?.ketua?.message}
-                  </FormErrorMessage>
-                </FormControl>
-                <FormControl
-                  mt={6}
-                  isInvalid={formState.errors?.wakil as unknown as boolean}
-                >
-                  <FormLabel htmlFor="wakil">Nama Wakil Ketua</FormLabel>
-                  <Input
-                    type="text"
-                    isDisabled={
-                      settingsQuery.isLoading ||
-                      settingsQuery.data?.canVote ||
-                      formState.isSubmitting
-                    }
-                    placeholder="Masukan Nama Wakil Ketua"
-                    {...register("wakil")}
-                  />
-                  <FormErrorMessage>
-                    {formState.errors?.wakil?.message}
+                    {formState.errors?.kandidat?.message}
                   </FormErrorMessage>
                 </FormControl>
                 <FormControl
@@ -217,7 +198,7 @@ const HalamanTambah = () => {
                 >
                   Tambah
                 </Button>
-                <NextLink href="/admin/paslon" legacyBehavior passHref>
+                <NextLink href="/admin/kandidat" legacyBehavior passHref>
                   <Link display={"flex"} justifyContent="center" mt={2} mb={3}>
                     Kembali
                   </Link>

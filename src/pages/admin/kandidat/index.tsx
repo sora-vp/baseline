@@ -37,13 +37,13 @@ import { DateTime } from "luxon";
 import { trpc } from "../../../utils/trpc";
 import Sidebar from "../../../components/Sidebar";
 
-const Paslon = () => {
+const Candidate = () => {
   const toast = useToast();
   const cancelRef = useRef<HTMLButtonElement>(null!);
 
   const { isOpen, onOpen, onClose } = useDisclosure();
 
-  const paslonQuery = trpc.paslon.adminCandidateList.useQuery(undefined, {
+  const candidateQuery = trpc.candidate.adminCandidateList.useQuery(undefined, {
     refetchInterval: 2500,
     refetchIntervalInBackground: true,
   });
@@ -52,37 +52,40 @@ const Paslon = () => {
     refetchIntervalInBackground: true,
   });
 
-  const paslonDeleteMutation = trpc.paslon.adminDeleteCandidate.useMutation({
-    onSuccess(result) {
-      onClose();
+  const candidateDeleteMutation =
+    trpc.candidate.adminDeleteCandidate.useMutation({
+      onSuccess(result) {
+        onClose();
 
-      toast({
-        description: result.message,
-        status: "success",
-        duration: 6000,
-        position: "top-right",
-        isClosable: true,
-      });
-    },
+        toast({
+          description: result.message,
+          status: "success",
+          duration: 6000,
+          position: "top-right",
+          isClosable: true,
+        });
+      },
 
-    onError(result) {
-      toast({
-        description: result.message,
-        status: "error",
-        duration: 6000,
-        position: "top-right",
-        isClosable: true,
-      });
-    },
-  });
+      onError(result) {
+        toast({
+          description: result.message,
+          status: "error",
+          duration: 6000,
+          position: "top-right",
+          isClosable: true,
+        });
+      },
+    });
 
   // Untuk keperluan hapus data
   const [currentID, setID] = useState<Types.ObjectId | null>(null);
 
   const getNama = () => {
-    const currentPaslon = paslonQuery.data?.find((p) => p._id === currentID);
+    const currentCandidate = candidateQuery.data?.find(
+      (p) => p._id === currentID
+    );
 
-    return `${currentPaslon?.namaKetua} dan ${currentPaslon?.namaWakil}`;
+    return currentCandidate?.namaKandidat;
   };
 
   return (
@@ -93,7 +96,7 @@ const Paslon = () => {
       <VStack align="stretch">
         <HStack mb={"10px"} style={{ justifyContent: "center" }}>
           <Text fontWeight="500" fontSize="5xl">
-            Paslon
+            Kandidat
           </Text>
         </HStack>
         <HStack>
@@ -108,7 +111,7 @@ const Paslon = () => {
             <VStack align="stretch" px={2} py={2}>
               <HStack>
                 <NextLink
-                  href="/admin/paslon/tambah"
+                  href="/admin/kandidat/tambah"
                   passHref={
                     !settingsQuery.isLoading ||
                     !(settingsQuery.data as unknown as { canVote?: boolean })
@@ -123,27 +126,27 @@ const Paslon = () => {
                     bg="blue.500"
                     color="white"
                   >
-                    Tambah Paslon Baru
+                    Tambah Kandidat Baru
                   </Button>
                 </NextLink>
               </HStack>
               <HStack>
                 <TableContainer w="100%" h="100%">
                   <Table variant="simple">
-                    {!paslonQuery.isLoading && !paslonQuery.isError && (
+                    {!candidateQuery.isLoading && !candidateQuery.isError && (
                       <TableCaption>
-                        {paslonQuery.data.length > 0 ? (
+                        {candidateQuery.data.length > 0 ? (
                           <>
                             Jumlah orang yang sudah bersuara berjumlah{" "}
-                            {paslonQuery.data
+                            {candidateQuery.data
                               .map((p) => p.dipilih)
                               .reduce((curr, acc) => curr + acc, 0)}{" "}
                             orang
                           </>
                         ) : (
                           <>
-                            Tidak ada paslon yang tersedia, silahkan tambahkan
-                            paslon terlebih dahulu.
+                            Tidak ada kandidat yang tersedia, silahkan tambahkan
+                            kandidat terlebih dahulu.
                           </>
                         )}
                       </TableCaption>
@@ -151,15 +154,15 @@ const Paslon = () => {
 
                     <Thead>
                       <Tr>
-                        <Th>Nama Ketua</Th>
-                        <Th>Nama Wakil</Th>
+                        <Th>#</Th>
+                        <Th>Nama Kandidat</Th>
                         <Th>Yang Memilih</Th>
                         <Th>Gambar</Th>
                         <Th>Aksi</Th>
                       </Tr>
                     </Thead>
                     <Tbody>
-                      {paslonQuery.isLoading && (
+                      {candidateQuery.isLoading && (
                         <Tr>
                           <Td colSpan={5} style={{ textAlign: "center" }}>
                             <Spinner
@@ -172,23 +175,23 @@ const Paslon = () => {
                         </Tr>
                       )}
 
-                      {!paslonQuery.isLoading &&
-                        !paslonQuery.isError &&
-                        paslonQuery.data &&
-                        paslonQuery.data.map((p) => (
+                      {!candidateQuery.isLoading &&
+                        !candidateQuery.isError &&
+                        candidateQuery.data &&
+                        candidateQuery.data.map((p, idx) => (
                           <Tr key={p._id as unknown as string}>
-                            <Td>{p.namaKetua}</Td>
-                            <Td>{p.namaWakil}</Td>
+                            <Td>{++idx}</Td>
+                            <Td>{p.namaKandidat}</Td>
                             <Td>{p.dipilih} Orang</Td>
                             <Td>
                               <img
                                 src={`/api/uploads/${p.imgName}`}
-                                alt={`Gambar dari pasangan calon ${p.namaKetua} dan ${p.namaWakil}.`}
+                                alt={`Gambar dari kandidat ${p.namaKandidat}.`}
                               />
                             </Td>
                             <Td>
                               <NextLink
-                                href={`/admin/paslon/edit/${p._id}`}
+                                href={`/admin/kandidat/edit/${p._id}`}
                                 passHref={
                                   !settingsQuery.isLoading ||
                                   !(
@@ -239,11 +242,11 @@ const Paslon = () => {
                           </Tr>
                         ))}
 
-                      {!paslonQuery.isLoading && !paslonQuery.data && (
+                      {!candidateQuery.isLoading && !candidateQuery.data && (
                         <Tr>
                           <Td colSpan={5} style={{ textAlign: "center" }}>
-                            Tidak ada data paslon, Silahkan tambah paslon baru
-                            dengan tombol di atas.
+                            Tidak ada data kandidat, Silahkan tambah kandidat
+                            baru dengan tombol di atas.
                           </Td>
                         </Tr>
                       )}
@@ -262,7 +265,7 @@ const Paslon = () => {
         }
         leastDestructiveRef={cancelRef}
         onClose={() => {
-          if (!paslonDeleteMutation.isLoading) {
+          if (!candidateDeleteMutation.isLoading) {
             setID(null);
             onClose();
           }
@@ -270,13 +273,13 @@ const Paslon = () => {
       >
         <AlertDialogOverlay>
           <AlertDialogContent>
-            {!paslonDeleteMutation.isLoading && <AlertDialogCloseButton />}
+            {!candidateDeleteMutation.isLoading && <AlertDialogCloseButton />}
             <AlertDialogHeader fontSize="lg" fontWeight="bold">
-              Hapus Paslon
+              Hapus Kandidat
             </AlertDialogHeader>
 
             <AlertDialogBody>
-              Apakah anda yakin? Jika sudah terhapus maka paslon {getNama()}{" "}
+              Apakah anda yakin? Jika sudah terhapus maka kandidat {getNama()}{" "}
               <b>TIDAK BISA DIPILIH, DIREVISI, DAN DIKEMBALIKAN LAGI!</b>
             </AlertDialogBody>
 
@@ -284,7 +287,7 @@ const Paslon = () => {
               <Button
                 ref={cancelRef}
                 onClick={onClose}
-                disabled={paslonDeleteMutation.isLoading}
+                disabled={candidateDeleteMutation.isLoading}
               >
                 Batal
               </Button>
@@ -292,14 +295,14 @@ const Paslon = () => {
                 bg="red.500"
                 _hover={{ bg: "red.700" }}
                 color="white"
-                disabled={paslonDeleteMutation.isLoading}
+                disabled={candidateDeleteMutation.isLoading}
                 onClick={async () => {
                   if (
                     !settingsQuery.isLoading ||
                     !(settingsQuery.data as unknown as { canVote?: boolean })
                       ?.canVote
                   )
-                    paslonDeleteMutation.mutate({
+                    candidateDeleteMutation.mutate({
                       id: currentID as unknown as string,
                       timeZone: DateTime.now().zoneName,
                     });
@@ -316,4 +319,4 @@ const Paslon = () => {
   );
 };
 
-export default Sidebar(Paslon);
+export default Sidebar(Candidate);

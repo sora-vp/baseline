@@ -27,13 +27,10 @@ import Sidebar from "../../../../components/Sidebar";
 import InputImageBox from "../../../../components/InputImageBox";
 
 import { trpc } from "../../../../utils/trpc";
-import { EditPaslonValidationSchema as validationSchema } from "../../../../schema/admin.paslon.schema";
-
-type FormValues = {
-  ketua: string;
-  wakil: string;
-  image: File;
-};
+import {
+  EditPaslonValidationSchema as validationSchema,
+  TEditPaslonValidationSchema as FormValues,
+} from "../../../../schema/admin.candidate.schema";
 
 const EditPaslonWithID = () => {
   const toast = useToast();
@@ -48,10 +45,10 @@ const EditPaslonWithID = () => {
 
   const settingsQuery = trpc.settings.getSettings.useQuery(undefined, {
     onSuccess(result) {
-      if (result.canVote) router.push("/admin/paslon");
+      if (result.canVote) router.push("/admin/kandidat");
     },
   });
-  const paslonQuery = trpc.paslon.getSpecificCandidate.useQuery(
+  const candidateQuery = trpc.candidate.getSpecificCandidate.useQuery(
     { id: router.query.id as string },
     {
       onSuccess: reset,
@@ -107,7 +104,7 @@ const EditPaslonWithID = () => {
       else formData.append(key, data[key as keyof FormValues]);
     }
 
-    const response = await fetch("/api/admin/paslon", {
+    const response = await fetch("/api/admin/kandidat", {
       method: "PUT",
       body: formData,
       headers: {
@@ -131,19 +128,19 @@ const EditPaslonWithID = () => {
       if (imgFromInput !== null) URL.revokeObjectURL(imgFromInput);
       setIFI(null);
     } else {
-      router.push("/admin/paslon");
+      router.push("/admin/kandidat");
     }
   };
 
   return (
     <>
       <Head>
-        <title>Ubah Paslon</title>
+        <title>Ubah Kandidat</title>
       </Head>
       <VStack align="stretch">
         <HStack mb={"10px"} style={{ justifyContent: "center" }}>
           <Text fontWeight="500" fontSize="5xl">
-            Ubah Paslon
+            Ubah Kandidat
           </Text>
         </HStack>
         <HStack justifyContent="center">
@@ -160,42 +157,23 @@ const EditPaslonWithID = () => {
             <Box my={4} mx={4} textAlign="left">
               <form onSubmit={handleSubmit(onSubmit)}>
                 <FormControl
-                  isInvalid={formState.errors?.ketua as unknown as boolean}
-                >
-                  <FormLabel htmlFor="ketua">Nama Ketua</FormLabel>
-                  <Input
-                    type="text"
-                    isDisabled={
-                      paslonQuery.isLoading ||
-                      settingsQuery.isLoading ||
-                      settingsQuery.data?.canVote ||
-                      formState.isSubmitting
-                    }
-                    placeholder="Masukan Nama Ketua"
-                    {...register("ketua")}
-                  />
-                  <FormErrorMessage>
-                    {formState.errors?.ketua?.message}
-                  </FormErrorMessage>
-                </FormControl>
-                <FormControl
                   mt={6}
-                  isInvalid={formState.errors?.wakil as unknown as boolean}
+                  isInvalid={formState.errors?.kandidat as unknown as boolean}
                 >
-                  <FormLabel htmlFor="wakil">Nama Wakil Ketua</FormLabel>
+                  <FormLabel htmlFor="kandidat">Nama Kandidat</FormLabel>
                   <Input
                     type="text"
                     isDisabled={
-                      paslonQuery.isLoading ||
+                      candidateQuery.isLoading ||
                       settingsQuery.isLoading ||
                       settingsQuery.data?.canVote ||
                       formState.isSubmitting
                     }
-                    placeholder="Masukan Nama Wakil Ketua"
-                    {...register("wakil")}
+                    placeholder="Masukan Nama Kandidat"
+                    {...register("kandidat")}
                   />
                   <FormErrorMessage>
-                    {formState.errors?.wakil?.message}
+                    {formState.errors?.kandidat?.message}
                   </FormErrorMessage>
                 </FormControl>
                 <FormControl
@@ -231,7 +209,7 @@ const EditPaslonWithID = () => {
                   color="white"
                   isLoading={formState.isSubmitting}
                   isDisabled={
-                    paslonQuery.isLoading ||
+                    candidateQuery.isLoading ||
                     settingsQuery.isLoading ||
                     settingsQuery.data?.canVote
                   }
@@ -239,7 +217,7 @@ const EditPaslonWithID = () => {
                 >
                   Edit
                 </Button>
-                <NextLink href="/admin/paslon" legacyBehavior passHref>
+                <NextLink href="/admin/kandidat" legacyBehavior passHref>
                   <Link display={"flex"} justifyContent="center" mt={2} mb={3}>
                     Kembali
                   </Link>

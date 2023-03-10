@@ -29,18 +29,18 @@ const Statistik = () => {
   const [height, setHeight] = useState<number>(0);
   const container = useRef<HTMLDivElement>(null!);
 
-  const paslonQuery = trpc.paslon.adminCandidateList.useQuery(undefined, {
+  const candidateQuery = trpc.candidate.adminCandidateList.useQuery(undefined, {
     refetchInterval: 2500,
     refetchIntervalInBackground: true,
   });
 
   const chartData = useMemo(
     () =>
-      paslonQuery.data?.map((pasangan) => ({
-        name: `${pasangan.namaKetua} - ${pasangan.namaWakil}`,
-        ["Yang Memilih"]: pasangan.dipilih,
+      candidateQuery.data?.map((kandidat) => ({
+        name: kandidat.namaKandidat,
+        ["Yang Memilih"]: kandidat.dipilih,
       })),
-    [paslonQuery.data]
+    [candidateQuery.data]
   );
 
   const tooltipColor = useColorModeValue("white", "#171923");
@@ -92,15 +92,17 @@ const Statistik = () => {
                 alignItems: "center",
               }}
             >
-              {paslonQuery.isLoading && <Spinner thickness="4px" size="xl" />}
+              {candidateQuery.isLoading && (
+                <Spinner thickness="4px" size="xl" />
+              )}
 
-              {!paslonQuery.isLoading &&
-                paslonQuery.data &&
-                paslonQuery.data.length < 1 && (
+              {!candidateQuery.isLoading &&
+                candidateQuery.data &&
+                candidateQuery.data.length < 1 && (
                   <HStack>
                     <Text fontSize={"3xl"} style={{ textAlign: "center" }}>
                       Belum ada paslon, buat terlebih dahulu di{" "}
-                      <NextLink href={"/admin/paslon"} passHref>
+                      <NextLink href={"/admin/kandidat"} passHref>
                         <Link color="teal.500">halaman paslon</Link>
                       </NextLink>
                       !
@@ -108,9 +110,9 @@ const Statistik = () => {
                   </HStack>
                 )}
 
-              {!paslonQuery.isLoading &&
-                paslonQuery.data &&
-                paslonQuery.data.length > 0 && (
+              {!candidateQuery.isLoading &&
+                candidateQuery.data &&
+                candidateQuery.data.length > 0 && (
                   <BarChart width={width} height={height} data={chartData}>
                     <CartesianGrid strokeDasharray="3 3" />
                     <XAxis dataKey="name" />

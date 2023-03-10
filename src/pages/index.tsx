@@ -3,7 +3,6 @@ import Router from "next/router";
 import type { NextPage } from "next";
 import { useState, useEffect, useRef, useMemo } from "react";
 import {
-  useToast,
   useDisclosure,
   Container,
   Box,
@@ -33,7 +32,6 @@ import { trpc } from "../utils/trpc";
 let intervalID: NodeJS.Timeout;
 
 const Home: NextPage = () => {
-  const toast = useToast();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const cancelRef = useRef<HTMLButtonElement>(null!);
   const sendRef = useRef<HTMLButtonElement>(null!);
@@ -50,7 +48,7 @@ const Home: NextPage = () => {
   const userInfo = trpc.auth.me.useQuery(undefined, {
     refetchOnWindowFocus: false,
   });
-  const paslonQuery = trpc.paslon.candidateList.useQuery(undefined, {
+  const candidateQuery = trpc.candidate.candidateList.useQuery(undefined, {
     refetchOnWindowFocus: false,
   });
   const settingsQuery = trpc.settings.getSettings.useQuery(undefined, {
@@ -78,32 +76,17 @@ const Home: NextPage = () => {
     },
   });
 
-  const paslonMutation = trpc.paslon.upvote.useMutation({
-    onSuccess(result) {
-      toast({
-        description: result.message,
-        status: "success",
-        duration: 3000,
-        position: "top-right",
-        isClosable: true,
-      });
-
+  const candidateMutation = trpc.candidate.upvote.useMutation({
+    onSuccess() {
       onClose();
 
       sendRef.current.setAttribute("disabled", "");
 
-      if (settingsQuery.data?.reloadAfterVote)
-        setTimeout(() => Router.reload(), 500);
-    },
-
-    onError(result) {
-      toast({
-        description: result.message,
-        status: "error",
-        duration: 3000,
-        position: "top-right",
-        isClosable: true,
-      });
+      setTimeout(() => {
+        if (settingsQuery.data?.reloadAfterVote)
+          setTimeout(() => Router.reload(), 500);
+        else candidateMutation.reset();
+      }, 12_000);
     },
   });
 
@@ -116,10 +99,11 @@ const Home: NextPage = () => {
   );
 
   const getNama = () => {
-    const currentPaslon =
-      paslonQuery.data && paslonQuery.data?.find((p) => p.id === currentID);
+    const currentCandidate =
+      candidateQuery.data &&
+      candidateQuery.data?.find((p) => p.id === currentID);
 
-    return `${currentPaslon?.namaKetua} dan ${currentPaslon?.namaWakil}`;
+    return currentCandidate?.namaKandidat;
   };
 
   useEffect(() => {
@@ -135,7 +119,7 @@ const Home: NextPage = () => {
     };
   }, []);
 
-  if (userInfo.isLoading || paslonQuery.isLoading)
+  if (userInfo.isLoading || candidateQuery.isLoading)
     return (
       <>
         <Head>
@@ -173,21 +157,26 @@ const Home: NextPage = () => {
       </>
     );
 
+  if (candidateMutation.isSuccess) return <BerhasilMemilihDanCapJari />;
+
+  if (candidateMutation.isError)
+    return <MutationErrorBox errorMessage={candidateMutation.error.message} />;
+
   return (
     <>
       <Head>
-        <title>Pilih Paslon Mu | ᮞᮧᮛ</title>
+        <title>Pilih Kandidat Mu | ᮞᮧᮛ</title>
       </Head>
 
-      {paslonQuery.data && paslonQuery.data.length > 0 ? (
+      {candidateQuery.data && candidateQuery.data.length > 0 ? (
         <VStack align="stretch" mt={3}>
           <HStack style={{ justifyContent: "center" }}>
-            <Text fontWeight="500" fontSize="4xl">
-              Pilih Ketua Barumu!
+            <Text fontWeight="500" fontSize="5xl">
+              Pilih Kandidatmu!
             </Text>
           </HStack>
           <HStack
-            spacing={4}
+            spacing={2}
             style={{
               paddingLeft: "9px",
               paddingRight: "9px",
@@ -197,10 +186,10 @@ const Home: NextPage = () => {
               flexWrap: "wrap",
             }}
           >
-            {paslonQuery.data?.map((paslon) => (
-              <Center key={paslon.imgName} py={6}>
+            {candidateQuery.data?.map((kandidat, idx) => (
+              <Center key={kandidat.imgName} py={6}>
                 <Box
-                  maxW={"320px"}
+                  maxW={"265px"}
                   w={"full"}
                   borderWidth="1px"
                   borderRadius="lg"
@@ -208,27 +197,27 @@ const Home: NextPage = () => {
                   textAlign={"center"}
                 >
                   <Image
-                    src={`/api/uploads/${paslon.imgName}`}
-                    alt={`Gambar dari pasangan calon ${paslon.namaKetua} dan ${paslon.namaWakil}.`}
+                    src={`/api/uploads/${kandidat.imgName}`}
+                    alt={`Gambar dari kandidat ${kandidat.namaKandidat}.`}
                   />
-                  <Heading mt={2} fontSize={"3xl"} fontFamily={"body"}>
-                    Pasangan Calon
+                  <Heading mt={2} as="h3" size="lg" fontFamily={"body"}>
+                    Nomor Urut {++idx}
                   </Heading>
                   <Text fontSize={"1.4rem"} mt={2}>
-                    {paslon.namaKetua}
-                  </Text>
-                  <Text fontSize={"1.4rem"} mb={4}>
-                    {paslon.namaWakil}
+                    {kandidat.namaKandidat}
                   </Text>
 
                   <Button
                     onClick={() => {
-                      setID(paslon.id);
+                      setID(kandidat.id);
                       onOpen();
                     }}
+                    w="90%"
                     colorScheme="green"
                     variant="solid"
                     mb={4}
+                    fontSize={"1.3rem"}
+                    mt={"1.7rem"}
                   >
                     Pilih
                   </Button>
@@ -242,7 +231,7 @@ const Home: NextPage = () => {
             isOpen={isOpen}
             leastDestructiveRef={cancelRef}
             onClose={() => {
-              if (!paslonMutation.isLoading) {
+              if (!candidateMutation.isLoading) {
                 setID(null);
                 onClose();
               }
@@ -250,28 +239,31 @@ const Home: NextPage = () => {
           >
             <AlertDialogOverlay>
               <AlertDialogContent>
-                <AlertDialogHeader fontSize="lg" fontWeight="bold">
-                  Pilih Paslon
+                <AlertDialogHeader fontSize="3xl" fontWeight="bold">
+                  Pilih Kandidat
                 </AlertDialogHeader>
 
-                <AlertDialogBody>
-                  Apakah anda yakin untuk memilih paslon atas nama {getNama()}?
+                <AlertDialogBody fontSize="xl">
+                  Apakah anda yakin untuk memilih kandidat atas nama {getNama()}
+                  ?
                 </AlertDialogBody>
 
                 <AlertDialogFooter>
                   <Button
+                    fontSize="xl"
                     ref={cancelRef}
                     onClick={onClose}
-                    disabled={paslonMutation.isLoading}
+                    disabled={candidateMutation.isLoading}
                   >
                     Batal
                   </Button>
                   <Button
+                    fontSize="xl"
                     colorScheme="green"
                     ref={sendRef}
                     onClick={() => {
                       sendRef.current.setAttribute("disabled", "disabled");
-                      paslonMutation.mutate({
+                      candidateMutation.mutate({
                         id: currentID as unknown as string,
                         timeZone: DateTime.now().zoneName,
                       });
@@ -296,15 +288,73 @@ const MasihKosong = () => (
   <Container>
     <Box p={4} borderWidth="1px" mt="6" borderRadius="lg">
       <Text fontSize="2xl" fontWeight="semibold" color="gray.900">
-        Tidak Ada Data PASLON
+        Tidak Ada Data KANDIDAT
       </Text>
       <Divider orientation="horizontal" mt="1" mb="1" />
       <Text>
-        Tidak ada data paslon yang ada, mohon hubungi admin untuk menambahkan
-        data paslon.
+        Tidak ada data kandidat yang ada, mohon hubungi admin untuk menambahkan
+        data kandidat.
       </Text>
     </Box>
   </Container>
+);
+
+const BerhasilMemilihDanCapJari = () => (
+  <HStack h={"100vh"} justifyContent="center">
+    <Box
+      borderWidth="2px"
+      borderRadius="lg"
+      w="85%"
+      h="90%"
+      backgroundColor="green.500"
+      style={{
+        display: "flex",
+        boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
+        gap: "1em",
+      }}
+      alignItems="center"
+      justifyContent="center"
+      flexDirection="column"
+    >
+      <Heading as="h1" size="4xl" fontSize="5rem" color={"white"}>
+        Data berhasil terekam!
+      </Heading>
+      <Heading as="h2" size="xl" color={"white"} fontWeight={"regular"}>
+        Silahkan keluar dari bilik suara dan melakukan cap jari.
+      </Heading>
+    </Box>
+  </HStack>
+);
+
+const MutationErrorBox = ({ errorMessage }: { errorMessage: string }) => (
+  <HStack h={"100vh"} justifyContent="center">
+    <Box
+      borderWidth="2px"
+      borderRadius="lg"
+      w="85%"
+      h="90%"
+      backgroundColor="red.500"
+      style={{
+        display: "flex",
+        boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
+        gap: "1em",
+      }}
+      alignItems="center"
+      justifyContent="center"
+      flexDirection="column"
+    >
+      <Heading as="h2" size="2xl" fontSize="4rem" color="white">
+        Gagal dalam menambahkan data!
+      </Heading>
+      <Heading as="pre" size="xl" color={"white"} fontWeight={"regular"}>
+        Beritahu panitia atas masalah ini, pesan error terlampir di bawah.
+      </Heading>
+
+      <Text as="pre" fontSize="3xl" color="white">
+        {errorMessage}
+      </Text>
+    </Box>
+  </HStack>
 );
 
 const TidakDiizinkanMemilih = () => (

@@ -7,7 +7,7 @@ import { Types } from "mongoose";
 import formidable from "formidable";
 import nextConnect from "next-connect";
 
-import { PaslonModel } from "../../../models";
+import { KandidatModel } from "../../../models";
 import { canVoteNow } from "../../../utils/canVote";
 
 import { connectDatabase } from "../../../utils/database";
@@ -47,16 +47,15 @@ handler
     const form = new formidable.IncomingForm();
 
     form.parse(req, async (err, fields, files) => {
-      const { ketua, wakil, timeZone } = fields as {
-        ketua: string;
-        wakil: string;
+      const { kandidat, timeZone } = fields as {
+        kandidat: string;
         timeZone: string;
       };
 
-      if (!ketua || !wakil || !files.image || !timeZone)
+      if (!kandidat || !files.image || !timeZone)
         return res.status(400).json({
           error: true,
-          message: "Diperlukan nama ketua, wakil, gambar, dan zona waktu!",
+          message: "Diperlukan nama kandidat, gambar, dan zona waktu!",
         });
 
       if (!DateTime.now().setZone(timeZone).isValid) {
@@ -71,7 +70,8 @@ handler
       if (inVoteCondition)
         return res.status(400).json({
           error: true,
-          message: "Tidak bisa menambahkan paslon pada saat kondisi pemilihan",
+          message:
+            "Tidak bisa menambahkan kandidat pada saat kondisi pemilihan",
         });
 
       const image = files.image as unknown as grabableImageType;
@@ -90,17 +90,16 @@ handler
       });
 
       try {
-        const newPaslon = new PaslonModel({
-          namaKetua: ketua,
-          namaWakil: wakil,
+        const newCandidate = new KandidatModel({
+          namaKandidat: kandidat,
           imgName: newName,
         });
 
-        await newPaslon.save();
+        await newCandidate.save();
 
         res
           .status(200)
-          .json({ error: false, message: "Paslon berhasil dibuat" });
+          .json({ error: false, message: "Kandidat berhasil dibuat" });
       } catch (e: unknown) {
         res.status(500).json({
           error: true,
@@ -113,23 +112,22 @@ handler
     const form = new formidable.IncomingForm();
 
     form.parse(req, async (err, fields, files) => {
-      const { ketua, wakil, timeZone, id } = fields as unknown as {
-        ketua: string;
-        wakil: string;
+      const { kandidat, timeZone, id } = fields as unknown as {
+        kandidat: string;
         timeZone: string;
         id: Types.ObjectId;
       };
 
-      if (!id || !ketua || !wakil || !timeZone)
+      if (!id || !kandidat || !timeZone)
         return res.status(400).json({
           error: true,
-          message: "Diperlukan id paslon, ketua, wakil, dan zona waktu!",
+          message: "Diperlukan id nama kandidat, dan zona waktu!",
         });
 
       if (!Types.ObjectId.isValid(id))
         return res
           .status(400)
-          .json({ error: true, message: "Parameter id paslon tidak valid!" });
+          .json({ error: true, message: "Parameter id kandidat tidak valid!" });
 
       if (!DateTime.now().setZone(timeZone).isValid) {
         return res.status(400).json({
@@ -143,16 +141,16 @@ handler
       if (inVoteCondition)
         return res.status(400).json({
           error: true,
-          message: "Tidak bisa mengubah paslon pada saat kondisi pemilihan",
+          message: "Tidak bisa mengubah kandidat pada saat kondisi pemilihan",
         });
 
       try {
-        const paslon = await PaslonModel.findById(id);
+        const candidate = await KandidatModel.findById(id);
 
-        if (!paslon)
+        if (!candidate)
           return res
             .status(404)
-            .json({ error: true, message: "Paslon tidak ditemukan!" });
+            .json({ error: true, message: "Kandidat tidak ditemukan!" });
 
         const image = files.image as unknown as grabableImageType;
 
@@ -161,7 +159,7 @@ handler
         const newName = image && `${image.newFilename}.${ext}`;
 
         if (image) {
-          const oldImagePath = path.join(ROOT_PATH, paslon.imgName);
+          const oldImagePath = path.join(ROOT_PATH, candidate.imgName);
           if (fs.existsSync(oldImagePath)) await fsp.unlink(oldImagePath);
 
           const newPath = image && path.join(ROOT_PATH, newName);
@@ -174,15 +172,14 @@ handler
           });
         }
 
-        await paslon.updateOne({
-          namaKetua: ketua,
-          namaWakil: wakil,
-          imgName: image ? newName : paslon.imgName,
+        await candidate.updateOne({
+          namaKandidat: kandidat,
+          imgName: image ? newName : candidate.imgName,
         });
 
         res.status(200).json({
           error: false,
-          message: "Berhasil mengedit paslon!",
+          message: "Berhasil mengedit kandidat!",
         });
       } catch (e: unknown) {
         res.status(500).json({

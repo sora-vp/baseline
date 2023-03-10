@@ -32,7 +32,7 @@ import {
 } from "react-icons/fi";
 import NextLink from "next/link";
 import { IconType } from "react-icons";
-import localFont from "@next/font/local";
+import localFont from "next/font/local";
 
 import LogoutButton from "./LogoutButton";
 import ModeToggler from "./ModeToggler";
@@ -44,7 +44,7 @@ interface LinkItemProps {
 }
 const LinkItems: Array<LinkItemProps> = [
   { name: "Dashboard", icon: FiHome, href: "/admin" },
-  { name: "Paslon", icon: FiUser, href: "/admin/paslon" },
+  { name: "Kandidat", icon: FiUser, href: "/admin/kandidat" },
   { name: "Statistik", icon: FiTrendingUp, href: "/admin/statistik" },
   { name: "Pengaturan", icon: FiSettings, href: "/admin/pengaturan" },
 ];
