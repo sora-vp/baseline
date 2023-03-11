@@ -18,7 +18,7 @@ const baseAddAndEditForm = z.object({
     }),
 });
 
-export const TambahPaslonValidationSchema = baseAddAndEditForm.merge(
+export const TambahKandidatValidationSchema = baseAddAndEditForm.merge(
   z.object({
     image: z
       .any()
@@ -48,7 +48,7 @@ export const adminGetSpecificCandidateValidationSchema = z.object({
   id: z.string().min(1),
 });
 
-export const EditPaslonValidationSchema = baseAddAndEditForm.merge(
+export const EditKandidatValidationSchema = baseAddAndEditForm.merge(
   z.object({
     image: z
       .any()
@@ -70,7 +70,7 @@ export const EditPaslonValidationSchema = baseAddAndEditForm.merge(
   })
 );
 
-export type TEditPaslonValidationSchema = {
+export type TEditKandidatValidationSchema = {
   kandidat: string;
   image: File;
 };

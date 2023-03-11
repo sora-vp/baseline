@@ -28,8 +28,8 @@ import InputImageBox from "../../../../components/InputImageBox";
 
 import { trpc } from "../../../../utils/trpc";
 import {
-  EditPaslonValidationSchema as validationSchema,
-  TEditPaslonValidationSchema as FormValues,
+  EditKandidatValidationSchema as validationSchema,
+  TEditKandidatValidationSchema as FormValues,
 } from "../../../../schema/admin.candidate.schema";
 
 const EditPaslonWithID = () => {
