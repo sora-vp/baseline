@@ -1,9 +1,7 @@
 import { prop } from "@typegoose/typegoose";
 
-const nameRegExp = /^[a-zA-Z\s\-]+$/;
-
 export class Kandidat {
-  @prop({ required: true, unique: true, match: nameRegExp })
+  @prop({ required: true, unique: true })
   public namaKandidat!: string;
 
   @prop({ required: true, unique: true })

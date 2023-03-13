@@ -11,10 +11,15 @@ import {
   VStack,
   HStack,
   Image,
-  Center,
   Heading,
   Button,
   Spinner,
+
+  // Card
+  Card,
+  CardBody,
+  CardFooter,
+  Stack,
 
   // Alert dialog
   AlertDialog,
@@ -186,7 +191,7 @@ const Home: NextPage = () => {
               flexWrap: "wrap",
             }}
           >
-            {candidateQuery.data?.map((kandidat, idx) => (
+            {/* {candidateQuery.data?.map((kandidat, idx) => (
               <Center key={kandidat.imgName} py={6}>
                 <Box
                   maxW={"265px"}
@@ -195,34 +200,76 @@ const Home: NextPage = () => {
                   borderRadius="lg"
                   bg="white"
                   textAlign={"center"}
+                  minH="588px"
                 >
                   <Image
                     src={`/api/uploads/${kandidat.imgName}`}
                     alt={`Gambar dari kandidat ${kandidat.namaKandidat}.`}
                   />
-                  <Heading mt={2} as="h3" size="lg" fontFamily={"body"}>
-                    Nomor Urut {++idx}
-                  </Heading>
-                  <Text fontSize={"1.4rem"} mt={2}>
-                    {kandidat.namaKandidat}
-                  </Text>
+                  <VStack
+                  // display="flex" gap="0.4em" h="100%" w="100%"
+                  >
+                    <VStack>
 
+                      <Heading mt={2} as="h3" size="lg" fontFamily={"body"}>
+                        Nomor Urut {++idx}
+                      </Heading>
+                      <Text fontSize={"1.4rem"} mt={2}>
+                        {kandidat.namaKandidat}
+                      </Text>
+                    </VStack>
+
+                    <Button
+                      onClick={() => {
+                        setID(kandidat.id);
+                        onOpen();
+                      }}
+                      w="90%"
+                      colorScheme="green"
+                      variant="solid"
+                      mb={4}
+                      fontSize={"1.3rem"}
+                    >
+                      Pilih
+                    </Button>
+                  </VStack>
+                </Box>
+              </Center>
+            ))} */}
+            {candidateQuery.data?.map((kandidat, idx) => (
+              <Card maxW="265px" minH="583px" key={idx}>
+                <CardBody>
+                  <Image
+                    w="100%"
+                    src={`/api/uploads/${kandidat.imgName}`}
+                    alt={`Gambar dari kandidat ${kandidat.namaKandidat}.`}
+                  />
+                  <Stack textAlign="center">
+                    <Heading mt={2} as="h3" size="lg" fontFamily={"body"}>
+                      Nomor Urut {++idx}
+                    </Heading>
+                    <Text fontSize={"1.4rem"} mt={2}>
+                      {kandidat.namaKandidat}
+                    </Text>
+                  </Stack>
+                </CardBody>
+
+                <CardFooter>
                   <Button
                     onClick={() => {
                       setID(kandidat.id);
                       onOpen();
                     }}
-                    w="90%"
+                    w="100%"
                     colorScheme="green"
                     variant="solid"
                     mb={4}
                     fontSize={"1.3rem"}
-                    mt={"1.7rem"}
                   >
                     Pilih
                   </Button>
-                </Box>
-              </Center>
+                </CardFooter>
+              </Card>
             ))}
           </HStack>
 

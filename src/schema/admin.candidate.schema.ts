@@ -1,7 +1,6 @@
 import { z } from "zod";
 
 const TwoMegs = 2_000_000;
-const validNameRegex = /^[a-zA-Z\s\-]+$/;
 const ACCEPTED_IMAGE_TYPES = [
   "image/jpeg",
   "image/jpg",
@@ -10,12 +9,7 @@ const ACCEPTED_IMAGE_TYPES = [
 ];
 
 const baseAddAndEditForm = z.object({
-  kandidat: z
-    .string()
-    .min(1, { message: "Diperlukan nama kandidat!" })
-    .regex(validNameRegex, {
-      message: "Nama kandidat harus berupa nama yang valid!",
-    }),
+  kandidat: z.string().min(1, { message: "Diperlukan nama kandidat!" }),
 });
 
 export const TambahPaslonValidationSchema = baseAddAndEditForm.merge(
