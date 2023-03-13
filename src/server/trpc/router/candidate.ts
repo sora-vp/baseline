@@ -7,7 +7,7 @@ import {
   unprotectedProcedure,
 } from "../trpc";
 
-import { KandidatModel, Kandidat as KandidatType } from "../../../models";
+import { KandidatModel, KandidatBackupModel } from "../../../models";
 import {
   adminDeleteCandidateAndUpvoteValidationSchema,
   adminGetSpecificCandidateValidationSchema,
@@ -59,6 +59,9 @@ export const candidateRouter = router({
         });
 
       const isCandidateExist = await KandidatModel.findById(input.id);
+      const isCandidateBackupExist = await KandidatBackupModel.findById(
+        input.id
+      );
 
       if (!isCandidateExist)
         throw new TRPCError({
@@ -67,6 +70,9 @@ export const candidateRouter = router({
         });
 
       await KandidatModel.findByIdAndRemove(input.id);
+
+      if (isCandidateBackupExist)
+        await KandidatBackupModel.findByIdAndRemove(input.id);
 
       return { message: "Berhasil menghapus kandidat!" };
     }),
@@ -91,9 +97,23 @@ export const candidateRouter = router({
           message: "Kandidat tidak dapat ditemukan!",
         });
 
-      await KandidatModel.findByIdAndUpdate(input.id, {
+      const baseDate = new Date();
+
+      const updatedData = await KandidatModel.findByIdAndUpdate(input.id, {
         $inc: { dipilih: 1 },
-      });
+        $set: { last_voted_at: baseDate },
+      }).lean();
+
+      await KandidatBackupModel.findByIdAndUpdate(
+        updatedData!._id,
+        {
+          namaKandidat: updatedData!.namaKandidat,
+          imgName: updatedData!.imgName,
+          dipilih: updatedData!.dipilih + 1,
+          last_voted_at: baseDate,
+        },
+        { upsert: true }
+      );
 
       return { message: "Berhasil memilih kandidat!" };
     }),
