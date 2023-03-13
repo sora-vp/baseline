@@ -28,7 +28,7 @@ import Sidebar from "../../../components/Sidebar";
 import { trpc } from "../../../utils/trpc";
 
 import {
-  TambahPaslonValidationSchema as validationSchema,
+  TambahKandidatValidationSchema as validationSchema,
   type TambahFormValues as FormValues,
 } from "../../../schema/admin.candidate.schema";
 
