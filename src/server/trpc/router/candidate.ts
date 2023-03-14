@@ -79,7 +79,7 @@ export const candidateRouter = router({
           await KandidatBackupModel.findByIdAndRemove(input.id);
       } catch (e) {
         console.log(
-          `DB (SLAVE): ERROR ATTEMPT TO REMOVE A CANDIDATE BACKUP AND PLEASE REMOVE IT MANUALLY, _id: ${input.id}, ${e}`
+          `DB (SLAVE): ERROR ATTEMPT TO REMOVE A CANDIDATE BACKUP AND PLEASE REMOVE IT MANUALLY (IF EXIST), _id: ${input.id}, ${e}`
         );
       }
 
