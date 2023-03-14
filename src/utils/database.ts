@@ -2,7 +2,7 @@
 import mongoose from "mongoose";
 import { env } from "../env/server.mjs";
 
-const { MONGODB_URI } = env;
+const { MONGODB_MASTER_URI } = env;
 let cached = global.mongoose;
 
 if (!cached) {
@@ -20,10 +20,12 @@ export async function connectDatabase() {
     };
 
     mongoose.set("strictQuery", true);
-    cached.promise = mongoose.connect(MONGODB_URI, opts).then((mongoose) => {
-      console.log("DB: Connected");
-      return mongoose;
-    });
+    cached.promise = mongoose
+      .connect(MONGODB_MASTER_URI, opts)
+      .then((mongoose) => {
+        console.log("DB (MASTER): Connected");
+        return mongoose;
+      });
   }
 
   try {

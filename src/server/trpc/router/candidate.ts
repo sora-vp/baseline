@@ -7,7 +7,7 @@ import {
   unprotectedProcedure,
 } from "../trpc";
 
-import { KandidatModel, Kandidat as KandidatType } from "../../../models";
+import { KandidatModel, KandidatBackupModel } from "../../../models";
 import {
   adminDeleteCandidateAndUpvoteValidationSchema,
   adminGetSpecificCandidateValidationSchema,
@@ -68,6 +68,21 @@ export const candidateRouter = router({
 
       await KandidatModel.findByIdAndRemove(input.id);
 
+      // OKAY TO GIVE AN ERROR MESSAGE, THIS IS FAILSAFE SYSTEM
+      // MAKE SURE TO CHECK YOUR FAILSAFE BACKUP ON
+      try {
+        const isCandidateBackupExist = await KandidatBackupModel.findById(
+          input.id
+        );
+
+        if (isCandidateBackupExist)
+          await KandidatBackupModel.findByIdAndRemove(input.id);
+      } catch (e) {
+        console.log(
+          `DB (SLAVE): ERROR ATTEMPT TO REMOVE A CANDIDATE BACKUP AND PLEASE REMOVE IT MANUALLY (IF EXIST), _id: ${input.id}, ${e}`
+        );
+      }
+
       return { message: "Berhasil menghapus kandidat!" };
     }),
 
@@ -91,9 +106,29 @@ export const candidateRouter = router({
           message: "Kandidat tidak dapat ditemukan!",
         });
 
-      await KandidatModel.findByIdAndUpdate(input.id, {
+      const baseDate = new Date();
+
+      const updatedData = await KandidatModel.findByIdAndUpdate(input.id, {
         $inc: { dipilih: 1 },
-      });
+        $set: { last_voted_at: baseDate },
+      }).lean();
+
+      // OKAY TO GIVE AN ERROR MESSAGE, THIS IS FAILSAFE SYSTEM
+      // MAKE SURE TO CHECK YOUR FAILSAFE BACKUP ON
+      try {
+        await KandidatBackupModel.findByIdAndUpdate(
+          updatedData!._id,
+          {
+            namaKandidat: updatedData!.namaKandidat,
+            imgName: updatedData!.imgName,
+            dipilih: updatedData!.dipilih + 1,
+            last_voted_at: baseDate,
+          },
+          { upsert: true }
+        );
+      } catch (e) {
+        console.log(`DB (SLAVE): ERROR TO UPDATE AN UPVOTE BACKUP, ${e}`);
+      }
 
       return { message: "Berhasil memilih kandidat!" };
     }),

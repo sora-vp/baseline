@@ -15,7 +15,8 @@ export const serverSchema = z.object({
     // VERCEL_URL doesnt include `https` so it cant be validated as a URL
     process.env.VERCEL ? z.string() : z.string().url()
   ),
-  MONGODB_URI: z.string().min(5),
+  MONGODB_MASTER_URI: z.string().min(5),
+  MONGODB_SLAVE_URI: z.string().min(5),
   SETTINGS_SECRET: z.string().min(5),
 });
 

@@ -3,10 +3,12 @@ on: [pull_request, push]
 
 env:
   MONGODB_URI: dummytxt
+  MONGODB_MASTER_URI: dummytxt
+  MONGODB_SLAVE_URI: dummytxt
   NEXTAUTH_SECRET: dummysecret
   NEXTAUTH_URL: http://localhost:3000
   SETTINGS_SECRET: dummysecret
-  
+
 jobs:
   lint:
     runs-on: ubuntu-latest
