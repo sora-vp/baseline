@@ -59,9 +59,6 @@ export const candidateRouter = router({
         });
 
       const isCandidateExist = await KandidatModel.findById(input.id);
-      const isCandidateBackupExist = await KandidatBackupModel.findById(
-        input.id
-      );
 
       if (!isCandidateExist)
         throw new TRPCError({
@@ -71,8 +68,20 @@ export const candidateRouter = router({
 
       await KandidatModel.findByIdAndRemove(input.id);
 
-      if (isCandidateBackupExist)
-        await KandidatBackupModel.findByIdAndRemove(input.id);
+      // OKAY TO GIVE AN ERROR MESSAGE, THIS IS FAILSAFE SYSTEM
+      // MAKE SURE TO CHECK YOUR FAILSAFE BACKUP ON
+      try {
+        const isCandidateBackupExist = await KandidatBackupModel.findById(
+          input.id
+        );
+
+        if (isCandidateBackupExist)
+          await KandidatBackupModel.findByIdAndRemove(input.id);
+      } catch (e) {
+        console.log(
+          `DB (SLAVE): ERROR ATTEMPT TO REMOVE A CANDIDATE BACKUP AND PLEASE REMOVE IT MANUALLY, _id: ${input.id}, ${e}`
+        );
+      }
 
       return { message: "Berhasil menghapus kandidat!" };
     }),
@@ -104,16 +113,22 @@ export const candidateRouter = router({
         $set: { last_voted_at: baseDate },
       }).lean();
 
-      await KandidatBackupModel.findByIdAndUpdate(
-        updatedData!._id,
-        {
-          namaKandidat: updatedData!.namaKandidat,
-          imgName: updatedData!.imgName,
-          dipilih: updatedData!.dipilih + 1,
-          last_voted_at: baseDate,
-        },
-        { upsert: true }
-      );
+      // OKAY TO GIVE AN ERROR MESSAGE, THIS IS FAILSAFE SYSTEM
+      // MAKE SURE TO CHECK YOUR FAILSAFE BACKUP ON
+      try {
+        await KandidatBackupModel.findByIdAndUpdate(
+          updatedData!._id,
+          {
+            namaKandidat: updatedData!.namaKandidat,
+            imgName: updatedData!.imgName,
+            dipilih: updatedData!.dipilih + 1,
+            last_voted_at: baseDate,
+          },
+          { upsert: true }
+        );
+      } catch (e) {
+        console.log(`DB (SLAVE): ERROR TO UPDATE AN UPVOTE BACKUP, ${e}`);
+      }
 
       return { message: "Berhasil memilih kandidat!" };
     }),

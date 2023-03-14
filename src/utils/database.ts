@@ -23,7 +23,7 @@ export async function connectDatabase() {
     cached.promise = mongoose
       .connect(MONGODB_MASTER_URI, opts)
       .then((mongoose) => {
-        console.log("DB: Connected");
+        console.log("DB (MASTER): Connected");
         return mongoose;
       });
   }
