@@ -1,13 +1,10 @@
 import Head from "next/head";
 import Router from "next/router";
 import type { NextPage } from "next";
-import { useState, useEffect, useRef, useMemo } from "react";
+import { useState, useEffect, useRef, useMemo, useCallback } from "react";
 import {
   useDisclosure,
-  Container,
-  Box,
   Text,
-  Divider,
   VStack,
   HStack,
   Image,
@@ -28,11 +25,18 @@ import {
   AlertDialogHeader,
   AlertDialogContent,
   AlertDialogOverlay,
+  Box,
 } from "@chakra-ui/react";
 import { DateTime } from "luxon";
 import { Types } from "mongoose";
 
 import { trpc } from "../utils/trpc";
+import {
+  BerhasilMemilihDanCapJari,
+  MasihKosong,
+  MutationErrorBox,
+  TidakDiizinkanMemilih,
+} from "../components/Home";
 
 let intervalID: NodeJS.Timeout;
 
@@ -103,6 +107,36 @@ const Home: NextPage = () => {
     [waktuMulai, waktuSelesai, currentTime, canVote]
   );
 
+  const cannotPushAKeyboard = useMemo(
+    () =>
+      userInfo.data ||
+      !canVoteNow ||
+      candidateMutation.isSuccess ||
+      candidateMutation.isError ||
+      candidateMutation.isLoading ||
+      candidateQuery.isLoading ||
+      userInfo.isLoading ||
+      (candidateQuery.data && candidateQuery.data.length === 0),
+    [
+      canVoteNow,
+      candidateMutation.isError,
+      candidateMutation.isLoading,
+      candidateMutation.isSuccess,
+      candidateQuery.data,
+      candidateQuery.isLoading,
+      userInfo.data,
+      userInfo.isLoading,
+    ]
+  );
+
+  const chooseCandidate = useCallback(() => {
+    sendRef.current.setAttribute("disabled", "disabled");
+    candidateMutation.mutate({
+      id: currentID as unknown as string,
+      timeZone: DateTime.now().zoneName,
+    });
+  }, [candidateMutation, currentID]);
+
   const getNama = () => {
     const currentCandidate =
       candidateQuery.data &&
@@ -123,6 +157,62 @@ const Home: NextPage = () => {
       clearInterval(intervalID);
     };
   }, []);
+
+  useEffect(() => {
+    const triggerBox = (index: number) => {
+      const candidateData =
+        candidateQuery.data &&
+        candidateQuery.data.length > 0 &&
+        candidateQuery.data[index];
+
+      if (!isOpen && candidateData) {
+        setID(candidateData.id);
+        onOpen();
+      }
+    };
+
+    const onKeydown = (e: KeyboardEvent) => {
+      if (cannotPushAKeyboard) return;
+
+      switch (e.key) {
+        case "Escape":
+          if (isOpen) onClose();
+          break;
+
+        case "1":
+          triggerBox(0);
+          break;
+
+        case "2":
+          triggerBox(1);
+          break;
+
+        case "3":
+          triggerBox(2);
+          break;
+
+        case "4":
+          triggerBox(3);
+          break;
+
+        case "5":
+          triggerBox(4);
+          break;
+
+        case "Enter":
+          if (isOpen) chooseCandidate();
+          break;
+      }
+    };
+
+    window.addEventListener("keyup", onKeydown);
+
+    return () => {
+      window.removeEventListener("keyup", onKeydown);
+    };
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [cannotPushAKeyboard, isOpen]);
 
   if (userInfo.isLoading || candidateQuery.isLoading)
     return (
@@ -220,6 +310,7 @@ const Home: NextPage = () => {
                     variant="solid"
                     mb={4}
                     fontSize={"1.3rem"}
+                    onFocus={(e) => e.target.blur()}
                   >
                     Pilih
                   </Button>
@@ -256,6 +347,7 @@ const Home: NextPage = () => {
                     ref={cancelRef}
                     onClick={onClose}
                     disabled={candidateMutation.isLoading}
+                    onFocus={(e) => e.target.blur()}
                   >
                     Batal
                   </Button>
@@ -263,13 +355,8 @@ const Home: NextPage = () => {
                     fontSize="xl"
                     colorScheme="green"
                     ref={sendRef}
-                    onClick={() => {
-                      sendRef.current.setAttribute("disabled", "disabled");
-                      candidateMutation.mutate({
-                        id: currentID as unknown as string,
-                        timeZone: DateTime.now().zoneName,
-                      });
-                    }}
+                    onFocus={(e) => e.target.blur()}
+                    onClick={chooseCandidate}
                     ml={3}
                   >
                     Pilih
@@ -285,100 +372,5 @@ const Home: NextPage = () => {
     </>
   );
 };
-
-const MasihKosong = () => (
-  <Container>
-    <Box p={4} borderWidth="1px" mt="6" borderRadius="lg">
-      <Text fontSize="2xl" fontWeight="semibold" color="gray.900">
-        Tidak Ada Data KANDIDAT
-      </Text>
-      <Divider orientation="horizontal" mt="1" mb="1" />
-      <Text>
-        Tidak ada data kandidat yang ada, mohon hubungi admin untuk menambahkan
-        data kandidat.
-      </Text>
-    </Box>
-  </Container>
-);
-
-const BerhasilMemilihDanCapJari = () => (
-  <HStack h={"100vh"} justifyContent="center">
-    <Box
-      borderWidth="2px"
-      borderRadius="lg"
-      w="85%"
-      h="90%"
-      backgroundColor="green.500"
-      style={{
-        display: "flex",
-        boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
-        gap: "1em",
-      }}
-      alignItems="center"
-      justifyContent="center"
-      flexDirection="column"
-    >
-      <Heading as="h1" size="4xl" fontSize="5rem" color={"white"}>
-        Data berhasil terekam!
-      </Heading>
-      <Heading as="h2" size="xl" color={"white"} fontWeight={"regular"}>
-        Silahkan keluar dari bilik suara dan melakukan cap jari.
-      </Heading>
-    </Box>
-  </HStack>
-);
-
-const MutationErrorBox = ({ errorMessage }: { errorMessage: string }) => (
-  <HStack h={"100vh"} justifyContent="center">
-    <Box
-      borderWidth="2px"
-      borderRadius="lg"
-      w="85%"
-      h="90%"
-      backgroundColor="red.500"
-      style={{
-        display: "flex",
-        boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
-        gap: "1em",
-      }}
-      alignItems="center"
-      justifyContent="center"
-      flexDirection="column"
-    >
-      <Heading as="h2" size="2xl" fontSize="4rem" color="white">
-        Gagal dalam menambahkan data!
-      </Heading>
-      <Heading as="pre" size="xl" color={"white"} fontWeight={"regular"}>
-        Beritahu panitia atas masalah ini, pesan error terlampir di bawah.
-      </Heading>
-
-      <Text as="pre" fontSize="3xl" color="white">
-        {errorMessage}
-      </Text>
-    </Box>
-  </HStack>
-);
-
-const TidakDiizinkanMemilih = () => (
-  <HStack h={"100vh"} justifyContent="center">
-    <Box
-      borderWidth="2px"
-      borderRadius="lg"
-      w="85%"
-      h="90%"
-      style={{
-        display: "flex",
-        boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
-      }}
-      alignItems="center"
-      justifyContent="center"
-    >
-      <Heading size="lg" fontSize="50px" fontWeight="semibold" color="gray.900">
-        Tidak <Text color="red">Di izinkan</Text>
-        Untuk memilih!
-      </Heading>
-    </Box>
-  </HStack>
-);
 
 export default Home;
