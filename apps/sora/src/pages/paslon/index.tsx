@@ -42,7 +42,7 @@ const Paslon = () => {
 
   const { isOpen, onOpen, onClose } = useDisclosure();
 
-  const paslonQuery = trpc.paslon.adminCandidateList.useQuery(undefined, {
+  const candidateQuery = trpc.paslon.adminCandidateList.useQuery(undefined, {
     refetchInterval: 2500,
     refetchIntervalInBackground: true,
   });

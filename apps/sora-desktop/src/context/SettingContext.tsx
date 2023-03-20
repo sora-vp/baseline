@@ -9,7 +9,7 @@ interface ISettingContext {
   isLoading: boolean;
   isError: boolean;
   isCandidatesExist: boolean;
-  paslon: SoraRouterOutput["paslon"]["candidateList"] | undefined;
+  candidate: SoraRouterOutput["candidate"]["candidateList"] | undefined;
 }
 
 export const SettingContext = createContext<ISettingContext>(
@@ -29,7 +29,7 @@ export const SettingProvider: React.FC<{ children: React.ReactNode }> = ({
   const [waktuMulai, setWaktuMulai] = useState<number | null>(null);
   const [waktuSelesai, setWaktuSelesai] = useState<number | null>(null);
 
-  const paslonQuery = trpc.sora.paslon.candidateList.useQuery(undefined, {
+  const candidateQuery = trpc.sora.candidate.candidateList.useQuery(undefined, {
     refetchOnWindowFocus: false,
 
     onError(error) {
@@ -50,22 +50,22 @@ export const SettingProvider: React.FC<{ children: React.ReactNode }> = ({
       setWaktuMulai(
         result.startTime
           ? DateTime.fromISO(result.startTime as unknown as string)
-              .toLocal()
-              .toJSDate()
-              .getTime()
+            .toLocal()
+            .toJSDate()
+            .getTime()
           : null
       );
       setWaktuSelesai(
         result.endTime
           ? DateTime.fromISO(result.endTime as unknown as string)
-              .toLocal()
-              .toJSDate()
-              .getTime()
+            .toLocal()
+            .toJSDate()
+            .getTime()
           : null
       );
       setCanVote(result.canVote);
 
-      if (paslonQuery.isError) paslonQuery.refetch();
+      if (candidateQuery.isError) candidateQuery.refetch();
     },
 
     onError(error) {
@@ -87,18 +87,18 @@ export const SettingProvider: React.FC<{ children: React.ReactNode }> = ({
   );
 
   const isCandidatesExist = useMemo(
-    () => (paslonQuery.data && paslonQuery.data.length > 1) || false,
-    [paslonQuery.data]
+    () => (candidateQuery.data && candidateQuery.data.length > 1) || false,
+    [candidateQuery.data]
   );
 
   const isLoading = useMemo(
-    () => paslonQuery.isLoading || settingsQuery.isLoading,
-    [paslonQuery.isLoading, settingsQuery.isLoading]
+    () => candidateQuery.isLoading || settingsQuery.isLoading,
+    [candidateQuery.isLoading, settingsQuery.isLoading]
   );
 
   const isError = useMemo(
-    () => paslonQuery.isError || settingsQuery.isError,
-    [paslonQuery.isError, settingsQuery.isError]
+    () => candidateQuery.isError || settingsQuery.isError,
+    [candidateQuery.isError, settingsQuery.isError]
   );
 
   useEffect(() => {
@@ -121,7 +121,7 @@ export const SettingProvider: React.FC<{ children: React.ReactNode }> = ({
         isLoading,
         isError,
         isCandidatesExist,
-        paslon: paslonQuery.data,
+        candidate: candidateQuery.data,
       }}
     >
       {children}

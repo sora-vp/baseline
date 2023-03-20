@@ -1,9 +1,9 @@
 import { getModelForClass } from "@typegoose/typegoose";
 
-import { Paslon } from "./Paslon";
+import { Kandidat } from "./Kandidat";
 import { User } from "./User";
 
-export const PaslonModel = getModelForClass(Paslon);
+export const KandidatModel = getModelForClass(Kandidat);
 export const UserModel = getModelForClass(User);
 
-export { Paslon, User };
+export { Kandidat, User };

@@ -51,7 +51,7 @@ const EditPaslonWithID = () => {
       if (result.canVote) router.push("/paslon");
     },
   });
-  const paslonQuery = trpc.paslon.getSpecificCandidate.useQuery(
+  const candidateQuery = trpc.paslon.getSpecificCandidate.useQuery(
     { id: router.query.id as string },
     {
       onSuccess: reset,

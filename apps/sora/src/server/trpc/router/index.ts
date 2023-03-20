@@ -2,12 +2,12 @@
 import { router } from "../trpc";
 
 import { authRouter } from "./auth";
-import { paslonRouter } from "./paslon";
+import { candidateRouter } from "./candidate";
 import { settingsRouter } from "./settings";
 
 export const appRouter = router({
   auth: authRouter,
-  paslon: paslonRouter,
+  candidate: candidateRouter,
   settings: settingsRouter,
 });
 

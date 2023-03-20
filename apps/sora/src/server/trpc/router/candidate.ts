@@ -7,7 +7,7 @@ import {
   unprotectedProcedure,
 } from "../trpc";
 
-import { PaslonModel, Paslon as PaslonType } from "@models/index";
+import { KandidatModel } from "@models/index";
 import {
   upvoteValidationSchema,
   adminDeleteCandidateValidationSchema,
@@ -18,37 +18,35 @@ import { canVoteNow } from "@utils/canVote";
 
 import { trpcAbsensi } from "@utils/trpc";
 
-export const paslonRouter = router({
+export const candidateRouter = router({
   candidateList: publicProcedure.query(async () => {
-    const data = await PaslonModel.find({}).lean();
+    const data = await KandidatModel.find({}).lean();
 
-    return data.map((kandidat: PaslonType & { _id: string }) => ({
+    return data.map((kandidat) => ({
       id: kandidat._id,
-      namaKetua: kandidat.namaKetua,
-      namaWakil: kandidat.namaWakil,
+      namaKandidat: kandidat.namaKandidat,
       imgName: kandidat.imgName,
     }));
   }),
 
   adminCandidateList: protectedProcedure.query(
-    async () => await PaslonModel.find({}).lean()
+    async () => await KandidatModel.find({}).lean()
   ),
 
   getSpecificCandidate: protectedProcedure
     .input(adminGetSpecificCandidateValidationSchema)
     .query(async ({ input }) => {
-      const paslon = await PaslonModel.findById(input.id);
+      const kandidat = await KandidatModel.findById(input.id);
 
-      if (!paslon)
+      if (!kandidat)
         throw new TRPCError({
           code: "NOT_FOUND",
-          message: "Paslon tidak dapat ditemukan!",
+          message: "Kandidat tidak dapat ditemukan!",
         });
 
       // For the easiest reset for frontend
       return {
-        ketua: paslon.namaKetua,
-        wakil: paslon.namaWakil,
+        kandidat: kandidat.namaKandidat,
       };
     }),
 
@@ -63,7 +61,7 @@ export const paslonRouter = router({
           message: "Tidak bisa menghapus paslon dalam kondisi pemilihan!",
         });
 
-      const isPaslonExist = await PaslonModel.findById(input.id);
+      const isPaslonExist = await KandidatModel.findById(input.id);
 
       if (!isPaslonExist)
         throw new TRPCError({
@@ -71,7 +69,7 @@ export const paslonRouter = router({
           message: "Paslon tidak dapat ditemukan!",
         });
 
-      await PaslonModel.findByIdAndRemove(input.id);
+      await KandidatModel.findByIdAndRemove(input.id);
 
       return { message: "Berhasil menghapus paslon!" };
     }),
@@ -104,7 +102,7 @@ export const paslonRouter = router({
             message: "Kamu belum absen!",
           });
 
-        const isPaslonExist = await PaslonModel.findById(input.id);
+        const isPaslonExist = await KandidatModel.findById(input.id);
 
         if (!isPaslonExist)
           throw new TRPCError({
@@ -125,7 +123,7 @@ export const paslonRouter = router({
                 "Gagal pada saat memilih kandidat! Mohon untuk dicoba lagi!",
             });
 
-          await PaslonModel.findByIdAndUpdate(input.id, {
+          await KandidatModel.findByIdAndUpdate(input.id, {
             $inc: { dipilih: 1 },
           });
 

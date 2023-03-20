@@ -29,7 +29,7 @@ const Statistik = () => {
   const [height, setHeight] = useState<number>(0);
   const container = useRef<HTMLDivElement>(null!);
 
-  const paslonQuery = trpc.paslon.adminCandidateList.useQuery(undefined, {
+  const candidateQuery = trpc.paslon.adminCandidateList.useQuery(undefined, {
     refetchInterval: 2500,
     refetchIntervalInBackground: true,
   });

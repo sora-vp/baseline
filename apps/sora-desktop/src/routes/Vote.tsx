@@ -19,8 +19,10 @@ import {
   AlertDialogContent,
   AlertDialogOverlay,
 } from "@chakra-ui/react";
+import { Types } from "mongoose";
 import { DateTime } from "luxon";
 import { Navigate } from "react-router-dom";
+
 
 import Loading from "@/components/PreScan/Loading";
 import { useAppSetting } from "@/context/AppSetting";
@@ -38,15 +40,15 @@ const Vote: React.FC = () => {
 
   const { qrId, setQRCode } = useParticipant();
   const { soraURL } = useAppSetting();
-  const { isLoading, isError, canVoteNow, paslon } = useSetting();
+  const { isLoading, isError, canVoteNow, candidate } = useSetting();
 
   const { isOpen, onOpen, onClose } = useDisclosure();
   const cancelRef = useRef<HTMLButtonElement>(null!);
 
   // Untuk keperluan pemilihan
-  const [currentID, setID] = useState<string | null>(null);
+  const [currentID, setID] = useState<Types.ObjectId | null>(null);
 
-  const paslonMutation = trpc.sora.paslon.upvote.useMutation({
+  const candidateMutation = trpc.sora.candidate.upvote.useMutation({
     onSuccess(result) {
       toast({
         description: result.message,
@@ -72,10 +74,13 @@ const Vote: React.FC = () => {
   });
 
   const getNama = () => {
-    const currentPaslon = paslon && paslon.find((p) => p.id === currentID);
+    const currentCandidate =
+      candidate &&
+      candidate?.find((p) => p.id === currentID);
 
-    return `${currentPaslon?.namaKetua} dan ${currentPaslon?.namaWakil}`;
+    return currentCandidate?.namaKandidat;
   };
+
 
   if (isLoading) return <Loading />;
 
@@ -99,8 +104,8 @@ const Vote: React.FC = () => {
           flexWrap: "wrap",
         }}
       >
-        {paslon &&
-          paslon.map((kandidat) => (
+        {candidate &&
+          candidate.map((kandidat) => (
             <Center key={kandidat.imgName} py={6}>
               <Box
                 maxW={"320px"}
@@ -112,16 +117,13 @@ const Vote: React.FC = () => {
               >
                 <Image
                   src={`${soraURL as string}/api/uploads/${kandidat.imgName}`}
-                  alt={`Gambar dari pasangan calon ${kandidat.namaKetua} dan ${kandidat.namaWakil}.`}
+                  alt={`Gambar dari kandidat ${kandidat.namaKandidat}.`}
                 />
                 <Heading mt={2} fontSize={"3xl"} fontFamily={"body"}>
                   Pasangan Calon
                 </Heading>
                 <Text fontSize={"1.4rem"} mt={2}>
-                  {kandidat.namaKetua}
-                </Text>
-                <Text fontSize={"1.4rem"} mb={4}>
-                  {kandidat.namaWakil}
+                  {kandidat.namaKandidat}
                 </Text>
 
                 <Button
@@ -145,7 +147,7 @@ const Vote: React.FC = () => {
         isOpen={isOpen}
         leastDestructiveRef={cancelRef}
         onClose={() => {
-          if (!paslonMutation.isLoading) {
+          if (!candidateMutation.isLoading) {
             setID(null);
             onClose();
           }
@@ -165,17 +167,17 @@ const Vote: React.FC = () => {
               <Button
                 ref={cancelRef}
                 onClick={onClose}
-                disabled={paslonMutation.isLoading}
+                disabled={candidateMutation.isLoading}
               >
                 Batal
               </Button>
               <Button
                 colorScheme="green"
-                disabled={paslonMutation.isLoading}
+                disabled={candidateMutation.isLoading}
                 onClick={() => {
-                  paslonMutation.mutate({
+                  candidateMutation.mutate({
                     qrId: qrId as string,
-                    id: currentID as string,
+                    id: currentID as unknown as string,
                     timeZone: DateTime.now().zoneName,
                   });
                 }}
