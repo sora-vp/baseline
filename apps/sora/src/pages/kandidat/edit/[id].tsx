@@ -27,7 +27,10 @@ import Sidebar from "@components/Sidebar";
 import InputImageBox from "@components/InputImageBox";
 
 import { trpc } from "@utils/trpc";
-import { EditKandidatValidationSchema as validationSchema, TEditKandidatValidationSchema as FormValues } from "@schema/admin.candidate.schema";
+import {
+  EditKandidatValidationSchema as validationSchema,
+  TEditKandidatValidationSchema as FormValues,
+} from "@schema/admin.candidate.schema";
 
 const EditCandidateWithID = () => {
   const toast = useToast();

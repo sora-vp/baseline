@@ -19,8 +19,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import {
   PengaturanPerilakuValidationSchema as validationSchema,
   type PengaturanPerilakuFormValues as FormValues,
-} from "../../../schema/admin.settings.schema";
-import { trpc } from "../../../utils/trpc";
+} from "@schema/admin.settings.schema";
+import { trpc } from "@utils/trpc";
 
 const PengaturanPerilaku = () => {
   const toast = useToast();
@@ -33,6 +33,7 @@ const PengaturanPerilaku = () => {
     onSuccess(data) {
       reset({
         canVote: data.canVote !== null && data.canVote !== false,
+        canAttend: data.canAttend !== null && data.canAttend !== false,
         reloadAfterVote:
           data.reloadAfterVote !== null && data.reloadAfterVote !== false,
       });
@@ -83,7 +84,7 @@ const PengaturanPerilaku = () => {
               control={control}
               render={({ field }) => (
                 <Switch
-                  colorScheme="cyan"
+                  colorScheme="red"
                   size="lg"
                   isChecked={field.value}
                   onChange={(checked) => field.onChange(checked)}
@@ -99,7 +100,32 @@ const PengaturanPerilaku = () => {
           </FormControl>
 
           <FormControl
-            mt={6}
+            mt={5}
+            isInvalid={formState.errors?.canAttend as unknown as boolean}
+          >
+            <FormLabel htmlFor="mulai">Sudah Bisa Absen</FormLabel>
+            <Controller
+              name={"canAttend"}
+              control={control}
+              render={({ field }) => (
+                <Switch
+                  colorScheme="cyan"
+                  size="lg"
+                  isChecked={field.value}
+                  onChange={(checked) => field.onChange(checked)}
+                  isDisabled={
+                    changeBehaviour.isLoading || settingsQuery.isLoading
+                  }
+                />
+              )}
+            />
+            <FormErrorMessage>
+              {formState.errors?.canAttend?.message}
+            </FormErrorMessage>
+          </FormControl>
+
+          <FormControl
+            mt={5}
             isInvalid={formState.errors?.reloadAfterVote as unknown as boolean}
           >
             <FormLabel htmlFor="selesai">
@@ -126,7 +152,7 @@ const PengaturanPerilaku = () => {
           </FormControl>
 
           <Button
-            mt={7}
+            mt={6}
             bg="green.600"
             color="white"
             _hover={{

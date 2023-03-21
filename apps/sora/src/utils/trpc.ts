@@ -1,5 +1,6 @@
 // src/utils/trpc.ts
 import { httpBatchLink, loggerLink } from "@trpc/client";
+import type { inferRouterOutputs } from "@trpc/server";
 import { createTRPCNext } from "@trpc/next";
 import superjson from "superjson";
 
@@ -29,3 +30,8 @@ export const trpc = createTRPCNext<AppRouter>({
   },
   ssr: false,
 });
+
+type RouterOutput = inferRouterOutputs<AppRouter>;
+
+export type allParticipantOutput =
+  RouterOutput["participant"]["getParticipantPaginated"];

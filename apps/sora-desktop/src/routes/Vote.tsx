@@ -23,7 +23,6 @@ import { Types } from "mongoose";
 import { DateTime } from "luxon";
 import { Navigate } from "react-router-dom";
 
-
 import Loading from "@/components/PreScan/Loading";
 import { useAppSetting } from "@/context/AppSetting";
 import { useSetting } from "@/context/SettingContext";
@@ -75,12 +74,10 @@ const Vote: React.FC = () => {
 
   const getNama = () => {
     const currentCandidate =
-      candidate &&
-      candidate?.find((p) => p.id === currentID);
+      candidate && candidate?.find((p) => p.id === currentID);
 
     return currentCandidate?.namaKandidat;
   };
-
 
   if (isLoading) return <Loading />;
 

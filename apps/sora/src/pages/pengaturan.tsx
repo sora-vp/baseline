@@ -19,8 +19,8 @@ const Pengaturan = () => {
           </Text>
         </HStack>
         <HStack spacing={15}>
-          <PengaturanWaktu />
           <PengaturanPerilaku />
+          <PengaturanWaktu />
         </HStack>
       </VStack>
     </>

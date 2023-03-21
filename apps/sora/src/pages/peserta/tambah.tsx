@@ -20,14 +20,14 @@ import Router from "next/router";
 import NextLink from "next/link";
 import Head from "next/head";
 
-import Sidebar from "~components/Sidebar";
+import Sidebar from "@components/Sidebar";
 
-import { trpc } from "~utils/trpc";
+import { trpc } from "@utils/trpc";
 
 import {
   TambahPesertaValidationSchema as validationSchema,
   type TambahFormValues as FormValues,
-} from "~schema/admin.peserta.schema";
+} from "@schema/admin.participant.schema";
 
 const HalamanTambah = () => {
   const toast = useToast();

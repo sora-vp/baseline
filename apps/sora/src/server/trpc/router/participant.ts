@@ -1,11 +1,11 @@
 import { router, protectedProcedure, publicProcedure } from "../trpc";
 
-import { ParticipantModel } from "~models/index";
+import { ParticipantModel } from "@models/index";
 import {
   PaginatedParticipantValidationSchema,
   ParticipantAttendValidationSchema,
   TambahPesertaValidationSchema,
-} from "~schema/admin.peserta.schema";
+} from "@schema/admin.participant.schema";
 import { TRPCError } from "@trpc/server";
 
 export const participantRouter = router({
@@ -14,7 +14,6 @@ export const participantRouter = router({
     .query(
       async ({ input: { pageSize: limit, pageIndex: offset } }) =>
         await ParticipantModel.paginate({}, { offset, limit }).catch(
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           (e: any) => {
             throw new TRPCError({
               code: "INTERNAL_SERVER_ERROR",

@@ -52,29 +52,30 @@ const Candidate = () => {
     refetchIntervalInBackground: true,
   });
 
-  const candidateDeleteMutation = trpc.candidate.adminDeleteCandidate.useMutation({
-    onSuccess(result) {
-      onClose();
+  const candidateDeleteMutation =
+    trpc.candidate.adminDeleteCandidate.useMutation({
+      onSuccess(result) {
+        onClose();
 
-      toast({
-        description: result.message,
-        status: "success",
-        duration: 6000,
-        position: "top-right",
-        isClosable: true,
-      });
-    },
+        toast({
+          description: result.message,
+          status: "success",
+          duration: 6000,
+          position: "top-right",
+          isClosable: true,
+        });
+      },
 
-    onError(result) {
-      toast({
-        description: result.message,
-        status: "error",
-        duration: 6000,
-        position: "top-right",
-        isClosable: true,
-      });
-    },
-  });
+      onError(result) {
+        toast({
+          description: result.message,
+          status: "error",
+          duration: 6000,
+          position: "top-right",
+          isClosable: true,
+        });
+      },
+    });
 
   // Untuk keperluan hapus data
   const [currentID, setID] = useState<Types.ObjectId | null>(null);
@@ -86,7 +87,6 @@ const Candidate = () => {
 
     return currentCandidate?.namaKandidat;
   };
-
 
   return (
     <>
@@ -160,7 +160,6 @@ const Candidate = () => {
                         <Th>Gambar</Th>
                         <Th>Aksi</Th>
                       </Tr>
-
                     </Thead>
                     <Tbody>
                       {candidateQuery.isLoading && (
@@ -246,8 +245,8 @@ const Candidate = () => {
                       {!candidateQuery.isLoading && !candidateQuery.data && (
                         <Tr>
                           <Td colSpan={5} style={{ textAlign: "center" }}>
-                            Tidak ada data kandidat, Silahkan tambah kandidat baru
-                            dengan tombol di atas.
+                            Tidak ada data kandidat, Silahkan tambah kandidat
+                            baru dengan tombol di atas.
                           </Td>
                         </Tr>
                       )}

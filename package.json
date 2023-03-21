@@ -11,10 +11,9 @@
     "lint": "turbo run lint",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "dev:sora": "turbo run dev --filter sora",
-    "dev:absensi": "turbo run dev --filter absensi",
     "dev:sora-desktop": "turbo run dev --filter sora-desktop",
     "dev:absensi-desktop": "turbo run dev --filter absensi-desktop",
-    "build:web": "turbo run build --filter absensi && turbo run build --filter sora",
+    "build:web": "turbo run build --filter sora",
     "build:desktop": "turbo run build --filter *-desktop"
   },
   "devDependencies": {

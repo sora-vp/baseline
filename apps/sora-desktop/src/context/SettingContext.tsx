@@ -50,17 +50,17 @@ export const SettingProvider: React.FC<{ children: React.ReactNode }> = ({
       setWaktuMulai(
         result.startTime
           ? DateTime.fromISO(result.startTime as unknown as string)
-            .toLocal()
-            .toJSDate()
-            .getTime()
+              .toLocal()
+              .toJSDate()
+              .getTime()
           : null
       );
       setWaktuSelesai(
         result.endTime
           ? DateTime.fromISO(result.endTime as unknown as string)
-            .toLocal()
-            .toJSDate()
-            .getTime()
+              .toLocal()
+              .toJSDate()
+              .getTime()
           : null
       );
       setCanVote(result.canVote);

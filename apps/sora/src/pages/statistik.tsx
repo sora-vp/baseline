@@ -92,7 +92,9 @@ const Statistik = () => {
                 alignItems: "center",
               }}
             >
-              {candidateQuery.isLoading && <Spinner thickness="4px" size="xl" />}
+              {candidateQuery.isLoading && (
+                <Spinner thickness="4px" size="xl" />
+              )}
 
               {!candidateQuery.isLoading &&
                 candidateQuery.data &&
