@@ -264,6 +264,8 @@ const Paslon = () => {
                               )}
                             </Th>
                           ))}
+
+                          <Th>Aksi</Th>
                         </Tr>
                       ))}
                     </Thead>
