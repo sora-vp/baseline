@@ -199,6 +199,7 @@ importers:
       '@typescript-eslint/parser': ^5.55.0
       bcrypt: ^5.1.0
       cors: ^2.8.5
+      csv-parse: ^5.3.6
       eslint: 8.36.0
       eslint-config-next: 13.2.4
       formidable: ^2.1.1
@@ -240,6 +241,7 @@ importers:
       '@typegoose/typegoose': 10.3.3_mongoose@6.10.3
       bcrypt: 5.1.0
       cors: 2.8.5
+      csv-parse: 5.3.6
       formidable: 2.1.1
       framer-motion: 10.6.1_biqbaboplfbrettd7655fr4n2y
       fs-json-store: 8.0.1
@@ -4320,6 +4322,10 @@ packages:
 
   /csstype/3.1.1:
     resolution: {integrity: sha512-DJR/VvkAvSZW9bTouZue2sSxDwdTN92uHjqeKVm+0dAqdfNykRzQ95tay8aXMBAAPpUiq4Qcug2L7neoRh2Egw==}
+
+  /csv-parse/5.3.6:
+    resolution: {integrity: sha512-WI330GjCuEioK/ii8HM2YE/eV+ynpeLvU+RXw4R8bRU8R0laK5zO3fDsc4gH8s472e3Ga38rbIjCAiQh+tEHkw==}
+    dev: false
 
   /custom-error-instance/2.1.1:
     resolution: {integrity: sha512-p6JFxJc3M4OTD2li2qaHkDCw9SfMw82Ldr6OC9Je1aXiGfhx2W8p3GaoeaGrPJTUN9NirTM/KTxHWMUdR1rsUg==}

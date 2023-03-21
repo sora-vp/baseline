@@ -112,26 +112,6 @@ const HalamanTambah = () => {
                   </FormErrorMessage>
                 </FormControl>
 
-                <FormControl
-                  mt={6}
-                  isInvalid={formState.errors?.status as unknown as boolean}
-                >
-                  <FormLabel htmlFor="status">Status Peserta</FormLabel>
-                  <Input
-                    type="text"
-                    isDisabled={
-                      settingsQuery.isLoading ||
-                      settingsQuery.data?.canAttend ||
-                      participantMutation.isLoading
-                    }
-                    placeholder="Masukan Status Peserta"
-                    {...register("status")}
-                  />
-                  <FormErrorMessage>
-                    {formState.errors?.status?.message}
-                  </FormErrorMessage>
-                </FormControl>
-
                 <Button
                   width="full"
                   mt={4}

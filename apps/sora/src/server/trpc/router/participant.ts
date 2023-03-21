@@ -5,6 +5,7 @@ import {
   PaginatedParticipantValidationSchema,
   ParticipantAttendValidationSchema,
   TambahPesertaValidationSchema,
+  DeletePesertaValidationSchema,
 } from "@schema/admin.participant.schema";
 import { TRPCError } from "@trpc/server";
 
@@ -31,6 +32,22 @@ export const participantRouter = router({
       await newParticipant.save();
 
       return { message: "Berhasil menambahkan peserta baru!" };
+    }),
+
+  deleteParticipant: protectedProcedure
+    .input(DeletePesertaValidationSchema)
+    .mutation(async ({ input }) => {
+      const participant = await ParticipantModel.findById(input.id);
+
+      if (!participant)
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Peserta pemilihan tidak dapat ditemukan!",
+        });
+
+      await participant.deleteOne();
+
+      return { message: "Berhasil menghapus peserta!" };
     }),
 
   participantAttend: publicProcedure
@@ -97,22 +114,5 @@ export const participantRouter = router({
         sudahAbsen: participant.sudahAbsen,
         sudahMemilih: participant.sudahMemilih,
       };
-    }),
-
-  updateUserUpvoteStatus: publicProcedure
-    .input(ParticipantAttendValidationSchema)
-    .mutation(async ({ input }) => {
-      const participant = await ParticipantModel.findOne({ qrId: input });
-
-      if (!participant)
-        throw new TRPCError({
-          code: "NOT_FOUND",
-          message: "Peserta pemilihan tidak dapat ditemukan!",
-        });
-
-      participant.sudahMemilih = true;
-      await participant.save();
-
-      return { success: true };
     }),
 });

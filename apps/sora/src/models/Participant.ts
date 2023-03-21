@@ -16,9 +16,6 @@ export class Participant {
   @prop({ required: true, unique: true, match: nameRegExp })
   public nama!: string;
 
-  @prop({ required: true })
-  public status!: string;
-
   @prop({ required: true, unique: true, default: () => nanoid(15) })
   public qrId!: string;
 

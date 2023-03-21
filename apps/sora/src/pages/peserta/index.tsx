@@ -2,7 +2,7 @@ import { useMemo, useRef, useState } from "react";
 import {
   useToast,
   useColorModeValue,
-  // useDisclosure,
+  useDisclosure,
   VStack,
   HStack,
   Box,
@@ -20,15 +20,13 @@ import {
   TableContainer,
 
   // Alert dialog
-  // AlertDialog,
-  // AlertDialogBody,
-  // AlertDialogFooter,
-  // AlertDialogHeader,
-  // AlertDialogContent,
-  // AlertDialogOverlay,
-  // AlertDialogCloseButton,
-
-  //
+  AlertDialog,
+  AlertDialogBody,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogContent,
+  AlertDialogOverlay,
+  AlertDialogCloseButton,
   Flex,
   Tooltip,
   IconButton,
@@ -41,8 +39,9 @@ import {
 } from "@chakra-ui/react";
 import Head from "next/head";
 import NextLink from "next/link";
+import { Types } from "mongoose";
 import { BiFirstPage, BiLastPage } from "react-icons/bi";
-import { GrPrevious, GrNext } from "react-icons/gr";
+import { GrPrevious, GrNext, GrDocumentCsv } from "react-icons/gr";
 
 import { trpc, type allParticipantOutput } from "@utils/trpc";
 import Sidebar from "@components/Sidebar";
@@ -60,9 +59,6 @@ const columnHelper = createColumnHelper<allParticipantOutput["docs"][number]>();
 const columns = [
   columnHelper.accessor((row) => row.nama, {
     id: "Nama",
-  }),
-  columnHelper.accessor((row) => row.status, {
-    id: "Status",
   }),
   columnHelper.accessor((row) => row.qrId, {
     id: "QR ID",
@@ -88,9 +84,9 @@ const columns = [
 
 const Paslon = () => {
   const toast = useToast();
-  // const cancelRef = useRef<HTMLButtonElement>(null!);
+  const cancelRef = useRef<HTMLButtonElement>(null!);
 
-  // const { isOpen, onOpen, onClose } = useDisclosure();
+  const { isOpen, onOpen, onClose } = useDisclosure();
 
   const [{ pageIndex, pageSize }, setPagination] = useState<PaginationState>({
     pageIndex: 0,
@@ -136,29 +132,30 @@ const Paslon = () => {
     },
   });
 
-  // const paslonDeleteMutation = trpc.paslon.adminDeleteCandidate.useMutation({
-  //   onSuccess(result) {
-  //     onClose();
+  const participantDeleteMutation =
+    trpc.participant.deleteParticipant.useMutation({
+      onSuccess(result) {
+        onClose();
 
-  //     toast({
-  //       description: result.message,
-  //       status: "success",
-  //       duration: 6000,
-  //       position: "top-right",
-  //       isClosable: true,
-  //     });
-  //   },
+        toast({
+          description: result.message,
+          status: "success",
+          duration: 6000,
+          position: "top-right",
+          isClosable: true,
+        });
+      },
 
-  //   onError(result) {
-  //     toast({
-  //       description: result.message,
-  //       status: "error",
-  //       duration: 6000,
-  //       position: "top-right",
-  //       isClosable: true,
-  //     });
-  //   },
-  // });
+      onError(result) {
+        toast({
+          description: result.message,
+          status: "error",
+          duration: 6000,
+          position: "top-right",
+          isClosable: true,
+        });
+      },
+    });
 
   const table = useReactTable({
     data: participantQuery.data?.docs ?? [],
@@ -173,13 +170,18 @@ const Paslon = () => {
   });
 
   // Untuk keperluan hapus data
-  // const [currentID, setID] = useState<string | null>(null);
+  const [currentID, setID] = useState<Types.ObjectId | null>(null);
 
-  // const getNama = () => {
-  //   const currentPaslon = participantQuery.data?.find((p) => p._id === currentID);
+  const getNama = () => {
+    const currentParticipant =
+      participantQuery.data &&
+      participantQuery.data.docs &&
+      participantQuery.data.docs.find(
+        (p) => (p as unknown as { _id: Types.ObjectId })._id === currentID
+      );
 
-  //   return `${currentPaslon?.namaKetua} dan ${currentPaslon?.namaWakil}`;
-  // };
+    return currentParticipant?.nama;
+  };
 
   return (
     <>
@@ -235,6 +237,18 @@ const Paslon = () => {
                     Tambah Peserta Baru
                   </Button>
                 </NextLink>
+
+                <Button
+                  isDisabled={
+                    settingsQuery.isLoading || settingsQuery.data?.canAttend
+                  }
+                  borderRadius="md"
+                  bg="green.500"
+                  color="white"
+                  leftIcon={<GrDocumentCsv color="white" />}
+                >
+                  Upload File CSV
+                </Button>
               </HStack>
               <HStack>
                 <TableContainer w="100%" h="100%">
@@ -277,6 +291,40 @@ const Paslon = () => {
                               )}
                             </Td>
                           ))}
+
+                          <Td>
+                            <Button
+                              isDisabled={
+                                settingsQuery.isLoading ||
+                                settingsQuery.data?.canAttend
+                              }
+                              bg="red.500"
+                              _hover={{ bg: "red.700" }}
+                              ml={2}
+                              color="white"
+                              onClick={() => {
+                                if (
+                                  !settingsQuery.isLoading ||
+                                  !(
+                                    settingsQuery.data as unknown as {
+                                      canVote?: boolean;
+                                    }
+                                  )?.canVote
+                                ) {
+                                  setID(
+                                    (
+                                      row.original as unknown as {
+                                        _id: Types.ObjectId;
+                                      }
+                                    )._id
+                                  );
+                                  onOpen();
+                                }
+                              }}
+                            >
+                              Hapus
+                            </Button>
+                          </Td>
                         </Tr>
                       ))}
 
@@ -396,14 +444,14 @@ const Paslon = () => {
         </HStack>
       </VStack>
 
-      {/* <AlertDialog
+      <AlertDialog
         isCentered
         isOpen={
           !(settingsQuery.isLoading || settingsQuery.data?.canAttend) && isOpen
         }
         leastDestructiveRef={cancelRef}
         onClose={() => {
-          if (!paslonDeleteMutation.isLoading) {
+          if (!participantDeleteMutation.isLoading) {
             setID(null);
             onClose();
           }
@@ -411,21 +459,21 @@ const Paslon = () => {
       >
         <AlertDialogOverlay>
           <AlertDialogContent>
-            {!paslonDeleteMutation.isLoading && <AlertDialogCloseButton />}
+            {!participantDeleteMutation.isLoading && <AlertDialogCloseButton />}
             <AlertDialogHeader fontSize="lg" fontWeight="bold">
-              Hapus Paslon
+              Hapus Peserta
             </AlertDialogHeader>
 
             <AlertDialogBody>
-              Apakah anda yakin? Jika sudah terhapus maka paslon {getNama()}{" "}
-              <b>TIDAK BISA DIPILIH, DIREVISI, DAN DIKEMBALIKAN LAGI!</b>
+              Apakah anda yakin? Jika sudah terhapus maka peserta {getNama()}{" "}
+              <b>TIDAK BISA MEMILIH, DIREVISI, DAN DIKEMBALIKAN LAGI!</b>
             </AlertDialogBody>
 
             <AlertDialogFooter>
               <Button
                 ref={cancelRef}
                 onClick={onClose}
-                disabled={paslonDeleteMutation.isLoading}
+                disabled={participantDeleteMutation.isLoading}
               >
                 Batal
               </Button>
@@ -433,16 +481,15 @@ const Paslon = () => {
                 bg="red.500"
                 _hover={{ bg: "red.700" }}
                 color="white"
-                disabled={paslonDeleteMutation.isLoading}
+                disabled={participantDeleteMutation.isLoading}
                 onClick={async () => {
                   if (
                     !settingsQuery.isLoading ||
                     !(settingsQuery.data as unknown as { canAttend?: boolean })
                       ?.canAttend
                   )
-                    paslonDeleteMutation.mutate({
-                      id: currentID as string,
-                      timeZone: DateTime.now().zoneName,
+                    participantDeleteMutation.mutate({
+                      id: currentID as unknown as string,
                     });
                 }}
                 ml={3}
@@ -452,7 +499,7 @@ const Paslon = () => {
             </AlertDialogFooter>
           </AlertDialogContent>
         </AlertDialogOverlay>
-      </AlertDialog> */}
+      </AlertDialog>
     </>
   );
 };

@@ -3,8 +3,9 @@ import { validateId } from "id-generator";
 
 export const TambahPesertaValidationSchema = z.object({
   nama: z.string().min(1, { message: "Diperlukan nama peserta!" }),
-  status: z.string().min(1, { message: "Diperlukan status partisipan!" }),
 });
+
+export const DeletePesertaValidationSchema = z.object({ id: z.string() });
 
 export type TambahFormValues = z.infer<typeof TambahPesertaValidationSchema>;
 
