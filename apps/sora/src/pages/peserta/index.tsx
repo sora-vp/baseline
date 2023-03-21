@@ -82,7 +82,7 @@ const columns = [
   }),
 ];
 
-const Paslon = () => {
+const Peserta = () => {
   const toast = useToast();
   const cancelRef = useRef<HTMLButtonElement>(null!);
 
@@ -238,17 +238,27 @@ const Paslon = () => {
                   </Button>
                 </NextLink>
 
-                <Button
-                  isDisabled={
-                    settingsQuery.isLoading || settingsQuery.data?.canAttend
+                <NextLink
+                  href="/peserta/csv"
+                  passHref={
+                    !settingsQuery.isLoading ||
+                    !(settingsQuery.data as unknown as { canAttend?: boolean })
+                      ?.canAttend
                   }
-                  borderRadius="md"
-                  bg="green.500"
-                  color="white"
-                  leftIcon={<GrDocumentCsv color="white" />}
                 >
-                  Upload File CSV
-                </Button>
+                  <Button
+                    isDisabled={
+                      settingsQuery.isLoading || settingsQuery.data?.canAttend
+                    }
+                    borderRadius="md"
+                    bg="green.500"
+                    color="white"
+                    leftIcon={<GrDocumentCsv color="white" />}
+
+                  >
+                    Upload File CSV
+                  </Button>
+                </NextLink>
               </HStack>
               <HStack>
                 <TableContainer w="100%" h="100%">
@@ -506,4 +516,4 @@ const Paslon = () => {
   );
 };
 
-export default Sidebar(Paslon);
+export default Sidebar(Peserta);
