@@ -14,58 +14,38 @@ import {
   Input,
   Button,
 } from "@chakra-ui/react";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Controller, useForm } from "react-hook-form";
 import { useState, useEffect } from "react";
-import { useRouter } from "next/router";
-import { DateTime } from "luxon";
+import Router from "next/router";
 import NextLink from "next/link";
+import { DateTime } from "luxon";
 import Head from "next/head";
 
-import { Controller, useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-
-import Sidebar from "@components/Sidebar";
 import InputImageBox from "@components/InputImageBox";
+import Sidebar from "@components/Sidebar";
 
 import { trpc } from "@utils/trpc";
-import { EditPaslonValidationSchema as validationSchema } from "@schema/admin.paslon.schema";
 
-type FormValues = {
-  ketua: string;
-  wakil: string;
-  image: File;
-};
+import {
+  TambahKandidatValidationSchema as validationSchema,
+  type TambahFormValues as FormValues,
+} from "@schema/admin.candidate.schema";
 
-const EditPaslonWithID = () => {
+const HalamanTambah = () => {
   const toast = useToast();
-  const router = useRouter();
-
   const [imgFromInput, setIFI] = useState<string | null>(null);
-
-  const { handleSubmit, register, formState, reset, watch, control } =
-    useForm<FormValues>({
-      resolver: zodResolver(validationSchema),
-    });
 
   const settingsQuery = trpc.settings.getSettings.useQuery(undefined, {
     onSuccess(result) {
-      if (result.canVote) router.push("/paslon");
+      if (result.canVote) Router.push("/kandidat");
     },
   });
-  const candidateQuery = trpc.paslon.getSpecificCandidate.useQuery(
-    { id: router.query.id as string },
-    {
-      onSuccess: reset,
-      onError(result) {
-        toast({
-          description: result.message,
-          status: "error",
-          duration: 6000,
-          position: "top-right",
-          isClosable: true,
-        });
-      },
-    }
-  );
+
+  const { handleSubmit, register, formState, control, reset, watch } =
+    useForm<FormValues>({
+      resolver: zodResolver(validationSchema),
+    });
 
   useEffect(() => {
     const subscription = watch((value, { name, type }) => {
@@ -99,16 +79,15 @@ const EditPaslonWithID = () => {
     const keys = Object.keys(data);
 
     formData.append("timeZone", DateTime.local().zoneName);
-    formData.append("id", router.query.id as string);
 
     for (const key of keys) {
-      if (key === "image" && data.image)
+      if (key === "image")
         formData.append(key, (data[key] as unknown as { [0]: File })[0]);
       else formData.append(key, data[key as keyof FormValues]);
     }
 
-    const response = await fetch("/api/admin/paslon", {
-      method: "PUT",
+    const response = await fetch("/api/admin/kandidat", {
+      method: "POST",
       body: formData,
       headers: {
         credentials: "include",
@@ -130,20 +109,18 @@ const EditPaslonWithID = () => {
 
       if (imgFromInput !== null) URL.revokeObjectURL(imgFromInput);
       setIFI(null);
-    } else {
-      router.push("/paslon");
-    }
+    } else Router.push("/kandidat");
   };
 
   return (
     <>
       <Head>
-        <title>Ubah Paslon</title>
+        <title>Tambah Kandidat</title>
       </Head>
       <VStack align="stretch">
         <HStack mb={"10px"} style={{ justifyContent: "center" }}>
           <Text fontWeight="500" fontSize="5xl">
-            Ubah Paslon
+            Tambah Kandidat Baru
           </Text>
         </HStack>
         <HStack justifyContent="center">
@@ -160,44 +137,24 @@ const EditPaslonWithID = () => {
             <Box my={4} mx={4} textAlign="left">
               <form onSubmit={handleSubmit(onSubmit)}>
                 <FormControl
-                  isInvalid={formState.errors?.ketua as unknown as boolean}
+                  isInvalid={formState.errors?.kandidat as unknown as boolean}
                 >
-                  <FormLabel htmlFor="ketua">Nama Ketua</FormLabel>
+                  <FormLabel htmlFor="ketua">Nama Kandidat</FormLabel>
                   <Input
                     type="text"
+                    placeholder="Masukan Nama Kandidat"
                     isDisabled={
-                      paslonQuery.isLoading ||
                       settingsQuery.isLoading ||
                       settingsQuery.data?.canVote ||
                       formState.isSubmitting
                     }
-                    placeholder="Masukan Nama Ketua"
-                    {...register("ketua")}
+                    {...register("kandidat")}
                   />
                   <FormErrorMessage>
-                    {formState.errors?.ketua?.message}
+                    {formState.errors?.kandidat?.message}
                   </FormErrorMessage>
                 </FormControl>
-                <FormControl
-                  mt={6}
-                  isInvalid={formState.errors?.wakil as unknown as boolean}
-                >
-                  <FormLabel htmlFor="wakil">Nama Wakil Ketua</FormLabel>
-                  <Input
-                    type="text"
-                    isDisabled={
-                      paslonQuery.isLoading ||
-                      settingsQuery.isLoading ||
-                      settingsQuery.data?.canVote ||
-                      formState.isSubmitting
-                    }
-                    placeholder="Masukan Nama Wakil Ketua"
-                    {...register("wakil")}
-                  />
-                  <FormErrorMessage>
-                    {formState.errors?.wakil?.message}
-                  </FormErrorMessage>
-                </FormControl>
+
                 <FormControl
                   mt={6}
                   isInvalid={formState.errors?.image as unknown as boolean}
@@ -208,7 +165,11 @@ const EditPaslonWithID = () => {
                     render={({ field }) => (
                       <InputImageBox
                         imgFromInput={imgFromInput}
-                        isDisabled={formState.isSubmitting}
+                        isDisabled={
+                          settingsQuery.isLoading ||
+                          settingsQuery.data?.canVote ||
+                          formState.isSubmitting
+                        }
                         count={1}
                         onChange={(e) =>
                           field.onChange(
@@ -226,20 +187,19 @@ const EditPaslonWithID = () => {
                 <Button
                   width="full"
                   mt={4}
-                  bg="orange.500"
-                  _hover={{ bg: "orange.700" }}
-                  color="white"
+                  colorScheme="blue"
+                  backgroundColor="blue.500"
+                  color="blue.50"
+                  _hover={{ color: "white" }}
                   isLoading={formState.isSubmitting}
                   isDisabled={
-                    paslonQuery.isLoading ||
-                    settingsQuery.isLoading ||
-                    settingsQuery.data?.canVote
+                    settingsQuery.isLoading || settingsQuery.data?.canVote
                   }
                   type="submit"
                 >
-                  Edit
+                  Tambah
                 </Button>
-                <NextLink href="/paslon" legacyBehavior passHref>
+                <NextLink href="/kandidat" legacyBehavior passHref>
                   <Link display={"flex"} justifyContent="center" mt={2} mb={3}>
                     Kembali
                   </Link>
@@ -253,4 +213,4 @@ const EditPaslonWithID = () => {
   );
 };
 
-export default Sidebar(EditPaslonWithID);
+export default Sidebar(HalamanTambah);

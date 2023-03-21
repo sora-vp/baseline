@@ -196,7 +196,6 @@ importers:
       '@types/react-dom': 18.0.11
       '@typescript-eslint/eslint-plugin': ^5.55.0
       '@typescript-eslint/parser': ^5.55.0
-      absensi: workspace:*
       bcrypt: ^5.1.0
       cors: ^2.8.5
       eslint: 8.36.0
@@ -273,7 +272,6 @@ importers:
       '@types/react-dom': 18.0.11
       '@typescript-eslint/eslint-plugin': 5.55.0_342y7v4tc7ytrrysmit6jo4wri
       '@typescript-eslint/parser': 5.55.0_vgl77cfdswitgr47lm5swmv43m
-      absensi: link:../absensi
       eslint: 8.36.0
       eslint-config-next: 13.2.4_vgl77cfdswitgr47lm5swmv43m
       tsconfig: link:../../packages/tsconfig

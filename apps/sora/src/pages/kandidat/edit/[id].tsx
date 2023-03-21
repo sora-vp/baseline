@@ -14,38 +14,52 @@ import {
   Input,
   Button,
 } from "@chakra-ui/react";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { Controller, useForm } from "react-hook-form";
 import { useState, useEffect } from "react";
-import Router from "next/router";
-import NextLink from "next/link";
+import { useRouter } from "next/router";
 import { DateTime } from "luxon";
+import NextLink from "next/link";
 import Head from "next/head";
 
-import InputImageBox from "@components/InputImageBox";
+import { Controller, useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+
 import Sidebar from "@components/Sidebar";
+import InputImageBox from "@components/InputImageBox";
 
 import { trpc } from "@utils/trpc";
+import { EditKandidatValidationSchema as validationSchema, TEditKandidatValidationSchema as FormValues } from "@schema/admin.candidate.schema";
 
-import {
-  TambahPaslonValidationSchema as validationSchema,
-  type TambahFormValues as FormValues,
-} from "@schema/admin.paslon.schema";
-
-const HalamanTambah = () => {
+const EditCandidateWithID = () => {
   const toast = useToast();
+  const router = useRouter();
+
   const [imgFromInput, setIFI] = useState<string | null>(null);
 
-  const settingsQuery = trpc.settings.getSettings.useQuery(undefined, {
-    onSuccess(result) {
-      if (result.canVote) Router.push("/paslon");
-    },
-  });
-
-  const { handleSubmit, register, formState, control, reset, watch } =
+  const { handleSubmit, register, formState, reset, watch, control } =
     useForm<FormValues>({
       resolver: zodResolver(validationSchema),
     });
+
+  const settingsQuery = trpc.settings.getSettings.useQuery(undefined, {
+    onSuccess(result) {
+      if (result.canVote) router.push("/kandidat");
+    },
+  });
+  const candidateQuery = trpc.candidate.getSpecificCandidate.useQuery(
+    { id: router.query.id as string },
+    {
+      onSuccess: reset,
+      onError(result) {
+        toast({
+          description: result.message,
+          status: "error",
+          duration: 6000,
+          position: "top-right",
+          isClosable: true,
+        });
+      },
+    }
+  );
 
   useEffect(() => {
     const subscription = watch((value, { name, type }) => {
@@ -79,15 +93,16 @@ const HalamanTambah = () => {
     const keys = Object.keys(data);
 
     formData.append("timeZone", DateTime.local().zoneName);
+    formData.append("id", router.query.id as string);
 
     for (const key of keys) {
-      if (key === "image")
+      if (key === "image" && data.image)
         formData.append(key, (data[key] as unknown as { [0]: File })[0]);
       else formData.append(key, data[key as keyof FormValues]);
     }
 
-    const response = await fetch("/api/admin/paslon", {
-      method: "POST",
+    const response = await fetch("/api/admin/kandidat", {
+      method: "PUT",
       body: formData,
       headers: {
         credentials: "include",
@@ -109,18 +124,20 @@ const HalamanTambah = () => {
 
       if (imgFromInput !== null) URL.revokeObjectURL(imgFromInput);
       setIFI(null);
-    } else Router.push("/paslon");
+    } else {
+      router.push("/kandidat");
+    }
   };
 
   return (
     <>
       <Head>
-        <title>Tambah Paslon</title>
+        <title>Ubah Kandidat</title>
       </Head>
       <VStack align="stretch">
         <HStack mb={"10px"} style={{ justifyContent: "center" }}>
           <Text fontWeight="500" fontSize="5xl">
-            Tambah Paslon Baru
+            Ubah Kandidat
           </Text>
         </HStack>
         <HStack justifyContent="center">
@@ -137,40 +154,23 @@ const HalamanTambah = () => {
             <Box my={4} mx={4} textAlign="left">
               <form onSubmit={handleSubmit(onSubmit)}>
                 <FormControl
-                  isInvalid={formState.errors?.ketua as unknown as boolean}
-                >
-                  <FormLabel htmlFor="ketua">Nama Ketua</FormLabel>
-                  <Input
-                    type="text"
-                    placeholder="Masukan Nama Ketua"
-                    isDisabled={
-                      settingsQuery.isLoading ||
-                      settingsQuery.data?.canVote ||
-                      formState.isSubmitting
-                    }
-                    {...register("ketua")}
-                  />
-                  <FormErrorMessage>
-                    {formState.errors?.ketua?.message}
-                  </FormErrorMessage>
-                </FormControl>
-                <FormControl
                   mt={6}
-                  isInvalid={formState.errors?.wakil as unknown as boolean}
+                  isInvalid={formState.errors?.kandidat as unknown as boolean}
                 >
-                  <FormLabel htmlFor="wakil">Nama Wakil Ketua</FormLabel>
+                  <FormLabel htmlFor="kandidat">Nama Kandidat</FormLabel>
                   <Input
                     type="text"
                     isDisabled={
+                      candidateQuery.isLoading ||
                       settingsQuery.isLoading ||
                       settingsQuery.data?.canVote ||
                       formState.isSubmitting
                     }
-                    placeholder="Masukan Nama Wakil Ketua"
-                    {...register("wakil")}
+                    placeholder="Masukan Nama Kandidat"
+                    {...register("kandidat")}
                   />
                   <FormErrorMessage>
-                    {formState.errors?.wakil?.message}
+                    {formState.errors?.kandidat?.message}
                   </FormErrorMessage>
                 </FormControl>
                 <FormControl
@@ -183,11 +183,7 @@ const HalamanTambah = () => {
                     render={({ field }) => (
                       <InputImageBox
                         imgFromInput={imgFromInput}
-                        isDisabled={
-                          settingsQuery.isLoading ||
-                          settingsQuery.data?.canVote ||
-                          formState.isSubmitting
-                        }
+                        isDisabled={formState.isSubmitting}
                         count={1}
                         onChange={(e) =>
                           field.onChange(
@@ -205,19 +201,20 @@ const HalamanTambah = () => {
                 <Button
                   width="full"
                   mt={4}
-                  colorScheme="blue"
-                  backgroundColor="blue.500"
-                  color="blue.50"
-                  _hover={{ color: "white" }}
+                  bg="orange.500"
+                  _hover={{ bg: "orange.700" }}
+                  color="white"
                   isLoading={formState.isSubmitting}
                   isDisabled={
-                    settingsQuery.isLoading || settingsQuery.data?.canVote
+                    candidateQuery.isLoading ||
+                    settingsQuery.isLoading ||
+                    settingsQuery.data?.canVote
                   }
                   type="submit"
                 >
-                  Tambah
+                  Edit
                 </Button>
-                <NextLink href="/paslon" legacyBehavior passHref>
+                <NextLink href="/kandidat" legacyBehavior passHref>
                   <Link display={"flex"} justifyContent="center" mt={2} mb={3}>
                     Kembali
                   </Link>
@@ -231,4 +228,4 @@ const HalamanTambah = () => {
   );
 };
 
-export default Sidebar(HalamanTambah);
+export default Sidebar(EditCandidateWithID);

@@ -2,8 +2,6 @@ import { z } from "zod";
 import { validateId } from "id-generator";
 
 const TwoMegs = 2_000_000;
-const validNameRegex =
-  /^(?![ -.&,_'":?!])(?!.*[- &_'":]$)(?!.*[-.#@&,:?!]{2})[a-zA-Z- .,']+$/;
 const ACCEPTED_IMAGE_TYPES = [
   "image/jpeg",
   "image/jpg",
@@ -12,25 +10,14 @@ const ACCEPTED_IMAGE_TYPES = [
 ];
 
 const baseAddAndEditForm = z.object({
-  ketua: z
-    .string()
-    .min(1, { message: "Diperlukan nama ketua!" })
-    .regex(validNameRegex, {
-      message: "Bidang nama harus berupa nama yang valid!",
-    }),
-  wakil: z
-    .string()
-    .min(1, { message: "Diperlukan nama wakil!" })
-    .regex(validNameRegex, {
-      message: "Bidang nama harus berupa nama yang valid!",
-    }),
+  kandidat: z.string().min(1, { message: "Diperlukan nama kandidat!" }),
 });
 
-export const TambahPaslonValidationSchema = baseAddAndEditForm.merge(
+export const TambahKandidatValidationSchema = baseAddAndEditForm.merge(
   z.object({
     image: z
       .any()
-      .refine((files) => files?.length == 1, "Diperlukan gambar paslon!")
+      .refine((files) => files?.length == 1, "Diperlukan gambar kandidat!")
       .refine(
         (files) => files?.[0]?.size <= TwoMegs,
         `Ukuran maksimal gambar adalah 2MB!`
@@ -43,8 +30,7 @@ export const TambahPaslonValidationSchema = baseAddAndEditForm.merge(
 );
 
 export type TambahFormValues = {
-  ketua: string;
-  wakil: string;
+  kandidat: string;
   image: File;
 };
 
@@ -64,13 +50,13 @@ export const adminGetSpecificCandidateValidationSchema = z.object({
   id: z.string().min(1),
 });
 
-export const EditPaslonValidationSchema = baseAddAndEditForm.merge(
+export const EditKandidatValidationSchema = baseAddAndEditForm.merge(
   z.object({
     image: z
       .any()
       .refine(
         (files) => (files === undefined ? true : files?.length === 1),
-        "Diperlukan gambar paslon!"
+        "Diperlukan gambar kandidat!"
       )
       .refine(
         (files) => (files === undefined ? true : files?.[0]?.size <= TwoMegs),
@@ -85,3 +71,8 @@ export const EditPaslonValidationSchema = baseAddAndEditForm.merge(
       ),
   })
 );
+
+export type TEditKandidatValidationSchema = {
+  kandidat: string;
+  image: File;
+};

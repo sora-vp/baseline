@@ -12,11 +12,9 @@ import {
   upvoteValidationSchema,
   adminDeleteCandidateValidationSchema,
   adminGetSpecificCandidateValidationSchema,
-} from "@schema/admin.paslon.schema";
+} from "@schema/admin.candidate.schema";
 
 import { canVoteNow } from "@utils/canVote";
-
-import { trpcAbsensi } from "@utils/trpc";
 
 export const candidateRouter = router({
   candidateList: publicProcedure.query(async () => {
@@ -58,20 +56,20 @@ export const candidateRouter = router({
       if (inVotingCondition)
         throw new TRPCError({
           code: "BAD_REQUEST",
-          message: "Tidak bisa menghapus paslon dalam kondisi pemilihan!",
+          message: "Tidak bisa menghapus kandidat dalam kondisi pemilihan!",
         });
 
-      const isPaslonExist = await KandidatModel.findById(input.id);
+      const isCandidateExist = await KandidatModel.findById(input.id);
 
-      if (!isPaslonExist)
+      if (!isCandidateExist)
         throw new TRPCError({
           code: "NOT_FOUND",
-          message: "Paslon tidak dapat ditemukan!",
+          message: "Kandidat tidak dapat ditemukan!",
         });
 
       await KandidatModel.findByIdAndRemove(input.id);
 
-      return { message: "Berhasil menghapus paslon!" };
+      return { message: "Berhasil menghapus kandidat!" };
     }),
 
   upvote: unprotectedProcedure
@@ -83,51 +81,51 @@ export const candidateRouter = router({
         throw new TRPCError({
           code: "BAD_REQUEST",
           message:
-            "Tidak bisa memilih paslon jika bukan dalam kondisi pemilihan!",
+            "Tidak bisa memilih kandidat jika bukan dalam kondisi pemilihan!",
         });
 
       try {
-        const participantStatus =
-          await trpcAbsensi.participant.getParticipantStatus.query(input.qrId);
+        // const participantStatus =
+        //   await trpcAbsensi.participant.getParticipantStatus.query(input.qrId);
 
-        if (participantStatus.sudahMemilih)
-          throw new TRPCError({
-            code: "BAD_REQUEST",
-            message: "Kamu sudah memilih!",
-          });
+        // if (participantStatus.sudahMemilih)
+        //   throw new TRPCError({
+        //     code: "BAD_REQUEST",
+        //     message: "Kamu sudah memilih!",
+        // });
 
-        if (!participantStatus.sudahAbsen)
-          throw new TRPCError({
-            code: "BAD_REQUEST",
-            message: "Kamu belum absen!",
-          });
+        // if (!participantStatus.sudahAbsen)
+        //   throw new TRPCError({
+        //     code: "BAD_REQUEST",
+        //     message: "Kamu belum absen!",
+        //   });
 
-        const isPaslonExist = await KandidatModel.findById(input.id);
+        const isCandidateExist = await KandidatModel.findById(input.id);
 
-        if (!isPaslonExist)
+        if (!isCandidateExist)
           throw new TRPCError({
             code: "NOT_FOUND",
-            message: "Paslon tidak dapat ditemukan!",
+            message: "Kandidat tidak dapat ditemukan!",
           });
 
         try {
-          const upvoteStatus =
-            await trpcAbsensi.participant.updateUserUpvoteStatus.mutate(
-              input.qrId
-            );
+          // const upvoteStatus =
+          //   await trpcAbsensi.participant.updateUserUpvoteStatus.mutate(
+          //     input.qrId
+          //   );
 
-          if (!upvoteStatus.success)
-            throw new TRPCError({
-              code: "INTERNAL_SERVER_ERROR",
-              message:
-                "Gagal pada saat memilih kandidat! Mohon untuk dicoba lagi!",
-            });
+          // if (!upvoteStatus.success)
+          //   throw new TRPCError({
+          //     code: "INTERNAL_SERVER_ERROR",
+          //     message:
+          //       "Gagal pada saat memilih kandidat! Mohon untuk dicoba lagi!",
+          //   });
 
           await KandidatModel.findByIdAndUpdate(input.id, {
             $inc: { dipilih: 1 },
           });
 
-          return { message: "Berhasil memilih paslon!" };
+          return { message: "Berhasil memilih kandidat!" };
         } catch (e: any) {
           throw new TRPCError({
             code: "INTERNAL_SERVER_ERROR",

@@ -59,7 +59,6 @@
     "@types/react-dom": "18.0.11",
     "@typescript-eslint/eslint-plugin": "^5.55.0",
     "@typescript-eslint/parser": "^5.55.0",
-    "absensi": "workspace:*",
     "eslint": "8.36.0",
     "eslint-config-next": "13.2.4",
     "tsconfig": "workspace:*",
@@ -69,8 +68,7 @@
     "peerDependencyRules": {
       "ignoreMissing": [
         "@babel/core",
-        "prop-types",
-        "@trpc/react"
+        "prop-types"
       ]
     }
   }
