@@ -9,6 +9,9 @@
   "compilerOptions": {
     "composite": true,
     "jsx": "react-jsx",
+    "allowJs": true,
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
     "baseUrl": ".",
     "paths": {
       "@renderer/*": ["src/renderer/src/*"]

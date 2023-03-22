@@ -1,16 +1,16 @@
 import { router, protectedProcedure, publicProcedure } from "../trpc";
 
-import { ParticipantModel } from "@models/index";
+import { ParticipantModel } from "../../../models";
 import {
   PaginatedParticipantValidationSchema,
   TambahPesertaManyValidationSchema,
   ParticipantAttendValidationSchema,
   TambahPesertaValidationSchema,
   DeletePesertaValidationSchema,
-} from "@schema/admin.participant.schema";
+} from "../../../schema/admin.participant.schema";
 import { TRPCError } from "@trpc/server";
 
-import { runInTransaction } from "@utils/transaction";
+import { runInTransaction } from "../../../utils/transaction";
 
 export const participantRouter = router({
   getParticipantPaginated: protectedProcedure

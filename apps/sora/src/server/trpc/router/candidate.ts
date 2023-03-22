@@ -7,14 +7,14 @@ import {
   unprotectedProcedure,
 } from "../trpc";
 
-import { KandidatModel } from "@models/index";
+import { KandidatModel } from "../../../models";
 import {
   upvoteValidationSchema,
   adminDeleteCandidateValidationSchema,
   adminGetSpecificCandidateValidationSchema,
-} from "@schema/admin.candidate.schema";
+} from "../../../schema/admin.candidate.schema";
 
-import { canVoteNow } from "@utils/canVote";
+import { canVoteNow } from "../../../utils/canVote";
 
 export const candidateRouter = router({
   candidateList: publicProcedure.query(async () => {

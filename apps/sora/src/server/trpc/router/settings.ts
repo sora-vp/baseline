@@ -3,10 +3,10 @@ import { router, publicProcedure, protectedProcedure } from "../trpc";
 import {
   PengaturanPerilakuValidationSchema,
   ServerPengaturanWaktuValidationSchema,
-} from "@schema/admin.settings.schema";
+} from "../../../schema/admin.settings.schema";
 
-import settings from "@utils/settings";
-import type { DataModel } from "@utils/settings";
+import settings from "../../../utils/settings";
+import type { DataModel } from "../../../utils/settings";
 
 export const settingsRouter = router({
   getSettings: publicProcedure.query(async () => {
