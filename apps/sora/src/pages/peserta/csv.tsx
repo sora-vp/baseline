@@ -26,6 +26,7 @@ import Sidebar from "@components/Sidebar";
 import { trpc } from "@utils/trpc";
 
 import {
+  TambahPesertaManyValidationSchema as CSVDataValidator,
   UploadPartisipanValidationSchema as validationSchema,
   type TUploadFormValues as FormValues,
 } from "@schema/admin.participant.schema";
@@ -33,7 +34,7 @@ import {
 const HalamanTambah = () => {
   const toast = useToast();
 
-  const participantMutation = trpc.participant.createNewParticipant.useMutation(
+  const insertManyMutation = trpc.participant.insertManyParticipant.useMutation(
     {
       onSuccess(result) {
         toast({
@@ -75,7 +76,11 @@ const HalamanTambah = () => {
     parseCSV(text, { columns: true, trim: true }, (err, records) => {
       if (err) toast();
 
-      console.log(records);
+      const result = CSVDataValidator.safeParse(records);
+
+      if (!result.success) return toast();
+
+      insertManyMutation.mutate(result.data);
     });
   };
 
@@ -114,7 +119,7 @@ const HalamanTambah = () => {
                     isDisabled={
                       settingsQuery.isLoading ||
                       settingsQuery.data?.canAttend ||
-                      participantMutation.isLoading
+                      insertManyMutation.isLoading
                     }
                     {...register("csv")}
                   />
@@ -130,7 +135,7 @@ const HalamanTambah = () => {
                   backgroundColor="blue.500"
                   color="blue.50"
                   _hover={{ color: "white" }}
-                  isLoading={participantMutation.isLoading}
+                  isLoading={insertManyMutation.isLoading}
                   isDisabled={
                     settingsQuery.isLoading || settingsQuery.data?.canAttend
                   }

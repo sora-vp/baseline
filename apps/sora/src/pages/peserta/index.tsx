@@ -65,7 +65,14 @@ const columns = [
   }),
   columnHelper.accessor("sudahAbsen", {
     cell: (info) => (
-      <span style={{ fontSize: "1.4rem" }}>
+      <span
+        style={{
+          fontSize: "1.4rem",
+          display: "block",
+          width: "100%",
+          textAlign: "center",
+        }}
+      >
         {info.getValue() ? "✅" : "❌"}
       </span>
     ),
@@ -74,7 +81,14 @@ const columns = [
 
   columnHelper.accessor("sudahMemilih", {
     cell: (info) => (
-      <span style={{ fontSize: "1.4rem" }}>
+      <span
+        style={{
+          fontSize: "1.4rem",
+          display: "block",
+          width: "100%",
+          textAlign: "center",
+        }}
+      >
         {info.getValue() ? "✅" : "❌"}
       </span>
     ),

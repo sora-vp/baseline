@@ -3,11 +3,14 @@ import { router, protectedProcedure, publicProcedure } from "../trpc";
 import { ParticipantModel } from "@models/index";
 import {
   PaginatedParticipantValidationSchema,
+  TambahPesertaManyValidationSchema,
   ParticipantAttendValidationSchema,
   TambahPesertaValidationSchema,
   DeletePesertaValidationSchema,
 } from "@schema/admin.participant.schema";
 import { TRPCError } from "@trpc/server";
+
+import { runInTransaction } from "@utils/transaction";
 
 export const participantRouter = router({
   getParticipantPaginated: protectedProcedure
@@ -32,6 +35,35 @@ export const participantRouter = router({
       await newParticipant.save();
 
       return { message: "Berhasil menambahkan peserta baru!" };
+    }),
+
+  insertManyParticipant: protectedProcedure
+    .input(TambahPesertaManyValidationSchema)
+    .mutation(async ({ input }) => {
+      const okToInsert = input.map(({ Nama }) => ({ nama: Nama }));
+
+      const checkThing = await Promise.all(
+        okToInsert.map(({ nama }) => ParticipantModel.findOne({ nama }))
+      );
+
+      if (checkThing.every((data) => data !== null)) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message:
+            "Semua data dengan nama yang sama, semuanya sudah di upload!",
+        });
+      }
+
+      if (checkThing.some((data) => data !== null)) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "Beberapa data yang di upload sudah ada!",
+        });
+      }
+
+      await ParticipantModel.insertMany(okToInsert);
+
+      return { message: "Berhasil mengupload data file csv!" };
     }),
 
   deleteParticipant: protectedProcedure

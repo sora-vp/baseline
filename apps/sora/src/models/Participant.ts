@@ -3,8 +3,6 @@ import { prop, plugin } from "@typegoose/typegoose";
 import mongoosePaginate from "mongoose-paginate-v2";
 import { FilterQuery, PaginateOptions, PaginateResult } from "mongoose";
 
-const nameRegExp =
-  /^(?![ -.&,_'":?!])(?!.*[- &_'":]$)(?!.*[-.#@&,:?!]{2})[a-zA-Z- .,']+$/;
 type PaginateMethod<T> = (
   query?: FilterQuery<T>,
   options?: PaginateOptions,
@@ -13,7 +11,7 @@ type PaginateMethod<T> = (
 
 @plugin(mongoosePaginate)
 export class Participant {
-  @prop({ required: true, unique: true, match: nameRegExp })
+  @prop({ required: true, unique: true })
   public nama!: string;
 
   @prop({ required: true, unique: true, default: () => nanoid(15) })

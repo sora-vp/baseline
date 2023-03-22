@@ -1,9 +1,17 @@
 import { z } from "zod";
 import { validateId } from "id-generator";
 
+const baseNameSchema = z
+  .string()
+  .min(1, { message: "Diperlukan nama peserta!" });
+
 export const TambahPesertaValidationSchema = z.object({
-  nama: z.string().min(1, { message: "Diperlukan nama peserta!" }),
+  nama: baseNameSchema,
 });
+
+export const TambahPesertaManyValidationSchema = z.array(
+  z.object({ Nama: baseNameSchema })
+);
 
 export const UploadPartisipanValidationSchema = z.object({
   csv: z
