@@ -10,113 +10,6 @@ importers:
       prettier: 2.8.5
       turbo: 1.8.3
 
-  apps/absensi:
-    specifiers:
-      '@chakra-ui/react': ^2.5.2
-      '@emotion/react': ^11.10.6
-      '@emotion/styled': ^11.10.6
-      '@hookform/resolvers': ^3.0.0
-      '@tanstack/react-query': ^4.28.0
-      '@tanstack/react-table': ^8.7.9
-      '@trpc/client': 10.16.0
-      '@trpc/next': 10.16.0
-      '@trpc/react-query': ^10.16.0
-      '@trpc/server': 10.16.0
-      '@typegoose/typegoose': ^10.3.3
-      '@types/bcrypt': ^5.0.0
-      '@types/cors': ^2.8.13
-      '@types/formidable': ^2.0.5
-      '@types/luxon': ^3.2.0
-      '@types/mime-types': ^2.1.1
-      '@types/mv': ^2.1.2
-      '@types/node': 18.15.3
-      '@types/react': 18.0.28
-      '@types/react-datepicker': ^4.10.0
-      '@types/react-dom': 18.0.11
-      '@typescript-eslint/eslint-plugin': ^5.55.0
-      '@typescript-eslint/parser': ^5.55.0
-      bcrypt: ^5.1.0
-      cors: ^2.8.5
-      eslint: 8.36.0
-      eslint-config-next: 13.2.4
-      formidable: ^2.1.1
-      framer-motion: ^10.6.1
-      fs-json-store: ^8.0.1
-      fs-json-store-encryption-adapter: ^3.0.4
-      id-generator: workspace:*
-      luxon: ^3.3.0
-      mime-types: ^2.1.35
-      mongoose: 6.10.3
-      mongoose-paginate-v2: ^1.7.1
-      mv: ^2.1.1
-      next: 13.2.4
-      next-auth: ^4.20.1
-      next-connect: ^0.13.0
-      react: 18.2.0
-      react-dom: 18.2.0
-      react-hook-form: ^7.43.7
-      react-icons: ^4.8.0
-      react-query: ^3.39.3
-      recharts: ^2.5.0
-      superjson: 1.12.2
-      tsconfig: workspace:*
-      typescript: ^4.9.5
-      ui: workspace:*
-      zod: ^3.21.4
-    dependencies:
-      '@chakra-ui/react': 2.5.2_swvn7aw537nzp5i3amtbyedzyq
-      '@emotion/react': 11.10.6_pmekkgnqduwlme35zpnqhenc34
-      '@emotion/styled': 11.10.6_oouaibmszuch5k64ms7uxp2aia
-      '@hookform/resolvers': 3.0.0_react-hook-form@7.43.7
-      '@tanstack/react-query': 4.28.0_biqbaboplfbrettd7655fr4n2y
-      '@tanstack/react-table': 8.7.9_biqbaboplfbrettd7655fr4n2y
-      '@trpc/client': 10.16.0_@trpc+server@10.16.0
-      '@trpc/next': 10.16.0_mij5hnkg7plnkazziyhiiojtom
-      '@trpc/react-query': 10.16.0_v5tfig22lh3a2q5x6bgupkqhli
-      '@trpc/server': 10.16.0
-      '@typegoose/typegoose': 10.3.3_mongoose@6.10.3
-      bcrypt: 5.1.0
-      cors: 2.8.5
-      formidable: 2.1.1
-      framer-motion: 10.6.1_biqbaboplfbrettd7655fr4n2y
-      fs-json-store: 8.0.1
-      fs-json-store-encryption-adapter: 3.0.4
-      id-generator: link:../../packages/id-generator
-      luxon: 3.3.0
-      mime-types: 2.1.35
-      mongoose: 6.10.3
-      mongoose-paginate-v2: 1.7.1
-      mv: 2.1.1
-      next: 13.2.4_biqbaboplfbrettd7655fr4n2y
-      next-auth: 4.20.1_ld2jel3hspngo3u5lti2kgl2sq
-      next-connect: 0.13.0
-      react: 18.2.0
-      react-dom: 18.2.0_react@18.2.0
-      react-hook-form: 7.43.7_react@18.2.0
-      react-icons: 4.8.0_react@18.2.0
-      react-query: 3.39.3_biqbaboplfbrettd7655fr4n2y
-      recharts: 2.5.0_v2m5e27vhdewzwhryxwfaorcca
-      superjson: 1.12.2
-      ui: link:../../packages/ui
-      zod: 3.21.4
-    devDependencies:
-      '@types/bcrypt': 5.0.0
-      '@types/cors': 2.8.13
-      '@types/formidable': 2.0.5
-      '@types/luxon': 3.2.0
-      '@types/mime-types': 2.1.1
-      '@types/mv': 2.1.2
-      '@types/node': 18.15.3
-      '@types/react': 18.0.28
-      '@types/react-datepicker': 4.10.0_biqbaboplfbrettd7655fr4n2y
-      '@types/react-dom': 18.0.11
-      '@typescript-eslint/eslint-plugin': 5.55.0_342y7v4tc7ytrrysmit6jo4wri
-      '@typescript-eslint/parser': 5.55.0_vgl77cfdswitgr47lm5swmv43m
-      eslint: 8.36.0
-      eslint-config-next: 13.2.4_vgl77cfdswitgr47lm5swmv43m
-      tsconfig: link:../../packages/tsconfig
-      typescript: 4.9.5
-
   apps/absensi-desktop:
     specifiers:
       '@chakra-ui/react': ^2.5.2
@@ -129,7 +22,6 @@ importers:
       '@types/react': ^18.0.28
       '@types/react-dom': ^18.0.11
       '@vitejs/plugin-react': ^3.1.0
-      absensi: workspace:*
       electron: 23.1.4
       electron-builder: ^23.6.0
       electron-store: ^8.1.0
@@ -157,7 +49,6 @@ importers:
       '@types/react': 18.0.28
       '@types/react-dom': 18.0.11
       '@vitejs/plugin-react': 3.1.0_vite@4.2.1
-      absensi: link:../absensi
       electron: 23.1.4
       electron-builder: 23.6.0
       framer-motion: 10.6.1_biqbaboplfbrettd7655fr4n2y
@@ -169,7 +60,7 @@ importers:
       superjson: 1.12.2
       typescript: 4.9.5
       vite: 4.2.1
-      vite-electron-plugin: 0.8.2_esbuild@0.17.12
+      vite-electron-plugin: 0.8.2
       vite-plugin-electron-renderer: 0.13.0
 
   apps/sora:
@@ -261,7 +152,7 @@ importers:
       react-hook-form: 7.43.7_react@18.2.0
       react-icons: 4.8.0_react@18.2.0
       react-query: 3.39.3_biqbaboplfbrettd7655fr4n2y
-      recharts: 2.5.0_v2m5e27vhdewzwhryxwfaorcca
+      recharts: 2.5.0_biqbaboplfbrettd7655fr4n2y
       superjson: 1.12.2
       ui: link:../../packages/ui
       zod: 3.21.4
@@ -307,7 +198,6 @@ importers:
       react-dom: ^18.2.0
       react-router-dom: ^6.9.0
       superjson: 1.12.2
-      trpc-glue: workspace:*
       typescript: ^4.9.5
       vite: ^4.2.1
       vite-electron-plugin: ^0.8.2
@@ -336,31 +226,10 @@ importers:
       react-dom: 18.2.0_react@18.2.0
       react-router-dom: 6.9.0_biqbaboplfbrettd7655fr4n2y
       superjson: 1.12.2
-      trpc-glue: link:../trpc-glue
       typescript: 4.9.5
       vite: 4.2.1
-      vite-electron-plugin: 0.8.2_esbuild@0.17.12
+      vite-electron-plugin: 0.8.2
       vite-plugin-electron-renderer: 0.13.0
-
-  apps/trpc-glue:
-    specifiers:
-      '@tanstack/react-query': ^4.28.0
-      '@trpc/client': ^10.16.0
-      '@trpc/react-query': ^10.16.0
-      '@trpc/server': ^10.16.0
-      absensi: workspace:*
-      sora: workspace:*
-      superjson: 1.12.2
-      typescript: ^4.9.5
-    devDependencies:
-      '@tanstack/react-query': 4.28.0_biqbaboplfbrettd7655fr4n2y
-      '@trpc/client': 10.16.0_@trpc+server@10.16.0
-      '@trpc/react-query': 10.16.0_v5tfig22lh3a2q5x6bgupkqhli
-      '@trpc/server': 10.16.0
-      absensi: link:../absensi
-      sora: link:../sora
-      superjson: 1.12.2
-      typescript: 4.9.5
 
   packages/id-generator:
     specifiers:
@@ -3622,10 +3491,8 @@ packages:
     transitivePeerDependencies:
       - supports-color
 
-  /ajv-formats/2.1.1_ajv@8.12.0:
+  /ajv-formats/2.1.1:
     resolution: {integrity: sha512-Wx0Kx52hxE7C18hkMEggYlEifqWZtYaRgouJor+WMdPnQyEK13vgEWyVNup7SoeeoLMsr4kf5h6dOW11I15MUA==}
-    peerDependencies:
-      ajv: ^8.0.0
     peerDependenciesMeta:
       ajv:
         optional: true
@@ -4236,7 +4103,7 @@ packages:
     engines: {node: '>=12'}
     dependencies:
       ajv: 8.12.0
-      ajv-formats: 2.1.1_ajv@8.12.0
+      ajv-formats: 2.1.1
       atomically: 1.7.0
       debounce-fn: 4.0.0
       dot-prop: 6.0.1
@@ -4872,7 +4739,7 @@ packages:
       eslint: 8.36.0
       eslint-import-resolver-node: 0.3.7
       eslint-import-resolver-typescript: 3.5.3_eakrjjutlgqjxe5ydhtnd4qdmy
-      eslint-plugin-import: 2.27.5_a7er6olmtneep4uytpot6gt7wu
+      eslint-plugin-import: 2.27.5_v7jo3sddp7aqau7pajjy572cju
       eslint-plugin-jsx-a11y: 6.7.1_eslint@8.36.0
       eslint-plugin-react: 7.32.2_eslint@8.36.0
       eslint-plugin-react-hooks: 4.6.0_eslint@8.36.0
@@ -4902,7 +4769,7 @@ packages:
       debug: 4.3.4
       enhanced-resolve: 5.12.0
       eslint: 8.36.0
-      eslint-plugin-import: 2.27.5_a7er6olmtneep4uytpot6gt7wu
+      eslint-plugin-import: 2.27.5_v7jo3sddp7aqau7pajjy572cju
       get-tsconfig: 4.4.0
       globby: 13.1.3
       is-core-module: 2.11.0
@@ -4912,7 +4779,7 @@ packages:
       - supports-color
     dev: true
 
-  /eslint-module-utils/2.7.4_tzfhnsp6rhftjfsbnqrkrbah74:
+  /eslint-module-utils/2.7.4_wgltsi2kbncdpzwytonvdf2oba:
     resolution: {integrity: sha512-j4GT+rqzCoRKHwURX7pddtIPGySnX9Si/cgMI5ztrcqOPtk5dDEeZ34CQVPphnqkJytlc97Vuk05Um2mJ3gEQA==}
     engines: {node: '>=4'}
     peerDependencies:
@@ -4937,11 +4804,12 @@ packages:
       debug: 3.2.7
       eslint: 8.36.0
       eslint-import-resolver-node: 0.3.7
+      eslint-import-resolver-typescript: 3.5.3_eakrjjutlgqjxe5ydhtnd4qdmy
     transitivePeerDependencies:
       - supports-color
     dev: true
 
-  /eslint-plugin-import/2.27.5_a7er6olmtneep4uytpot6gt7wu:
+  /eslint-plugin-import/2.27.5_v7jo3sddp7aqau7pajjy572cju:
     resolution: {integrity: sha512-LmEt3GVofgiGuiE+ORpnvP+kAm3h6MLZJ4Q5HCyHADofsb4VzXFsRiWj3c0OFiV+3DWFh0qg3v9gcPlfc3zRow==}
     engines: {node: '>=4'}
     peerDependencies:
@@ -4959,7 +4827,7 @@ packages:
       doctrine: 2.1.0
       eslint: 8.36.0
       eslint-import-resolver-node: 0.3.7
-      eslint-module-utils: 2.7.4_tzfhnsp6rhftjfsbnqrkrbah74
+      eslint-module-utils: 2.7.4_wgltsi2kbncdpzwytonvdf2oba
       has: 1.0.3
       is-core-module: 2.11.0
       is-glob: 4.0.3
@@ -7139,7 +7007,7 @@ packages:
       react: 18.2.0
     dev: true
 
-  /react-smooth/2.0.2_v2m5e27vhdewzwhryxwfaorcca:
+  /react-smooth/2.0.2_biqbaboplfbrettd7655fr4n2y:
     resolution: {integrity: sha512-pgqSp1q8rAGtF1bXQE0m3CHGLNfZZh5oA5o1tsPLXRHnKtkujMIJ8Ws5nO1mTySZf1c4vgwlEk+pHi3Ln6eYLw==}
     peerDependencies:
       prop-types: ^15.6.0
@@ -7147,7 +7015,6 @@ packages:
       react-dom: ^15.0.0 || ^16.0.0 || ^17.0.0 || ^18.0.0
     dependencies:
       fast-equals: 4.0.3
-      prop-types: 15.8.1
       react: 18.2.0
       react-dom: 18.2.0_react@18.2.0
       react-transition-group: 2.9.0_biqbaboplfbrettd7655fr4n2y
@@ -7230,7 +7097,7 @@ packages:
       decimal.js-light: 2.5.1
     dev: false
 
-  /recharts/2.5.0_v2m5e27vhdewzwhryxwfaorcca:
+  /recharts/2.5.0_biqbaboplfbrettd7655fr4n2y:
     resolution: {integrity: sha512-0EQYz3iA18r1Uq8VqGZ4dABW52AKBnio37kJgnztIqprELJXpOEsa0SzkqU1vjAhpCXCv52Dx1hiL9119xsqsQ==}
     engines: {node: '>=12'}
     peerDependencies:
@@ -7241,12 +7108,11 @@ packages:
       classnames: 2.3.2
       eventemitter3: 4.0.7
       lodash: 4.17.21
-      prop-types: 15.8.1
       react: 18.2.0
       react-dom: 18.2.0_react@18.2.0
       react-is: 16.13.1
       react-resize-detector: 8.0.4_biqbaboplfbrettd7655fr4n2y
-      react-smooth: 2.0.2_v2m5e27vhdewzwhryxwfaorcca
+      react-smooth: 2.0.2_biqbaboplfbrettd7655fr4n2y
       recharts-scale: 0.4.5
       reduce-css-calc: 2.1.8
       victory-vendor: 36.6.8
@@ -8039,7 +7905,7 @@ packages:
       d3-timer: 3.0.1
     dev: false
 
-  /vite-electron-plugin/0.8.2_esbuild@0.17.12:
+  /vite-electron-plugin/0.8.2:
     resolution: {integrity: sha512-IN0sSi1MKVh2ewc6b+sSZjsBAyL4XjUvEI9pEvroGonvjk2Jj2Pd00zIabKIQPAnvnPmeRJgv+Hjn/lrvQZqQg==}
     peerDependencies:
       acorn: '*'
@@ -8048,7 +7914,6 @@ packages:
       acorn:
         optional: true
     dependencies:
-      esbuild: 0.17.12
       fast-glob: 3.2.12
       notbundle: 0.4.0
       vite-plugin-electron: 0.11.1

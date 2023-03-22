@@ -15,7 +15,7 @@ import {
   Button,
 } from "@chakra-ui/react";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { parse as parseCSV } from "csv-parse"
+import { parse as parseCSV } from "csv-parse";
 import { useForm } from "react-hook-form";
 import Router from "next/router";
 import NextLink from "next/link";
@@ -75,9 +75,9 @@ const HalamanTambah = () => {
     parseCSV(text, { columns: true, trim: true }, (err, records) => {
       if (err) toast();
 
-      console.log(records)
-    })
-  }
+      console.log(records);
+    });
+  };
 
   return (
     <>

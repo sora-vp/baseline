@@ -254,7 +254,6 @@ const Peserta = () => {
                     bg="green.500"
                     color="white"
                     leftIcon={<GrDocumentCsv color="white" />}
-
                   >
                     Upload File CSV
                   </Button>
