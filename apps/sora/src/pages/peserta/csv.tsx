@@ -74,11 +74,23 @@ const HalamanTambah = () => {
     const text = await file!.text(); // Already checked
 
     parseCSV(text, { columns: true, trim: true }, (err, records) => {
-      if (err) toast();
+      if (err) toast({
+        description: err.message,
+        status: "error",
+        duration: 6000,
+        position: "top-right",
+        isClosable: true,
+      });
 
       const result = CSVDataValidator.safeParse(records);
 
-      if (!result.success) return toast();
+      if (!result.success) return toast({
+        description: "Format file csv tidak valid!",
+        status: "error",
+        duration: 6000,
+        position: "top-right",
+        isClosable: true,
+      });
 
       insertManyMutation.mutate(result.data);
     });

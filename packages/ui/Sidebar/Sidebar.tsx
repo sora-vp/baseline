@@ -20,7 +20,7 @@ import {
 import { FiMenu } from "react-icons/fi";
 import NextLink from "next/link";
 import { IconType } from "react-icons";
-import localFont from "@next/font/local";
+import localFont from "next/font/local";
 
 import LogoutButton from "./LogoutButton";
 import ModeToggler from "./ModeToggler";
