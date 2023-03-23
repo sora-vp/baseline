@@ -7,7 +7,10 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 import { trpc } from "@renderer/utils/trpc";
 import { SettingProvider } from "@renderer/context/SettingContext";
-import { useAppSetting, ensureHasAppSetting } from "@renderer/context/AppSetting";
+import {
+  useAppSetting,
+  ensureHasAppSetting,
+} from "@renderer/context/AppSetting";
 
 import Main from "./routes/Main";
 import Setting from "./routes/Setting";

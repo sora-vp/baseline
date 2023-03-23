@@ -7,9 +7,11 @@
     "src/preload/*.d.ts"
   ],
   "compilerOptions": {
+    "strict": true,
     "composite": true,
     "jsx": "react-jsx",
     "allowJs": true,
+    "noImplicitReturns": false,
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
     "baseUrl": ".",

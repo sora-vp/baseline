@@ -8,7 +8,7 @@ import {
 // import Store from "electron-store";
 import { useToast } from "@chakra-ui/react";
 
-import Setting from "@renderer/routes/Setting";
+// import Setting from "@renderer/routes/Setting";
 interface IAppSetting {
   serverURL?: string;
   setServerUrl: (url: string) => void;
@@ -27,7 +27,8 @@ export const AppSettingProvider: React.FC<{ children: React.ReactNode }> = ({
 
   const setServerUrl = useCallback((url: string) => {
     try {
-      const serverURL = new URL(url);
+      console.log(url); // temporary
+      // const serverURL = new URL(url);
 
       // store.set("serverURL", serverURL.origin);
 
@@ -61,6 +62,10 @@ export const AppSettingProvider: React.FC<{ children: React.ReactNode }> = ({
 export const useAppSetting = () => useContext(AppSettingContext) as IAppSetting;
 
 export const ensureHasAppSetting = (Element: React.FC) => () => {
+  const settings = useAppSetting();
+
+  console.log(settings);
+
   // if (!store.get("serverURL")) return <Setting />;
 
   return <Element />;

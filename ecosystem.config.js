@@ -2,17 +2,18 @@ const path = require("path");
 
 const root = path.join(__dirname);
 
-const nodeModuleDir = path.join(root, "node_modules");
-const appDir = path.join(root, "apps");
-
-const soraDir = path.join(appDir, "sora");
+const nodeModulesDir = path.join(root, "node_modules");
+const appsDir = path.join(root, "apps");
 
 module.exports = {
   apps: [
     {
       name: "sora",
-      script: path.join(soraDir, "next/dist/bin/next"),
-      cwd: soraDir,
+      script: require.resolve("next/dist/bin/next"),
+      env: {
+        NODE_PATH: nodeModulesDir + ":" + appsDir + "/sora/node_modules",
+      },
+      cwd: path.join(root, "apps/sora"),
       args: "start -p 3000",
     },
   ],
