@@ -1,7 +1,12 @@
-import { app, shell, BrowserWindow } from "electron";
+import { app, shell, BrowserWindow, ipcMain } from "electron";
 import { join } from "path";
+import Store from "electron-store";
 import { electronApp, optimizer, is } from "@electron-toolkit/utils";
 import icon from "../../resources/icon.png?asset";
+
+const store = new Store<{
+  serverURL?: string;
+}>();
 
 function createWindow(): void {
   // Create the browser window.
@@ -66,6 +71,9 @@ app.on("window-all-closed", () => {
     app.quit();
   }
 });
+
+ipcMain.handle("get-server-url", () => store.get("serverURL"));
+ipcMain.handle("set-server-url", (_, url) => store.set("serverURL", url));
 
 // In this file you can include the rest of your app"s specific main process
 // code. You can also put them in separate files and require them here.

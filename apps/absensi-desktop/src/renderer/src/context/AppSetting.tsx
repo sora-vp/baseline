@@ -3,18 +3,17 @@ import {
   useContext,
   useMemo,
   useState,
+  useEffect,
   useCallback,
 } from "react";
-// import Store from "electron-store";
 import { useToast } from "@chakra-ui/react";
 
-// import Setting from "@renderer/routes/Setting";
+import Setting from "@renderer/routes/Setting";
+
 interface IAppSetting {
   serverURL?: string;
   setServerUrl: (url: string) => void;
 }
-
-// const store = new Store<Omit<IAppSetting, "setServerUrl">>();
 
 export const AppSettingContext = createContext<IAppSetting>({} as IAppSetting);
 
@@ -23,14 +22,16 @@ export const AppSettingProvider: React.FC<{ children: React.ReactNode }> = ({
 }) => {
   const toast = useToast();
 
-  const [serverURL] = useState<string | undefined>("http://localhost:3000");
+  const [serverURL, setServerUrlState] = useState<string | undefined>();
 
-  const setServerUrl = useCallback((url: string) => {
+  const setServerUrl = useCallback(async (url: string) => {
     try {
-      console.log(url); // temporary
-      // const serverURL = new URL(url);
+      const serverURL = new URL(url);
 
-      // store.set("serverURL", serverURL.origin);
+      await window.electron.ipcRenderer.invoke(
+        "set-server-url",
+        serverURL.origin
+      );
 
       toast({
         description: "Berhasil memperbarui pengaturan alamat server!",
@@ -50,6 +51,18 @@ export const AppSettingProvider: React.FC<{ children: React.ReactNode }> = ({
     }
   }, []);
 
+  useEffect(() => {
+    const composeAsync = async () => {
+      const storeValue = await window.electron.ipcRenderer.invoke(
+        "get-server-url"
+      );
+
+      setServerUrlState(storeValue);
+    };
+
+    composeAsync();
+  }, []);
+
   const valueProps = useMemo(() => ({ serverURL, setServerUrl }), [serverURL]);
 
   return (
@@ -62,11 +75,9 @@ export const AppSettingProvider: React.FC<{ children: React.ReactNode }> = ({
 export const useAppSetting = () => useContext(AppSettingContext) as IAppSetting;
 
 export const ensureHasAppSetting = (Element: React.FC) => () => {
-  const settings = useAppSetting();
+  const { serverURL } = useAppSetting();
 
-  console.log(settings);
-
-  // if (!store.get("serverURL")) return <Setting />;
+  if (!serverURL) return <Setting />;
 
   return <Element />;
 };
