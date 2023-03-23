@@ -10,7 +10,7 @@ import {
 } from "../../../schema/admin.participant.schema";
 import { TRPCError } from "@trpc/server";
 
-import { runInTransaction } from "../../../utils/transaction";
+// import { runInTransaction } from "../../../utils/transaction";
 
 export const participantRouter = router({
   getParticipantPaginated: protectedProcedure
