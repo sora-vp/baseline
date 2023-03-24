@@ -63,7 +63,7 @@ const Setting: React.FC = () => {
             </FormControl>
 
             <Button type="submit" w={"100%"} colorScheme="green">
-              Simpan dan Muat Ulang
+              Simpan
             </Button>
           </form>
         </Box>

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 import superjson from "superjson";
 import { httpBatchLink } from "@trpc/client";
@@ -40,6 +40,18 @@ const App: React.FC = () => {
       ],
     })
   );
+
+  useEffect(() => {
+    const openSetting = () => {
+      location.href = "#/setting";
+    };
+
+    window.electron.ipcRenderer.on("open-setting", openSetting);
+
+    return () => {
+      window.electron.ipcRenderer.removeListener("open-setting", openSetting);
+    };
+  }, []);
 
   return (
     <trpc.Provider client={trpcClient} queryClient={queryClient}>

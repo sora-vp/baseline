@@ -40,7 +40,9 @@ export const AppSettingProvider: React.FC<{ children: React.ReactNode }> = ({
         position: "top-right",
       });
 
-      setTimeout(() => location.reload(), 3000);
+      setTimeout(() => {
+        location.href = "#/";
+      }, 3000);
     } catch (error: any) {
       toast({
         description: `Gagal memperbarui url | ${error.message}`,
