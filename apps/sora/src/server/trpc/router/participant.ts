@@ -10,7 +10,7 @@ import {
 } from "../../../schema/admin.participant.schema";
 import { TRPCError } from "@trpc/server";
 
-// import { runInTransaction } from "../../../utils/transaction";
+import { canAttendNow } from "../../../utils/canDoSomething";
 
 export const participantRouter = router({
   getParticipantPaginated: protectedProcedure
@@ -49,15 +49,14 @@ export const participantRouter = router({
       if (checkThing.every((data) => data !== null)) {
         throw new TRPCError({
           code: "BAD_REQUEST",
-          message:
-            "Semua data dengan nama yang sama, semuanya sudah di upload!",
+          message: "Semua data yang ingin di upload sudah terdaftar!",
         });
       }
 
       if (checkThing.some((data) => data !== null)) {
         throw new TRPCError({
           code: "BAD_REQUEST",
-          message: "Beberapa data yang di upload sudah ada!",
+          message: "Beberapa data yang ingin di upload sudah ada!",
         });
       }
 
@@ -77,6 +76,18 @@ export const participantRouter = router({
           message: "Peserta pemilihan tidak dapat ditemukan!",
         });
 
+      if (participant.sudahAbsen)
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "Peserta pemilihan sebelumnya sudah absen!",
+        });
+
+      if (participant.sudahMemilih)
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "Peserta pemilihan sebelumnya sudah memilih!",
+        });
+
       await participant.deleteOne();
 
       return { message: "Berhasil menghapus peserta!" };
@@ -85,6 +96,14 @@ export const participantRouter = router({
   participantAttend: publicProcedure
     .input(ParticipantAttendValidationSchema)
     .mutation(async ({ input }) => {
+      const participantCanAttend = await canAttendNow();
+
+      if (!participantCanAttend)
+        throw new TRPCError({
+          code: "UNAUTHORIZED",
+          message: "Belum diperbolehkan untuk melakukan absensi!",
+        });
+
       const participant = await ParticipantModel.findOne({ qrId: input });
 
       if (!participant)

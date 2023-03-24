@@ -234,16 +234,8 @@ const Peserta = () => {
               <HStack>
                 <NextLink
                   href="/peserta/tambah"
-                  passHref={
-                    !settingsQuery.isLoading ||
-                    !(settingsQuery.data as unknown as { canAttend?: boolean })
-                      ?.canAttend
-                  }
                 >
                   <Button
-                    isDisabled={
-                      settingsQuery.isLoading || settingsQuery.data?.canAttend
-                    }
                     borderRadius="md"
                     bg="blue.500"
                     color="white"
@@ -254,16 +246,8 @@ const Peserta = () => {
 
                 <NextLink
                   href="/peserta/csv"
-                  passHref={
-                    !settingsQuery.isLoading ||
-                    !(settingsQuery.data as unknown as { canAttend?: boolean })
-                      ?.canAttend
-                  }
                 >
                   <Button
-                    isDisabled={
-                      settingsQuery.isLoading || settingsQuery.data?.canAttend
-                    }
                     borderRadius="md"
                     bg="green.500"
                     color="white"
@@ -321,7 +305,9 @@ const Peserta = () => {
                             <Button
                               isDisabled={
                                 settingsQuery.isLoading ||
-                                settingsQuery.data?.canAttend
+                                settingsQuery.data?.canAttend ||
+                                row.original.sudahAbsen ||
+                                row.original.sudahMemilih
                               }
                               bg="red.500"
                               _hover={{ bg: "red.700" }}
@@ -334,7 +320,8 @@ const Peserta = () => {
                                     settingsQuery.data as unknown as {
                                       canVote?: boolean;
                                     }
-                                  )?.canVote
+                                  )?.canVote && !(row.original.sudahAbsen ||
+                                    row.original.sudahMemilih)
                                 ) {
                                   setID(
                                     (

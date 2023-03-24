@@ -57,11 +57,6 @@ const HalamanTambah = () => {
       },
     }
   );
-  const settingsQuery = trpc.settings.getSettings.useQuery(undefined, {
-    onSuccess(result) {
-      if (result.canAttend) Router.push("/peserta");
-    },
-  });
 
   const { handleSubmit, register, formState } = useForm<FormValues>({
     resolver: zodResolver(validationSchema),
@@ -101,8 +96,6 @@ const HalamanTambah = () => {
                     type="text"
                     placeholder="Masukan Nama Peserta"
                     isDisabled={
-                      settingsQuery.isLoading ||
-                      settingsQuery.data?.canAttend ||
                       participantMutation.isLoading
                     }
                     {...register("nama")}
@@ -120,9 +113,6 @@ const HalamanTambah = () => {
                   color="blue.50"
                   _hover={{ color: "white" }}
                   isLoading={participantMutation.isLoading}
-                  isDisabled={
-                    settingsQuery.isLoading || settingsQuery.data?.canAttend
-                  }
                   type="submit"
                 >
                   Tambah

@@ -32,7 +32,6 @@ import {
 import Head from "next/head";
 import { Types } from "mongoose";
 import NextLink from "next/link";
-import { DateTime } from "luxon";
 
 import { trpc } from "@utils/trpc";
 import Sidebar from "@components/Sidebar";
@@ -304,7 +303,6 @@ const Candidate = () => {
                   )
                     candidateDeleteMutation.mutate({
                       id: currentID as unknown as string,
-                      timeZone: DateTime.now().zoneName,
                     });
                 }}
                 ml={3}

@@ -36,7 +36,6 @@ export type TambahFormValues = {
 
 export const adminDeleteCandidateValidationSchema = z.object({
   id: z.string().min(1),
-  timeZone: z.string().min(1),
 });
 
 export const upvoteValidationSchema =

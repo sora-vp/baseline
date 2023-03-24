@@ -14,7 +14,7 @@ import {
   adminGetSpecificCandidateValidationSchema,
 } from "../../../schema/admin.candidate.schema";
 
-import { canVoteNow } from "../../../utils/canVote";
+import { canVoteNow } from "../../../utils/canDoSomething";
 
 export const candidateRouter = router({
   candidateList: publicProcedure.query(async () => {
@@ -51,7 +51,7 @@ export const candidateRouter = router({
   adminDeleteCandidate: protectedProcedure
     .input(adminDeleteCandidateValidationSchema)
     .mutation(async ({ input }) => {
-      const inVotingCondition = await canVoteNow(input.timeZone);
+      const inVotingCondition = await canVoteNow();
 
       if (inVotingCondition)
         throw new TRPCError({
@@ -75,7 +75,7 @@ export const candidateRouter = router({
   upvote: unprotectedProcedure
     .input(upvoteValidationSchema)
     .mutation(async ({ input }) => {
-      const inVotingCondition = await canVoteNow(input.timeZone);
+      const inVotingCondition = await canVoteNow();
 
       if (!inVotingCondition)
         throw new TRPCError({

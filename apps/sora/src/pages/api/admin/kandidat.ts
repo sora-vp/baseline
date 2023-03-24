@@ -8,7 +8,7 @@ import formidable from "formidable";
 import nextConnect from "next-connect";
 
 import { KandidatModel } from "@models/index";
-import { canVoteNow } from "@utils/canVote";
+import { canVoteNow } from "@utils/canDoSomething";
 
 import { connectDatabase } from "@utils/database";
 import { getServerAuthSession } from "@server/common/get-server-auth-session";
@@ -47,25 +47,17 @@ handler
     const form = new formidable.IncomingForm();
 
     form.parse(req, async (err, fields, files) => {
-      const { kandidat, timeZone } = fields as {
+      const { kandidat } = fields as {
         kandidat: string;
-        timeZone: string;
       };
 
-      if (!kandidat || !files.image || !timeZone)
+      if (!kandidat || !files.image)
         return res.status(400).json({
           error: true,
-          message: "Diperlukan nama kandidat, gambar, dan zona waktu!",
+          message: "Diperlukan nama kandidat dan gambarnya!",
         });
 
-      if (!DateTime.now().setZone(timeZone).isValid) {
-        return res.status(400).json({
-          error: true,
-          message: "Zona waktu tidak valid!",
-        });
-      }
-
-      const inVoteCondition = await canVoteNow(timeZone);
+      const inVoteCondition = await canVoteNow();
 
       if (inVoteCondition)
         return res.status(400).json({
@@ -112,13 +104,12 @@ handler
     const form = new formidable.IncomingForm();
 
     form.parse(req, async (err, fields, files) => {
-      const { kandidat, timeZone, id } = fields as unknown as {
+      const { kandidat, id } = fields as unknown as {
         kandidat: string;
-        timeZone: string;
         id: Types.ObjectId;
       };
 
-      if (!id || !kandidat || !timeZone)
+      if (!id || !kandidat)
         return res.status(400).json({
           error: true,
           message: "Diperlukan id, nama kandidat, dan zona waktu!",
@@ -129,14 +120,7 @@ handler
           .status(400)
           .json({ error: true, message: "Parameter id kandidat tidak valid!" });
 
-      if (!DateTime.now().setZone(timeZone).isValid) {
-        return res.status(400).json({
-          error: true,
-          message: "Zona waktu tidak valid!",
-        });
-      }
-
-      const inVoteCondition = await canVoteNow(timeZone);
+      const inVoteCondition = await canVoteNow();
 
       if (inVoteCondition)
         return res.status(400).json({

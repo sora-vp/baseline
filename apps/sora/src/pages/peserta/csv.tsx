@@ -59,11 +59,6 @@ const HalamanTambah = () => {
       },
     }
   );
-  const settingsQuery = trpc.settings.getSettings.useQuery(undefined, {
-    onSuccess(result) {
-      if (result.canAttend) Router.push("/peserta");
-    },
-  });
 
   const { handleSubmit, register, formState } = useForm<FormValues>({
     resolver: zodResolver(validationSchema),
@@ -131,8 +126,6 @@ const HalamanTambah = () => {
                     accept="text/csv"
                     placeholder="Masukan File CSV"
                     isDisabled={
-                      settingsQuery.isLoading ||
-                      settingsQuery.data?.canAttend ||
                       insertManyMutation.isLoading
                     }
                     {...register("csv")}
@@ -150,9 +143,6 @@ const HalamanTambah = () => {
                   color="blue.50"
                   _hover={{ color: "white" }}
                   isLoading={insertManyMutation.isLoading}
-                  isDisabled={
-                    settingsQuery.isLoading || settingsQuery.data?.canAttend
-                  }
                   type="submit"
                 >
                   Tambah
