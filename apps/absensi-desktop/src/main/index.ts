@@ -1,8 +1,10 @@
-import { app, shell, BrowserWindow, ipcMain } from "electron";
+import { app, shell, BrowserWindow, ipcMain, Menu } from "electron";
 import { join } from "path";
 import Store from "electron-store";
 import { electronApp, optimizer, is } from "@electron-toolkit/utils";
 import icon from "../../resources/icon.png?asset";
+
+import type { MenuItemConstructorOptions } from "electron";
 
 const store = new Store<{
   serverURL?: string;
@@ -21,6 +23,31 @@ function createWindow(): void {
       sandbox: false,
     },
   });
+
+  const template: MenuItemConstructorOptions[] = [
+    {
+      label: "View",
+      submenu: [
+        { role: "reload" },
+        { role: "forceReload" },
+        { role: "toggleDevTools" },
+        { type: "separator" },
+        { role: "togglefullscreen" },
+      ],
+    },
+    {
+      label: "App",
+      submenu: [
+        {
+          label: "Settings",
+          click: () => mainWindow.webContents.send("open-setting"),
+        },
+      ],
+    },
+  ];
+
+  const menu = Menu.buildFromTemplate(template);
+  Menu.setApplicationMenu(menu);
 
   mainWindow.on("ready-to-show", () => {
     mainWindow.show();
