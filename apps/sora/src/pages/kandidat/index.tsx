@@ -190,7 +190,7 @@ const Candidate = () => {
                             </Td>
                             <Td>
                               <NextLink
-                                href={`/admin/kandidat/edit/${p._id}`}
+                                href={`/kandidat/edit/${p._id}`}
                                 passHref={
                                   !settingsQuery.isLoading ||
                                   !(
@@ -215,7 +215,8 @@ const Candidate = () => {
                               <Button
                                 isDisabled={
                                   settingsQuery.isLoading ||
-                                  settingsQuery.data?.canVote
+                                  settingsQuery.data?.canVote ||
+                                  p.dipilih > 0
                                 }
                                 bg="red.500"
                                 _hover={{ bg: "red.700" }}

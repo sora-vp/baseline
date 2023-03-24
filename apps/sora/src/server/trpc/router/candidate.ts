@@ -59,12 +59,19 @@ export const candidateRouter = router({
           message: "Tidak bisa menghapus kandidat dalam kondisi pemilihan!",
         });
 
-      const isCandidateExist = await KandidatModel.findById(input.id);
+      const candidate = await KandidatModel.findById(input.id);
 
-      if (!isCandidateExist)
+      if (!candidate)
         throw new TRPCError({
           code: "NOT_FOUND",
           message: "Kandidat tidak dapat ditemukan!",
+        });
+
+      if (candidate.dipilih > 0)
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message:
+            "Tidak bisa menghapus kandidat dikarenakan sudah ada yang memilihnya!",
         });
 
       await KandidatModel.findByIdAndRemove(input.id);
