@@ -7,7 +7,7 @@ import {
   unprotectedProcedure,
 } from "../trpc";
 
-import { KandidatModel } from "../../../models";
+import { ParticipantModel, KandidatModel } from "../../../models";
 import {
   upvoteValidationSchema,
   adminDeleteCandidateValidationSchema,
@@ -15,6 +15,7 @@ import {
 } from "../../../schema/admin.candidate.schema";
 
 import { canVoteNow } from "../../../utils/canDoSomething";
+import { runInTransaction } from "../../../utils/transaction";
 
 export const candidateRouter = router({
   candidateList: publicProcedure.query(async () => {
@@ -91,60 +92,49 @@ export const candidateRouter = router({
             "Tidak bisa memilih kandidat jika bukan dalam kondisi pemilihan!",
         });
 
-      try {
-        // const participantStatus =
-        //   await trpcAbsensi.participant.getParticipantStatus.query(input.qrId);
+      const participant = await ParticipantModel.findOne({ qrId: input.qrId });
 
-        // if (participantStatus.sudahMemilih)
-        //   throw new TRPCError({
-        //     code: "BAD_REQUEST",
-        //     message: "Kamu sudah memilih!",
-        // });
-
-        // if (!participantStatus.sudahAbsen)
-        //   throw new TRPCError({
-        //     code: "BAD_REQUEST",
-        //     message: "Kamu belum absen!",
-        //   });
-
-        const isCandidateExist = await KandidatModel.findById(input.id);
-
-        if (!isCandidateExist)
-          throw new TRPCError({
-            code: "NOT_FOUND",
-            message: "Kandidat tidak dapat ditemukan!",
-          });
-
-        try {
-          // const upvoteStatus =
-          //   await trpcAbsensi.participant.updateUserUpvoteStatus.mutate(
-          //     input.qrId
-          //   );
-
-          // if (!upvoteStatus.success)
-          //   throw new TRPCError({
-          //     code: "INTERNAL_SERVER_ERROR",
-          //     message:
-          //       "Gagal pada saat memilih kandidat! Mohon untuk dicoba lagi!",
-          //   });
-
-          await KandidatModel.findByIdAndUpdate(input.id, {
-            $inc: { dipilih: 1 },
-          });
-
-          return { message: "Berhasil memilih kandidat!" };
-        } catch (e: any) {
-          throw new TRPCError({
-            code: "INTERNAL_SERVER_ERROR",
-            message:
-              "Tidak dapat memilih, telah terjadi kesalahan internal saat memilih!",
-          });
-        }
-      } catch (e: any) {
+      if (!participant)
         throw new TRPCError({
-          code: "INTERNAL_SERVER_ERROR",
-          message: "Terjadi kesalahan internal!",
+          code: "NOT_FOUND",
+          message: "Kamu belum terdaftar dalam daftar peserta pemilihan!",
         });
-      }
+
+      if (participant.sudahMemilih)
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "Kamu sudah memilih!",
+        });
+
+      if (!participant.sudahAbsen)
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "Kamu belum absen!",
+        });
+
+      const isCandidateExist = await KandidatModel.findById(input.id);
+
+      if (!isCandidateExist)
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Kandidat tidak dapat ditemukan!",
+        });
+
+      await runInTransaction(async (session) => {
+        await participant.updateOne(
+          { $set: { sudahMemilih: true } },
+          { session }
+        );
+
+        await KandidatModel.findByIdAndUpdate(
+          input.id,
+          {
+            $inc: { dipilih: 1 },
+          },
+          { session }
+        );
+      });
+
+      return { message: "Berhasil memilih kandidat!" };
     }),
 });

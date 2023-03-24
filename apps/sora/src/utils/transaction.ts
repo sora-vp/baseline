@@ -5,8 +5,6 @@ type TransactionCallback = (session: ClientSession) => Promise<void>;
 export const runInTransaction = async (callback: TransactionCallback) => {
   const session: ClientSession = await mongoose.startSession();
 
-  console.log(session);
-
   session.startTransaction();
 
   try {
