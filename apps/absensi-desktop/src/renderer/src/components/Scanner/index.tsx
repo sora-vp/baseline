@@ -20,9 +20,23 @@ const Scanner: React.FC = () => {
   if (participantAttend.isSuccess)
     return <SuccessScan participantAttend={participantAttend} />;
 
-  if (isQrInvalid || participantAttend.isError) return <ScanningError message={participantAttend.isError ? participantAttend.error.message : "QR Code yang anda tunjukkan tidak valid. Beritahu panitia untuk memperbaiki masalah ini."} />
+  if (isQrInvalid || participantAttend.isError)
+    return (
+      <ScanningError
+        message={
+          participantAttend.isError
+            ? participantAttend.error.message
+            : "QR Code yang anda tunjukkan tidak valid. Beritahu panitia untuk memperbaiki masalah ini."
+        }
+      />
+    );
 
-  return <NormalScanner participantAttend={participantAttend} setInvalidQr={setIsQrValid} />;
+  return (
+    <NormalScanner
+      participantAttend={participantAttend}
+      setInvalidQr={setIsQrValid}
+    />
+  );
 };
 
 export default Scanner;

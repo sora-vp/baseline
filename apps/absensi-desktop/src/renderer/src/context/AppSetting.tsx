@@ -17,9 +17,9 @@ interface IAppSetting {
 
 export const AppSettingContext = createContext<IAppSetting>({} as IAppSetting);
 
-export const AppSettingProvider: React.FC<{ children: React.ReactNode }> = ({
+export const AppSettingProvider = ({
   children,
-}) => {
+}: { children: React.ReactNode }) => {
   const toast = useToast();
 
   const [serverURL, setServerUrlState] = useState<string | undefined>();
@@ -43,6 +43,8 @@ export const AppSettingProvider: React.FC<{ children: React.ReactNode }> = ({
       setTimeout(() => {
         location.href = "#/";
       }, 3000);
+
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       toast({
         description: `Gagal memperbarui url | ${error.message}`,
@@ -76,6 +78,7 @@ export const AppSettingProvider: React.FC<{ children: React.ReactNode }> = ({
 
 export const useAppSetting = () => useContext(AppSettingContext) as IAppSetting;
 
+// eslint-disable-next-line react/display-name
 export const ensureHasAppSetting = (Element: React.FC) => () => {
   const { serverURL } = useAppSetting();
 

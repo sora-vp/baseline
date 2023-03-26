@@ -39,5 +39,5 @@ jobs:
       - name: Install dependencies
         run: pnpm install
 
-      - name: Test Code Typing
-        run: pnpm tsc
+      - name: Test Code Typing Entire Workspace
+        run: pnpm typecheck

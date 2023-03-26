@@ -34,4 +34,8 @@ export const PaginatedParticipantValidationSchema = z.object({
   pageIndex: z.number().min(0),
 });
 
+export const ParticipantByCategoryValidationSchema = z.object({
+  category: z.string(),
+});
+
 export const ParticipantAttendValidationSchema = z.string().refine(validateId);

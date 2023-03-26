@@ -3,11 +3,11 @@ import { Box, HStack, Heading } from "@chakra-ui/react";
 
 import { trpc } from "@renderer/utils/trpc";
 
-const SuccessScan: React.FC<{
+const SuccessScan = ({ participantAttend }: {
   participantAttend: ReturnType<
     typeof trpc.participant.participantAttend.useMutation
   >;
-}> = ({ participantAttend }) => {
+}) => {
   useEffect(() => {
     setTimeout(() => participantAttend.reset(), 5_000);
   }, []);

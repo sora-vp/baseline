@@ -2,6 +2,7 @@ import { router, protectedProcedure, publicProcedure } from "../trpc";
 
 import { ParticipantModel } from "../../../models";
 import {
+  ParticipantByCategoryValidationSchema,
   PaginatedParticipantValidationSchema,
   TambahPesertaManyValidationSchema,
   ParticipantAttendValidationSchema,
@@ -91,6 +92,36 @@ export const participantRouter = router({
       await participant.deleteOne();
 
       return { message: "Berhasil menghapus peserta!" };
+    }),
+
+  categories: protectedProcedure.query(async () => {
+    const participants = await ParticipantModel.find().lean();
+
+    if (!participants)
+      throw new TRPCError({
+        code: "NOT_FOUND",
+        message: "Data peserta pemilihan masih kosong!",
+      });
+
+    const categories = [
+      ...new Set(participants.map(({ nama }) => nama.split("|")[0])),
+    ].map((text) => text!.trim());
+
+    return { categories };
+  }),
+
+  getParticipantByCategory: protectedProcedure
+    .input(ParticipantByCategoryValidationSchema)
+    .query(async ({ input }) => {
+      if (input.category === "") return { participants: [] };
+
+      const regex = new RegExp(`^${input.category}`);
+
+      const participants = await ParticipantModel.find({
+        nama: { $regex: regex },
+      }).lean();
+
+      return { participants };
     }),
 
   participantAttend: publicProcedure

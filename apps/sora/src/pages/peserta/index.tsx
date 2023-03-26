@@ -40,8 +40,9 @@ import {
 import Head from "next/head";
 import NextLink from "next/link";
 import { Types } from "mongoose";
+import { GrPrevious, GrNext } from "react-icons/gr";
 import { BiFirstPage, BiLastPage } from "react-icons/bi";
-import { GrPrevious, GrNext, GrDocumentCsv } from "react-icons/gr";
+import { BsFillFilePdfFill, BsFiletypeCsv } from "react-icons/bs";
 
 import { trpc, type allParticipantOutput } from "@utils/trpc";
 import Sidebar from "@components/Sidebar";
@@ -243,9 +244,20 @@ const Peserta = () => {
                     borderRadius="md"
                     bg="green.500"
                     color="white"
-                    leftIcon={<GrDocumentCsv color="white" />}
+                    leftIcon={<BsFiletypeCsv color="white" />}
                   >
                     Upload File CSV
+                  </Button>
+                </NextLink>
+
+                <NextLink href="/peserta/pdf">
+                  <Button
+                    borderRadius="md"
+                    bg="red.500"
+                    color="white"
+                    leftIcon={<BsFillFilePdfFill color="white" />}
+                  >
+                    Cetak PDF
                   </Button>
                 </NextLink>
               </HStack>
