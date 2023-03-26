@@ -181,6 +181,23 @@ export const participantRouter = router({
       return { success: true };
     }),
 
+  exportJsonData: protectedProcedure.query(async () => {
+    const participants = await ParticipantModel.find().lean();
+
+    if (!participants)
+      throw new TRPCError({
+        code: "NOT_FOUND",
+        message: "Tidak ada data peserta pemilihan!",
+      });
+
+    const remapped = participants.map((participant) => ({
+      nama: participant.nama,
+      qrId: participant.qrId,
+    }));
+
+    return { data: JSON.stringify(remapped, null, 2) };
+  }),
+
   getParticipantStatus: publicProcedure
     .input(ParticipantAttendValidationSchema)
     .query(async ({ input }) => {

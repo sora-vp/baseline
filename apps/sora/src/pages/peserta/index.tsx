@@ -42,7 +42,7 @@ import NextLink from "next/link";
 import { Types } from "mongoose";
 import { GrPrevious, GrNext } from "react-icons/gr";
 import { BiFirstPage, BiLastPage } from "react-icons/bi";
-import { BsFillFilePdfFill, BsFiletypeCsv } from "react-icons/bs";
+import { BsFillFilePdfFill, BsFiletypeCsv, BsQrCode, BsFiletypeJson } from "react-icons/bs";
 
 import { trpc, type allParticipantOutput } from "@utils/trpc";
 import Sidebar from "@components/Sidebar";
@@ -146,6 +146,21 @@ const Peserta = () => {
       });
     },
   });
+
+  const exportJsonQuery = trpc.participant.exportJsonData.useQuery(undefined, {
+    refetchOnMount: false,
+    refetchOnWindowFocus: false,
+    enabled: false,
+
+    onSuccess({ data }) {
+      const element = document.createElement('a');
+
+      element.setAttribute('href', 'data:application/json;charset=utf-8,' + encodeURIComponent(data));
+      element.setAttribute('download', "data-partisipan.json");
+
+      element.click();
+    }
+  })
 
   const participantDeleteMutation =
     trpc.participant.deleteParticipant.useMutation({
@@ -260,6 +275,28 @@ const Peserta = () => {
                     Cetak PDF
                   </Button>
                 </NextLink>
+
+                <NextLink href="/peserta/qr">
+                  <Button
+                    borderRadius="md"
+                    bg="teal.600"
+                    color="white"
+                    leftIcon={<BsQrCode color="white" />}
+                  >
+                    Buat QR Dadakan
+                  </Button>
+                </NextLink>
+
+                <Button
+                  borderRadius="md"
+                  bg="yellow.600"
+                  color="white"
+                  isLoading={exportJsonQuery.isLoading}
+                  onClick={() => exportJsonQuery.refetch()}
+                  leftIcon={<BsFiletypeJson color="white" />}
+                >
+                  Export JSON
+                </Button>
               </HStack>
               <HStack>
                 <TableContainer w="100%" h="100%">
