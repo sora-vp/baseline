@@ -95,9 +95,7 @@ const HalamanTambah = () => {
                   <Input
                     type="text"
                     placeholder="Masukan Nama Peserta"
-                    isDisabled={
-                      participantMutation.isLoading
-                    }
+                    isDisabled={participantMutation.isLoading}
                     {...register("nama")}
                   />
                   <FormErrorMessage>

@@ -1,6 +1,6 @@
 import { createContext, useContext, useState, useMemo } from "react";
 import { useToast } from "@chakra-ui/react";
-import { DateTime } from "luxon"
+import { DateTime } from "luxon";
 
 import { trpc } from "@renderer/utils/trpc";
 
@@ -28,23 +28,24 @@ export const SettingProvider: React.FC<{ children: React.ReactNode }> = ({
     onSuccess(result) {
       const waktuMulai = result.startTime
         ? DateTime.fromISO(result.startTime as unknown as string)
-          .toLocal()
-          .toJSDate()
-          .getTime()
-        : null
-      const waktuSelesai =
-        result.endTime
-          ? DateTime.fromISO(result.endTime as unknown as string)
             .toLocal()
             .toJSDate()
             .getTime()
-          : null
+        : null;
+      const waktuSelesai = result.endTime
+        ? DateTime.fromISO(result.endTime as unknown as string)
+            .toLocal()
+            .toJSDate()
+            .getTime()
+        : null;
 
       const currentTime = new Date().getTime();
 
-      setCanAttend((waktuMulai as number) <= currentTime &&
-        (waktuSelesai as number) >= currentTime &&
-        result.canAttend);
+      setCanAttend(
+        (waktuMulai as number) <= currentTime &&
+          (waktuSelesai as number) >= currentTime &&
+          result.canAttend
+      );
     },
 
     onError(error) {

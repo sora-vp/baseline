@@ -125,9 +125,7 @@ const HalamanTambah = () => {
                     type="file"
                     accept="text/csv"
                     placeholder="Masukan File CSV"
-                    isDisabled={
-                      insertManyMutation.isLoading
-                    }
+                    isDisabled={insertManyMutation.isLoading}
                     {...register("csv")}
                   />
                   <FormErrorMessage>

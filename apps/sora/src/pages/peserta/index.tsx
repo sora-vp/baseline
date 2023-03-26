@@ -232,21 +232,13 @@ const Peserta = () => {
           >
             <VStack align="stretch" px={2} py={2}>
               <HStack>
-                <NextLink
-                  href="/peserta/tambah"
-                >
-                  <Button
-                    borderRadius="md"
-                    bg="blue.500"
-                    color="white"
-                  >
+                <NextLink href="/peserta/tambah">
+                  <Button borderRadius="md" bg="blue.500" color="white">
                     Tambah Peserta Baru
                   </Button>
                 </NextLink>
 
-                <NextLink
-                  href="/peserta/csv"
-                >
+                <NextLink href="/peserta/csv">
                   <Button
                     borderRadius="md"
                     bg="green.500"
@@ -316,12 +308,15 @@ const Peserta = () => {
                               onClick={() => {
                                 if (
                                   !settingsQuery.isLoading ||
-                                  !(
+                                  (!(
                                     settingsQuery.data as unknown as {
                                       canVote?: boolean;
                                     }
-                                  )?.canVote && !(row.original.sudahAbsen ||
-                                    row.original.sudahMemilih)
+                                  )?.canVote &&
+                                    !(
+                                      row.original.sudahAbsen ||
+                                      row.original.sudahMemilih
+                                    ))
                                 ) {
                                   setID(
                                     (
