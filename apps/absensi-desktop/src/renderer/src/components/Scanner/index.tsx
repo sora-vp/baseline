@@ -1,7 +1,6 @@
 import { useState, useCallback } from "react";
 
-import IsMutationError from "./IsMutationError";
-import InvalidScanner from "./InvalidScanner";
+import ScanningError from "./ScanningError";
 import NormalScanner from "./NormalScanner";
 
 import SuccessScan from "./SuccessScan";
@@ -21,9 +20,7 @@ const Scanner: React.FC = () => {
   if (participantAttend.isSuccess)
     return <SuccessScan participantAttend={participantAttend} />;
 
-  if (participantAttend.isError) return <IsMutationError message={participantAttend.error.message} />
-
-  if (isQrInvalid) return <InvalidScanner setInvalidQr={setIsQrValid} />;
+  if (isQrInvalid || participantAttend.isError) return <ScanningError message={participantAttend.isError ? participantAttend.error.message : "QR Code yang anda tunjukkan tidak valid. Beritahu panitia untuk memperbaiki masalah ini."} />
 
   return <NormalScanner participantAttend={participantAttend} setInvalidQr={setIsQrValid} />;
 };

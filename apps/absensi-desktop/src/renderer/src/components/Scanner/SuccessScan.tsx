@@ -9,7 +9,7 @@ const SuccessScan: React.FC<{
   >;
 }> = ({ participantAttend }) => {
   useEffect(() => {
-    setTimeout(() => participantAttend.reset(), 4_500);
+    setTimeout(() => participantAttend.reset(), 5_000);
   }, []);
 
   return (
