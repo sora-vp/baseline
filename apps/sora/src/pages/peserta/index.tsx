@@ -291,7 +291,6 @@ const Peserta = () => {
                   borderRadius="md"
                   bg="yellow.600"
                   color="white"
-                  isLoading={exportJsonQuery.isLoading}
                   onClick={() => exportJsonQuery.refetch()}
                   leftIcon={<BsFiletypeJson color="white" />}
                 >
