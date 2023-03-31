@@ -157,8 +157,6 @@ const Peserta = () => {
     },
   });
 
-  console.log(participantQuery.data);
-
   const exportJsonQuery = api.participant.exportJsonData.useQuery(undefined, {
     refetchOnMount: false,
     refetchOnWindowFocus: false,
