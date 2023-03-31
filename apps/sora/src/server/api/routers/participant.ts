@@ -22,13 +22,22 @@ import { canAttendNow } from "~/utils/canDoSomething";
 export const participantRouter = createTRPCRouter({
   getParticipantPaginated: protectedProcedure
     .input(PaginatedParticipantValidationSchema)
-    .query(
-      async ({ input: { pageSize: limit, pageIndex: offset } }) =>
-        await prisma.participant.findMany({
-          skip: offset,
-          take: limit,
-        })
-    ),
+    .query(async ({ input: { pageSize: limit, pageIndex: offset } }) => {
+      const participants = await prisma.participant.findMany({
+        skip: offset,
+        take: limit,
+      });
+
+      const totalParticipants = await prisma.participant.count();
+      const pageCount = Math.ceil(totalParticipants / limit);
+      const currentPage = Math.ceil(offset / limit) + 1;
+
+      return {
+        participants,
+        pageCount,
+        currentPage,
+      };
+    }),
 
   createNewParticipant: protectedProcedure
     .input(TambahPesertaValidationSchema)

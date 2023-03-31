@@ -8,7 +8,7 @@ import {
   Box,
   Text,
   Button,
-  // Spinner,
+  Spinner,
 
   // Table
   Table,
@@ -55,7 +55,7 @@ import {
   type PaginationState,
 } from "@tanstack/react-table";
 
-const columnHelper = createColumnHelper<RouterOutputs["participant"]['getParticipantPaginated'][number]>();
+const columnHelper = createColumnHelper<RouterOutputs["participant"]['getParticipantPaginated']["participants"][number]>();
 
 const columns = [
   columnHelper.accessor((row) => row.name, {
@@ -118,24 +118,24 @@ const Peserta = () => {
     [pageIndex, pageSize]
   );
 
-  // const participantQuery = api.participant.getParticipantPaginated.useQuery(
-  //   {
-  //     pageIndex: pageIndex > 0 ? pageIndex * pageSize : 0,
-  //     pageSize,
-  //   },
-  //   {
-  //     onError(result) {
-  //       toast({
-  //         description: result.message,
-  //         status: "error",
-  //         duration: 6000,
-  //         position: "top-right",
-  //       });
-  //     },
-  //     refetchInterval: 5000,
-  //     refetchOnWindowFocus: false,
-  //   }
-  // );
+  const participantQuery = api.participant.getParticipantPaginated.useQuery(
+    {
+      pageIndex: pageIndex > 0 ? pageIndex * pageSize : 0,
+      pageSize,
+    },
+    {
+      onError(result) {
+        toast({
+          description: result.message,
+          status: "error",
+          duration: 6000,
+          position: "top-right",
+        });
+      },
+      refetchInterval: 5000,
+      refetchOnWindowFocus: false,
+    }
+  );
   const settingsQuery = api.settings.getSettings.useQuery(undefined, {
     refetchInterval: 5000,
     refetchIntervalInBackground: true,
@@ -148,6 +148,8 @@ const Peserta = () => {
       });
     },
   });
+
+  console.log(participantQuery.data);
 
   const exportJsonQuery = api.participant.exportJsonData.useQuery(undefined, {
     refetchOnMount: false,
@@ -190,11 +192,9 @@ const Peserta = () => {
     });
 
   const table = useReactTable({
-    // data: participantQuery.data?.docs ?? [],
-    data: [],
+    data: participantQuery.data?.participants ?? [],
     columns,
-    // pageCount: participantQuery.data?.totalPages ?? -1,
-    pageCount: -1,
+    pageCount: participantQuery.data?.pageCount ?? -1,
     state: {
       pagination,
     },
@@ -207,15 +207,14 @@ const Peserta = () => {
   const [currentID, setID] = useState<number | null>(null);
 
   const getNama = () => {
-    // const currentParticipant =
-    //   participantQuery.data &&
-    //   participantQuery.data.docs &&
-    //   participantQuery.data.docs.find(
-    //     (p) => (p as unknown as { _id: Types.ObjectId })._id === currentID
-    //   );
+    const currentParticipant =
+      participantQuery.data &&
+      participantQuery.data.participants &&
+      participantQuery.data.participants.find(
+        (p) => p.id === currentID
+      );
 
-    // return currentParticipant?.nama;
-    return "<PLACEHOLDER>"
+    return currentParticipant?.name;
   };
 
   return (
@@ -322,7 +321,7 @@ const Peserta = () => {
                       ))}
                     </Thead>
                     <Tbody>
-                      {/* {participantQuery.isLoading && (
+                      {participantQuery.isLoading && (
                         <Tr>
                           <Td colSpan={5} style={{ textAlign: "center" }}>
                             <Spinner
@@ -333,7 +332,7 @@ const Peserta = () => {
                             />
                           </Td>
                         </Tr>
-                      )} */}
+                      )}
 
                       {table.getRowModel().rows.map((row) => (
                         <Tr key={row.id}>
@@ -382,22 +381,22 @@ const Peserta = () => {
                         </Tr>
                       ))}
 
-                      {/* {(!participantQuery.isLoading &&
+                      {(!participantQuery.isLoading &&
                         !participantQuery.data) ||
                         (participantQuery.data &&
-                          participantQuery.data.docs.length < 1 && (
+                          participantQuery.data.participants.length < 1 && (
                             <Tr>
                               <Td colSpan={5} style={{ textAlign: "center" }}>
                                 Tidak ada data peserta, Silahkan tambah peserta
                                 baru dengan tombol di atas.
                               </Td>
                             </Tr>
-                          ))} */}
+                          ))}
                     </Tbody>
                   </Table>
 
-                  {/* {participantQuery.data &&
-                    participantQuery.data.docs.length > 0 && (
+                  {participantQuery.data &&
+                    participantQuery.data.participants.length > 0 && (
                       <Flex
                         justifyContent="space-between"
                         marginTop={5}
@@ -490,7 +489,7 @@ const Peserta = () => {
                           </Tooltip>
                         </Flex>
                       </Flex>
-                    )} */}
+                    )}
                 </TableContainer>
               </HStack>
             </VStack>
