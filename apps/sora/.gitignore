@@ -43,3 +43,6 @@ yarn-error.log*
 
 # Image uploads
 public/uploads
+
+# Web settings
+settings.bin
