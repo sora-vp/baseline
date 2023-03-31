@@ -12,11 +12,10 @@
     "jsx": "react-jsx",
     "allowJs": true,
     "noImplicitReturns": false,
-    "experimentalDecorators": true,
-    "emitDecoratorMetadata": true,
     "baseUrl": ".",
     "paths": {
-      "@renderer/*": ["src/renderer/src/*"]
+      "@renderer/*": ["src/renderer/src/*"],
+      "~/*": ["../sora/src/*"]
     }
   }
 }
