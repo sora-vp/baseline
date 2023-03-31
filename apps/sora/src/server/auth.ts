@@ -17,11 +17,7 @@ import { prisma } from "~/server/db";
  */
 declare module "next-auth" {
   interface Session extends DefaultSession {
-    user: {
-      id: string;
-      // ...other properties
-      // role: UserRole;
-    } & DefaultSession["user"];
+    user: DefaultSession["user"];
   }
 
   // interface User {
@@ -40,15 +36,6 @@ export const authOptions: NextAuthOptions = {
     signIn: "/login",
   },
 
-  callbacks: {
-    session({ session, user }) {
-      if (session.user) {
-        session.user.id = user.id;
-        // session.user.role = user.role; <-- put other properties on the session here
-      }
-      return session;
-    },
-  },
   providers: [
     CredentialsProvider({
       name: "credentials",
@@ -56,30 +43,27 @@ export const authOptions: NextAuthOptions = {
         email: { label: "Email", type: "text" },
         password: { label: "Password", type: "password" },
       },
+      async authorize(credentials) {
+        if (!credentials?.email || !credentials?.password)
+          throw new Error("Dibutuhkan email dan password!");
 
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore
-      async authorize(credentials: Record<"email" | "password", string>) {
         const user = await prisma.user.findUnique({
-          where: { email: credentials.email },
+          where: { email: credentials?.email },
         });
 
         if (!user) throw new Error("Pengguna tidak ditemukan!");
 
-        console.log(user);
-
         const isValidPassword = await bcrypt.compare(
-          credentials.password,
+          credentials?.password as string,
           user.password
         );
 
         if (!isValidPassword) throw new Error("Kata sandi salah!");
 
         return {
-          user: {
-            id: user.id,
-            email: user.email,
-          },
+          id: user.id,
+          name: user.name,
+          email: user.email,
         };
       },
     }),

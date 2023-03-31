@@ -8,7 +8,7 @@ import {
   Box,
   Text,
   Button,
-  Spinner,
+  // Spinner,
 
   // Table
   Table,
@@ -43,7 +43,7 @@ import { GrPrevious, GrNext } from "react-icons/gr";
 import { BiFirstPage, BiLastPage } from "react-icons/bi";
 import { BsFillFilePdfFill, BsFiletypeCsv, BsQrCode, BsFiletypeJson } from "react-icons/bs";
 
-import { api, type allParticipantOutput } from "~/utils/api";
+import { api, type RouterOutputs } from "~/utils/api";
 import Sidebar from "~/components/Sidebar";
 
 import {
@@ -55,7 +55,7 @@ import {
   type PaginationState,
 } from "@tanstack/react-table";
 
-const columnHelper = createColumnHelper<allParticipantOutput["docs"][number]>();
+const columnHelper = createColumnHelper<RouterOutputs["participant"]['getParticipantPaginated'][number]>();
 
 const columns = [
   columnHelper.accessor((row) => row.name, {
@@ -64,7 +64,7 @@ const columns = [
   columnHelper.accessor((row) => row.qrId, {
     id: "QR ID",
   }),
-  columnHelper.accessor("sudahAbsen", {
+  columnHelper.accessor("alreadyAttended", {
     cell: (info) => (
       <span
         style={{
@@ -80,7 +80,7 @@ const columns = [
     header: "Sudah Absen",
   }),
 
-  columnHelper.accessor("sudahMemilih", {
+  columnHelper.accessor("alreadyChoosing", {
     cell: (info) => (
       <span
         style={{
@@ -118,24 +118,24 @@ const Peserta = () => {
     [pageIndex, pageSize]
   );
 
-  const participantQuery = api.participant.getParticipantPaginated.useQuery(
-    {
-      pageIndex: pageIndex > 0 ? pageIndex * pageSize : 0,
-      pageSize,
-    },
-    {
-      onError(result) {
-        toast({
-          description: result.message,
-          status: "error",
-          duration: 6000,
-          position: "top-right",
-        });
-      },
-      refetchInterval: 5000,
-      refetchOnWindowFocus: false,
-    }
-  );
+  // const participantQuery = api.participant.getParticipantPaginated.useQuery(
+  //   {
+  //     pageIndex: pageIndex > 0 ? pageIndex * pageSize : 0,
+  //     pageSize,
+  //   },
+  //   {
+  //     onError(result) {
+  //       toast({
+  //         description: result.message,
+  //         status: "error",
+  //         duration: 6000,
+  //         position: "top-right",
+  //       });
+  //     },
+  //     refetchInterval: 5000,
+  //     refetchOnWindowFocus: false,
+  //   }
+  // );
   const settingsQuery = api.settings.getSettings.useQuery(undefined, {
     refetchInterval: 5000,
     refetchIntervalInBackground: true,
@@ -190,9 +190,11 @@ const Peserta = () => {
     });
 
   const table = useReactTable({
-    data: participantQuery.data?.docs ?? [],
+    // data: participantQuery.data?.docs ?? [],
+    data: [],
     columns,
-    pageCount: participantQuery.data?.totalPages ?? -1,
+    // pageCount: participantQuery.data?.totalPages ?? -1,
+    pageCount: -1,
     state: {
       pagination,
     },
@@ -202,17 +204,18 @@ const Peserta = () => {
   });
 
   // Untuk keperluan hapus data
-  const [currentID, setID] = useState<Types.ObjectId | null>(null);
+  const [currentID, setID] = useState<number | null>(null);
 
   const getNama = () => {
-    const currentParticipant =
-      participantQuery.data &&
-      participantQuery.data.docs &&
-      participantQuery.data.docs.find(
-        (p) => (p as unknown as { _id: Types.ObjectId })._id === currentID
-      );
+    // const currentParticipant =
+    //   participantQuery.data &&
+    //   participantQuery.data.docs &&
+    //   participantQuery.data.docs.find(
+    //     (p) => (p as unknown as { _id: Types.ObjectId })._id === currentID
+    //   );
 
-    return currentParticipant?.nama;
+    // return currentParticipant?.nama;
+    return "<PLACEHOLDER>"
   };
 
   return (
@@ -319,7 +322,7 @@ const Peserta = () => {
                       ))}
                     </Thead>
                     <Tbody>
-                      {participantQuery.isLoading && (
+                      {/* {participantQuery.isLoading && (
                         <Tr>
                           <Td colSpan={5} style={{ textAlign: "center" }}>
                             <Spinner
@@ -330,7 +333,7 @@ const Peserta = () => {
                             />
                           </Td>
                         </Tr>
-                      )}
+                      )} */}
 
                       {table.getRowModel().rows.map((row) => (
                         <Tr key={row.id}>
@@ -348,8 +351,8 @@ const Peserta = () => {
                               isDisabled={
                                 settingsQuery.isLoading ||
                                 settingsQuery.data?.canAttend ||
-                                row.original.sudahAbsen ||
-                                row.original.sudahMemilih
+                                row.original.alreadyAttended ||
+                                row.original.alreadyChoosing
                               }
                               bg="red.500"
                               _hover={{ bg: "red.700" }}
@@ -364,17 +367,11 @@ const Peserta = () => {
                                     }
                                   )?.canVote &&
                                     !(
-                                      row.original.sudahAbsen ||
-                                      row.original.sudahMemilih
+                                      row.original.alreadyAttended ||
+                                      row.original.alreadyChoosing
                                     ))
                                 ) {
-                                  setID(
-                                    (
-                                      row.original as unknown as {
-                                        _id: Types.ObjectId;
-                                      }
-                                    )._id
-                                  );
+                                  setID(row.original.id)
                                   onOpen();
                                 }
                               }}
@@ -385,7 +382,7 @@ const Peserta = () => {
                         </Tr>
                       ))}
 
-                      {(!participantQuery.isLoading &&
+                      {/* {(!participantQuery.isLoading &&
                         !participantQuery.data) ||
                         (participantQuery.data &&
                           participantQuery.data.docs.length < 1 && (
@@ -395,11 +392,11 @@ const Peserta = () => {
                                 baru dengan tombol di atas.
                               </Td>
                             </Tr>
-                          ))}
+                          ))} */}
                     </Tbody>
                   </Table>
 
-                  {participantQuery.data &&
+                  {/* {participantQuery.data &&
                     participantQuery.data.docs.length > 0 && (
                       <Flex
                         justifyContent="space-between"
@@ -493,7 +490,7 @@ const Peserta = () => {
                           </Tooltip>
                         </Flex>
                       </Flex>
-                    )}
+                    )} */}
                 </TableContainer>
               </HStack>
             </VStack>
@@ -546,7 +543,7 @@ const Peserta = () => {
                       ?.canAttend
                   )
                     participantDeleteMutation.mutate({
-                      id: currentID as unknown as string,
+                      id: currentID as number,
                     });
                 }}
                 ml={3}
