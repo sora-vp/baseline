@@ -63,8 +63,8 @@ const HalamanTambah = () => {
   });
 
   const onSubmit = async (data: FormValues) => {
-    const file = data.csv.item(0);
-    const text = await file!.text(); // Already checked
+    const file = data.csv.item(0) as File;
+    const text = await file.text(); // Already checked
 
     parseCSV(text, { columns: true, trim: true }, (err, records) => {
       if (err)
