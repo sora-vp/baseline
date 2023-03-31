@@ -20,13 +20,13 @@ import NextLink from "next/link";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
-import Sidebar from "@components/Sidebar";
+import Sidebar from "~/components/Sidebar";
 
 import {
   ChangeNameSchemaValidator as validationSchema,
   type ChangeNameType as FormValues,
-} from "@schema/auth.schema";
-import { trpc } from "@utils/trpc";
+} from "~/schema/auth.schema";
+import { api } from "~/utils/api";
 
 const UbahNama = () => {
   const toast = useToast();
@@ -35,14 +35,14 @@ const UbahNama = () => {
     resolver: zodResolver(validationSchema),
   });
 
-  const userInfo = trpc.auth.me.useQuery(undefined, {
+  const userInfo = api.auth.me.useQuery(undefined, {
     refetchOnWindowFocus: false,
     onSuccess(result) {
-      reset({ nama: result.username });
+      reset({ name: result.name });
     },
   });
 
-  const nameMutatation = trpc.auth.changeName.useMutation({
+  const nameMutatation = api.auth.changeName.useMutation({
     onSuccess(result) {
       toast({
         description: result.message,
@@ -67,7 +67,7 @@ const UbahNama = () => {
   });
 
   const onSubmit = (data: FormValues) => {
-    if (data.nama === userInfo.data?.username)
+    if (data.name === userInfo.data?.name)
       return toast({
         description:
           "Nama yang ingin di ubah tidak boleh sama dengan nama yang sebelumnya!",
@@ -105,17 +105,17 @@ const UbahNama = () => {
             <Box my={4} mx={4} textAlign="left">
               <form onSubmit={handleSubmit(onSubmit)}>
                 <FormControl
-                  isInvalid={formState.errors?.nama as unknown as boolean}
+                  isInvalid={formState.errors?.name as unknown as boolean}
                 >
                   <FormLabel htmlFor="nama">Nama Lengkap</FormLabel>
                   <Input
                     type="text"
                     placeholder="Masukan Nama Lengkap"
                     isDisabled={nameMutatation.isLoading || userInfo.isLoading}
-                    {...register("nama")}
+                    {...register("name")}
                   />
                   <FormErrorMessage>
-                    {formState.errors?.nama?.message}
+                    {formState.errors?.name?.message}
                   </FormErrorMessage>
                 </FormControl>
                 <Button

@@ -39,32 +39,40 @@ import {
 } from "@chakra-ui/react";
 import Head from "next/head";
 import NextLink from "next/link";
-import { Types } from "mongoose";
 import { GrPrevious, GrNext } from "react-icons/gr";
 import { BiFirstPage, BiLastPage } from "react-icons/bi";
-import { BsFillFilePdfFill, BsFiletypeCsv, BsQrCode, BsFiletypeJson } from "react-icons/bs";
+import {
+  BsFillFilePdfFill,
+  BsFiletypeCsv,
+  BsQrCode,
+  BsFiletypeJson,
+} from "react-icons/bs";
 
-import { trpc, type allParticipantOutput } from "@utils/trpc";
-import Sidebar from "@components/Sidebar";
+import { api, type RouterOutputs } from "~/utils/api";
+import Sidebar from "~/components/Sidebar";
 
 import {
-  PaginationState,
   useReactTable,
   getCoreRowModel,
   flexRender,
   createColumnHelper,
+  type PaginationState,
 } from "@tanstack/react-table";
 
-const columnHelper = createColumnHelper<allParticipantOutput["docs"][number]>();
+const columnHelper =
+  createColumnHelper<
+    RouterOutputs["participant"]["getParticipantPaginated"]["participants"][number]
+  >();
 
 const columns = [
-  columnHelper.accessor((row) => row.nama, {
+  columnHelper.accessor((row) => row.name, {
     id: "Nama",
   }),
   columnHelper.accessor((row) => row.qrId, {
     id: "QR ID",
+    cell: (info) => <Text as="pre">{info.getValue()}</Text>,
   }),
-  columnHelper.accessor("sudahAbsen", {
+  columnHelper.accessor("alreadyAttended", {
     cell: (info) => (
       <span
         style={{
@@ -80,7 +88,7 @@ const columns = [
     header: "Sudah Absen",
   }),
 
-  columnHelper.accessor("sudahMemilih", {
+  columnHelper.accessor("alreadyChoosing", {
     cell: (info) => (
       <span
         style={{
@@ -99,6 +107,8 @@ const columns = [
 
 const Peserta = () => {
   const toast = useToast();
+
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   const cancelRef = useRef<HTMLButtonElement>(null!);
 
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -116,7 +126,7 @@ const Peserta = () => {
     [pageIndex, pageSize]
   );
 
-  const participantQuery = trpc.participant.getParticipantPaginated.useQuery(
+  const participantQuery = api.participant.getParticipantPaginated.useQuery(
     {
       pageIndex: pageIndex > 0 ? pageIndex * pageSize : 0,
       pageSize,
@@ -134,7 +144,7 @@ const Peserta = () => {
       refetchOnWindowFocus: false,
     }
   );
-  const settingsQuery = trpc.settings.getSettings.useQuery(undefined, {
+  const settingsQuery = api.settings.getSettings.useQuery(undefined, {
     refetchInterval: 5000,
     refetchIntervalInBackground: true,
     onError(result) {
@@ -147,23 +157,28 @@ const Peserta = () => {
     },
   });
 
-  const exportJsonQuery = trpc.participant.exportJsonData.useQuery(undefined, {
+  console.log(participantQuery.data);
+
+  const exportJsonQuery = api.participant.exportJsonData.useQuery(undefined, {
     refetchOnMount: false,
     refetchOnWindowFocus: false,
     enabled: false,
 
     onSuccess({ data }) {
-      const element = document.createElement('a');
+      const element = document.createElement("a");
 
-      element.setAttribute('href', 'data:application/json;charset=utf-8,' + encodeURIComponent(data));
-      element.setAttribute('download', "data-partisipan.json");
+      element.setAttribute(
+        "href",
+        "data:application/json;charset=utf-8," + encodeURIComponent(data)
+      );
+      element.setAttribute("download", "data-partisipan.json");
 
       element.click();
-    }
-  })
+    },
+  });
 
   const participantDeleteMutation =
-    trpc.participant.deleteParticipant.useMutation({
+    api.participant.deleteParticipant.useMutation({
       onSuccess(result) {
         onClose();
 
@@ -188,9 +203,9 @@ const Peserta = () => {
     });
 
   const table = useReactTable({
-    data: participantQuery.data?.docs ?? [],
+    data: participantQuery.data?.participants ?? [],
     columns,
-    pageCount: participantQuery.data?.totalPages ?? -1,
+    pageCount: participantQuery.data?.pageCount ?? -1,
     state: {
       pagination,
     },
@@ -200,17 +215,15 @@ const Peserta = () => {
   });
 
   // Untuk keperluan hapus data
-  const [currentID, setID] = useState<Types.ObjectId | null>(null);
+  const [currentID, setID] = useState<number | null>(null);
 
   const getNama = () => {
     const currentParticipant =
       participantQuery.data &&
-      participantQuery.data.docs &&
-      participantQuery.data.docs.find(
-        (p) => (p as unknown as { _id: Types.ObjectId })._id === currentID
-      );
+      participantQuery.data.participants &&
+      participantQuery.data.participants.find((p) => p.id === currentID);
 
-    return currentParticipant?.nama;
+    return currentParticipant?.name;
   };
 
   return (
@@ -346,8 +359,8 @@ const Peserta = () => {
                               isDisabled={
                                 settingsQuery.isLoading ||
                                 settingsQuery.data?.canAttend ||
-                                row.original.sudahAbsen ||
-                                row.original.sudahMemilih
+                                row.original.alreadyAttended ||
+                                row.original.alreadyChoosing
                               }
                               bg="red.500"
                               _hover={{ bg: "red.700" }}
@@ -362,17 +375,11 @@ const Peserta = () => {
                                     }
                                   )?.canVote &&
                                     !(
-                                      row.original.sudahAbsen ||
-                                      row.original.sudahMemilih
+                                      row.original.alreadyAttended ||
+                                      row.original.alreadyChoosing
                                     ))
                                 ) {
-                                  setID(
-                                    (
-                                      row.original as unknown as {
-                                        _id: Types.ObjectId;
-                                      }
-                                    )._id
-                                  );
+                                  setID(row.original.id);
                                   onOpen();
                                 }
                               }}
@@ -386,7 +393,7 @@ const Peserta = () => {
                       {(!participantQuery.isLoading &&
                         !participantQuery.data) ||
                         (participantQuery.data &&
-                          participantQuery.data.docs.length < 1 && (
+                          participantQuery.data.participants.length < 1 && (
                             <Tr>
                               <Td colSpan={5} style={{ textAlign: "center" }}>
                                 Tidak ada data peserta, Silahkan tambah peserta
@@ -398,7 +405,7 @@ const Peserta = () => {
                   </Table>
 
                   {participantQuery.data &&
-                    participantQuery.data.docs.length > 0 && (
+                    participantQuery.data.participants.length > 0 && (
                       <Flex
                         justifyContent="space-between"
                         marginTop={5}
@@ -544,7 +551,7 @@ const Peserta = () => {
                       ?.canAttend
                   )
                     participantDeleteMutation.mutate({
-                      id: currentID as unknown as string,
+                      id: currentID as number,
                     });
                 }}
                 ml={3}

@@ -20,43 +20,41 @@ import Router from "next/router";
 import NextLink from "next/link";
 import Head from "next/head";
 
-import Sidebar from "@components/Sidebar";
+import Sidebar from "~/components/Sidebar";
 
-import { trpc } from "@utils/trpc";
+import { api } from "~/utils/api";
 
 import {
   TambahPesertaValidationSchema as validationSchema,
   type TambahFormValues as FormValues,
-} from "@schema/admin.participant.schema";
+} from "~/schema/admin.participant.schema";
 
 const HalamanTambah = () => {
   const toast = useToast();
 
-  const participantMutation = trpc.participant.createNewParticipant.useMutation(
-    {
-      onSuccess(result) {
-        toast({
-          description: result.message,
-          status: "success",
-          duration: 6000,
-          position: "top-right",
-          isClosable: true,
-        });
+  const participantMutation = api.participant.createNewParticipant.useMutation({
+    onSuccess(result) {
+      toast({
+        description: result.message,
+        status: "success",
+        duration: 6000,
+        position: "top-right",
+        isClosable: true,
+      });
 
-        Router.push("/peserta");
-      },
+      Router.push("/peserta");
+    },
 
-      onError(result) {
-        toast({
-          description: result.message,
-          status: "error",
-          duration: 6000,
-          position: "top-right",
-          isClosable: true,
-        });
-      },
-    }
-  );
+    onError(result) {
+      toast({
+        description: result.message,
+        status: "error",
+        duration: 6000,
+        position: "top-right",
+        isClosable: true,
+      });
+    },
+  });
 
   const { handleSubmit, register, formState } = useForm<FormValues>({
     resolver: zodResolver(validationSchema),
@@ -89,17 +87,17 @@ const HalamanTambah = () => {
             <Box my={4} mx={4} textAlign="left">
               <form onSubmit={handleSubmit(onSubmit)}>
                 <FormControl
-                  isInvalid={formState.errors?.nama as unknown as boolean}
+                  isInvalid={formState.errors?.name as unknown as boolean}
                 >
                   <FormLabel htmlFor="nama">Nama Peserta</FormLabel>
                   <Input
                     type="text"
                     placeholder="Masukan Nama Peserta"
                     isDisabled={participantMutation.isLoading}
-                    {...register("nama")}
+                    {...register("name")}
                   />
                   <FormErrorMessage>
-                    {formState.errors?.nama?.message}
+                    {formState.errors?.name?.message}
                   </FormErrorMessage>
                 </FormControl>
 

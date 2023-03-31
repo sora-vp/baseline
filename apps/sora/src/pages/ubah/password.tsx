@@ -21,13 +21,13 @@ import Router from "next/router";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
-import Sidebar from "@components/Sidebar";
-import { trpc } from "@utils/trpc";
+import Sidebar from "~/components/Sidebar";
+import { api } from "~/utils/api";
 
 import {
   ClientChangePasswordSchemaValidator as validationSchema,
   type ClientChangePasswordType as FormValues,
-} from "@schema/auth.schema";
+} from "~/schema/auth.schema";
 
 const UbahPassword = () => {
   const toast = useToast();
@@ -36,7 +36,7 @@ const UbahPassword = () => {
     resolver: zodResolver(validationSchema),
   });
 
-  const passwordMutation = trpc.auth.changePassword.useMutation({
+  const passwordMutation = api.auth.changePassword.useMutation({
     onSuccess(result) {
       toast({
         description: result.message,

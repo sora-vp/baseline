@@ -24,7 +24,14 @@ const getTimePermission = async () => {
 
   return {
     isPermittedByTime:
-      timeConfig?.mulai <= currentTime && timeConfig?.selesai >= currentTime,
+      // Start
+      (timeConfig.mulai
+        ? (timeConfig.mulai as number) <= currentTime
+        : false) &&
+      // End
+      (timeConfig.selesai
+        ? (timeConfig.selesai as number) >= currentTime
+        : false),
     settings,
   };
 };

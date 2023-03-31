@@ -2,11 +2,11 @@ name: ES Lint
 on: [pull_request, push]
 
 env:
-  MONGODB_URI: dummytxt
+  DATABASE_URL: mysql://usrnm:pw@localhost:3306/sora
   NEXTAUTH_SECRET: dummysecret
   NEXTAUTH_URL: http://localhost:3000
   SETTINGS_SECRET: dummysecret
-  
+
 jobs:
   lint:
     runs-on: ubuntu-latest

@@ -13,6 +13,7 @@ import {
   Select,
   VStack,
   Table,
+  Text,
   Thead,
   Tbody,
   Tr,
@@ -21,7 +22,7 @@ import {
   Link,
 } from "@chakra-ui/react";
 
-import { trpc } from "@utils/trpc";
+import { api } from "~/utils/api";
 
 const PDFPage = () => {
   const { colorMode, toggleColorMode } = useColorMode();
@@ -29,13 +30,13 @@ const PDFPage = () => {
   const [categoryValue, setCategory] = useState<string>("");
   const [mainWeb, setMainWeb] = useState<string>("");
 
-  const categoriesQuery = trpc.participant.categories.useQuery(undefined, {
+  const categoriesQuery = api.participant.categories.useQuery(undefined, {
     refetchOnReconnect: false,
     refetchOnWindowFocus: false,
   });
 
   const participantByCategoryQuery =
-    trpc.participant.getParticipantByCategory.useQuery(
+    api.participant.getParticipantByCategory.useQuery(
       {
         category: categoryValue,
       },
@@ -121,12 +122,14 @@ const PDFPage = () => {
                 <Tr key={idx}>
                   <Td>{++idx}</Td>
                   <Td>
-                    {participant.nama
+                    {participant.name
                       .replace(categoryValue, "")
                       .replace("|", "")
                       .trim()}
                   </Td>
-                  <Td>{participant.qrId}</Td>
+                  <Td>
+                    <Text as="pre">{participant.qrId}</Text>
+                  </Td>
                   <Td>
                     <Link
                       href={`${mainWeb}/qr/${participant.qrId}`}

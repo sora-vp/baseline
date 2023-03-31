@@ -6,9 +6,9 @@ import {
   Heading,
   Text,
   Input,
-  InputProps,
+  type InputProps,
 } from "@chakra-ui/react";
-import { useEffect, useRef, InputHTMLAttributes } from "react";
+import { useEffect, useRef, type InputHTMLAttributes } from "react";
 
 export type IIBType = {
   imgFromInput: string | null;
@@ -25,6 +25,8 @@ export default function InputImageBox({
   ...props
 }: IIBType) {
   const toast = useToast();
+
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   const drop = useRef<HTMLDivElement>(null!);
 
   useEffect(() => {
@@ -111,6 +113,7 @@ export default function InputImageBox({
               spacing="4"
             >
               {imgFromInput !== null ? (
+                // eslint-disable-next-line @next/next/no-img-element
                 <img
                   src={imgFromInput}
                   alt={"Gambar input dari administrator."}

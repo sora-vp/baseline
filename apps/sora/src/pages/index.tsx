@@ -12,11 +12,11 @@ import Head from "next/head";
 import NextLink from "next/link";
 import { DateTime } from "luxon";
 
-import { trpc } from "@utils/trpc";
-import Sidebar from "@components/Sidebar";
+import { api } from "~/utils/api";
+import Sidebar from "~/components/Sidebar";
 
 const Admin = () => {
-  const userInfo = trpc.auth.me.useQuery();
+  const userInfo = api.auth.me.useQuery();
 
   return (
     <>
@@ -41,7 +41,7 @@ const Admin = () => {
                 Informasi Akun Anda
               </Text>
 
-              <Text>Nama: {userInfo.data?.username ?? "N/A"}</Text>
+              <Text>Nama: {userInfo.data?.name ?? "N/A"}</Text>
               <Text>Email: {userInfo.data?.email ?? "N/A"}</Text>
               <Text>
                 Tanggal Pendaftaran:{" "}

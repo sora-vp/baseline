@@ -3,7 +3,9 @@ import { Box, HStack, Heading } from "@chakra-ui/react";
 
 import { trpc } from "@renderer/utils/trpc";
 
-const SuccessScan = ({ participantAttend }: {
+const SuccessScan = ({
+  participantAttend,
+}: {
   participantAttend: ReturnType<
     typeof trpc.participant.participantAttend.useMutation
   >;

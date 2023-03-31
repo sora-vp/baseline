@@ -1,14 +1,18 @@
-import { router, publicProcedure, protectedProcedure } from "../trpc";
+import {
+  createTRPCRouter,
+  publicProcedure,
+  protectedProcedure,
+} from "~/server/api/trpc";
 
 import {
   PengaturanPerilakuValidationSchema,
   ServerPengaturanWaktuValidationSchema,
-} from "../../../schema/admin.settings.schema";
+} from "~/schema/admin.settings.schema";
 
-import settings from "../../../utils/settings";
-import type { DataModel } from "../../../utils/settings";
+import settings from "~/utils/settings";
+import type { DataModel } from "~/utils/settings";
 
-export const settingsRouter = router({
+export const settingsRouter = createTRPCRouter({
   getSettings: publicProcedure.query(async () => {
     const data = await settings.read();
 

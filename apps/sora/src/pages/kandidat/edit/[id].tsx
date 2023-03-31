@@ -23,14 +23,14 @@ import Head from "next/head";
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
-import Sidebar from "@components/Sidebar";
-import InputImageBox from "@components/InputImageBox";
+import Sidebar from "~/components/Sidebar";
+import InputImageBox from "~/components/InputImageBox";
 
-import { trpc } from "@utils/trpc";
+import { api } from "~/utils/api";
 import {
   EditKandidatValidationSchema as validationSchema,
-  TEditKandidatValidationSchema as FormValues,
-} from "@schema/admin.candidate.schema";
+  type TEditKandidatValidationSchema as FormValues,
+} from "~/schema/admin.candidate.schema";
 
 const EditCandidateWithID = () => {
   const toast = useToast();
@@ -43,13 +43,13 @@ const EditCandidateWithID = () => {
       resolver: zodResolver(validationSchema),
     });
 
-  const settingsQuery = trpc.settings.getSettings.useQuery(undefined, {
+  const settingsQuery = api.settings.getSettings.useQuery(undefined, {
     onSuccess(result) {
       if (result.canVote) router.push("/kandidat");
     },
   });
-  const candidateQuery = trpc.candidate.getSpecificCandidate.useQuery(
-    { id: router.query.id as string },
+  const candidateQuery = api.candidate.getSpecificCandidate.useQuery(
+    { id: Number(router.query.id) },
     {
       onSuccess: reset,
       onError(result) {

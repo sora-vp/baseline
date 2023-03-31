@@ -17,7 +17,7 @@ import { DateTime } from "luxon";
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
-import { trpc } from "@utils/trpc";
+import { api } from "~/utils/api";
 
 import DatePicker from "../../DatePicker";
 
@@ -52,7 +52,7 @@ const PengaturanWaktu = () => {
       resolver: zodResolver(validationSchema),
     });
 
-  const settingsQuery = trpc.settings.getSettings.useQuery(undefined, {
+  const settingsQuery = api.settings.getSettings.useQuery(undefined, {
     onSuccess(result) {
       if (result.startTime && result.endTime)
         reset({
@@ -65,7 +65,7 @@ const PengaturanWaktu = () => {
         });
     },
   });
-  const changeTime = trpc.settings.changeVotingTime.useMutation({
+  const changeTime = api.settings.changeVotingTime.useMutation({
     onSuccess(result) {
       toast({
         description: result.message,

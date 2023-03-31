@@ -22,21 +22,21 @@ import NextLink from "next/link";
 import { DateTime } from "luxon";
 import Head from "next/head";
 
-import InputImageBox from "@components/InputImageBox";
-import Sidebar from "@components/Sidebar";
+import InputImageBox from "~/components/InputImageBox";
+import Sidebar from "~/components/Sidebar";
 
-import { trpc } from "@utils/trpc";
+import { api } from "~/utils/api";
 
 import {
   TambahKandidatValidationSchema as validationSchema,
   type TambahFormValues as FormValues,
-} from "@schema/admin.candidate.schema";
+} from "~/schema/admin.candidate.schema";
 
 const HalamanTambah = () => {
   const toast = useToast();
   const [imgFromInput, setIFI] = useState<string | null>(null);
 
-  const settingsQuery = trpc.settings.getSettings.useQuery(undefined, {
+  const settingsQuery = api.settings.getSettings.useQuery(undefined, {
     onSuccess(result) {
       if (result.canVote) Router.push("/kandidat");
     },

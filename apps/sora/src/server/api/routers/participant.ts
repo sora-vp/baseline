@@ -1,6 +1,11 @@
-import { router, protectedProcedure, publicProcedure } from "../trpc";
+import {
+  createTRPCRouter,
+  protectedProcedure,
+  publicProcedure,
+} from "~/server/api/trpc";
 
-import { ParticipantModel } from "../../../models";
+import { nanoid } from "id-generator";
+
 import {
   ParticipantByCategoryValidationSchema,
   PaginatedParticipantValidationSchema,
@@ -8,32 +13,41 @@ import {
   ParticipantAttendValidationSchema,
   TambahPesertaValidationSchema,
   DeletePesertaValidationSchema,
-} from "../../../schema/admin.participant.schema";
+} from "~/schema/admin.participant.schema";
 import { TRPCError } from "@trpc/server";
+import { prisma } from "~/server/db";
 
-import { canAttendNow } from "../../../utils/canDoSomething";
+import { canAttendNow } from "~/utils/canDoSomething";
 
-export const participantRouter = router({
+export const participantRouter = createTRPCRouter({
   getParticipantPaginated: protectedProcedure
     .input(PaginatedParticipantValidationSchema)
-    .query(
-      async ({ input: { pageSize: limit, pageIndex: offset } }) =>
-        await ParticipantModel.paginate({}, { offset, limit }).catch(
-          (e: any) => {
-            throw new TRPCError({
-              code: "INTERNAL_SERVER_ERROR",
-              message: e.message,
-            });
-          }
-        )
-    ),
+    .query(async ({ input: { pageSize: limit, pageIndex: offset } }) => {
+      const participants = await prisma.participant.findMany({
+        skip: offset,
+        take: limit,
+      });
+
+      const totalParticipants = await prisma.participant.count();
+      const pageCount = Math.ceil(totalParticipants / limit);
+      const currentPage = Math.ceil(offset / limit) + 1;
+
+      return {
+        participants,
+        pageCount,
+        currentPage,
+      };
+    }),
 
   createNewParticipant: protectedProcedure
     .input(TambahPesertaValidationSchema)
     .mutation(async ({ input }) => {
-      const newParticipant = new ParticipantModel(input);
-
-      await newParticipant.save();
+      await prisma.participant.create({
+        data: {
+          name: input.name,
+          qrId: nanoid(),
+        },
+      });
 
       return { message: "Berhasil menambahkan peserta baru!" };
     }),
@@ -41,10 +55,15 @@ export const participantRouter = router({
   insertManyParticipant: protectedProcedure
     .input(TambahPesertaManyValidationSchema)
     .mutation(async ({ input }) => {
-      const okToInsert = input.map(({ Nama }) => ({ nama: Nama }));
+      const okToInsert = input.map(({ Nama }) => ({
+        name: Nama,
+        qrId: nanoid(),
+      }));
 
       const checkThing = await Promise.all(
-        okToInsert.map(({ nama }) => ParticipantModel.findOne({ nama }))
+        okToInsert.map(({ name }) =>
+          prisma.participant.findUnique({ where: { name } })
+        )
       );
 
       if (checkThing.every((data) => data !== null)) {
@@ -61,7 +80,9 @@ export const participantRouter = router({
         });
       }
 
-      await ParticipantModel.insertMany(okToInsert);
+      await prisma.participant.createMany({
+        data: okToInsert,
+      });
 
       return { message: "Berhasil mengupload data file csv!" };
     }),
@@ -69,7 +90,9 @@ export const participantRouter = router({
   deleteParticipant: protectedProcedure
     .input(DeletePesertaValidationSchema)
     .mutation(async ({ input }) => {
-      const participant = await ParticipantModel.findById(input.id);
+      const participant = await prisma.participant.findUnique({
+        where: { id: input.id },
+      });
 
       if (!participant)
         throw new TRPCError({
@@ -77,25 +100,25 @@ export const participantRouter = router({
           message: "Peserta pemilihan tidak dapat ditemukan!",
         });
 
-      if (participant.sudahAbsen)
+      if (participant.alreadyAttended)
         throw new TRPCError({
           code: "BAD_REQUEST",
           message: "Peserta pemilihan sebelumnya sudah absen!",
         });
 
-      if (participant.sudahMemilih)
+      if (participant.alreadyChoosing)
         throw new TRPCError({
           code: "BAD_REQUEST",
           message: "Peserta pemilihan sebelumnya sudah memilih!",
         });
 
-      await participant.deleteOne();
+      await prisma.participant.delete({ where: { id: input.id } });
 
       return { message: "Berhasil menghapus peserta!" };
     }),
 
   categories: protectedProcedure.query(async () => {
-    const participants = await ParticipantModel.find().lean();
+    const participants = await prisma.participant.findMany();
 
     if (!participants)
       throw new TRPCError({
@@ -104,8 +127,8 @@ export const participantRouter = router({
       });
 
     const categories = [
-      ...new Set(participants.map(({ nama }) => nama.split("|")[0])),
-    ].map((text) => text!.trim());
+      ...new Set(participants.map(({ name }) => name.split("|")[0])),
+    ].map((text) => text?.trim());
 
     return { categories };
   }),
@@ -115,11 +138,13 @@ export const participantRouter = router({
     .query(async ({ input }) => {
       if (input.category === "") return { participants: [] };
 
-      const regex = new RegExp(`^${input.category}`);
-
-      const participants = await ParticipantModel.find({
-        nama: { $regex: regex },
-      }).lean();
+      const participants = await prisma.participant.findMany({
+        where: {
+          name: {
+            startsWith: `${input.category} | `,
+          },
+        },
+      });
 
       return { participants };
     }),
@@ -135,7 +160,9 @@ export const participantRouter = router({
           message: "Belum diperbolehkan untuk melakukan absensi!",
         });
 
-      const participant = await ParticipantModel.findOne({ qrId: input });
+      const participant = await prisma.participant.findUnique({
+        where: { qrId: input },
+      });
 
       if (!participant)
         throw new TRPCError({
@@ -143,14 +170,19 @@ export const participantRouter = router({
           message: "Peserta pemilihan tidak dapat ditemukan!",
         });
 
-      if (participant.sudahAbsen)
+      if (participant.alreadyAttended)
         throw new TRPCError({
           code: "BAD_REQUEST",
           message: "Kamu sudah absen!",
         });
 
-      participant.sudahAbsen = true;
-      await participant.save();
+      await prisma.participant.update({
+        where: { qrId: input },
+        data: {
+          alreadyAttended: true,
+          attendedAt: new Date(),
+        },
+      });
 
       return { message: "Berhasil melakukan absensi!" };
     }),
@@ -158,7 +190,9 @@ export const participantRouter = router({
   isParticipantAlreadyAttended: publicProcedure
     .input(ParticipantAttendValidationSchema)
     .mutation(async ({ input }) => {
-      const participant = await ParticipantModel.findOne({ qrId: input });
+      const participant = await prisma.participant.findUnique({
+        where: { qrId: input },
+      });
 
       if (!participant)
         throw new TRPCError({
@@ -166,13 +200,13 @@ export const participantRouter = router({
           message: "Peserta pemilihan tidak dapat ditemukan!",
         });
 
-      if (participant.sudahMemilih)
+      if (participant.alreadyChoosing)
         throw new TRPCError({
           code: "BAD_REQUEST",
           message: "Kamu sudah memilih kandidat!",
         });
 
-      if (!participant.sudahAbsen)
+      if (!participant.alreadyAttended)
         throw new TRPCError({
           code: "BAD_REQUEST",
           message: "Kamu belum absen!",
@@ -182,7 +216,7 @@ export const participantRouter = router({
     }),
 
   exportJsonData: protectedProcedure.query(async () => {
-    const participants = await ParticipantModel.find().lean();
+    const participants = await prisma.participant.findMany();
 
     if (!participants)
       throw new TRPCError({
@@ -191,7 +225,7 @@ export const participantRouter = router({
       });
 
     const remapped = participants.map((participant) => ({
-      nama: participant.nama,
+      name: participant.name,
       qrId: participant.qrId,
     }));
 
@@ -201,7 +235,9 @@ export const participantRouter = router({
   getParticipantStatus: publicProcedure
     .input(ParticipantAttendValidationSchema)
     .query(async ({ input }) => {
-      const participant = await ParticipantModel.findOne({ qrId: input });
+      const participant = await prisma.participant.findUnique({
+        where: { qrId: input },
+      });
 
       if (!participant)
         throw new TRPCError({
@@ -210,8 +246,8 @@ export const participantRouter = router({
         });
 
       return {
-        sudahAbsen: participant.sudahAbsen,
-        sudahMemilih: participant.sudahMemilih,
+        alreadyAttended: participant.alreadyAttended,
+        alreadyChoosing: participant.alreadyChoosing,
       };
     }),
 });

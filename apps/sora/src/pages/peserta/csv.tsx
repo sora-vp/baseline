@@ -21,52 +21,50 @@ import Router from "next/router";
 import NextLink from "next/link";
 import Head from "next/head";
 
-import Sidebar from "@components/Sidebar";
+import Sidebar from "~/components/Sidebar";
 
-import { trpc } from "@utils/trpc";
+import { api } from "~/utils/api";
 
 import {
   TambahPesertaManyValidationSchema as CSVDataValidator,
   UploadPartisipanValidationSchema as validationSchema,
   type TUploadFormValues as FormValues,
-} from "@schema/admin.participant.schema";
+} from "~/schema/admin.participant.schema";
 
 const HalamanTambah = () => {
   const toast = useToast();
 
-  const insertManyMutation = trpc.participant.insertManyParticipant.useMutation(
-    {
-      onSuccess(result) {
-        toast({
-          description: result.message,
-          status: "success",
-          duration: 6000,
-          position: "top-right",
-          isClosable: true,
-        });
+  const insertManyMutation = api.participant.insertManyParticipant.useMutation({
+    onSuccess(result) {
+      toast({
+        description: result.message,
+        status: "success",
+        duration: 6000,
+        position: "top-right",
+        isClosable: true,
+      });
 
-        Router.push("/peserta");
-      },
+      Router.push("/peserta");
+    },
 
-      onError(result) {
-        toast({
-          description: result.message,
-          status: "error",
-          duration: 6000,
-          position: "top-right",
-          isClosable: true,
-        });
-      },
-    }
-  );
+    onError(result) {
+      toast({
+        description: result.message,
+        status: "error",
+        duration: 6000,
+        position: "top-right",
+        isClosable: true,
+      });
+    },
+  });
 
   const { handleSubmit, register, formState } = useForm<FormValues>({
     resolver: zodResolver(validationSchema),
   });
 
   const onSubmit = async (data: FormValues) => {
-    const file = data.csv.item(0);
-    const text = await file!.text(); // Already checked
+    const file = data.csv.item(0) as File;
+    const text = await file.text(); // Already checked
 
     parseCSV(text, { columns: true, trim: true }, (err, records) => {
       if (err)

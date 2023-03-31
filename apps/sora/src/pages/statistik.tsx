@@ -20,16 +20,18 @@ import {
 } from "recharts";
 import NextLink from "next/link";
 
-import { trpc } from "@utils/trpc";
+import { api } from "~/utils/api";
 
-import Sidebar from "@components/Sidebar";
+import Sidebar from "~/components/Sidebar";
 
 const Statistik = () => {
   const [width, setWidth] = useState<number>(0);
   const [height, setHeight] = useState<number>(0);
+
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   const container = useRef<HTMLDivElement>(null!);
 
-  const candidateQuery = trpc.candidate.adminCandidateList.useQuery(undefined, {
+  const candidateQuery = api.candidate.adminCandidateList.useQuery(undefined, {
     refetchInterval: 2500,
     refetchIntervalInBackground: true,
   });
@@ -37,8 +39,8 @@ const Statistik = () => {
   const chartData = useMemo(
     () =>
       candidateQuery.data?.map((kandidat) => ({
-        name: kandidat.namaKandidat,
-        ["Yang Memilih"]: kandidat.dipilih,
+        name: kandidat.name,
+        ["Yang Memilih"]: kandidat.counter,
       })),
     [candidateQuery.data]
   );

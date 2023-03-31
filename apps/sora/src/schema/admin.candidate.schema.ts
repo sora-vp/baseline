@@ -35,7 +35,7 @@ export type TambahFormValues = {
 };
 
 export const adminDeleteCandidateValidationSchema = z.object({
-  id: z.string().min(1),
+  id: z.number(),
 });
 
 export const upvoteValidationSchema =
@@ -46,7 +46,7 @@ export const upvoteValidationSchema =
   );
 
 export const adminGetSpecificCandidateValidationSchema = z.object({
-  id: z.string().min(1),
+  id: z.number(),
 });
 
 export const EditKandidatValidationSchema = baseAddAndEditForm.merge(

@@ -1,8 +1,8 @@
 import path from "path";
-import { Model, Store } from "fs-json-store";
+import { type Model, Store } from "fs-json-store";
 import { EncryptionAdapter } from "fs-json-store-encryption-adapter";
 
-import { env } from "../env/server.mjs";
+import { env } from "~/env.mjs";
 
 export type TModelApiResponse = {
   startTime: Date | null;

@@ -6,7 +6,7 @@ const baseNameSchema = z
   .min(1, { message: "Diperlukan nama peserta!" });
 
 export const TambahPesertaValidationSchema = z.object({
-  nama: baseNameSchema,
+  name: baseNameSchema,
 });
 
 export const TambahPesertaManyValidationSchema = z.array(
@@ -25,7 +25,7 @@ export const UploadPartisipanValidationSchema = z.object({
 
 export type TUploadFormValues = { csv: FileList };
 
-export const DeletePesertaValidationSchema = z.object({ id: z.string() });
+export const DeletePesertaValidationSchema = z.object({ id: z.number() });
 
 export type TambahFormValues = z.infer<typeof TambahPesertaValidationSchema>;
 

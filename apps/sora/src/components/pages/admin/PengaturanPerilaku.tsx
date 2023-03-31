@@ -19,8 +19,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import {
   PengaturanPerilakuValidationSchema as validationSchema,
   type PengaturanPerilakuFormValues as FormValues,
-} from "@schema/admin.settings.schema";
-import { trpc } from "@utils/trpc";
+} from "~/schema/admin.settings.schema";
+import { api } from "~/utils/api";
 
 const PengaturanPerilaku = () => {
   const toast = useToast();
@@ -29,7 +29,7 @@ const PengaturanPerilaku = () => {
     resolver: zodResolver(validationSchema),
   });
 
-  const settingsQuery = trpc.settings.getSettings.useQuery(undefined, {
+  const settingsQuery = api.settings.getSettings.useQuery(undefined, {
     onSuccess(data) {
       reset({
         canVote: data.canVote !== null && data.canVote !== false,
@@ -39,7 +39,7 @@ const PengaturanPerilaku = () => {
       });
     },
   });
-  const changeBehaviour = trpc.settings.changeVotingBehaviour.useMutation({
+  const changeBehaviour = api.settings.changeVotingBehaviour.useMutation({
     onSuccess(result) {
       toast({
         description: result.message,

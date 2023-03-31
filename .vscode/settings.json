@@ -1,0 +1,3 @@
+{
+  "typescript.tsdk": "apps\\sora\\node_modules\\typescript\\lib"
+}

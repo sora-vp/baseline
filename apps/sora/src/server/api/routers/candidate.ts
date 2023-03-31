@@ -1,41 +1,42 @@
 import { TRPCError } from "@trpc/server";
 
 import {
-  router,
+  createTRPCRouter,
   publicProcedure,
   protectedProcedure,
   unprotectedProcedure,
-} from "../trpc";
+} from "~/server/api/trpc";
 
-import { ParticipantModel, KandidatModel } from "../../../models";
+import { prisma } from "~/server/db";
 import {
   upvoteValidationSchema,
   adminDeleteCandidateValidationSchema,
   adminGetSpecificCandidateValidationSchema,
-} from "../../../schema/admin.candidate.schema";
+} from "~/schema/admin.candidate.schema";
 
-import { canVoteNow } from "../../../utils/canDoSomething";
-import { runInTransaction } from "../../../utils/transaction";
+import { canVoteNow } from "~/utils/canDoSomething";
 
-export const candidateRouter = router({
+export const candidateRouter = createTRPCRouter({
   candidateList: publicProcedure.query(async () => {
-    const data = await KandidatModel.find({}).lean();
+    const data = await prisma.candidate.findMany();
 
     return data.map((kandidat) => ({
-      id: kandidat._id,
-      namaKandidat: kandidat.namaKandidat,
-      imgName: kandidat.imgName,
+      id: kandidat.id,
+      name: kandidat.name,
+      image: kandidat.img,
     }));
   }),
 
-  adminCandidateList: protectedProcedure.query(
-    async () => await KandidatModel.find({}).lean()
+  adminCandidateList: protectedProcedure.query(() =>
+    prisma.candidate.findMany()
   ),
 
   getSpecificCandidate: protectedProcedure
     .input(adminGetSpecificCandidateValidationSchema)
     .query(async ({ input }) => {
-      const kandidat = await KandidatModel.findById(input.id);
+      const kandidat = await prisma.candidate.findUnique({
+        where: { id: input.id },
+      });
 
       if (!kandidat)
         throw new TRPCError({
@@ -45,7 +46,7 @@ export const candidateRouter = router({
 
       // For the easiest reset for frontend
       return {
-        kandidat: kandidat.namaKandidat,
+        kandidat: kandidat.name,
       };
     }),
 
@@ -60,7 +61,9 @@ export const candidateRouter = router({
           message: "Tidak bisa menghapus kandidat dalam kondisi pemilihan!",
         });
 
-      const candidate = await KandidatModel.findById(input.id);
+      const candidate = await prisma.candidate.findUnique({
+        where: { id: input.id },
+      });
 
       if (!candidate)
         throw new TRPCError({
@@ -68,14 +71,14 @@ export const candidateRouter = router({
           message: "Kandidat tidak dapat ditemukan!",
         });
 
-      if (candidate.dipilih > 0)
+      if (candidate.counter > 0)
         throw new TRPCError({
           code: "BAD_REQUEST",
           message:
             "Tidak bisa menghapus kandidat dikarenakan sudah ada yang memilihnya!",
         });
 
-      await KandidatModel.findByIdAndRemove(input.id);
+      await prisma.candidate.delete({ where: { id: input.id } });
 
       return { message: "Berhasil menghapus kandidat!" };
     }),
@@ -92,7 +95,9 @@ export const candidateRouter = router({
             "Tidak bisa memilih kandidat jika bukan dalam kondisi pemilihan!",
         });
 
-      const participant = await ParticipantModel.findOne({ qrId: input.qrId });
+      const participant = await prisma.participant.findUnique({
+        where: { qrId: input.qrId },
+      });
 
       if (!participant)
         throw new TRPCError({
@@ -100,19 +105,21 @@ export const candidateRouter = router({
           message: "Kamu belum terdaftar dalam daftar peserta pemilihan!",
         });
 
-      if (participant.sudahMemilih)
+      if (participant.alreadyChoosing)
         throw new TRPCError({
           code: "BAD_REQUEST",
           message: "Kamu sudah memilih!",
         });
 
-      if (!participant.sudahAbsen)
+      if (!participant.alreadyAttended)
         throw new TRPCError({
           code: "BAD_REQUEST",
           message: "Kamu belum absen!",
         });
 
-      const isCandidateExist = await KandidatModel.findById(input.id);
+      const isCandidateExist = await prisma.candidate.findUnique({
+        where: { id: input.id },
+      });
 
       if (!isCandidateExist)
         throw new TRPCError({
@@ -120,20 +127,23 @@ export const candidateRouter = router({
           message: "Kandidat tidak dapat ditemukan!",
         });
 
-      await runInTransaction(async (session) => {
-        await participant.updateOne(
-          { $set: { sudahMemilih: true } },
-          { session }
-        );
-
-        await KandidatModel.findByIdAndUpdate(
-          input.id,
-          {
-            $inc: { dipilih: 1 },
+      await prisma.$transaction([
+        prisma.participant.update({
+          where: { qrId: input.qrId },
+          data: {
+            alreadyChoosing: true,
+            choosingAt: new Date(),
           },
-          { session }
-        );
-      });
+        }),
+        prisma.candidate.update({
+          where: { id: input.id },
+          data: {
+            counter: {
+              increment: 1,
+            },
+          },
+        }),
+      ]);
 
       return { message: "Berhasil memilih kandidat!" };
     }),

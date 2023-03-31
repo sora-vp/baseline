@@ -2,16 +2,13 @@ import fs from "fs";
 import mv from "mv";
 import path from "path";
 import fsp from "fs/promises";
-import { DateTime } from "luxon";
-import { Types } from "mongoose";
 import formidable from "formidable";
 import nextConnect from "next-connect";
 
-import { KandidatModel } from "@models/index";
-import { canVoteNow } from "@utils/canDoSomething";
+import { prisma } from "~/server/db";
+import { canVoteNow } from "~/utils/canDoSomething";
 
-import { connectDatabase } from "@utils/database";
-import { getServerAuthSession } from "@server/common/get-server-auth-session";
+import { getServerAuthSession } from "~/server/auth";
 
 import type { NextApiRequest, NextApiResponse } from "next";
 
@@ -22,16 +19,11 @@ type grabableImageType = {
 };
 
 const ROOT_PATH = path.join(path.resolve(), "public/uploads");
+
 const handler = nextConnect<
   NextApiRequest & { cookies: Partial<{ [key: string]: string }> },
   NextApiResponse
->();
-
-handler
-  .use(async (req, res, next) => {
-    await connectDatabase();
-    next();
-  })
+>()
   .use(async (req, res, next) => {
     const session = await getServerAuthSession({ req, res });
 
@@ -82,12 +74,12 @@ handler
       });
 
       try {
-        const newCandidate = new KandidatModel({
-          namaKandidat: kandidat,
-          imgName: newName,
+        await prisma.candidate.create({
+          data: {
+            name: kandidat,
+            img: newName,
+          },
         });
-
-        await newCandidate.save();
 
         res
           .status(200)
@@ -106,19 +98,14 @@ handler
     form.parse(req, async (err, fields, files) => {
       const { kandidat, id } = fields as unknown as {
         kandidat: string;
-        id: Types.ObjectId;
+        id: number;
       };
 
       if (!id || !kandidat)
         return res.status(400).json({
           error: true,
-          message: "Diperlukan id, nama kandidat, dan zona waktu!",
+          message: "Diperlukan id dan nama kandidat!",
         });
-
-      if (!Types.ObjectId.isValid(id))
-        return res
-          .status(400)
-          .json({ error: true, message: "Parameter id kandidat tidak valid!" });
 
       const inVoteCondition = await canVoteNow();
 
@@ -129,9 +116,9 @@ handler
         });
 
       try {
-        const kandidat = await KandidatModel.findById(id);
+        const candidate = await prisma.candidate.findUnique({ where: { id } });
 
-        if (!kandidat)
+        if (!candidate)
           return res
             .status(404)
             .json({ error: true, message: "Kandidat tidak ditemukan!" });
@@ -143,7 +130,7 @@ handler
         const newName = image && `${image.newFilename}.${ext}`;
 
         if (image) {
-          const oldImagePath = path.join(ROOT_PATH, kandidat.imgName);
+          const oldImagePath = path.join(ROOT_PATH, candidate.img);
           if (fs.existsSync(oldImagePath)) await fsp.unlink(oldImagePath);
 
           const newPath = image && path.join(ROOT_PATH, newName);
@@ -156,9 +143,17 @@ handler
           });
         }
 
-        await kandidat.updateOne({
-          namaKandidat: kandidat,
-          imgName: image ? newName : kandidat.imgName,
+        // await kandidat.updateOne({
+        //   namaKandidat: kandidat,
+        //   imgName: image ? newName : kandidat.imgName,
+        // });
+
+        await prisma.candidate.update({
+          where: { id },
+          data: {
+            name: kandidat,
+            img: image ? newName : candidate.img,
+          },
         });
 
         res.status(200).json({

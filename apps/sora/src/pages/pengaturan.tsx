@@ -1,10 +1,10 @@
 import { VStack, HStack, Text } from "@chakra-ui/react";
 import Head from "next/head";
 
-import Sidebar from "@components/Sidebar";
+import Sidebar from "~/components/Sidebar";
 
-import PengaturanWaktu from "@components/pages/admin/PengaturanWaktu";
-import PengaturanPerilaku from "@components/pages/admin/PengaturanPerilaku";
+import PengaturanWaktu from "~/components/pages/admin/PengaturanWaktu";
+import PengaturanPerilaku from "~/components/pages/admin/PengaturanPerilaku";
 
 const Pengaturan = () => {
   return (

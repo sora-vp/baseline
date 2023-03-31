@@ -11,7 +11,7 @@ const password = z
   .string()
   .nonempty({ message: "Kata sandi harus di isi!" })
   .min(6, { message: "Kata sandi memiliki panjang setidaknya 6 karakter!" });
-const nama = z
+const name = z
   .string()
   .min(1, { message: "Bidang nama harus di isi!" })
   .regex(validNameRegex, {
@@ -26,7 +26,7 @@ export const LoginSchemaValidator = z.object({
 export const ServerRegisterSchemaValidator = z.object({
   email,
   password,
-  nama,
+  name,
 });
 
 export const ClientRegisterSchemaValidator =
@@ -63,7 +63,7 @@ export const ClientChangePasswordSchemaValidator =
     path: ["konfirmasi"],
   });
 
-export const ChangeNameSchemaValidator = z.object({ nama });
+export const ChangeNameSchemaValidator = z.object({ name });
 
 export type LoginType = z.infer<typeof LoginSchemaValidator>;
 export type ServerRegisterType = z.infer<typeof ServerRegisterSchemaValidator>;

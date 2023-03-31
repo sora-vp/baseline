@@ -1,18 +1,24 @@
 import bcrypt from "bcrypt";
 import { TRPCError } from "@trpc/server";
 
-import { router, publicProcedure, protectedProcedure } from "../trpc";
+import {
+  createTRPCRouter,
+  publicProcedure,
+  protectedProcedure,
+} from "~/server/api/trpc";
 import {
   ChangeNameSchemaValidator,
   ServerRegisterSchemaValidator,
   ServerChangePasswordSchemaValidator,
-} from "../../../schema/auth.schema";
+} from "~/schema/auth.schema";
 
-import { UserModel } from "../../../models";
+import { prisma } from "~/server/db";
 
-export const authRouter = router({
+export const authRouter = createTRPCRouter({
   me: protectedProcedure.query(async ({ ctx }) => {
-    const user = await UserModel.getByEmail(ctx.session.user?.email as string);
+    const user = await prisma.user.findUnique({
+      where: { email: ctx.session.user?.email as string },
+    });
 
     if (!user)
       throw new TRPCError({
@@ -21,7 +27,7 @@ export const authRouter = router({
       });
 
     return {
-      username: user.username,
+      name: user.name,
       email: user.email,
       createdAt: user.createdAt,
     };
@@ -30,7 +36,9 @@ export const authRouter = router({
   register: publicProcedure
     .input(ServerRegisterSchemaValidator)
     .mutation(async ({ input }) => {
-      const isAlreadyExist = await UserModel.getByEmail(input.email);
+      const isAlreadyExist = await prisma.user.findUnique({
+        where: { email: input.email },
+      });
 
       if (isAlreadyExist)
         throw new TRPCError({
@@ -41,13 +49,13 @@ export const authRouter = router({
       const salt = bcrypt.genSaltSync(10);
       const hash = bcrypt.hashSync(input.password, salt);
 
-      const newUser = new UserModel({
-        email: input.email,
-        username: input.nama,
-        password: hash,
+      await prisma.user.create({
+        data: {
+          email: input.email,
+          name: input.name,
+          password: hash,
+        },
       });
-
-      await newUser.save();
 
       return {
         success: true,
@@ -57,9 +65,11 @@ export const authRouter = router({
   changePassword: protectedProcedure
     .input(ServerChangePasswordSchemaValidator)
     .mutation(async ({ ctx, input }) => {
-      const user = await UserModel.getByEmail(
-        ctx.session.user?.email as string
-      );
+      const user = await prisma.user.findUnique({
+        where: {
+          email: ctx.session.user?.email as string,
+        },
+      });
 
       if (!user)
         throw new TRPCError({
@@ -81,9 +91,14 @@ export const authRouter = router({
       const salt = bcrypt.genSaltSync(10);
       const hash = bcrypt.hashSync(input.baru, salt);
 
-      user.password = hash;
-
-      await user.save();
+      await prisma.user.update({
+        where: {
+          id: user.id,
+        },
+        data: {
+          password: hash,
+        },
+      });
 
       return {
         message: "Berhasil mengubah kata sandi!",
@@ -93,9 +108,11 @@ export const authRouter = router({
   changeName: protectedProcedure
     .input(ChangeNameSchemaValidator)
     .mutation(async ({ ctx, input }) => {
-      const user = await UserModel.getByEmail(
-        ctx.session.user?.email as string
-      );
+      const user = await prisma.user.findUnique({
+        where: {
+          email: ctx.session.user?.email as string,
+        },
+      });
 
       if (!user)
         throw new TRPCError({
@@ -103,7 +120,7 @@ export const authRouter = router({
           message: "Pengguna tidak dapat ditemukan!",
         });
 
-      const currentNameSameAsNewName = user.username === input.nama;
+      const currentNameSameAsNewName = user.name === input.name;
 
       if (currentNameSameAsNewName)
         throw new TRPCError({
@@ -111,9 +128,14 @@ export const authRouter = router({
           message: "Nama yang baru tidak boleh sama dengan yang lama!",
         });
 
-      user.username = input.nama;
-
-      await user.save();
+      await prisma.user.update({
+        where: {
+          id: user.id,
+        },
+        data: {
+          name: input.name,
+        },
+      });
 
       return {
         message: "Berhasil mengubah nama pengguna!",

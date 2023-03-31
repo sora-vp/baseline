@@ -26,9 +26,9 @@ import { useRouter } from "next/router";
 import {
   ClientRegisterSchemaValidator,
   type ClientRegisterType,
-} from "@schema/auth.schema";
+} from "~/schema/auth.schema";
 
-import { trpc } from "@utils/trpc";
+import { api } from "~/utils/api";
 
 import type { NextPage } from "next";
 
@@ -52,7 +52,7 @@ const Register: NextPage = () => {
   const toast = useToast();
   const router = useRouter();
 
-  const registerUser = trpc.auth.register.useMutation({
+  const registerUser = api.auth.register.useMutation({
     onSuccess(data) {
       if (data.success) {
         toast.closeAll();
@@ -87,7 +87,7 @@ const Register: NextPage = () => {
     registerUser.mutate({
       email: val.email,
       password: val.password,
-      nama: val.nama,
+      name: val.name,
     });
 
   useEffect(() => {
@@ -160,17 +160,17 @@ const Register: NextPage = () => {
             </FormControl>
             <FormControl
               mt={6}
-              isInvalid={formState.errors?.nama as unknown as boolean}
+              isInvalid={formState.errors?.name as unknown as boolean}
             >
               <FormLabel htmlFor="pass">Nama Lengkap</FormLabel>
               <Input
                 type="text"
                 placeholder="Masukan nama lengkap"
                 disabled={registerUser.isLoading}
-                {...register("nama")}
+                {...register("name")}
               />
               <FormErrorMessage>
-                {formState.errors?.nama?.message}
+                {formState.errors?.name?.message}
               </FormErrorMessage>
             </FormControl>
             <HStack mt={6}>

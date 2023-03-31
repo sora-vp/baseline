@@ -16,7 +16,9 @@ export const SettingContext = createContext<ISettingContext>(
 
 export const SettingProvider = ({
   children,
-}: { children: React.ReactNode }) => {
+}: {
+  children: React.ReactNode;
+}) => {
   const toast = useToast();
 
   const [canAttend, setCanAttend] = useState<boolean>(false);
@@ -28,23 +30,23 @@ export const SettingProvider = ({
     onSuccess(result) {
       const waktuMulai = result.startTime
         ? DateTime.fromISO(result.startTime as unknown as string)
-          .toLocal()
-          .toJSDate()
-          .getTime()
+            .toLocal()
+            .toJSDate()
+            .getTime()
         : null;
       const waktuSelesai = result.endTime
         ? DateTime.fromISO(result.endTime as unknown as string)
-          .toLocal()
-          .toJSDate()
-          .getTime()
+            .toLocal()
+            .toJSDate()
+            .getTime()
         : null;
 
       const currentTime = new Date().getTime();
 
       setCanAttend(
         (waktuMulai as number) <= currentTime &&
-        (waktuSelesai as number) >= currentTime &&
-        result.canAttend
+          (waktuSelesai as number) >= currentTime &&
+          result.canAttend
       );
     },
 

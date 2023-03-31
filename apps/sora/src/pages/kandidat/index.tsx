@@ -30,29 +30,30 @@ import {
   AlertDialogCloseButton,
 } from "@chakra-ui/react";
 import Head from "next/head";
-import { Types } from "mongoose";
 import NextLink from "next/link";
 
-import { trpc } from "@utils/trpc";
-import Sidebar from "@components/Sidebar";
+import { api } from "~/utils/api";
+import Sidebar from "~/components/Sidebar";
 
 const Candidate = () => {
   const toast = useToast();
+
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   const cancelRef = useRef<HTMLButtonElement>(null!);
 
   const { isOpen, onOpen, onClose } = useDisclosure();
 
-  const candidateQuery = trpc.candidate.adminCandidateList.useQuery(undefined, {
+  const candidateQuery = api.candidate.adminCandidateList.useQuery(undefined, {
     refetchInterval: 2500,
     refetchIntervalInBackground: true,
   });
-  const settingsQuery = trpc.settings.getSettings.useQuery(undefined, {
+  const settingsQuery = api.settings.getSettings.useQuery(undefined, {
     refetchInterval: 2500,
     refetchIntervalInBackground: true,
   });
 
   const candidateDeleteMutation =
-    trpc.candidate.adminDeleteCandidate.useMutation({
+    api.candidate.adminDeleteCandidate.useMutation({
       onSuccess(result) {
         onClose();
 
@@ -77,14 +78,14 @@ const Candidate = () => {
     });
 
   // Untuk keperluan hapus data
-  const [currentID, setID] = useState<Types.ObjectId | null>(null);
+  const [currentID, setID] = useState<number | null>(null);
 
   const getNama = () => {
     const currentCandidate = candidateQuery.data?.find(
-      (p) => p._id === currentID
+      (p) => p.id === currentID
     );
 
-    return currentCandidate?.namaKandidat;
+    return currentCandidate?.name;
   };
 
   return (
@@ -138,7 +139,7 @@ const Candidate = () => {
                           <>
                             Jumlah orang yang sudah bersuara berjumlah{" "}
                             {candidateQuery.data
-                              .map((p) => p.dipilih)
+                              .map((p) => p.counter)
                               .reduce((curr, acc) => curr + acc, 0)}{" "}
                             orang
                           </>
@@ -178,19 +179,20 @@ const Candidate = () => {
                         !candidateQuery.isError &&
                         candidateQuery.data &&
                         candidateQuery.data.map((p, idx) => (
-                          <Tr key={p._id as unknown as string}>
+                          <Tr key={p.id}>
                             <Td>{++idx}</Td>
-                            <Td>{p.namaKandidat}</Td>
-                            <Td>{p.dipilih} Orang</Td>
+                            <Td>{p.name}</Td>
+                            <Td>{p.counter} Orang</Td>
                             <Td>
+                              {/* eslint-disable-next-line @next/next/no-img-element */}
                               <img
-                                src={`/api/uploads/${p.imgName}`}
-                                alt={`Gambar dari kandidat ${p.namaKandidat}.`}
+                                src={`/api/uploads/${p.img}`}
+                                alt={`Gambar dari kandidat ${p.name}.`}
                               />
                             </Td>
                             <Td>
                               <NextLink
-                                href={`/kandidat/edit/${p._id}`}
+                                href={`/kandidat/edit/${p.id}`}
                                 passHref={
                                   !settingsQuery.isLoading ||
                                   !(
@@ -216,7 +218,7 @@ const Candidate = () => {
                                 isDisabled={
                                   settingsQuery.isLoading ||
                                   settingsQuery.data?.canVote ||
-                                  p.dipilih > 0
+                                  p.counter > 0
                                 }
                                 bg="red.500"
                                 _hover={{ bg: "red.700" }}
@@ -231,7 +233,7 @@ const Candidate = () => {
                                       }
                                     )?.canVote
                                   ) {
-                                    setID(p._id);
+                                    setID(p.id);
                                     onOpen();
                                   }
                                 }}
@@ -303,7 +305,7 @@ const Candidate = () => {
                       ?.canVote
                   )
                     candidateDeleteMutation.mutate({
-                      id: currentID as unknown as string,
+                      id: currentID as number,
                     });
                 }}
                 ml={3}
