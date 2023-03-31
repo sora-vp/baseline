@@ -5,7 +5,7 @@ import type { Session } from "next-auth";
 import type { AppType } from "next/app";
 
 import "react-datepicker/dist/react-datepicker.css";
-import "@components/DatePicker/chakra-support.css";
+import "~/components/DatePicker/chakra-support.css";
 
 import { api } from "~/utils/api";
 

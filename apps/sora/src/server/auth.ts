@@ -1,11 +1,12 @@
+import CredentialsProvider from "next-auth/providers/credentials";
 import { type GetServerSidePropsContext } from "next";
 import {
   getServerSession,
   type NextAuthOptions,
   type DefaultSession,
 } from "next-auth";
-import CredentialsProvider from "next-auth/providers/credentials";
-import { env } from "~/env.mjs";
+import bcrypt from "bcrypt";
+
 import { prisma } from "~/server/db";
 
 /**
@@ -35,6 +36,10 @@ declare module "next-auth" {
  * @see https://next-auth.js.org/configuration/options
  */
 export const authOptions: NextAuthOptions = {
+  pages: {
+    signIn: "/login",
+  },
+
   callbacks: {
     session({ session, user }) {
       if (session.user) {
@@ -44,7 +49,41 @@ export const authOptions: NextAuthOptions = {
       return session;
     },
   },
-  providers: [],
+  providers: [
+    CredentialsProvider({
+      name: "credentials",
+      credentials: {
+        email: { label: "Email", type: "text" },
+        password: { label: "Password", type: "password" },
+      },
+
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      async authorize(credentials: Record<"email" | "password", string>) {
+        const user = await prisma.user.findUnique({
+          where: { email: credentials.email },
+        });
+
+        if (!user) throw new Error("Pengguna tidak ditemukan!");
+
+        console.log(user);
+
+        const isValidPassword = await bcrypt.compare(
+          credentials.password,
+          user.password
+        );
+
+        if (!isValidPassword) throw new Error("Kata sandi salah!");
+
+        return {
+          user: {
+            id: user.id,
+            email: user.email,
+          },
+        };
+      },
+    }),
+  ],
 };
 
 /**
