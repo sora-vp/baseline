@@ -184,7 +184,7 @@ const Candidate = () => {
                             <Td>{p.name}</Td>
                             <Td>{p.counter} Orang</Td>
                             <Td>
-                              { /* eslint-disable-next-line @next/next/no-img-element */}
+                              {/* eslint-disable-next-line @next/next/no-img-element */}
                               <img
                                 src={`/api/uploads/${p.img}`}
                                 alt={`Gambar dari kandidat ${p.name}.`}

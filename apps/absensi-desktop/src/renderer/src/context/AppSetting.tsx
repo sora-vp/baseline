@@ -19,7 +19,9 @@ export const AppSettingContext = createContext<IAppSetting>({} as IAppSetting);
 
 export const AppSettingProvider = ({
   children,
-}: { children: React.ReactNode }) => {
+}: {
+  children: React.ReactNode;
+}) => {
   const toast = useToast();
 
   const [serverURL, setServerUrlState] = useState<string | undefined>();

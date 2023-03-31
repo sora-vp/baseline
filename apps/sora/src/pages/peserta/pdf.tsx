@@ -13,6 +13,7 @@ import {
   Select,
   VStack,
   Table,
+  Text,
   Thead,
   Tbody,
   Tr,
@@ -126,7 +127,9 @@ const PDFPage = () => {
                       .replace("|", "")
                       .trim()}
                   </Td>
-                  <Td>{participant.qrId}</Td>
+                  <Td>
+                    <Text as="pre">{participant.qrId}</Text>
+                  </Td>
                   <Td>
                     <Link
                       href={`${mainWeb}/qr/${participant.qrId}`}

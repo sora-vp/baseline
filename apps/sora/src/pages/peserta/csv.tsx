@@ -34,31 +34,29 @@ import {
 const HalamanTambah = () => {
   const toast = useToast();
 
-  const insertManyMutation = api.participant.insertManyParticipant.useMutation(
-    {
-      onSuccess(result) {
-        toast({
-          description: result.message,
-          status: "success",
-          duration: 6000,
-          position: "top-right",
-          isClosable: true,
-        });
+  const insertManyMutation = api.participant.insertManyParticipant.useMutation({
+    onSuccess(result) {
+      toast({
+        description: result.message,
+        status: "success",
+        duration: 6000,
+        position: "top-right",
+        isClosable: true,
+      });
 
-        Router.push("/peserta");
-      },
+      Router.push("/peserta");
+    },
 
-      onError(result) {
-        toast({
-          description: result.message,
-          status: "error",
-          duration: 6000,
-          position: "top-right",
-          isClosable: true,
-        });
-      },
-    }
-  );
+    onError(result) {
+      toast({
+        description: result.message,
+        status: "error",
+        duration: 6000,
+        position: "top-right",
+        isClosable: true,
+      });
+    },
+  });
 
   const { handleSubmit, register, formState } = useForm<FormValues>({
     resolver: zodResolver(validationSchema),

@@ -140,7 +140,9 @@ export const participantRouter = createTRPCRouter({
 
       const participants = await prisma.participant.findMany({
         where: {
-          name: input.category,
+          name: {
+            startsWith: `${input.category} | `,
+          },
         },
       });
 

@@ -7,7 +7,10 @@ import styles from "@renderer/styles/components/Scanner.module.css";
 
 import { trpc } from "@renderer/utils/trpc";
 
-const NormalScanner = ({ setInvalidQr, participantAttend }: {
+const NormalScanner = ({
+  setInvalidQr,
+  participantAttend,
+}: {
   setInvalidQr: (invalid: boolean) => void;
   participantAttend: ReturnType<
     typeof trpc.participant.participantAttend.useMutation

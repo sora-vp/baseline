@@ -41,7 +41,12 @@ import Head from "next/head";
 import NextLink from "next/link";
 import { GrPrevious, GrNext } from "react-icons/gr";
 import { BiFirstPage, BiLastPage } from "react-icons/bi";
-import { BsFillFilePdfFill, BsFiletypeCsv, BsQrCode, BsFiletypeJson } from "react-icons/bs";
+import {
+  BsFillFilePdfFill,
+  BsFiletypeCsv,
+  BsQrCode,
+  BsFiletypeJson,
+} from "react-icons/bs";
 
 import { api, type RouterOutputs } from "~/utils/api";
 import Sidebar from "~/components/Sidebar";
@@ -51,11 +56,13 @@ import {
   getCoreRowModel,
   flexRender,
   createColumnHelper,
-
   type PaginationState,
 } from "@tanstack/react-table";
 
-const columnHelper = createColumnHelper<RouterOutputs["participant"]['getParticipantPaginated']["participants"][number]>();
+const columnHelper =
+  createColumnHelper<
+    RouterOutputs["participant"]["getParticipantPaginated"]["participants"][number]
+  >();
 
 const columns = [
   columnHelper.accessor((row) => row.name, {
@@ -63,6 +70,7 @@ const columns = [
   }),
   columnHelper.accessor((row) => row.qrId, {
     id: "QR ID",
+    cell: (info) => <Text as="pre">{info.getValue()}</Text>,
   }),
   columnHelper.accessor("alreadyAttended", {
     cell: (info) => (
@@ -157,14 +165,17 @@ const Peserta = () => {
     enabled: false,
 
     onSuccess({ data }) {
-      const element = document.createElement('a');
+      const element = document.createElement("a");
 
-      element.setAttribute('href', 'data:application/json;charset=utf-8,' + encodeURIComponent(data));
-      element.setAttribute('download', "data-partisipan.json");
+      element.setAttribute(
+        "href",
+        "data:application/json;charset=utf-8," + encodeURIComponent(data)
+      );
+      element.setAttribute("download", "data-partisipan.json");
 
       element.click();
-    }
-  })
+    },
+  });
 
   const participantDeleteMutation =
     api.participant.deleteParticipant.useMutation({
@@ -210,9 +221,7 @@ const Peserta = () => {
     const currentParticipant =
       participantQuery.data &&
       participantQuery.data.participants &&
-      participantQuery.data.participants.find(
-        (p) => p.id === currentID
-      );
+      participantQuery.data.participants.find((p) => p.id === currentID);
 
     return currentParticipant?.name;
   };
@@ -370,7 +379,7 @@ const Peserta = () => {
                                       row.original.alreadyChoosing
                                     ))
                                 ) {
-                                  setID(row.original.id)
+                                  setID(row.original.id);
                                   onOpen();
                                 }
                               }}
