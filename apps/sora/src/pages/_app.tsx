@@ -1,10 +1,13 @@
-import { type AppType } from "next/app";
-import { type Session } from "next-auth";
+// src/pages/_app.tsx
+import { ChakraProvider } from "@chakra-ui/react";
 import { SessionProvider } from "next-auth/react";
+import type { Session } from "next-auth";
+import type { AppType } from "next/app";
+
+import "react-datepicker/dist/react-datepicker.css";
+import "@components/DatePicker/chakra-support.css";
 
 import { api } from "~/utils/api";
-
-import "~/styles/globals.css";
 
 const MyApp: AppType<{ session: Session | null }> = ({
   Component,
@@ -12,7 +15,9 @@ const MyApp: AppType<{ session: Session | null }> = ({
 }) => {
   return (
     <SessionProvider session={session}>
-      <Component {...pageProps} />
+      <ChakraProvider resetCSS>
+        <Component {...pageProps} />
+      </ChakraProvider>
     </SessionProvider>
   );
 };

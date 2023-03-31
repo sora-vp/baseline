@@ -35,7 +35,7 @@ export const participantRouter = createTRPCRouter({
     .mutation(async ({ input }) => {
       await prisma.participant.create({
         data: {
-          name: input.nama,
+          name: input.name,
           qrId: nanoid(),
         },
       });

@@ -6,7 +6,7 @@ const baseNameSchema = z
   .min(1, { message: "Diperlukan nama peserta!" });
 
 export const TambahPesertaValidationSchema = z.object({
-  nama: baseNameSchema,
+  name: baseNameSchema,
 });
 
 export const TambahPesertaManyValidationSchema = z.array(
