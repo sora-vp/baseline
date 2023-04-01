@@ -12,11 +12,11 @@
     "typecheck": "turbo run typecheck",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "dev:web": "turbo run dev --filter sora",
-    "dev:sora-desktop": "turbo run dev --filter sora-desktop",
-    "dev:absensi-desktop": "turbo run dev --filter absensi-desktop",
+    "dev:sora": "turbo run dev --filter sora-desktop",
+    "dev:absensi": "turbo run dev --filter absensi-desktop",
     "build:web": "turbo run build --filter sora",
-    "build-desktop:win": "turbo run build --filter *-desktop",
-    "build-desktop:linux": "turbo run build --filter *-desktop"
+    "build-desktop:win": "turbo run build-win --filter *-desktop",
+    "build-desktop:linux": "turbo run build-linux --filter *-desktop"
   },
   "devDependencies": {
     "prettier": "^2.8.6",
