@@ -8,14 +8,17 @@ import { useParticipant } from "@renderer/context/ParticipantContext";
 import { useToast, Box, Text, HStack } from "@chakra-ui/react";
 import styles from "@renderer/styles/components/Scanner.module.css";
 
-const NormalScanner: React.FC<{ setInvalidQr: Function }> = ({
+const NormalScanner = ({
   setInvalidQr,
+}: {
+  setInvalidQr: (invalid: boolean) => void;
 }) => {
   const toast = useToast();
   const navigate = useNavigate();
 
   const { qrId, setQRCode } = useParticipant();
 
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   const videoRef = useRef<HTMLVideoElement>(null!);
 
   const checkParticipantMutation =

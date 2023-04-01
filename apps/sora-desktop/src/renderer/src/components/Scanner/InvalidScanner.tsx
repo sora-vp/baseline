@@ -1,7 +1,9 @@
 import { Box, Button, Text, HStack, Heading } from "@chakra-ui/react";
 
-const ErrorScanner: React.FC<{ setInvalidQr: Function }> = ({
+const ErrorScanner = ({
   setInvalidQr,
+}: {
+  setInvalidQr: (invalid: boolean) => void;
 }) => {
   return (
     <HStack h={"100vh"} justifyContent="center">
