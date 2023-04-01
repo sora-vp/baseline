@@ -9,14 +9,12 @@ export type TModelApiResponse = {
   endTime: Date | null;
   canVote: boolean | null;
   canAttend: boolean | null;
-  reloadAfterVote: boolean | null;
 };
 export interface DataModel extends Partial<Model.StoreEntity> {
   startTime: Date;
   endTime: Date;
   canVote: boolean;
   canAttend: boolean;
-  reloadAfterVote: boolean;
 }
 
 const file = path.join(path.resolve(), "settings.bin");

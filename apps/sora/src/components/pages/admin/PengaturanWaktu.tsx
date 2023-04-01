@@ -98,6 +98,7 @@ const PengaturanWaktu = () => {
       bg={useColorModeValue("white", "gray.800")}
       borderWidth="1px"
       borderRadius="lg"
+      minHeight="21.5em"
     >
       <Container mx={7} my={7}>
         <Text fontWeight={500} fontSize={"30px"} mb={5}>
@@ -129,7 +130,7 @@ const PengaturanWaktu = () => {
           </FormControl>
 
           <FormControl
-            mt={4}
+            mt={5}
             isInvalid={formState.errors?.endTime as unknown as boolean}
           >
             <FormLabel htmlFor="selesai">Waktu Selesai</FormLabel>

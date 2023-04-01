@@ -2,7 +2,6 @@ import { z } from "zod";
 
 export const PengaturanPerilakuValidationSchema = z.object({
   canVote: z.boolean(),
-  reloadAfterVote: z.boolean(),
   canAttend: z.boolean(),
 });
 

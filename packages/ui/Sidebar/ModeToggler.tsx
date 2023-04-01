@@ -1,4 +1,3 @@
-import * as React from "react";
 import { useColorMode, Flex, Button, Icon } from "@chakra-ui/react";
 import { BsMoonFill, BsSun } from "react-icons/bs";
 

@@ -86,6 +86,7 @@
     "sora": "workspace:*",
     "superjson": "1.12.2",
     "typescript": "^4.9.5",
+    "ui": "workspace:*",
     "vite": "^4.2.1"
   }
 }

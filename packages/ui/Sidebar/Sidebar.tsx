@@ -1,5 +1,4 @@
 /* eslint-disable react-hooks/rules-of-hooks */
-import * as React from "react";
 
 import { useRef, ElementType, ReactNode, memo } from "react";
 import {

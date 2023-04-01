@@ -20,8 +20,6 @@ export const settingsRouter = createTRPCRouter({
       startTime: data?.startTime ? data.startTime : null,
       endTime: data?.endTime ? data.endTime : null,
       canVote: data?.canVote !== undefined ? data.canVote : false,
-      reloadAfterVote:
-        data?.reloadAfterVote !== undefined ? data.reloadAfterVote : false,
       canAttend: data?.canAttend !== undefined ? data.canAttend : false,
     };
   }),

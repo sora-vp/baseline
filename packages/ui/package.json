@@ -3,6 +3,10 @@
   "version": "0.0.0",
   "main": "./index.tsx",
   "types": "./index.tsx",
+  "files": [
+    "./Desktop",
+    "./Sidebar"
+  ],
   "license": "MIT",
   "devDependencies": {
     "@types/react": "18.0.28",
@@ -12,7 +16,6 @@
   },
   "dependencies": {
     "@chakra-ui/react": "^2.5.2",
-    "@next/font": "^13.2.3",
     "next": "13.2.4",
     "next-auth": "^4.20.1",
     "react-icons": "^4.8.0"

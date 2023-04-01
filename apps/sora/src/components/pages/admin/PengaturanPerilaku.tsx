@@ -34,8 +34,6 @@ const PengaturanPerilaku = () => {
       reset({
         canVote: data.canVote !== null && data.canVote !== false,
         canAttend: data.canAttend !== null && data.canAttend !== false,
-        reloadAfterVote:
-          data.reloadAfterVote !== null && data.reloadAfterVote !== false,
       });
     },
   });
@@ -68,6 +66,7 @@ const PengaturanPerilaku = () => {
       bg={useColorModeValue("white", "gray.800")}
       borderWidth="1px"
       borderRadius="lg"
+      minHeight="21.5em"
     >
       <Container mx={7} my={7}>
         <Text fontWeight={500} fontSize={"30px"} mb={6}>
@@ -100,7 +99,7 @@ const PengaturanPerilaku = () => {
           </FormControl>
 
           <FormControl
-            mt={5}
+            mt={6}
             isInvalid={formState.errors?.canAttend as unknown as boolean}
           >
             <FormLabel htmlFor="mulai">Sudah Bisa Absen</FormLabel>
@@ -121,33 +120,6 @@ const PengaturanPerilaku = () => {
             />
             <FormErrorMessage>
               {formState.errors?.canAttend?.message}
-            </FormErrorMessage>
-          </FormControl>
-
-          <FormControl
-            mt={5}
-            isInvalid={formState.errors?.reloadAfterVote as unknown as boolean}
-          >
-            <FormLabel htmlFor="selesai">
-              Refresh halaman setelah memilih
-            </FormLabel>
-            <Controller
-              name={"reloadAfterVote"}
-              control={control}
-              render={({ field }) => (
-                <Switch
-                  colorScheme="yellow"
-                  size="lg"
-                  isChecked={field.value}
-                  onChange={(checked) => field.onChange(checked)}
-                  isDisabled={
-                    changeBehaviour.isLoading || settingsQuery.isLoading
-                  }
-                />
-              )}
-            />
-            <FormErrorMessage>
-              {formState.errors?.reloadAfterVote?.message}
             </FormErrorMessage>
           </FormControl>
 
