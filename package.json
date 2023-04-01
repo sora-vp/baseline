@@ -6,7 +6,7 @@
     "packages/*"
   ],
   "scripts": {
-    "build": "turbo run build",
+    "build": "turbo run build --filter sora",
     "dev": "turbo run dev --parallel",
     "lint": "turbo run lint",
     "typecheck": "turbo run typecheck",
@@ -14,7 +14,6 @@
     "dev:web": "turbo run dev --filter sora",
     "dev:sora": "turbo run dev --filter sora-desktop",
     "dev:absensi": "turbo run dev --filter absensi-desktop",
-    "build:web": "turbo run build --filter sora",
     "build-desktop:win": "turbo run build-win --filter *-desktop",
     "build-desktop:linux": "turbo run build-linux --filter *-desktop"
   },
