@@ -1,4 +1,4 @@
-import { useState, useRef, } from "react";
+import { useState, useRef } from "react";
 import {
   useDisclosure,
   useToast,

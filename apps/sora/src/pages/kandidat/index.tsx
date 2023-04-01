@@ -9,6 +9,7 @@ import {
   Text,
   Button,
   Spinner,
+  Tooltip,
 
   // Table
   Table,
@@ -19,6 +20,8 @@ import {
   Td,
   TableContainer,
   TableCaption,
+  Stack,
+  Badge,
 
   // Alert dialog
   AlertDialog,
@@ -51,6 +54,13 @@ const Candidate = () => {
     refetchInterval: 2500,
     refetchIntervalInBackground: true,
   });
+  const counterQuery = api.candidate.getCandidateAndParticipantCount.useQuery(
+    undefined,
+    {
+      refetchInterval: 2500,
+      refetchIntervalInBackground: true,
+    }
+  );
 
   const candidateDeleteMutation =
     api.candidate.adminDeleteCandidate.useMutation({
@@ -130,27 +140,57 @@ const Candidate = () => {
                   </Button>
                 </NextLink>
               </HStack>
+
               <HStack>
                 <TableContainer w="100%" h="100%">
+                  {!candidateQuery.isLoading &&
+                  !candidateQuery.isError &&
+                  candidateQuery.data.length > 0 &&
+                  counterQuery.data ? (
+                    <Stack direction="row" mr="2" mt="3" mb="3">
+                      <Badge fontSize="1.3em">
+                        <Tooltip label="Jumlah suara masuk ke masing-masing kandidat terpilih">
+                          Akumulasi Kandidat:
+                        </Tooltip>{" "}
+                        {counterQuery.data.candidates} Orang
+                      </Badge>
+                      <Badge fontSize="1.3em">
+                        <Tooltip label="Jumlah peserta pemilihan yang valid dalem memilih kandidat">
+                          Akumulasi Pemilih:
+                        </Tooltip>{" "}
+                        {counterQuery.data.participants} Orang
+                      </Badge>
+                      <Badge
+                        fontSize="1.3em"
+                        colorScheme={
+                          counterQuery.data.isMatch ? "green" : "red"
+                        }
+                        variant="solid"
+                      >
+                        <Tooltip
+                          label={
+                            counterQuery.data.isMatch
+                              ? "Jumlah peserta yang berhasil memilih sesuai dengan jumlah keseluruhan kandidat"
+                              : "Jumlah peserta yang berhasil memilih tidak sesuai dengan jumlah keseluruhan kandidat"
+                          }
+                        >
+                          {counterQuery.data.isMatch
+                            ? "COCOK!"
+                            : "TIDAK COCOK!"}
+                        </Tooltip>
+                      </Badge>
+                    </Stack>
+                  ) : null}
+
                   <Table variant="simple">
-                    {!candidateQuery.isLoading && !candidateQuery.isError && (
-                      <TableCaption>
-                        {candidateQuery.data.length > 0 ? (
-                          <>
-                            Jumlah orang yang sudah bersuara berjumlah{" "}
-                            {candidateQuery.data
-                              .map((p) => p.counter)
-                              .reduce((curr, acc) => curr + acc, 0)}{" "}
-                            orang
-                          </>
-                        ) : (
-                          <>
-                            Tidak ada kandidat yang tersedia, silahkan tambahkan
-                            kandidat terlebih dahulu.
-                          </>
-                        )}
+                    {!candidateQuery.isLoading &&
+                    !candidateQuery.isError &&
+                    candidateQuery.data.length < 0 ? (
+                      <TableCaption placement="top">
+                        Tidak ada kandidat yang tersedia, silahkan tambahkan
+                        kandidat terlebih dahulu.
                       </TableCaption>
-                    )}
+                    ) : null}
 
                     <Thead>
                       <Tr>

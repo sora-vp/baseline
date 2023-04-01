@@ -103,7 +103,7 @@ const Vote: React.FC = () => {
       >
         {candidate &&
           candidate.map((kandidat) => (
-            <Center key={kandidat.image} py={6}>
+            <Center key={kandidat.img} py={6}>
               <Box
                 maxW={"320px"}
                 w={"full"}
@@ -113,7 +113,7 @@ const Vote: React.FC = () => {
                 textAlign={"center"}
               >
                 <Image
-                  src={`${serverURL as string}/api/uploads/${kandidat.image}`}
+                  src={`${serverURL as string}/api/uploads/${kandidat.img}`}
                   alt={`Gambar dari kandidat ${kandidat.name}.`}
                 />
                 <Heading mt={2} fontSize={"3xl"} fontFamily={"body"}>

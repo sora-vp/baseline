@@ -17,19 +17,55 @@ import {
 import { canVoteNow } from "~/utils/canDoSomething";
 
 export const candidateRouter = createTRPCRouter({
-  candidateList: publicProcedure.query(async () => {
-    const data = await prisma.candidate.findMany();
-
-    return data.map((kandidat) => ({
-      id: kandidat.id,
-      name: kandidat.name,
-      image: kandidat.img,
-    }));
-  }),
+  candidateList: publicProcedure.query(() =>
+    prisma.candidate.findMany({
+      select: {
+        id: true,
+        name: true,
+        img: true,
+      },
+    })
+  ),
 
   adminCandidateList: protectedProcedure.query(() =>
     prisma.candidate.findMany()
   ),
+
+  getCandidateAndParticipantCount: protectedProcedure.query(async () => {
+    const candidates = await prisma.candidate.findMany({
+      select: {
+        counter: true,
+      },
+      where: {
+        counter: {
+          gt: 0,
+        },
+      },
+    });
+
+    const alreadyAttendedAndChoosing = await prisma.participant.count({
+      where: {
+        alreadyAttended: true,
+        alreadyChoosing: true,
+      },
+    });
+
+    if (!candidates)
+      throw new TRPCError({
+        code: "NOT_FOUND",
+        message: "Belum ada kandidat yang terdaftar",
+      });
+
+    const candidatesAccumulation = candidates
+      .map(({ counter }) => counter)
+      .reduce((curr, acc) => curr + acc);
+
+    return {
+      isMatch: candidatesAccumulation === alreadyAttendedAndChoosing,
+      participants: alreadyAttendedAndChoosing,
+      candidates: candidatesAccumulation,
+    };
+  }),
 
   getSpecificCandidate: protectedProcedure
     .input(adminGetSpecificCandidateValidationSchema)
