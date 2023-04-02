@@ -9,7 +9,7 @@ interface ISettingContext {
   isLoading: boolean;
   isError: boolean;
   isCandidatesExist: boolean;
-  candidate: RouterOutput["candidate"]["candidateList"] | undefined;
+  candidates: RouterOutput["candidate"]["candidateList"] | undefined;
 }
 
 export const SettingContext = createContext<ISettingContext>(
@@ -123,7 +123,7 @@ export const SettingProvider = ({
         isLoading,
         isError,
         isCandidatesExist,
-        candidate: candidateQuery.data,
+        candidates: candidateQuery.data,
       }}
     >
       {children}

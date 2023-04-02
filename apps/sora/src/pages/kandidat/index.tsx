@@ -155,7 +155,7 @@ const Candidate = () => {
                         {counterQuery.data.candidates} Orang
                       </Badge>
                       <Badge fontSize="1.3em">
-                        <Tooltip label="Jumlah peserta pemilihan yang valid dalem memilih kandidat">
+                        <Tooltip label="Jumlah peserta pemilihan yang valid dalam memilih kandidat">
                           Akumulasi Pemilih:
                         </Tooltip>{" "}
                         {counterQuery.data.participants} Orang

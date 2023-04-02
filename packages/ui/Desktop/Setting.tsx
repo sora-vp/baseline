@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useCallback, useEffect } from "react";
 import {
   Box,
   Button,
@@ -9,17 +9,65 @@ import {
   FormHelperText,
   FormErrorMessage,
   Input,
+  useToast,
 } from "@chakra-ui/react";
+import { ElectronAPI } from "@electron-toolkit/preload";
 
-interface IAppSetting {
-  serverURL?: string;
-  setServerUrl: (url: string) => void;
+declare global {
+  interface Window {
+    electron: ElectronAPI;
+    api: unknown;
+  }
 }
 
-export const SettingWrapper = (useAppSetting: () => IAppSetting) => () => {
-  const { serverURL, setServerUrl } = useAppSetting();
+export const Setting = () => {
+  const toast = useToast();
 
-  const [formURL, setFormURL] = useState(serverURL ?? "");
+  const [formURL, setFormURL] = useState("");
+
+  const setServerUrl = useCallback(async (url: string) => {
+    try {
+      const serverURL = new URL(url);
+
+      await window.electron.ipcRenderer.invoke(
+        "set-server-url",
+        serverURL.origin
+      );
+
+      toast({
+        description: "Berhasil memperbarui pengaturan alamat server!",
+        status: "success",
+        duration: 4500,
+        position: "top-right",
+      });
+
+      setTimeout(() => {
+        location.href = "#/";
+        location.reload();
+      }, 3000);
+
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (error: any) {
+      toast({
+        description: `Gagal memperbarui url | ${error.message}`,
+        status: "error",
+        duration: 5000,
+        position: "top-right",
+      });
+    }
+  }, []);
+
+  useEffect(() => {
+    const composeAsync = async () => {
+      const storeValue = await window.electron.ipcRenderer.invoke(
+        "get-server-url"
+      );
+
+      setFormURL(storeValue);
+    };
+
+    composeAsync();
+  }, []);
 
   return (
     <HStack h={"100vh"} justifyContent="center">

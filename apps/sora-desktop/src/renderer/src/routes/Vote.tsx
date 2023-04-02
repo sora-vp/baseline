@@ -1,15 +1,17 @@
-import { useState, useRef } from "react";
+import { useState, useEffect, useRef, useMemo, useCallback } from "react";
 import {
   useToast,
   useDisclosure,
-  Box,
+  Heading,
   Text,
+  Stack,
   VStack,
   HStack,
   Image,
-  Center,
-  Heading,
   Button,
+  Card,
+  CardBody,
+  CardFooter,
 
   // Alert dialog
   AlertDialog,
@@ -37,12 +39,15 @@ const Vote: React.FC = () => {
 
   const { qrId, setQRCode } = useParticipant();
   const { serverURL } = useAppSetting();
-  const { isLoading, isError, canVoteNow, candidate } = useSetting();
+  const { isLoading, isError, canVoteNow, candidates } = useSetting();
 
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   const cancelRef = useRef<HTMLButtonElement>(null!);
+
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+  const sendRef = useRef<HTMLButtonElement>(null!);
 
   // Untuk keperluan pemilihan
   const [currentID, setID] = useState<number | null>(null);
@@ -72,12 +77,91 @@ const Vote: React.FC = () => {
     },
   });
 
+  const cannotPushAKeyboard = useMemo(
+    () =>
+      !qrId ||
+      !canVoteNow ||
+      candidateMutation.isSuccess ||
+      candidateMutation.isError ||
+      candidateMutation.isLoading ||
+      (candidates && candidates.length === 0),
+    [
+      qrId,
+      canVoteNow,
+      candidateMutation.isError,
+      candidateMutation.isLoading,
+      candidateMutation.isSuccess,
+    ]
+  );
+
+  const chooseCandidate = useCallback(() => {
+    if (qrId) {
+      sendRef.current.setAttribute("disabled", "disabled");
+      candidateMutation.mutate({
+        id: currentID as number,
+        qrId,
+      });
+    }
+  }, [candidateMutation, currentID]);
+
   const getNama = () => {
     const currentCandidate =
-      candidate && candidate?.find((p) => p.id === currentID);
+      candidates && candidates?.find((p) => p.id === currentID);
 
     return currentCandidate?.name;
   };
+
+  useEffect(() => {
+    const triggerBox = (index: number) => {
+      const candidateData =
+        candidates && candidates.length > 0 && candidates[index];
+
+      if (!isOpen && candidateData) {
+        setID(candidateData.id);
+        onOpen();
+      }
+    };
+
+    const onKeydown = (e: KeyboardEvent) => {
+      if (cannotPushAKeyboard) return;
+
+      switch (e.key) {
+        case "Escape":
+          if (isOpen) onClose();
+          break;
+
+        case "1":
+          triggerBox(0);
+          break;
+
+        case "2":
+          triggerBox(1);
+          break;
+
+        case "3":
+          triggerBox(2);
+          break;
+
+        case "4":
+          triggerBox(3);
+          break;
+
+        case "5":
+          triggerBox(4);
+          break;
+
+        case "Enter":
+          if (isOpen) chooseCandidate();
+          break;
+      }
+    };
+
+    window.addEventListener("keyup", onKeydown);
+
+    return () => {
+      window.removeEventListener("keyup", onKeydown);
+    };
+  }, [cannotPushAKeyboard, isOpen]);
 
   if (isLoading) return <Loading />;
 
@@ -101,45 +185,47 @@ const Vote: React.FC = () => {
           flexWrap: "wrap",
         }}
       >
-        {candidate &&
-          candidate.map((kandidat) => (
-            <Center key={kandidat.img} py={6}>
-              <Box
-                maxW={"320px"}
-                w={"full"}
-                borderWidth="1px"
-                borderRadius="lg"
-                bg="white"
-                textAlign={"center"}
-              >
-                <Image
-                  src={`${serverURL as string}/api/uploads/${kandidat.img}`}
-                  alt={`Gambar dari kandidat ${kandidat.name}.`}
-                />
-                <Heading mt={2} fontSize={"3xl"} fontFamily={"body"}>
-                  Pasangan Calon
+        {candidates?.map((kandidat, idx) => (
+          <Card maxW="265px" key={kandidat.id}>
+            <CardBody>
+              <Image
+                w="100%"
+                src={`${serverURL as string}/api/uploads/${kandidat.img}`}
+                alt={`Gambar dari kandidat ${kandidat.name}.`}
+              />
+              <Stack textAlign="center">
+                <Heading mt={2} as="h3" size="lg" fontFamily={"body"}>
+                  Nomor Urut {++idx}
                 </Heading>
                 <Text fontSize={"1.4rem"} mt={2}>
                   {kandidat.name}
                 </Text>
+              </Stack>
+            </CardBody>
 
-                <Button
-                  onClick={() => {
-                    setID(kandidat.id);
-                    onOpen();
-                  }}
-                  colorScheme="green"
-                  variant="solid"
-                  mb={4}
-                >
-                  Pilih
-                </Button>
-              </Box>
-            </Center>
-          ))}
+            <CardFooter>
+              <Button
+                onClick={() => {
+                  setID(kandidat.id);
+                  onOpen();
+                }}
+                w="100%"
+                colorScheme="green"
+                variant="solid"
+                mb={4}
+                fontSize={"1.3rem"}
+                onFocus={(e) => e.target.blur()}
+              >
+                Pilih
+              </Button>
+            </CardFooter>
+          </Card>
+        ))}
       </HStack>
 
       <AlertDialog
+        autoFocus={false}
+        trapFocus={false}
         isCentered
         isOpen={isOpen}
         leastDestructiveRef={cancelRef}
@@ -157,7 +243,7 @@ const Vote: React.FC = () => {
             </AlertDialogHeader>
 
             <AlertDialogBody>
-              Apakah anda yakin untuk memilih paslon atas nama {getNama()}?
+              Apakah anda yakin untuk memilih kandidat atas nama {getNama()}?
             </AlertDialogBody>
 
             <AlertDialogFooter>
@@ -169,15 +255,11 @@ const Vote: React.FC = () => {
                 Batal
               </Button>
               <Button
-                colorScheme="green"
-                disabled={candidateMutation.isLoading}
-                onClick={() => {
-                  candidateMutation.mutate({
-                    qrId: qrId as string,
-                    id: currentID as number,
-                  });
-                }}
                 ml={3}
+                ref={sendRef}
+                colorScheme="green"
+                onClick={chooseCandidate}
+                disabled={candidateMutation.isLoading}
               >
                 Pilih
               </Button>

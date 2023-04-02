@@ -122,6 +122,7 @@ export const candidateRouter = createTRPCRouter({
   upvote: unprotectedProcedure
     .input(upvoteValidationSchema)
     .mutation(async ({ input }) => {
+      const baseTime = new Date();
       const inVotingCondition = await canVoteNow();
 
       if (!inVotingCondition)
@@ -168,7 +169,7 @@ export const candidateRouter = createTRPCRouter({
           where: { qrId: input.qrId },
           data: {
             alreadyChoosing: true,
-            choosingAt: new Date(),
+            choosingAt: baseTime,
           },
         }),
         prisma.candidate.update({
@@ -177,6 +178,7 @@ export const candidateRouter = createTRPCRouter({
             counter: {
               increment: 1,
             },
+            lastChoosedAt: baseTime,
           },
         }),
       ]);
