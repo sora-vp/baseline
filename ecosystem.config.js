@@ -8,7 +8,7 @@ module.exports = {
   apps: [
     {
       name: "sora",
-      script: path.join(nodeModulesDir, ".bin/next"),
+      script: path.join(nodeModulesDir, "next/dist/bin/next"),
       cwd: path.join(root, "apps/sora"),
       args: "start -p 3000",
     },
