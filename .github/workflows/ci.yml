@@ -1,4 +1,4 @@
-name: ES Lint
+name: Lint & TS
 on: [pull_request, push]
 
 env:
@@ -10,7 +10,7 @@ env:
 jobs:
   lint:
     runs-on: ubuntu-latest
-    name: Mengecek apakah file aman lint eslint
+    name: Mengecek apakah file aman dari segi typing dan linting
 
     steps:
       - name: Checkout
@@ -19,10 +19,13 @@ jobs:
       - name: Install Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: 18.15.0
+          node-version: 18
 
       - name: Install all dependencies
         uses: ./.github/actions/yarn-nm-install
 
       - name: Test Code Linting
         run: yarn lint
+
+      - name: Test Typing
+        run: yarn typecheck

@@ -1,18 +1,39 @@
-# https://gist.github.com/belgattitude/042f9caf10d029badbde6cf9d43e400a
+# https://github.com/belgattitude/nextjs-monorepo-example/blob/0dec79c0d8768361c0f13cf8e20398d149b0e5a9/.github/actions/yarn-nm-install/action.yml
 
-name: "Yarn install"
+name: "Monorepo install (yarn)"
 description: "Run yarn install with node_modules linker and cache enabled"
+inputs:
+  enable-corepack:
+    description: "Enable corepack"
+    required: false
+    default: "true"
+
+  skip-prisma-postinstall-generate:
+    description: "Avoid prisma to automatically generate schema on postinstall"
+    required: false
+    default: "true"
+  playwright-skip-browser-download:
+    description: "Avoid playwright to download browsers automatically"
+    required: false
+    default: "1"
 
 runs:
   using: "composite"
+
   steps:
-    - name: Expose yarn config as "$GITHUB_OUTPUT"
+    - name: ⚙️ Enable Corepack
+      if: ${{ inputs.enable-corepack }} == 'true'
+      shell: bash
+      run: corepack enable
+
+    - name: ⚙️ Expose yarn config as "$GITHUB_OUTPUT"
       id: yarn-config
       shell: bash
       run: |
         echo "CACHE_FOLDER=$(yarn config get cacheFolder)" >> $GITHUB_OUTPUT
-
-    - name: Restore yarn cache
+    # Yarn rotates the downloaded cache archives, @see https://github.com/actions/setup-node/issues/325
+    # Yarn cache is also reusable between arch and os.
+    - name: ♻️ Restore yarn cache
       uses: actions/cache@v3
       id: yarn-download-cache
       with:
@@ -20,20 +41,24 @@ runs:
         key: yarn-download-cache-${{ hashFiles('yarn.lock') }}
         restore-keys: |
           yarn-download-cache-
-
-    - name: Restore yarn install state
+    # Save install_state (invalidated on yarn.lock changes)
+    - name: ♻️ Restore yarn install state
       id: yarn-install-state-cache
       uses: actions/cache@v3
       with:
         path: .yarn/ci-cache/
         key: ${{ runner.os }}-yarn-install-state-cache-${{ hashFiles('yarn.lock', '.yarnrc.yml') }}
 
-    - name: Install dependencies
+    - name: 📥 Install dependencies
       shell: bash
       run: |
         yarn install --immutable --inline-builds
       env:
-        YARN_ENABLE_GLOBAL_CACHE: "false"
-        YARN_NM_MODE: "hardlinks-local"
-        YARN_INSTALL_STATE_PATH: .yarn/ci-cache/install-state.gz
-        HUSKY: "0"
+        # CI optimizations. Overrides yarnrc.yml options (or their defaults) in the CI action.
+        YARN_ENABLE_GLOBAL_CACHE: "false" # Use local cache folder to keep downloaded archives
+        YARN_NM_MODE: "hardlinks-local" # Hardlinks-(local|global) reduces io / node_modules size
+        YARN_INSTALL_STATE_PATH: .yarn/ci-cache/install-state.gz # Very small speedup when lock does not change
+        # Other environment variables
+        HUSKY: "0" # By default do not run HUSKY install
+        PRISMA_SKIP_POSTINSTALL_GENERATE: ${{ inputs.skip-prisma-postinstall-generate }}
+        PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: ${{ inputs.playwright-skip-browser-download }}
