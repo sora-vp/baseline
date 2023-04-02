@@ -21,13 +21,6 @@ jobs:
         with:
           node-version: 18.15.0
 
-      - uses: pnpm/action-setup@v2
-        name: Install pnpm
-        id: pnpm-install
-        with:
-          version: 8
-          run_install: false
-
       - name: Install all dependencies
         uses: ./.github/actions/yarn-nm-install
 
