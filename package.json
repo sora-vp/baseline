@@ -14,8 +14,8 @@
     "dev:web": "turbo run dev --filter sora",
     "dev:sora": "turbo run dev --filter sora-desktop",
     "dev:absensi": "turbo run dev --filter absensi-desktop",
-    "build-desktop:win": "turbo run build-win --filter *-desktop",
-    "build-desktop:linux": "turbo run build-linux --filter *-desktop"
+    "build-desktop:win": "turbo run build-win --filter '*-desktop'",
+    "build-desktop:linux": "turbo run build-linux --filter '*-desktop'"
   },
   "devDependencies": {
     "prettier": "^2.8.6",
@@ -23,5 +23,6 @@
   },
   "engines": {
     "node": ">=14.0.0"
-  }
+  },
+  "packageManager": "yarn@3.5.0"
 }

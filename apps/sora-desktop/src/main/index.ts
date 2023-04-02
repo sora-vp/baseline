@@ -1,10 +1,18 @@
 import { app, shell, BrowserWindow, ipcMain, Menu } from "electron";
 import { join } from "path";
 import Store from "electron-store";
+import { SerialPort } from "serialport";
+import { usb } from "usb";
 import { electronApp, optimizer, is } from "@electron-toolkit/utils";
+
 import icon from "../../resources/icon.png?asset";
 
+import { handleConnect } from "./keyboard";
+
 import type { MenuItemConstructorOptions } from "electron";
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+let port: SerialPort | undefined;
 
 const store = new Store<{
   serverURL?: string;
@@ -65,6 +73,21 @@ function createWindow(): void {
   } else {
     mainWindow.loadFile(join(__dirname, "../renderer/index.html"));
   }
+
+  // Intial connection to arduino (if board exist)
+  SerialPort.list().then((value) => {
+    if (value.length > 0 && value[0]) handleConnect(value[0], port, mainWindow);
+  });
+
+  // Button module reconnect mechanism
+  usb.on("attach", () => {
+    if (!port) {
+      SerialPort.list().then((value) => {
+        if (value.length > 0 && value[0])
+          handleConnect(value[0], port, mainWindow);
+      });
+    }
+  });
 }
 
 // This method will be called when Electron has finished
