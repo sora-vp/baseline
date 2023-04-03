@@ -23,7 +23,6 @@ model Candidate {
   counter       Int       @default(0)
   name          String    @unique
   img           String    @unique @db.VarChar(50)
-  lastChoosedAt DateTime?
 }
 
 model Participant {
