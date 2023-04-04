@@ -1,0 +1,27 @@
+{
+  "name": "vote-processor",
+  "version": "2.1.0",
+  "private": true,
+  "description": "Consumer yang memroses data yang datang dari pemilih untuk memilih kandidatnya",
+  "main": "dist/index.js",
+  "scripts": {
+    "lint": "eslint src/",
+    "dev": "ts-node src/index.ts",
+    "build": "tsc",
+    "typecheck": "tsc --noEmit"
+  },
+  "author": "Ezra Khairan Permana",
+  "license": "GPL-3.0",
+  "devDependencies": {
+    "@types/amqplib": "^0.10.1",
+    "@typescript-eslint/eslint-plugin": "latest",
+    "@typescript-eslint/parser": "latest",
+    "eslint": "latest",
+    "ts-node": "^10.9.1",
+    "typescript": "4.9.5"
+  },
+  "dependencies": {
+    "amqplib": "^0.10.3",
+    "sora": "workspace:*"
+  }
+}

@@ -4,7 +4,7 @@
   "types": "index.ts",
   "main": "index.ts",
   "author": "Ezra Khairan Permana",
-  "license": "MIT",
+  "license": "GPL-3.0",
   "dependencies": {
     "nanoid": "3.x.x"
   }

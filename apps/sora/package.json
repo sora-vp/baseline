@@ -1,6 +1,7 @@
 {
   "name": "sora",
   "version": "1.0.0",
+  "license": "GPL-3.0",
   "private": true,
   "main": "index.ts",
   "types": "index.ts",
@@ -24,6 +25,7 @@
     "@trpc/next": "^10.18.0",
     "@trpc/react-query": "^10.18.0",
     "@trpc/server": "^10.18.0",
+    "amqplib": "^0.10.3",
     "bcrypt": "^5.1.0",
     "cors": "^2.8.5",
     "csv-parse": "^5.3.6",
@@ -51,6 +53,7 @@
     "zod": "^3.21.4"
   },
   "devDependencies": {
+    "@types/amqplib": "^0.10.1",
     "@types/bcrypt": "^5.0.0",
     "@types/cors": "^2.8.13",
     "@types/eslint": "^8.21.3",

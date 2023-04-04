@@ -6,7 +6,7 @@
     "packages/*"
   ],
   "scripts": {
-    "build": "turbo run build --filter sora",
+    "build": "turbo run build --filter=sora --filter=vote-processor",
     "dev": "turbo run dev --parallel",
     "lint": "turbo run lint",
     "typecheck": "turbo run typecheck",

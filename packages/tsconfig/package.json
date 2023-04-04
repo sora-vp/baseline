@@ -1,5 +1,6 @@
 {
   "name": "tsconfig",
+  "license": "GPL-3.0",
   "version": "0.0.0",
   "private": true,
   "files": [

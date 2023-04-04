@@ -1,6 +1,7 @@
 {
   "name": "sora-desktop",
   "version": "2.1.0",
+  "license": "GPL-3.0",
   "description": "Aplikasi desktop untuk frontend interface sora",
   "main": "./out/main/index.js",
   "author": "Ezra Khairan Permana <ezrakhairan123@gmail.com>",
