@@ -16,13 +16,5 @@ export default defineConfig({
       },
     },
     plugins: [react()],
-    optimizeDeps: {
-      include: ["ui"],
-    },
-    build: {
-      commonjsOptions: {
-        include: [/ui/, /node_modules/],
-      },
-    },
   },
 });
