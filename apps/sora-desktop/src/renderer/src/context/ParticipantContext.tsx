@@ -4,12 +4,15 @@ import {
   useState,
   useMemo,
   useCallback,
+  useEffect,
 } from "react";
 import { useToast } from "@chakra-ui/react";
 import { Navigate } from "react-router-dom";
 
 import Loading from "@renderer/components/PreScan/Loading";
 import { trpc } from "@renderer/utils/trpc";
+
+import { useSetting } from "./SettingContext";
 
 interface IParticipantContext {
   qrId: string | null;
@@ -25,7 +28,12 @@ export const ParticipantProvider = ({
 }: {
   children: React.ReactNode;
 }) => {
+  const { canVoteNow } = useSetting()
   const [qrId, setQrId] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (!canVoteNow && qrId) setQrId(null);
+  }, [canVoteNow, qrId])
 
   const setQRCode = useCallback((qr: string | null) => setQrId(qr), []);
 
