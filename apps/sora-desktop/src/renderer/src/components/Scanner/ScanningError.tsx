@@ -19,7 +19,7 @@ const ScanningError = ({ message }: { message: string }) => {
         flexDirection="column"
       >
         <Heading as="h2" size="2xl" fontSize="4rem" color="white">
-          Gagal Absen!
+          Gagal Verifikasi!
         </Heading>
         <Heading
           mt={2}

@@ -170,7 +170,7 @@ const Vote: React.FC = () => {
   return (
     <VStack align="stretch" mt={3}>
       <HStack style={{ justifyContent: "center" }}>
-        <Text fontWeight="500" fontSize="4xl">
+        <Text fontWeight="500" fontSize="5xl">
           Pilih Kandidatmu!
         </Text>
       </HStack>
@@ -238,16 +238,17 @@ const Vote: React.FC = () => {
       >
         <AlertDialogOverlay>
           <AlertDialogContent>
-            <AlertDialogHeader fontSize="lg" fontWeight="bold">
-              Pilih Paslon
+            <AlertDialogHeader fontSize="3xl" fontWeight="bold">
+              Pilih Kandidat
             </AlertDialogHeader>
 
-            <AlertDialogBody>
+            <AlertDialogBody fontSize="xl">
               Apakah anda yakin untuk memilih kandidat atas nama {getNama()}?
             </AlertDialogBody>
 
             <AlertDialogFooter>
               <Button
+                fontSize="xl"
                 ref={cancelRef}
                 onClick={onClose}
                 disabled={candidateMutation.isLoading}
@@ -257,6 +258,7 @@ const Vote: React.FC = () => {
               <Button
                 ml={3}
                 ref={sendRef}
+                fontSize="xl"
                 colorScheme="green"
                 onClick={chooseCandidate}
                 disabled={candidateMutation.isLoading}

@@ -3,37 +3,20 @@ import { validateId } from "id-generator";
 import { useRef, useEffect } from "react";
 
 import { trpc } from "@renderer/utils/trpc";
-import { useNavigate } from "react-router-dom";
-import { useParticipant } from "@renderer/context/ParticipantContext";
-import { useToast, Box, Text, HStack } from "@chakra-ui/react";
+import { Box, Text, HStack } from "@chakra-ui/react";
 import styles from "@renderer/styles/components/Scanner.module.css";
 
 const NormalScanner = ({
   setInvalidQr,
+  checkParticipantMutation,
 }: {
   setInvalidQr: (invalid: boolean) => void;
+  checkParticipantMutation: ReturnType<
+    typeof trpc.participant.isParticipantAlreadyAttended.useMutation
+  >;
 }) => {
-  const toast = useToast();
-  const navigate = useNavigate();
-
-  const { qrId, setQRCode } = useParticipant();
-
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   const videoRef = useRef<HTMLVideoElement>(null!);
-
-  const checkParticipantMutation =
-    trpc.participant.isParticipantAlreadyAttended.useMutation({
-      onError(error) {
-        toast({
-          description: `Error: ${error.message}`,
-          status: "error",
-          duration: 5000,
-          position: "top-right",
-        });
-
-        setInvalidQr(true);
-      },
-    });
 
   useEffect(() => {
     const qrScanner = new QrScanner(
@@ -48,22 +31,11 @@ const NormalScanner = ({
 
         if (!isValidQr) return setInvalidQr(true);
 
-        const status = await checkParticipantMutation.mutateAsync(data);
-
-        if (status.success) setQRCode(data);
+        checkParticipantMutation.mutate(data);
       },
       {
         highlightCodeOutline: true,
         highlightScanRegion: true,
-        onDecodeError: (error) => {
-          if (error instanceof Error)
-            toast({
-              description: `Error: ${error.message}`,
-              status: "error",
-              duration: 5000,
-              position: "top-right",
-            });
-        },
       }
     );
 
@@ -73,10 +45,6 @@ const NormalScanner = ({
       qrScanner.destroy();
     };
   }, []);
-
-  useEffect(() => {
-    if (qrId) navigate("/vote");
-  }, [qrId]);
 
   return (
     <HStack h="100vh" justifyContent="center">
