@@ -1,6 +1,6 @@
 import { Box, HStack, Heading } from "@chakra-ui/react";
 
-const ScanningError = ({ message }: { message: string }) => {
+const UniversalError = ({ title, message }: { title: string; message: string }) => {
   return (
     <HStack h={"100vh"} justifyContent="center">
       <Box
@@ -19,7 +19,7 @@ const ScanningError = ({ message }: { message: string }) => {
         flexDirection="column"
       >
         <Heading as="h2" size="2xl" fontSize="4rem" color="white">
-          Gagal Verifikasi!
+          {title}
         </Heading>
         <Heading
           mt={2}
@@ -36,4 +36,4 @@ const ScanningError = ({ message }: { message: string }) => {
   );
 };
 
-export default ScanningError;
+export default UniversalError;

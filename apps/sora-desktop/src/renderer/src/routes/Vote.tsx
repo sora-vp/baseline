@@ -23,6 +23,7 @@ import {
 } from "@chakra-ui/react";
 import { Navigate } from "react-router-dom";
 
+import { BerhasilMemilihDanCapJari } from "@renderer/components/AfterVote/BerhasilMemilihDanCapJari";
 import Loading from "@renderer/components/PreScan/Loading";
 import { useAppSetting } from "@renderer/context/AppSetting";
 import { useSetting } from "@renderer/context/SettingContext";
@@ -33,11 +34,10 @@ import {
 } from "@renderer/context/ParticipantContext";
 
 import { trpc } from "@renderer/utils/trpc";
+import UniversalError from "@renderer/components/UniversalErrorHandler";
 
 const Vote: React.FC = () => {
-  const toast = useToast();
-
-  const { qrId, setQRCode } = useParticipant();
+  const { qrId } = useParticipant();
   const { serverURL } = useAppSetting();
   const { isLoading, isError, canVoteNow, candidates } = useSetting();
 
@@ -52,30 +52,7 @@ const Vote: React.FC = () => {
   // Untuk keperluan pemilihan
   const [currentID, setID] = useState<number | null>(null);
 
-  const candidateMutation = trpc.candidate.upvote.useMutation({
-    onSuccess(result) {
-      toast({
-        description: result.message,
-        status: "success",
-        duration: 3000,
-        position: "top-right",
-        isClosable: true,
-      });
-
-      onClose();
-      setQRCode(null);
-    },
-
-    onError(result) {
-      toast({
-        description: `Gagal memilih, Error: ${result.message}`,
-        status: "error",
-        duration: 3000,
-        position: "top-right",
-        isClosable: true,
-      });
-    },
-  });
+  const candidateMutation = trpc.candidate.upvote.useMutation();
 
   const cannotPushAKeyboard = useMemo(
     () =>
@@ -164,6 +141,11 @@ const Vote: React.FC = () => {
   }, [cannotPushAKeyboard, isOpen]);
 
   if (isLoading) return <Loading />;
+
+  if (candidateMutation.isSuccess) return <BerhasilMemilihDanCapJari />
+
+  if (candidateMutation.isError)
+    return <UniversalError title="Gagal Memilih!" message={candidateMutation.error.message} />;
 
   if (!canVoteNow || isError) return <Navigate to={"/"} />;
 

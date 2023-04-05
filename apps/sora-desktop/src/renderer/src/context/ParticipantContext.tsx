@@ -28,12 +28,12 @@ export const ParticipantProvider = ({
 }: {
   children: React.ReactNode;
 }) => {
-  const { canVoteNow } = useSetting()
+  const { canVoteNow } = useSetting();
   const [qrId, setQrId] = useState<string | null>(null);
 
   useEffect(() => {
     if (!canVoteNow && qrId) setQrId(null);
-  }, [canVoteNow, qrId])
+  }, [canVoteNow, qrId]);
 
   const setQRCode = useCallback((qr: string | null) => setQrId(qr), []);
 

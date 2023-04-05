@@ -3,7 +3,7 @@ import { useState, useCallback } from "react";
 import { trpc } from "@renderer/utils/trpc";
 import { useParticipant } from "@renderer/context/ParticipantContext";
 
-import ScanningError from "./ScanningError";
+import UniversalErrorHandler from "../UniversalErrorHandler";
 import NormalScanner from "./NormalScanner";
 import { Navigate } from "react-router-dom";
 
@@ -16,8 +16,8 @@ const Scanner: React.FC = () => {
     trpc.participant.isParticipantAlreadyAttended.useMutation({
       onSuccess() {
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        setQRCode(checkParticipantMutation.variables!)
-      }
+        setQRCode(checkParticipantMutation.variables!);
+      },
     });
 
   const setIsQrValid = useCallback(
@@ -25,11 +25,12 @@ const Scanner: React.FC = () => {
     []
   );
 
-  if (qrId) return <Navigate to="/vote" />
+  if (qrId) return <Navigate to="/vote" />;
 
   if (isQrInvalid || checkParticipantMutation.isError)
     return (
-      <ScanningError
+      <UniversalErrorHandler
+        title="Gagal Verifikasi!"
         message={
           checkParticipantMutation.isError
             ? checkParticipantMutation.error.message
