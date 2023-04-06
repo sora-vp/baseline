@@ -62,11 +62,11 @@ const App: React.FC = () => {
   return (
     <trpc.Provider client={trpcClient} queryClient={queryClient}>
       <QueryClientProvider client={queryClient}>
-        <SettingProvider>
-          <ParticipantProvider>
+        <ParticipantProvider>
+          <SettingProvider>
             <RouterProvider router={router} />
-          </ParticipantProvider>
-        </SettingProvider>
+          </SettingProvider>
+        </ParticipantProvider>
       </QueryClientProvider>
     </trpc.Provider>
   );

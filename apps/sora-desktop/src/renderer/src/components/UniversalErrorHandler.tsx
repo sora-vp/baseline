@@ -1,6 +1,12 @@
 import { Box, HStack, Heading } from "@chakra-ui/react";
 
-const UniversalError = ({ title, message }: { title: string; message: string }) => {
+const UniversalError = ({
+  title,
+  message,
+}: {
+  title: string;
+  message: string;
+}) => {
   return (
     <HStack h={"100vh"} justifyContent="center">
       <Box

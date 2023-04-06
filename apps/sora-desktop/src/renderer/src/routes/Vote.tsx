@@ -1,6 +1,5 @@
 import { useState, useEffect, useRef, useMemo, useCallback } from "react";
 import {
-  useToast,
   useDisclosure,
   Heading,
   Text,
@@ -21,7 +20,7 @@ import {
   AlertDialogContent,
   AlertDialogOverlay,
 } from "@chakra-ui/react";
-import { Navigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 import { BerhasilMemilihDanCapJari } from "@renderer/components/AfterVote/BerhasilMemilihDanCapJari";
 import Loading from "@renderer/components/PreScan/Loading";
@@ -30,15 +29,31 @@ import { useSetting } from "@renderer/context/SettingContext";
 
 import {
   useParticipant,
-  ensureParticipantIsValidVoter,
+  justEnsureQrIDExist,
+  type IParticipantContext
 } from "@renderer/context/ParticipantContext";
 
 import { trpc } from "@renderer/utils/trpc";
 import UniversalError from "@renderer/components/UniversalErrorHandler";
 
-const Vote: React.FC = () => {
-  const { qrId } = useParticipant();
+const Minggat = ({ qrId, setQRCode }: IParticipantContext) => {
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (qrId) {
+      setQRCode(null);
+      navigate("/", { replace: true })
+    }
+  }, [])
+
+  return <></>
+}
+
+const Vote = () => {
+  const navigate = useNavigate();
+
   const { serverURL } = useAppSetting();
+  const { qrId, setQRCode } = useParticipant()
   const { isLoading, isError, canVoteNow, candidates } = useSetting();
 
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -52,9 +67,19 @@ const Vote: React.FC = () => {
   // Untuk keperluan pemilihan
   const [currentID, setID] = useState<number | null>(null);
 
-  const candidateMutation = trpc.candidate.upvote.useMutation();
+  const candidateMutation = trpc.candidate.upvote.useMutation({
+    onSuccess() {
+      setTimeout(() => {
+        setQRCode(null);
+      }, 12_000);
+    },
+  });
 
-  const cannotPushAKeyboard = useMemo(
+  const participantQuery = trpc.participant.getParticipantStatus.useQuery(qrId as string, {
+    refetchInterval: 2500,
+  })
+
+  const cannotPushKey = useMemo(
     () =>
       !qrId ||
       !canVoteNow ||
@@ -100,7 +125,7 @@ const Vote: React.FC = () => {
     };
 
     const onKeydown = (e: KeyboardEvent) => {
-      if (cannotPushAKeyboard) return;
+      if (cannotPushKey) return;
 
       switch (e.key) {
         case "Escape":
@@ -138,16 +163,38 @@ const Vote: React.FC = () => {
     return () => {
       window.removeEventListener("keyup", onKeydown);
     };
-  }, [cannotPushAKeyboard, isOpen]);
+  }, [cannotPushKey, isOpen]);
 
   if (isLoading) return <Loading />;
 
-  if (candidateMutation.isSuccess) return <BerhasilMemilihDanCapJari />
+  if (!canVoteNow || isError) return <Minggat qrId={qrId} setQRCode={setQRCode} />
+
+  if (candidateMutation.isSuccess) return <BerhasilMemilihDanCapJari />;
 
   if (candidateMutation.isError)
-    return <UniversalError title="Gagal Memilih!" message={candidateMutation.error.message} />;
+    return (
+      <UniversalError
+        title="Gagal Memilih!"
+        message={candidateMutation.error.message}
+      />
+    );
 
-  if (!canVoteNow || isError) return <Navigate to={"/"} />;
+  if (participantQuery.isFetched && !participantQuery.data?.alreadyAttended && candidateMutation.isIdle)
+    return (
+      <UniversalError
+        title="Gagal Memilih!"
+        message={"Kamu belum absen!"}
+      />
+    );
+
+  if (participantQuery.isFetched && participantQuery.data?.alreadyChoosing && candidateMutation.isIdle)
+    return (
+      <UniversalError
+        title="Gagal Memilih!"
+        message={"Kamu sudah memilih!"}
+      />
+    );
+
 
   return (
     <VStack align="stretch" mt={3}>
@@ -255,4 +302,4 @@ const Vote: React.FC = () => {
   );
 };
 
-export default ensureParticipantIsValidVoter(Vote);
+export default justEnsureQrIDExist(Vote);

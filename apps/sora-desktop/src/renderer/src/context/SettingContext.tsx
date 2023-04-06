@@ -3,6 +3,7 @@ import { useToast } from "@chakra-ui/react";
 import { DateTime } from "luxon";
 
 import { trpc, type RouterOutput } from "@renderer/utils/trpc";
+import { useParticipant } from "./ParticipantContext";
 
 interface ISettingContext {
   canVoteNow: boolean;
@@ -22,6 +23,8 @@ export const SettingProvider = ({
   children: React.ReactNode;
 }) => {
   const toast = useToast();
+
+  const { qrId, setQRCode } = useParticipant();
 
   const [canVoteNow, setCanVote] = useState<boolean>(false);
 
@@ -45,24 +48,27 @@ export const SettingProvider = ({
     onSuccess(result) {
       const waktuMulai = result.startTime
         ? DateTime.fromISO(result.startTime as unknown as string)
-            .toLocal()
-            .toJSDate()
-            .getTime()
+          .toLocal()
+          .toJSDate()
+          .getTime()
         : null;
       const waktuSelesai = result.endTime
         ? DateTime.fromISO(result.endTime as unknown as string)
-            .toLocal()
-            .toJSDate()
-            .getTime()
+          .toLocal()
+          .toJSDate()
+          .getTime()
         : null;
 
       const currentTime = new Date().getTime();
 
-      setCanVote(
+      const canVote =
         (waktuMulai as number) <= currentTime &&
-          (waktuSelesai as number) >= currentTime &&
-          result.canVote
-      );
+        (waktuSelesai as number) >= currentTime &&
+        result.canVote;
+
+      setCanVote(canVote);
+
+      if (!canVote && qrId) setQRCode(null);
 
       if (candidateQuery.isError) candidateQuery.refetch();
     },
