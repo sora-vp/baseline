@@ -70,7 +70,30 @@ const columns = [
   }),
   columnHelper.accessor((row) => row.qrId, {
     id: "QR ID",
-    cell: (info) => <Text as="pre">{info.getValue()}</Text>,
+    cell: (info) => {
+      // eslint-disable-next-line react-hooks/rules-of-hooks
+      const toast = useToast();
+
+      return (
+        <Tooltip label="Salin QR ID" placement="right">
+          <Text
+            as="pre"
+            _hover={{ cursor: "pointer" }}
+            onClick={() => {
+              navigator.clipboard.writeText(info.getValue());
+              toast({
+                description: "Berhasil menyalin QR ID!",
+                status: "success",
+                isClosable: true,
+                duration: 5000,
+              });
+            }}
+          >
+            {info.getValue()}
+          </Text>
+        </Tooltip>
+      );
+    },
   }),
   columnHelper.accessor("alreadyAttended", {
     cell: (info) => (
@@ -353,6 +376,24 @@ const Peserta = () => {
                           ))}
 
                           <Td>
+                            <NextLink href={`/peserta/edit/${row.original.id}`}>
+
+                              <Button
+                                isDisabled={
+                                  settingsQuery.isLoading ||
+                                  settingsQuery.data?.canAttend ||
+                                  row.original.alreadyAttended ||
+                                  row.original.alreadyChoosing
+                                }
+                                bg="cyan.500"
+                                _hover={{ bg: "cyan.700" }}
+                                ml={2}
+                                color="white"
+                              >
+                                Edit
+                              </Button>
+                            </NextLink>
+
                             <Button
                               isDisabled={
                                 settingsQuery.isLoading ||
