@@ -1,6 +1,6 @@
 import { SerialPort, ReadlineParser } from "serialport";
+import { BrowserWindow, Notification } from "electron";
 import { keyboard, Key } from "@nut-tree/nut-js";
-import { BrowserWindow } from "electron";
 
 export async function handleConnect(
   board: Awaited<ReturnType<typeof SerialPort.list>>[number],
@@ -10,7 +10,23 @@ export async function handleConnect(
   port = new SerialPort({
     path: board.path,
     baudRate: 9600,
-    autoOpen: true,
+    autoOpen: false,
+  });
+
+  port.open((error) => {
+    if (error) {
+      new Notification({
+        title: "❌ Gagal Terhubung!",
+        body: "Gagal membuka koneksi ke modul tombol pemilihan. Mohon periksa kembali sambungan kabel USB dengan komputer ini!",
+      }).show();
+
+      return;
+    }
+
+    new Notification({
+      title: "✅ Berhasil Terhubung!",
+      body: "Berhasil terhubung dengan tombol pemilihan!",
+    }).show();
   });
 
   const parser = port.pipe(new ReadlineParser({ delimiter: "\r\n" }));
@@ -44,6 +60,11 @@ export async function handleConnect(
   });
 
   port.on("close", () => {
+    new Notification({
+      title: "❌ Koneksi Tombol Terputus!",
+      body: "Koneksi dengan tombol pemilihan terputus. Mohon periksa kembali sambungan kabel USB dengan komputer ini!",
+    }).show();
+
     port = undefined;
   });
 }
