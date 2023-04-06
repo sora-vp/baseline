@@ -5,7 +5,7 @@ import {
   useMemo,
   useCallback,
 } from "react";
-import { Navigate } from "react-router-dom"
+import { Navigate } from "react-router-dom";
 
 export interface IParticipantContext {
   qrId: string | null;
@@ -49,7 +49,5 @@ export const justEnsureQrIDExist = (Element: React.FC) => () => {
 
   if (!qrId) return <Navigate to="/" replace />;
 
-  return (
-    <Element />
-  );
+  return <Element />;
 };

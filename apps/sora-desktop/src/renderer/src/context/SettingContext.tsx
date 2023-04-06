@@ -48,15 +48,15 @@ export const SettingProvider = ({
     onSuccess(result) {
       const waktuMulai = result.startTime
         ? DateTime.fromISO(result.startTime as unknown as string)
-          .toLocal()
-          .toJSDate()
-          .getTime()
+            .toLocal()
+            .toJSDate()
+            .getTime()
         : null;
       const waktuSelesai = result.endTime
         ? DateTime.fromISO(result.endTime as unknown as string)
-          .toLocal()
-          .toJSDate()
-          .getTime()
+            .toLocal()
+            .toJSDate()
+            .getTime()
         : null;
 
       const currentTime = new Date().getTime();

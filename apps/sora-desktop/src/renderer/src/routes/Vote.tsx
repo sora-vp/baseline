@@ -30,7 +30,7 @@ import { useSetting } from "@renderer/context/SettingContext";
 import {
   useParticipant,
   justEnsureQrIDExist,
-  type IParticipantContext
+  type IParticipantContext,
 } from "@renderer/context/ParticipantContext";
 
 import { trpc } from "@renderer/utils/trpc";
@@ -42,18 +42,16 @@ const Minggat = ({ qrId, setQRCode }: IParticipantContext) => {
   useEffect(() => {
     if (qrId) {
       setQRCode(null);
-      navigate("/", { replace: true })
+      navigate("/", { replace: true });
     }
-  }, [])
+  }, []);
 
-  return <></>
-}
+  return <></>;
+};
 
 const Vote = () => {
-  const navigate = useNavigate();
-
   const { serverURL } = useAppSetting();
-  const { qrId, setQRCode } = useParticipant()
+  const { qrId, setQRCode } = useParticipant();
   const { isLoading, isError, canVoteNow, candidates } = useSetting();
 
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -75,9 +73,12 @@ const Vote = () => {
     },
   });
 
-  const participantQuery = trpc.participant.getParticipantStatus.useQuery(qrId as string, {
-    refetchInterval: 2500,
-  })
+  const participantQuery = trpc.participant.getParticipantStatus.useQuery(
+    qrId as string,
+    {
+      refetchInterval: 2500,
+    }
+  );
 
   const cannotPushKey = useMemo(
     () =>
@@ -167,7 +168,8 @@ const Vote = () => {
 
   if (isLoading) return <Loading />;
 
-  if (!canVoteNow || isError) return <Minggat qrId={qrId} setQRCode={setQRCode} />
+  if (!canVoteNow || isError)
+    return <Minggat qrId={qrId} setQRCode={setQRCode} />;
 
   if (candidateMutation.isSuccess) return <BerhasilMemilihDanCapJari />;
 
@@ -179,22 +181,23 @@ const Vote = () => {
       />
     );
 
-  if (participantQuery.isFetched && !participantQuery.data?.alreadyAttended && candidateMutation.isIdle)
+  if (
+    participantQuery.isFetched &&
+    !participantQuery.data?.alreadyAttended &&
+    candidateMutation.isIdle
+  )
     return (
-      <UniversalError
-        title="Gagal Memilih!"
-        message={"Kamu belum absen!"}
-      />
+      <UniversalError title="Gagal Memilih!" message={"Kamu belum absen!"} />
     );
 
-  if (participantQuery.isFetched && participantQuery.data?.alreadyChoosing && candidateMutation.isIdle)
+  if (
+    participantQuery.isFetched &&
+    participantQuery.data?.alreadyChoosing &&
+    candidateMutation.isIdle
+  )
     return (
-      <UniversalError
-        title="Gagal Memilih!"
-        message={"Kamu sudah memilih!"}
-      />
+      <UniversalError title="Gagal Memilih!" message={"Kamu sudah memilih!"} />
     );
-
 
   return (
     <VStack align="stretch" mt={3}>
