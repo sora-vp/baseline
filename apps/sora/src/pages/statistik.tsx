@@ -31,7 +31,7 @@ const Statistik = () => {
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   const container = useRef<HTMLDivElement>(null!);
 
-  const candidateQuery = api.candidate.adminCandidateList.useQuery(undefined, {
+  const candidateQuery = api.candidate.statisticList.useQuery(undefined, {
     refetchInterval: 2500,
     refetchIntervalInBackground: true,
   });

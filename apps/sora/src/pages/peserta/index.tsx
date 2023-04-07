@@ -376,14 +376,13 @@ const Peserta = () => {
                           ))}
 
                           <Td>
-                            <NextLink href={`/peserta/edit/${row.original.id}`}>
-
+                            <NextLink
+                              href={`/peserta/edit/${row.original.qrId}`}
+                            >
                               <Button
                                 isDisabled={
                                   settingsQuery.isLoading ||
-                                  settingsQuery.data?.canAttend ||
-                                  row.original.alreadyAttended ||
-                                  row.original.alreadyChoosing
+                                  settingsQuery.data?.canAttend
                                 }
                                 bg="cyan.500"
                                 _hover={{ bg: "cyan.700" }}

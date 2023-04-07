@@ -39,3 +39,8 @@ export const ParticipantByCategoryValidationSchema = z.object({
 });
 
 export const ParticipantAttendValidationSchema = z.string().refine(validateId);
+
+export const UpdateParticipantValidationSchema = z.object({
+  name: baseNameSchema,
+  qrId: ParticipantAttendValidationSchema,
+});

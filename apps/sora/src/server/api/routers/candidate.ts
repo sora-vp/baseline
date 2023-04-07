@@ -27,6 +27,10 @@ export const candidateRouter = createTRPCRouter({
     })
   ),
 
+  statisticList: protectedProcedure.query(() =>
+    prisma.candidate.findMany({ select: { name: true, counter: true } })
+  ),
+
   adminCandidateList: protectedProcedure.query(() =>
     prisma.candidate.findMany()
   ),

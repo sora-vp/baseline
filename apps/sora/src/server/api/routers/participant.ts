@@ -11,6 +11,7 @@ import {
   PaginatedParticipantValidationSchema,
   TambahPesertaManyValidationSchema,
   ParticipantAttendValidationSchema,
+  UpdateParticipantValidationSchema,
   TambahPesertaValidationSchema,
   DeletePesertaValidationSchema,
 } from "~/schema/admin.participant.schema";
@@ -37,6 +38,55 @@ export const participantRouter = createTRPCRouter({
         pageCount,
         currentPage,
       };
+    }),
+
+  getSpecificParticipant: protectedProcedure
+    .input(ParticipantAttendValidationSchema)
+    .query(({ input: qrId }) => {
+      const participant = prisma.participant.findUnique({
+        where: { qrId },
+        select: { name: true, qrId: true },
+      });
+
+      if (!participant)
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Peserta pemilihan tidak dapat ditemukan!",
+        });
+
+      return participant;
+    }),
+
+  updateParticipant: protectedProcedure
+    .input(UpdateParticipantValidationSchema)
+    .mutation(async ({ input }) => {
+      const participant = await prisma.participant.findUnique({
+        where: { qrId: input.qrId },
+      });
+
+      if (!participant)
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Peserta pemilihan tidak dapat ditemukan!",
+        });
+
+      if (participant.name === input.name)
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message:
+            "Nama yang ingin diperbarui tidak boleh sama dengan nama yang lama!",
+        });
+
+      await prisma.participant.update({
+        where: {
+          qrId: input.qrId,
+        },
+        data: {
+          name: input.name,
+        },
+      });
+
+      return { message: "Berhasil memperbarui informasi peserta!" };
     }),
 
   createNewParticipant: protectedProcedure
@@ -90,6 +140,15 @@ export const participantRouter = createTRPCRouter({
   deleteParticipant: protectedProcedure
     .input(DeletePesertaValidationSchema)
     .mutation(async ({ input }) => {
+      const participantCanAttend = await canAttendNow();
+
+      if (participantCanAttend)
+        throw new TRPCError({
+          code: "UNAUTHORIZED",
+          message:
+            "Tidak di izinkan untuk menghapus peserta karena masih dalam masa diperbolehkan absen!",
+        });
+
       const participant = await prisma.participant.findUnique({
         where: { id: input.id },
       });

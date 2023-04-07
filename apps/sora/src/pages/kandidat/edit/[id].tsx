@@ -51,6 +51,7 @@ const EditCandidateWithID = () => {
   const candidateQuery = api.candidate.getSpecificCandidate.useQuery(
     { id: Number(router.query.id) },
     {
+      refetchOnWindowFocus: false,
       onSuccess: reset,
       onError(result) {
         toast({

@@ -16,7 +16,7 @@ import {
 } from "@chakra-ui/react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import Router from "next/router";
+import { useRouter } from "next/router";
 import NextLink from "next/link";
 import Head from "next/head";
 
@@ -29,10 +29,33 @@ import {
   type TambahFormValues as FormValues,
 } from "~/schema/admin.participant.schema";
 
-const HalamanTambah = () => {
+const EditPesertaWithID = () => {
   const toast = useToast();
+  const router = useRouter();
 
-  const participantMutation = api.participant.createNewParticipant.useMutation({
+  const { handleSubmit, register, formState, reset } = useForm<FormValues>({
+    resolver: zodResolver(validationSchema),
+  });
+
+  const specificParticipantQuery =
+    api.participant.getSpecificParticipant.useQuery(
+      router.query.qrId as string,
+      {
+        refetchOnWindowFocus: false,
+        onSuccess: reset,
+        onError(result) {
+          toast({
+            description: result.message,
+            status: "error",
+            duration: 6000,
+            position: "top-right",
+            isClosable: true,
+          });
+        },
+      }
+    );
+
+  const participantMutation = api.participant.updateParticipant.useMutation({
     onSuccess(result) {
       toast({
         description: result.message,
@@ -42,9 +65,8 @@ const HalamanTambah = () => {
         isClosable: true,
       });
 
-      Router.push("/peserta");
+      router.push("/peserta");
     },
-
     onError(result) {
       toast({
         description: result.message,
@@ -56,21 +78,21 @@ const HalamanTambah = () => {
     },
   });
 
-  const { handleSubmit, register, formState } = useForm<FormValues>({
-    resolver: zodResolver(validationSchema),
-  });
-
-  const onSubmit = (data: FormValues) => participantMutation.mutate(data);
+  const onSubmit = (data: FormValues) =>
+    participantMutation.mutate({
+      name: data.name,
+      qrId: router.query.qrId as string,
+    });
 
   return (
     <>
       <Head>
-        <title>Tambah Peserta</title>
+        <title>Ubah Peserta</title>
       </Head>
       <VStack align="stretch">
         <HStack mb={"10px"} style={{ justifyContent: "center" }}>
           <Text fontWeight="500" fontSize="5xl">
-            Tambah Peserta Baru
+            Ubah Informasi Peserta
           </Text>
         </HStack>
         <HStack justifyContent="center">
@@ -93,7 +115,10 @@ const HalamanTambah = () => {
                   <Input
                     type="text"
                     placeholder="Masukan Nama Peserta"
-                    isDisabled={participantMutation.isLoading}
+                    isDisabled={
+                      specificParticipantQuery.isLoading ||
+                      participantMutation.isLoading
+                    }
                     {...register("name")}
                   />
                   <FormErrorMessage>
@@ -104,14 +129,15 @@ const HalamanTambah = () => {
                 <Button
                   width="full"
                   mt={4}
-                  colorScheme="blue"
-                  backgroundColor="blue.500"
-                  color="blue.50"
+                  colorScheme="cyan"
+                  backgroundColor="cyan.500"
+                  color="cyan.50"
                   _hover={{ color: "white" }}
+                  isDisabled={specificParticipantQuery.isLoading}
                   isLoading={participantMutation.isLoading}
                   type="submit"
                 >
-                  Tambah
+                  Ubah
                 </Button>
                 <NextLink href="/peserta" legacyBehavior passHref>
                   <Link display={"flex"} justifyContent="center" mt={2} mb={3}>
@@ -127,4 +153,4 @@ const HalamanTambah = () => {
   );
 };
 
-export default Sidebar(HalamanTambah);
+export default Sidebar(EditPesertaWithID);
