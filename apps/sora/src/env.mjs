@@ -5,6 +5,7 @@ import { z } from "zod";
  * built with invalid env vars.
  */
 const server = z.object({
+  AMQP_URL: z.string().url(),
   DATABASE_URL: z.string().url(),
   NODE_ENV: z.enum(["development", "test", "production"]),
   SETTINGS_SECRET: z.string().min(1),
@@ -36,6 +37,7 @@ const client = z.object({
  * @type {Record<keyof z.infer<typeof server> | keyof z.infer<typeof client>, string | undefined>}
  */
 const processEnv = {
+  AMQP_URL: process.env.AMQP_URL,
   DATABASE_URL: process.env.DATABASE_URL,
   NODE_ENV: process.env.NODE_ENV,
   SETTINGS_SECRET: process.env.SETTINGS_SECRET,

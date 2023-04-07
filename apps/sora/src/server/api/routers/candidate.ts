@@ -1,4 +1,5 @@
 import { TRPCError } from "@trpc/server";
+import amqp from "amqplib";
 
 import {
   createTRPCRouter,
@@ -6,6 +7,7 @@ import {
   protectedProcedure,
   unprotectedProcedure,
 } from "~/server/api/trpc";
+import { env } from "~/env.mjs";
 
 import { prisma } from "~/server/db";
 import {
@@ -15,6 +17,8 @@ import {
 } from "~/schema/admin.candidate.schema";
 
 import { canVoteNow } from "~/utils/canDoSomething";
+
+const QUEUE_NAME = "vote_queue";
 
 export const candidateRouter = createTRPCRouter({
   candidateList: publicProcedure.query(() =>
@@ -135,6 +139,16 @@ export const candidateRouter = createTRPCRouter({
             "Tidak bisa memilih kandidat jika bukan dalam kondisi pemilihan!",
         });
 
+      const isCandidateExist = await prisma.candidate.findUnique({
+        where: { id: input.id },
+      });
+
+      if (!isCandidateExist)
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Kandidat tidak dapat ditemukan!",
+        });
+
       const participant = await prisma.participant.findUnique({
         where: { qrId: input.qrId },
       });
@@ -157,34 +171,50 @@ export const candidateRouter = createTRPCRouter({
           message: "Kamu belum absen!",
         });
 
-      const isCandidateExist = await prisma.candidate.findUnique({
-        where: { id: input.id },
-      });
+      const connection = await amqp.connect(env.DATABASE_URL);
 
-      if (!isCandidateExist)
-        throw new TRPCError({
-          code: "NOT_FOUND",
-          message: "Kandidat tidak dapat ditemukan!",
-        });
+      try {
+        const messageFromQueue = (await new Promise(async (resolve, reject) => {
+          const channel = await connection.createChannel();
 
-      await prisma.$transaction([
-        prisma.participant.update({
-          where: { qrId: input.qrId },
-          data: {
-            alreadyChoosing: true,
-            choosingAt: new Date(),
-          },
-        }),
-        prisma.candidate.update({
-          where: { id: input.id },
-          data: {
-            counter: {
-              increment: 1,
-            },
-          },
-        }),
-      ]);
+          const { queue } = await channel.assertQueue(QUEUE_NAME, {
+            durable: false,
+          });
 
-      return { message: "Berhasil memilih kandidat!" };
+          const payload = JSON.stringify(input);
+
+          const response = await channel.assertQueue("");
+          const correlationId = response.queue;
+
+          await channel.consume(correlationId, (msg) => {
+            if (!msg) {
+              reject(
+                "Publisher has been cancelled or channel has been closed."
+              );
+              return;
+            }
+
+            if (msg.properties.correlationId === correlationId) {
+              resolve(JSON.parse(msg.content.toString()));
+              channel.ack(msg);
+            }
+          });
+
+          channel.sendToQueue(queue, Buffer.from(payload), {
+            correlationId,
+            replyTo: correlationId,
+          });
+        })) as { success: boolean; message?: string };
+
+        if (!messageFromQueue.success)
+          throw new TRPCError({
+            code: "BAD_REQUEST",
+            message: messageFromQueue.message as string,
+          });
+
+        return { message: "Berhasil memilih kandidat!" };
+      } finally {
+        connection.close();
+      }
     }),
 });

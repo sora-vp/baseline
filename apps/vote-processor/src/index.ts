@@ -1,4 +1,4 @@
-import { prisma } from "sora";
+import { canVoteNow, prisma } from "sora";
 import amqp from "amqplib";
 
 import { env } from "./env";
@@ -10,68 +10,157 @@ const consumeMessagesFromQueue = async () => {
     const connection = await amqp.connect(env.AMQP_URL);
     const channel = await connection.createChannel();
 
-    // Declare the queue and prefetch 1 message at a time
-    const queueName = "votes";
-    await channel.assertQueue(queueName, { durable: true });
-    channel.prefetch(1);
+    const exchange = "vote";
+    const queue = "vote_queue";
+    const routingKey = "vote_rpc";
 
-    // Consume messages from the queue
-    channel.consume(queueName, async (message) => {
-      if (!message) throw new Error("invalid messages!");
+    await channel.assertExchange(exchange, "direct", { durable: false });
+    await channel.assertQueue(queue, { durable: false });
+    await channel.bindQueue(queue, exchange, routingKey);
+    await channel.prefetch(1);
 
-      const payload = JSON.parse(message.content.toString());
+    console.log("[MQ] Waiting for queue");
 
-      // Find the candidate and participant in the database
-      const candidate = await prisma.candidate.findUnique({
-        where: { id: payload.id },
-      });
-      const participant = await prisma.participant.findUnique({
-        where: { qrId: payload.qrId },
-      });
-
-      // Check if the candidate and participant exist
-      if (!candidate || !participant) {
-        console.error("Candidate or participant not found!");
-        channel.ack(message);
+    channel.consume(queue, async (msg) => {
+      if (!msg) {
+        console.log("Consumer has been cancelled or channel has been closed.");
         return;
       }
 
-      // Check if the participant has already voted
-      if (participant.alreadyChoosing) {
-        console.error(
-          "Participant has already voted!",
-          participant.name,
-          candidate.name
+      const inVotingCondition = await canVoteNow();
+
+      if (!inVotingCondition) {
+        channel.sendToQueue(
+          msg.properties.replyTo,
+          Buffer.from(
+            JSON.stringify({
+              success: false,
+              message:
+                "Tidak bisa memilih kandidat jika bukan dalam kondisi pemilihan!",
+            })
+          ),
+          { correlationId: msg.properties.correlationId }
         );
-        channel.ack(message);
+
+        channel.ack(msg);
         return;
       }
 
-      // Increment the candidate's counter and update the participant status
-      await prisma.$transaction([
-        prisma.candidate.update({
-          where: { id: candidate.id },
-          data: {
-            counter: {
-              increment: 1,
-            },
-          },
-        }),
-        prisma.participant.update({
-          where: { qrId: participant.qrId },
-          data: {
-            alreadyChoosing: true,
-            choosingAt: new Date(),
-          },
-        }),
-      ]);
+      const { id, qrId } = JSON.parse(msg.content.toString());
 
-      console.log(
-        `Vote counted for candidate ${candidate.name}!`,
-        participant.name,
-        candidate.name
-      );
-      channel.ack(message);
+      console.log("[MQ] New message!", { id, qrId });
+
+      const isCandidateExist = await prisma.candidate.findUnique({
+        where: { id },
+      });
+
+      if (!isCandidateExist) {
+        channel.sendToQueue(
+          msg.properties.replyTo,
+          Buffer.from(
+            JSON.stringify({
+              success: false,
+              message: "Kandidat tidak dapat ditemukan!",
+            })
+          ),
+          { correlationId: msg.properties.correlationId }
+        );
+
+        channel.ack(msg);
+        return;
+      }
+
+      const participant = await prisma.participant.findUnique({
+        where: { qrId },
+      });
+
+      if (!participant) {
+        channel.sendToQueue(
+          msg.properties.replyTo,
+          Buffer.from(
+            JSON.stringify({
+              success: false,
+              message: "Kamu belum terdaftar dalam daftar peserta pemilihan!",
+            })
+          ),
+          { correlationId: msg.properties.correlationId }
+        );
+
+        channel.ack(msg);
+        return;
+      }
+
+      if (participant.alreadyChoosing) {
+        channel.sendToQueue(
+          msg.properties.replyTo,
+          Buffer.from(
+            JSON.stringify({ success: false, message: "Kamu sudah memilih!" })
+          ),
+          { correlationId: msg.properties.correlationId }
+        );
+
+        channel.ack(msg);
+        return;
+      }
+
+      if (!participant.alreadyAttended) {
+        channel.sendToQueue(
+          msg.properties.replyTo,
+          Buffer.from(
+            JSON.stringify({ success: false, message: "Kamu belum absen!" })
+          ),
+          { correlationId: msg.properties.correlationId }
+        );
+
+        channel.ack(msg);
+        return;
+      }
+
+      try {
+        await prisma.$transaction([
+          prisma.candidate.update({
+            where: { id },
+            data: {
+              counter: {
+                increment: 1,
+              },
+            },
+          }),
+          prisma.participant.update({
+            where: { qrId },
+            data: {
+              alreadyChoosing: true,
+              choosingAt: new Date(),
+            },
+          }),
+        ]);
+
+        console.log("[MQ] Upvote!", { qrId });
+
+        channel.sendToQueue(
+          msg.properties.replyTo,
+          Buffer.from(JSON.stringify({ success: true })),
+          { correlationId: msg.properties.correlationId }
+        );
+
+        channel.ack(msg);
+      } catch (err) {
+        console.error(err);
+
+        channel.sendToQueue(
+          msg.properties.replyTo,
+          Buffer.from(
+            JSON.stringify({
+              success: false,
+              message:
+                "Gagal memproses pemilihan, mohon hubungi panitia dan coba lagi nanti.",
+            })
+          ),
+          { correlationId: msg.properties.correlationId }
+        );
+
+        channel.ack(msg);
+      }
     });
   } catch (error) {
     console.error(error);
