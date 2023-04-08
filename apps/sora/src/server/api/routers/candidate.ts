@@ -171,50 +171,77 @@ export const candidateRouter = createTRPCRouter({
           message: "Kamu belum absen!",
         });
 
-      const connection = await amqp.connect(env.AMQP_URL);
-
       try {
-        const messageFromQueue = (await new Promise(async (resolve, reject) => {
-          const channel = await connection.createChannel();
+        const connection = await amqp.connect(env.AMQP_URL);
 
-          const { queue } = await channel.assertQueue(QUEUE_NAME, {
-            durable: false,
-          });
+        try {
+          const messageFromQueue = (await new Promise(
+            async (resolve, reject) => {
+              const channel = await connection.createChannel();
 
-          const payload = JSON.stringify(input);
+              const { queue } = await channel.assertQueue(QUEUE_NAME, {
+                durable: false,
+              });
 
-          const response = await channel.assertQueue("");
-          const correlationId = response.queue;
+              const payload = JSON.stringify(input);
 
-          await channel.consume(correlationId, (msg) => {
-            if (!msg) {
-              reject(
-                "Publisher has been cancelled or channel has been closed."
+              const response = await channel.assertQueue("");
+              const correlationId = response.queue;
+
+              const timeout = setTimeout(async () => {
+                await channel.deleteQueue(QUEUE_NAME);
+                await channel.close();
+
+                reject(
+                  new Error("Timeout: No response received from consumer.")
+                );
+              }, 30_000);
+
+              await channel.consume(
+                correlationId,
+                (msg) => {
+                  if (!msg) {
+                    reject(
+                      "Publisher has been cancelled or channel has been closed."
+                    );
+                    return;
+                  }
+
+                  if (msg.properties.correlationId === correlationId) {
+                    clearTimeout(timeout);
+
+                    resolve(JSON.parse(msg.content.toString()));
+                    channel.ack(msg);
+                  }
+                },
+                { noAck: true }
               );
-              return;
+
+              channel.sendToQueue(queue, Buffer.from(payload), {
+                correlationId,
+                replyTo: correlationId,
+              });
             }
+          )) as { success: boolean; message?: string };
 
-            if (msg.properties.correlationId === correlationId) {
-              resolve(JSON.parse(msg.content.toString()));
-              channel.ack(msg);
-            }
-          });
+          if (!messageFromQueue.success)
+            throw new TRPCError({
+              code: "BAD_REQUEST",
+              message: messageFromQueue.message as string,
+            });
 
-          channel.sendToQueue(queue, Buffer.from(payload), {
-            correlationId,
-            replyTo: correlationId,
-          });
-        })) as { success: boolean; message?: string };
+          return { message: "Berhasil memilih kandidat!" };
+        } finally {
+          connection.close();
+        }
+      } catch (e) {
+        console.error(e);
 
-        if (!messageFromQueue.success)
-          throw new TRPCError({
-            code: "BAD_REQUEST",
-            message: messageFromQueue.message as string,
-          });
-
-        return { message: "Berhasil memilih kandidat!" };
-      } finally {
-        connection.close();
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message:
+            "Gagal memproses pemilihan, mohon hubungi panitia dan coba lagi nanti.",
+        });
       }
     }),
 });
