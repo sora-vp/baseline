@@ -2,6 +2,7 @@ name: Lint & TS
 on: [pull_request, push]
 
 env:
+  AMQP_URL: amqp://localhost
   DATABASE_URL: mysql://usrnm:pw@localhost:3306/sora
   NEXTAUTH_SECRET: dummysecret
   NEXTAUTH_URL: http://localhost:3000
