@@ -1,16 +1,26 @@
-import type { SoraAppRouter } from "sora";
-import "dotenv/config";
-
+import { PrismaClient } from "@prisma/client";
 import amqp from "amqplib";
+
+import "dotenv/config";
 
 import { env } from "./env";
 import { logger } from "./logger";
 
+import type { SoraAppRouter } from "sora";
+
+const prisma = new PrismaClient();
+
 const consumeMessagesFromQueue = async () => {
   try {
+    logger.info("[DB] Connecting");
+
+    await prisma.$connect();
+
+    logger.info("[DB] Connected!");
+
     if (!env.AMQP_URL) throw new Error("Diperlukan AQMP URL!");
 
-    logger.info('[MQ] Connecting to RabbitMQ instance');
+    logger.info("[MQ] Connecting to RabbitMQ instance");
 
     const connection = await amqp.connect(env.AMQP_URL);
     const channel = await connection.createChannel();
@@ -24,7 +34,7 @@ const consumeMessagesFromQueue = async () => {
     await channel.bindQueue(queue, exchange, routingKey);
     await channel.prefetch(1);
 
-    logger.info("[MQ] Connected, waiting for queue");
+    logger.info("[MQ] Connected! Waiting for queue...");
 
     channel.consume(queue, async (msg) => {
       if (!msg) {
@@ -55,90 +65,98 @@ const consumeMessagesFromQueue = async () => {
 
       logger.info("[MQ] New message!", { id, qrId });
 
-      // const isCandidateExist = await prisma.candidate.findUnique({
-      //   where: { id },
-      // });
-      //
-      // if (!isCandidateExist) {
-      //   channel.sendToQueue(
-      //     msg.properties.replyTo,
-      //     Buffer.from(
-      //       JSON.stringify({
-      //         success: false,
-      //         message: "Kandidat tidak dapat ditemukan!",
-      //       })
-      //     ),
-      //     { correlationId: msg.properties.correlationId }
-      //   );
-      //
-      //   channel.ack(msg);
-      //   return;
-      // }
-      //
-      // const participant = await prisma.participant.findUnique({
-      //   where: { qrId },
-      // });
-      //
-      // if (!participant) {
-      //   channel.sendToQueue(
-      //     msg.properties.replyTo,
-      //     Buffer.from(
-      //       JSON.stringify({
-      //         success: false,
-      //         message: "Kamu belum terdaftar dalam daftar peserta pemilihan!",
-      //       })
-      //     ),
-      //     { correlationId: msg.properties.correlationId }
-      //   );
-      //
-      //   channel.ack(msg);
-      //   return;
-      // }
-      //
-      // if (participant.alreadyChoosing) {
-      //   channel.sendToQueue(
-      //     msg.properties.replyTo,
-      //     Buffer.from(
-      //       JSON.stringify({ success: false, message: "Kamu sudah memilih!" })
-      //     ),
-      //     { correlationId: msg.properties.correlationId }
-      //   );
-      //
-      //   channel.ack(msg);
-      //   return;
-      // }
-      //
-      // if (!participant.alreadyAttended) {
-      //   channel.sendToQueue(
-      //     msg.properties.replyTo,
-      //     Buffer.from(
-      //       JSON.stringify({ success: false, message: "Kamu belum absen!" })
-      //     ),
-      //     { correlationId: msg.properties.correlationId }
-      //   );
-      //
-      //   channel.ack(msg);
-      //   return;
-      // }
+      const isCandidateExist = await prisma.candidate.findUnique({
+        where: { id },
+      });
+
+      if (!isCandidateExist) {
+        channel.sendToQueue(
+          msg.properties.replyTo,
+          Buffer.from(
+            JSON.stringify({
+              success: false,
+              message: "Kandidat tidak dapat ditemukan!",
+            })
+          ),
+          { correlationId: msg.properties.correlationId }
+        );
+
+        channel.ack(msg);
+        logger.trace("[MQ] Candidate isn't exist", { id, qrId });
+
+        return;
+      }
+
+      const participant = await prisma.participant.findUnique({
+        where: { qrId },
+      });
+
+      if (!participant) {
+        channel.sendToQueue(
+          msg.properties.replyTo,
+          Buffer.from(
+            JSON.stringify({
+              success: false,
+              message: "Kamu belum terdaftar dalam daftar peserta pemilihan!",
+            })
+          ),
+          { correlationId: msg.properties.correlationId }
+        );
+
+        channel.ack(msg);
+        logger.trace("[MQ] Participant isn't exist", { id, qrId });
+
+        return;
+      }
+
+      if (participant.alreadyChoosing) {
+        channel.sendToQueue(
+          msg.properties.replyTo,
+          Buffer.from(
+            JSON.stringify({ success: false, message: "Kamu sudah memilih!" })
+          ),
+          { correlationId: msg.properties.correlationId }
+        );
+
+        channel.ack(msg);
+        logger.trace("[MQ] Participant already choosing someone", { id, qrId });
+
+        return;
+      }
+
+      if (!participant.alreadyAttended) {
+        channel.sendToQueue(
+          msg.properties.replyTo,
+          Buffer.from(
+            JSON.stringify({ success: false, message: "Kamu belum absen!" })
+          ),
+          { correlationId: msg.properties.correlationId }
+        );
+
+        channel.ack(msg);
+        logger.trace("[MQ] Participant isn't attended yet", { id, qrId });
+
+        return;
+      }
 
       try {
-        // await prisma.$transaction([
-        //   prisma.candidate.update({
-        //     where: { id },
-        //     data: {
-        //       counter: {
-        //         increment: 1,
-        //       },
-        //     },
-        //   }),
-        //   prisma.participant.update({
-        //     where: { qrId },
-        //     data: {
-        //       alreadyChoosing: true,
-        //       choosingAt: new Date(),
-        //     },
-        //   }),
-        // ]);
+        await prisma.$transaction([
+          prisma.candidate.update({
+            where: { id },
+            data: {
+              counter: {
+                increment: 1,
+              },
+            },
+          }),
+          prisma.participant.update({
+            where: { qrId },
+            data: {
+              alreadyChoosing: true,
+              choosingAt: new Date(),
+            },
+          }),
+        ]);
 
         logger.info("[MQ] Upvote!", { qrId });
 

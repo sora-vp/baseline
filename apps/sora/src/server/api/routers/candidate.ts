@@ -171,7 +171,7 @@ export const candidateRouter = createTRPCRouter({
           message: "Kamu belum absen!",
         });
 
-      const connection = await amqp.connect(env.DATABASE_URL);
+      const connection = await amqp.connect(env.AMQP_URL);
 
       try {
         const messageFromQueue = (await new Promise(async (resolve, reject) => {

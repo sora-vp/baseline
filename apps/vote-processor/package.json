@@ -6,8 +6,8 @@
   "main": "dist/index.js",
   "scripts": {
     "lint": "eslint src/",
-    "dev": "ts-node src/index.ts",
-    "build": "tsup-node",
+    "dev": "nodemon src/index.ts",
+    "build": "tsc",
     "typecheck": "tsc --noEmit"
   },
   "author": "Ezra Khairan Permana",
@@ -17,12 +17,14 @@
     "@typescript-eslint/eslint-plugin": "latest",
     "@typescript-eslint/parser": "latest",
     "eslint": "latest",
+    "nodemon": "^2.0.22",
     "prisma": "^4.12.0",
     "ts-node": "^10.9.1",
     "tsup": "^6.7.0",
     "typescript": "4.9.5"
   },
   "dependencies": {
+    "@prisma/client": "^4.12.0",
     "amqplib": "^0.10.3",
     "dotenv": "^16.0.3",
     "pino": "^8.11.0",
