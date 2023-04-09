@@ -48,7 +48,7 @@ const consumeMessagesFromQueue = async () => {
 
       const { id, qrId } = JSON.parse(msg.content.toString());
 
-      logger.info(`[MQ] New message!. QR ID: ${qrId}`);
+      logger.info(`[MQ] New message! QR ID: ${qrId}`);
 
       if (!inVotingCondition) {
         channel.sendToQueue(
@@ -164,7 +164,7 @@ const consumeMessagesFromQueue = async () => {
           }),
         ]);
 
-        logger.info(`[MQ] Upvote!. QR ID: ${qrId}`);
+        logger.info(`[MQ] Upvote! QR ID: ${qrId}`);
 
         channel.sendToQueue(
           msg.properties.replyTo,
