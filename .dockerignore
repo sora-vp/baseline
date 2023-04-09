@@ -1,0 +1,10 @@
+.git
+node_modules
+Dockerfile*
+.dockerignore
+apps/**/*.next
+apps/**/*env
+apps/sora/settings.bin
+apps/**/npm-debug.log
+apps/**/node_modules
+packages/**/node_modules
