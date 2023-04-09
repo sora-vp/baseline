@@ -6,13 +6,14 @@ import "dotenv/config";
 import { env } from "./env";
 import { logger } from "./logger";
 
-import type { SoraAppRouter } from "sora";
+import { trpc } from "./trpc";
+import { canVoteNow } from "./canVoteNow";
 
 const prisma = new PrismaClient();
 
 const consumeMessagesFromQueue = async () => {
   try {
-    logger.info("[DB] Connecting");
+    logger.info("[DB] Connecting to Database...");
 
     await prisma.$connect();
 
@@ -42,28 +43,31 @@ const consumeMessagesFromQueue = async () => {
         return;
       }
 
-      // const inVotingCondition = await canVoteNow();
-
-      // if (!inVotingCondition) {
-      //   channel.sendToQueue(
-      //     msg.properties.replyTo,
-      //     Buffer.from(
-      //       JSON.stringify({
-      //         success: false,
-      //         message:
-      //           "Tidak bisa memilih kandidat jika bukan dalam kondisi pemilihan!",
-      //       })
-      //     ),
-      //     { correlationId: msg.properties.correlationId }
-      //   );
-      //
-      //   channel.ack(msg);
-      //   return;
-      // }
+      const settings = await trpc.settings.getSettings.query();
+      const inVotingCondition = canVoteNow(settings);
 
       const { id, qrId } = JSON.parse(msg.content.toString());
 
-      logger.info("[MQ] New message!", { id, qrId });
+      logger.info(`[MQ] New message!. QR ID: ${qrId}`);
+
+      if (!inVotingCondition) {
+        channel.sendToQueue(
+          msg.properties.replyTo,
+          Buffer.from(
+            JSON.stringify({
+              success: false,
+              message:
+                "Tidak bisa memilih kandidat jika bukan dalam kondisi pemilihan!",
+            })
+          ),
+          { correlationId: msg.properties.correlationId }
+        );
+
+        channel.ack(msg);
+        logger.trace(`[MQ] Isn't a valid time yet for voting. QR ID: ${qrId}`);
+
+        return;
+      }
 
       const isCandidateExist = await prisma.candidate.findUnique({
         where: { id },
@@ -82,7 +86,7 @@ const consumeMessagesFromQueue = async () => {
         );
 
         channel.ack(msg);
-        logger.trace("[MQ] Candidate isn't exist", { id, qrId });
+        logger.trace(`[MQ] Candidate isn't exist. QR ID: ${qrId}`);
 
         return;
       }
@@ -104,7 +108,7 @@ const consumeMessagesFromQueue = async () => {
         );
 
         channel.ack(msg);
-        logger.trace("[MQ] Participant isn't exist", { id, qrId });
+        logger.trace(`[MQ] Participant isn't exist. QR ID: ${qrId}`);
 
         return;
       }
@@ -119,7 +123,9 @@ const consumeMessagesFromQueue = async () => {
         );
 
         channel.ack(msg);
-        logger.trace("[MQ] Participant already choosing someone", { id, qrId });
+        logger.trace(
+          `[MQ] Participant already choosing someone. QR ID: ${qrId}`
+        );
 
         return;
       }
@@ -134,7 +140,7 @@ const consumeMessagesFromQueue = async () => {
         );
 
         channel.ack(msg);
-        logger.trace("[MQ] Participant isn't attended yet", { id, qrId });
+        logger.trace(`[MQ] Participant isn't attended yet. QR ID: ${qrId}`);
 
         return;
       }
@@ -158,7 +164,7 @@ const consumeMessagesFromQueue = async () => {
           }),
         ]);
 
-        logger.info("[MQ] Upvote!", { qrId });
+        logger.info(`[MQ] Upvote!. QR ID: ${qrId}`);
 
         channel.sendToQueue(
           msg.properties.replyTo,

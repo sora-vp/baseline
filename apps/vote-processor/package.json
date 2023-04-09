@@ -14,6 +14,7 @@
   "license": "GPL-3.0",
   "devDependencies": {
     "@types/amqplib": "^0.10.1",
+    "@types/luxon": "^3.3.0",
     "@typescript-eslint/eslint-plugin": "latest",
     "@typescript-eslint/parser": "latest",
     "eslint": "latest",
@@ -25,10 +26,14 @@
   },
   "dependencies": {
     "@prisma/client": "^4.12.0",
+    "@trpc/client": "^10.18.0",
+    "@trpc/server": "^10.18.0",
     "amqplib": "^0.10.3",
     "dotenv": "^16.0.3",
+    "luxon": "^3.3.0",
     "pino": "^8.11.0",
     "pino-pretty": "^10.0.0",
-    "sora": "workspace:*"
+    "sora": "workspace:*",
+    "superjson": "^1.12.2"
   }
 }

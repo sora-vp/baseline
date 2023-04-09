@@ -3284,6 +3284,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/luxon@npm:^3.3.0":
+  version: 3.3.0
+  resolution: "@types/luxon@npm:3.3.0"
+  checksum: f7e3a89fc3ca404fbc3ea538653ed6860bc28f570a8c4d6d24449b89b9b553b7d6ad6cc94a9e129c5b8c9a2b97f0c365b3017f811e59c4a859a9c219a1c918e0
+  languageName: node
+  linkType: hard
+
 "@types/mime-types@npm:^2.1.1":
   version: 2.1.1
   resolution: "@types/mime-types@npm:2.1.1"
@@ -10811,7 +10818,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"superjson@npm:1.12.2":
+"superjson@npm:1.12.2, superjson@npm:^1.12.2":
   version: 1.12.2
   resolution: "superjson@npm:1.12.2"
   dependencies:
@@ -11592,17 +11599,22 @@ __metadata:
   resolution: "vote-processor@workspace:apps/vote-processor"
   dependencies:
     "@prisma/client": ^4.12.0
+    "@trpc/client": ^10.18.0
+    "@trpc/server": ^10.18.0
     "@types/amqplib": ^0.10.1
+    "@types/luxon": ^3.3.0
     "@typescript-eslint/eslint-plugin": latest
     "@typescript-eslint/parser": latest
     amqplib: ^0.10.3
     dotenv: ^16.0.3
     eslint: latest
+    luxon: ^3.3.0
     nodemon: ^2.0.22
     pino: ^8.11.0
     pino-pretty: ^10.0.0
     prisma: ^4.12.0
     sora: "workspace:*"
+    superjson: ^1.12.2
     ts-node: ^10.9.1
     tsup: ^6.7.0
     typescript: 4.9.5
