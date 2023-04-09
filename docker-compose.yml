@@ -1,0 +1,43 @@
+version: '3'
+
+services:
+  sora:
+    build:
+      context: .
+      dockerfile: Dockerfile.sora
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./apps/sora/public/uploads:/app/public/uploads
+      - ./apps/sora/settings.bin:/app/settings.bin
+    depends_on:
+      - rabbitmq
+      - mariadb
+    environment:
+      - AMQP_URL=amqp://rabbitmq
+      - DATABASE_URL=mysql://user:password@mariadb/sora
+      - NEXTAUTH_SECRET=very_super_secret_for_auth
+      - NEXTAUTH_URL=http://localhost:3000/
+      - SETTINGS_SECRET=VERY_SUPER_SECRET_FOR_SETTINGS
+
+  vote-processor:
+    build:
+      context: .
+      dockerfile: Dockerfile.vote-processor
+    depends_on:
+      - rabbitmq
+      - mariadb
+    environment:
+      - AMQP_URL=amqp://rabbitmq
+      - DATABASE_URL=mysql://user:password@mariadb/sora
+
+  rabbitmq:
+    image: rabbitmq:3.9-alpine
+
+  mariadb:
+    image: mariadb:10.6
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: sora
+      MYSQL_USER: user
+      MYSQL_PASSWORD: password
