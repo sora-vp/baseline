@@ -4,10 +4,11 @@ services:
   sora:
     build:
       context: .
-      dockerfile: Dockerfile.sora
+      dockerfile: ./apps/sora/Dockerfile
     ports:
-      - "3000:3000"
+      - "0.0.0.0:3000:3000"
     volumes:
+      - /apps/sora:/app/apps/sora
       - ./apps/sora/public/uploads:/app/public/uploads
       - ./apps/sora/settings.bin:/app/settings.bin
     depends_on:
@@ -20,16 +21,16 @@ services:
       - NEXTAUTH_URL=http://localhost:3000/
       - SETTINGS_SECRET=VERY_SUPER_SECRET_FOR_SETTINGS
 
-  vote-processor:
-    build:
-      context: .
-      dockerfile: Dockerfile.vote-processor
-    depends_on:
-      - rabbitmq
-      - mariadb
-    environment:
-      - AMQP_URL=amqp://rabbitmq
-      - DATABASE_URL=mysql://user:password@mariadb/sora
+  # vote-processor:
+  #   build:
+  #     context: .
+  #     dockerfile: Dockerfile.vote-processor
+  #   depends_on:
+  #     - rabbitmq
+  #     - mariadb
+  #   environment:
+  #     - AMQP_URL=amqp://rabbitmq
+  #     - DATABASE_URL=mysql://user:password@mariadb/sora
 
   rabbitmq:
     image: rabbitmq:3.9-alpine
