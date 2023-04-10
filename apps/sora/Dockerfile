@@ -15,12 +15,21 @@ WORKDIR /app
 COPY .gitignore .gitignore
 COPY --from=builder /app/out/json .
 COPY --from=builder /app/out/yarn.lock ./yarn.lock
-RUN yarn install --immutable --inline-builds
+RUN yarn install
 
 COPY --from=builder /app/out/full .
 COPY turbo.json turbo.json
 
 ENV SKIP_ENV_VALIDATION true
+
+ARG DATABASE_URL
+ENV DATABASE_URL $DATABASE_URL
+
+WORKDIR /app/apps/sora
+
+RUN yarn dlx prisma generate
+
+WORKDIR /app
 
 RUN yarn turbo run build --filter=sora...
 
