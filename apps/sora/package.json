@@ -8,7 +8,6 @@
   "scripts": {
     "build": "next build",
     "dev": "next dev",
-    "postinstall": "prisma generate",
     "lint": "next lint",
     "start": "next start",
     "typecheck": "tsc"
@@ -18,7 +17,6 @@
     "@emotion/react": "^11.10.6",
     "@emotion/styled": "^11.10.6",
     "@hookform/resolvers": "^3.0.0",
-    "@prisma/client": "^4.11.0",
     "@tanstack/react-query": "^4.28.0",
     "@tanstack/react-table": "^8.8.4",
     "@trpc/client": "^10.18.0",
@@ -29,6 +27,7 @@
     "bcrypt": "^5.1.0",
     "cors": "^2.8.5",
     "csv-parse": "^5.3.6",
+    "database": "workspace:*",
     "formidable": "^2.1.1",
     "framer-motion": "^10.8.5",
     "fs-json-store": "^8.0.1",
@@ -71,7 +70,6 @@
     "@typescript-eslint/parser": "^5.56.0",
     "eslint": "^8.36.0",
     "eslint-config-next": "^13.2.4",
-    "prisma": "^4.11.0",
     "typescript": "^4.9.5"
   },
   "ct3aMetadata": {
