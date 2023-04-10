@@ -26,5 +26,8 @@
   "engines": {
     "node": ">=18.15.0"
   },
-  "packageManager": "yarn@3.5.0"
+  "packageManager": "yarn@3.5.0",
+  "dependencies": {
+    "@prisma/client": "^4.12.0"
+  }
 }

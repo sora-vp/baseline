@@ -10489,6 +10489,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "sora-root@workspace:."
   dependencies:
+    "@prisma/client": ^4.12.0
     prettier: ^2.8.6
     turbo: ^1.8.8
   languageName: unknown
