@@ -8,7 +8,6 @@ services:
     ports:
       - "0.0.0.0:3000:3000"
     volumes:
-      - /apps/sora:/app/apps/sora
       - ./apps/sora/public/uploads:/app/public/uploads
       - ./apps/sora/settings.bin:/app/settings.bin
     depends_on:

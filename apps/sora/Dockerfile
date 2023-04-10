@@ -1,57 +1,54 @@
 FROM node:lts-alpine AS builder
 
-RUN yarn set version stable
-
 WORKDIR /app
 
-RUN yarn global add turbo
+RUN corepack enable && corepack prepare yarn@stable --activate
 COPY . .
-RUN turbo prune --scope=sora --docker
+RUN yarn dlx turbo prune --scope=sora --docker
 
 FROM node:lts-alpine AS installer
 
+RUN corepack enable && corepack prepare yarn@stable --activate
+
 WORKDIR /app
 
-RUN yarn set version stable
 COPY .gitignore .gitignore
 COPY --from=builder /app/out/json .
 COPY --from=builder /app/out/yarn.lock ./yarn.lock
-RUN yarn install
+RUN yarn install --immutable --inline-builds
 
 COPY --from=builder /app/out/full .
 COPY turbo.json turbo.json
+
+ENV SKIP_ENV_VALIDATION true
+
 RUN yarn turbo run build --filter=sora...
 
 FROM node:lts-alpine AS runner
-
 WORKDIR /app
 
-COPY --from=installer /app .
+ARG AMQP_URL
+ARG DATABASE_URL
+ARG NEXTAUTH_SECRET
+ARG NEXTAUTH_URL
+ARG SETTINGS_SECRET
 
-WORKDIR /app/apps/sora
-RUN npx prisma generate
+ENV AMQP_URL $AMQP_URL
+ENV DATABASE_URL $DATABASE_URL
+ENV NEXTAUTH_SECRET $NEXTAUTH_SECRET
+ENV NEXTAUTH_URL $NEXTAUTH_URL
+ENV SETTINGS_SECRET $SETTINGS_SECRET
+
+RUN addgroup --system --gid 1001 nodejs
+RUN adduser --system --uid 1001 sora
+USER sora
+
+COPY --from=installer /app/apps/sora/next.config.mjs .
+COPY --from=installer /app/apps/sora/package.json .
+
+COPY --from=installer --chown=sora:nodejs /app/apps/sora/.next/standalone ./
+COPY --from=installer --chown=sora:nodejs /app/apps/sora/.next/static ./apps/sora/.next/static
+COPY --from=installer --chown=sora:nodejs /app/apps/sora/public ./apps/sora/public
 
 EXPOSE 3000
-CMD ["yarn", "start"]
-
-# # Set working directory
-# WORKDIR /app
-#
-# # Copy package.json and yarn.lock to the container
-# COPY package.json yarn.lock ./
-#
-# # Install dependencies with Yarn
-# RUN corepack prepare yarn@3.5.0 --activate \
-#     && yarn install --frozen-lockfile --non-interactive
-#
-# # Copy the rest of the application code to the container
-# COPY . .
-#
-# # Build the application
-# RUN yarn build
-#
-# # Expose the application port
-# EXPOSE 3000
-#
-# # Start the application
-# CMD ["yarn", "start"]
+CMD node apps/sora/server.js
