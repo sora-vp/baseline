@@ -5,10 +5,10 @@
   "description": "Consumer yang memroses data yang datang dari pemilih untuk memilih kandidatnya",
   "main": "dist/index.js",
   "scripts": {
+    "build": "tsup",
     "lint": "eslint src/",
-    "dev": "nodemon src/index.ts",
-    "build": "tsc",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "dev": "nodemon src/index.ts"
   },
   "author": "Ezra Khairan Permana",
   "license": "GPL-3.0",

@@ -1,10 +1,10 @@
-import { PrismaClient } from "database";
-import amqp from "amqplib";
-
 import "dotenv/config";
 
 import { env } from "./env";
 import { logger } from "./logger";
+
+import { PrismaClient } from "database";
+import amqp from "amqplib";
 
 import { trpc } from "./trpc";
 import { canVoteNow } from "./canVoteNow";

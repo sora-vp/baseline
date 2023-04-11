@@ -8,10 +8,6 @@ inputs:
     required: false
     default: "true"
 
-  skip-prisma-postinstall-generate:
-    description: "Avoid prisma to automatically generate schema on postinstall"
-    required: false
-    default: "true"
   playwright-skip-browser-download:
     description: "Avoid playwright to download browsers automatically"
     required: false
@@ -60,5 +56,10 @@ runs:
         YARN_INSTALL_STATE_PATH: .yarn/ci-cache/install-state.gz # Very small speedup when lock does not change
         # Other environment variables
         HUSKY: "0" # By default do not run HUSKY install
-        PRISMA_SKIP_POSTINSTALL_GENERATE: ${{ inputs.skip-prisma-postinstall-generate }}
         PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: ${{ inputs.playwright-skip-browser-download }}
+
+    - name: Prisma generate schema and types
+      shell: bash
+      run: |
+        yarn generate
+        yarn dlx turbo build --filter database
