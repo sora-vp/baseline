@@ -29,6 +29,7 @@
     "@trpc/client": "^10.18.0",
     "@trpc/server": "^10.18.0",
     "amqplib": "^0.10.3",
+    "database": "workspace:*",
     "dotenv": "^16.0.3",
     "luxon": "^3.3.0",
     "pino": "^8.11.0",

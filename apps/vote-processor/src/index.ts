@@ -1,4 +1,4 @@
-import { PrismaClient } from "@prisma/client";
+import { PrismaClient } from "database";
 import amqp from "amqplib";
 
 import "dotenv/config";

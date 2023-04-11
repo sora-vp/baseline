@@ -5,6 +5,9 @@
     "apps/*",
     "packages/*"
   ],
+  "prisma": {
+    "schema": "packages/database/prisma/schema.prisma"
+  },
   "scripts": {
     "build": "turbo run build --filter=sora --filter=vote-processor",
     "dev": "turbo run dev --parallel",
@@ -18,8 +21,10 @@
     "dev:processor": "turbo run dev --filter vote-processor",
     "build-desktop:win": "turbo run build-win --filter '*-desktop'",
     "build-desktop:linux": "turbo run build-linux --filter '*-desktop'",
-    "db:generate": "turbo run db:generate --filter database",
-    "db:push": "turbo run db:push --filter database"
+    "db:migrate:deploy": "turbo run db:migrate:deploy",
+    "db:push": "turbo run db:push",
+    "db:seed": "turbo run db:seed",
+    "generate": "turbo run generate"
   },
   "devDependencies": {
     "prettier": "^2.8.6",
