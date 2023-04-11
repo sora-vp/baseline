@@ -2,18 +2,25 @@
   "name": "database",
   "version": "0.0.0",
   "license": "GPL-3.0",
-  "main": "index.ts",
-  "types": "index.ts",
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist/**"
+  ],
   "scripts": {
-    "postinstall": "yarn db:generate",
+    "build": "tsup",
     "db:generate": "prisma generate",
-    "db:push": "prisma db push --skip-generate"
+    "db:push": "prisma db push --skip-generate",
+    "postinstall": "yarn build"
   },
   "dependencies": {
     "@prisma/client": "^4.12.0"
   },
   "devDependencies": {
-    "prisma": "^4.12.0"
+    "@types/node": "^18.15.11",
+    "prisma": "^4.12.0",
+    "tsup": "^6.7.0"
   },
   "packageManager": "yarn@3.5.0"
 }

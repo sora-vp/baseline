@@ -2,7 +2,7 @@
   "$schema": "https://turbo.build/schema.json",
   "pipeline": {
     "build": {
-      "dependsOn": ["^build", "^db:generate"],
+      "dependsOn": ["^db:generate", "^build"],
       "outputs": [".next/**", "dist/**"]
     },
     "lint": {
@@ -23,6 +23,7 @@
       "outputs": ["dist/**", "out/**"]
     },
     "db:generate": {
+      "dependsOn": ["^build"],
       "outputs": ["generated-prisma/**"]
     }
   }

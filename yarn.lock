@@ -3319,7 +3319,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:*, @types/node@npm:^18.15.5":
+"@types/node@npm:*, @types/node@npm:^18.15.11, @types/node@npm:^18.15.5":
   version: 18.15.11
   resolution: "@types/node@npm:18.15.11"
   checksum: 977b4ad04708897ff0eb049ecf82246d210939c82461922d20f7d2dcfd81bbc661582ba3af28869210f7e8b1934529dcd46bff7d448551400f9d48b9d3bddec3
@@ -5160,7 +5160,9 @@ __metadata:
   resolution: "database@workspace:packages/database"
   dependencies:
     "@prisma/client": ^4.12.0
+    "@types/node": ^18.15.11
     prisma: ^4.12.0
+    tsup: ^6.7.0
   languageName: unknown
   linkType: soft
 
