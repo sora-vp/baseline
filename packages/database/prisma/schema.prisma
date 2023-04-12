@@ -3,7 +3,7 @@
 
 generator client {
   provider = "prisma-client-js"
-  output = "../generated-prisma"
+  output   = "../generated-prisma"
 }
 
 datasource db {
@@ -20,10 +20,10 @@ model User {
 }
 
 model Candidate {
-  id            Int       @id @default(autoincrement())
-  counter       Int       @default(0)
-  name          String    @unique
-  img           String    @unique @db.VarChar(50)
+  id      Int    @id @default(autoincrement())
+  counter Int    @default(0)
+  name    String @unique
+  img     String @unique @db.VarChar(50)
 }
 
 model Participant {

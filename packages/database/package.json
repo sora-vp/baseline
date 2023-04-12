@@ -2,14 +2,13 @@
   "name": "database",
   "version": "0.0.0",
   "license": "GPL-3.0",
-  "main": "dist/index.js",
-  "module": "dist/index.mjs",
-  "types": "dist/index.d.ts",
+  "main": "./generated-prisma/index.js",
+  "types": "./generated-prisma/index.d.ts",
+  "browser": "./generated-prisma/index-browser.js",
   "files": [
     "dist/**"
   ],
   "scripts": {
-    "build": "tsup",
     "db:migrate:deploy": "prisma migrate deploy",
     "db:migrate:dev": "prisma migrate dev",
     "db:push": "prisma db push",
@@ -22,7 +21,6 @@
   "devDependencies": {
     "@types/node": "^18.15.11",
     "prisma": "^4.12.0",
-    "tsup": "^6.7.0",
     "typescript": "4.9.5"
   },
   "packageManager": "yarn@3.5.0"
