@@ -5,7 +5,11 @@
 !process.env.SKIP_ENV_VALIDATION && (await import("./src/env.mjs"));
 
 import path from "path";
-import { fileURLToPath } from 'url';
+import { fileURLToPath } from "url";
+
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
+import { PrismaPlugin } from "@prisma/nextjs-monorepo-workaround-plugin";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -14,6 +18,13 @@ const __dirname = path.dirname(__filename);
 const config = {
   reactStrictMode: true,
   transpilePackages: ["ui"],
+  webpack: (config, { isServer }) => {
+    if (isServer) {
+      config.plugins = [...config.plugins, new PrismaPlugin()];
+    }
+
+    return config;
+  },
 
   /**
    * If you have the "experimental: { appDir: true }" setting enabled, then you
@@ -28,6 +39,6 @@ const config = {
   output: "standalone",
   experimental: {
     outputFileTracingRoot: path.join(__dirname, "../../"),
-  }
+  },
 };
 export default config;

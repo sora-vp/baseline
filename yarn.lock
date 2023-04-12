@@ -2784,6 +2784,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@prisma/nextjs-monorepo-workaround-plugin@npm:^4.12.0":
+  version: 4.12.0
+  resolution: "@prisma/nextjs-monorepo-workaround-plugin@npm:4.12.0"
+  checksum: 0da429d7668723bb78e19d41e393927606ea79774f33abf0346c7e9f703f0fad8001d7d36d67a91f6c707b64eb4c13257ee4eac6cb93dcc3cbb131eaac2d9541
+  languageName: node
+  linkType: hard
+
 "@remix-run/router@npm:1.5.0":
   version: 1.5.0
   resolution: "@remix-run/router@npm:1.5.0"
@@ -10513,6 +10520,7 @@ __metadata:
     "@emotion/react": ^11.10.6
     "@emotion/styled": ^11.10.6
     "@hookform/resolvers": ^3.0.0
+    "@prisma/nextjs-monorepo-workaround-plugin": ^4.12.0
     "@tanstack/react-query": ^4.28.0
     "@tanstack/react-table": ^8.8.4
     "@trpc/client": ^10.18.0
