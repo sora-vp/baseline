@@ -16,7 +16,6 @@ import {
 } from "@chakra-ui/react";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
-import { DateTime } from "luxon";
 import NextLink from "next/link";
 import Head from "next/head";
 
@@ -96,7 +95,6 @@ const EditCandidateWithID = () => {
     const formData = new FormData();
     const keys = Object.keys(data);
 
-    formData.append("timeZone", DateTime.local().zoneName);
     formData.append("id", router.query.id as string);
 
     for (const key of keys) {

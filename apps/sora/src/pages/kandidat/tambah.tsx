@@ -19,7 +19,6 @@ import { Controller, useForm } from "react-hook-form";
 import { useState, useEffect } from "react";
 import Router from "next/router";
 import NextLink from "next/link";
-import { DateTime } from "luxon";
 import Head from "next/head";
 
 import InputImageBox from "~/components/InputImageBox";
@@ -77,8 +76,6 @@ const HalamanTambah = () => {
   const onSubmit = async (data: FormValues) => {
     const formData = new FormData();
     const keys = Object.keys(data);
-
-    formData.append("timeZone", DateTime.local().zoneName);
 
     for (const key of keys) {
       if (key === "image")

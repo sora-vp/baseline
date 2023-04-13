@@ -33,18 +33,6 @@ RUN yarn turbo run build --filter=sora...
 FROM node:lts-alpine3.17 AS runner
 WORKDIR /app
 
-ARG AMQP_URL
-ARG DATABASE_URL
-ARG NEXTAUTH_SECRET
-ARG NEXTAUTH_URL
-ARG SETTINGS_SECRET
-
-ENV AMQP_URL $AMQP_URL
-ENV DATABASE_URL $DATABASE_URL
-ENV NEXTAUTH_SECRET $NEXTAUTH_SECRET
-ENV NEXTAUTH_URL $NEXTAUTH_URL
-ENV SETTINGS_SECRET $SETTINGS_SECRET
-
 RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 sora
 USER sora
@@ -57,4 +45,4 @@ COPY --from=installer --chown=sora:nodejs /app/apps/sora/.next/static ./apps/sor
 COPY --from=installer --chown=sora:nodejs /app/apps/sora/public ./apps/sora/public
 
 EXPOSE 3000
-CMD node apps/sora/server.js
+ENTRYPOINT node apps/sora/server.js

@@ -22,6 +22,9 @@
       "dependsOn": ["build"],
       "outputs": ["dist/**", "out/**"]
     },
+    "db:migrate:deploy": {},
+    "db:push": {},
+    "db:seed": {},
     "generate": {
       "dependsOn": ["^generate"]
     }

@@ -1,10 +1,12 @@
-version: '3'
+version: "3"
 
 services:
   sora:
     build:
       context: .
       dockerfile: ./apps/sora/Dockerfile
+      args:
+        DATABASE_URL: "mysql://user:password@mariadb/sora"
     ports:
       - "0.0.0.0:3000:3000"
     volumes:
@@ -13,26 +15,32 @@ services:
     depends_on:
       - rabbitmq
       - mariadb
+      - vote-processor
     environment:
-      - AMQP_URL=amqp://rabbitmq
-      - DATABASE_URL=mysql://user:password@mariadb/sora
-      - NEXTAUTH_SECRET=very_super_secret_for_auth
-      - NEXTAUTH_URL=http://localhost:3000/
-      - SETTINGS_SECRET=VERY_SUPER_SECRET_FOR_SETTINGS
+      AMQP_URL: "amqp://rabbitmq"
+      DATABASE_URL: "mysql://user:password@mariadb/sora"
+      NEXTAUTH_SECRET: "very_super_secret_for_auth"
+      NEXTAUTH_URL: "http://localhost:3000/"
+      SETTINGS_SECRET: "VERY_SUPER_SECRET_FOR_SETTINGS"
 
-  # vote-processor:
-  #   build:
-  #     context: .
-  #     dockerfile: Dockerfile.vote-processor
-  #   depends_on:
-  #     - rabbitmq
-  #     - mariadb
-  #   environment:
-  #     - AMQP_URL=amqp://rabbitmq
-  #     - DATABASE_URL=mysql://user:password@mariadb/sora
+  vote-processor:
+    build:
+      context: .
+      dockerfile: ./apps/vote-processor/Dockerfile
+      args:
+        AMQP_URL: "amqp://rabbitmq"
+        DATABASE_URL: "mysql://user:password@mariadb/sora"
+    depends_on:
+      - rabbitmq
+      - mariadb
+    environment:
+      AMQP_URL: "amqp://rabbitmq"
+      DATABASE_URL: "mysql://user:password@mariadb/sora"
 
   rabbitmq:
     image: rabbitmq:3.9-alpine
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
 
   mariadb:
     image: mariadb:10.6
@@ -41,3 +49,9 @@ services:
       MYSQL_DATABASE: sora
       MYSQL_USER: user
       MYSQL_PASSWORD: password
+    volumes:
+      - mariadb_data:/var/lib/mysql
+
+volumes:
+  rabbitmq_data:
+  mariadb_data:
