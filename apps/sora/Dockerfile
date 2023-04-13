@@ -24,10 +24,6 @@ COPY turbo.json turbo.json
 RUN yarn generate
 
 ENV SKIP_ENV_VALIDATION true
-
-ARG DATABASE_URL
-ENV DATABASE_URL $DATABASE_URL
-
 RUN yarn turbo run build --filter=sora...
 
 FROM node:lts-alpine3.17 AS runner

@@ -4,7 +4,7 @@ WORKDIR /app
 
 RUN corepack enable && corepack prepare yarn@stable --activate
 COPY . .
-RUN yarn dlx turbo prune --scope=sora --docker
+RUN yarn dlx turbo prune --scope=vote-processor --docker
 
 FROM node:lts-alpine3.17 AS installer-n-runner
 
@@ -22,7 +22,8 @@ COPY --from=builder /app/out/full .
 COPY turbo.json turbo.json
 
 RUN yarn generate
-RUN RUN yarn turbo run build --filter=vote-processor
+ENV SKIP_ENV_VALIDATION true
+RUN yarn turbo run build --filter=vote-processor
 
 RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 vote
