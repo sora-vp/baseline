@@ -8,7 +8,7 @@ services:
       args:
         DATABASE_URL: "mysql://user:password@mariadb/sora"
     ports:
-      - "0.0.0.0:3000:3000"
+      - "3000:3000"
     volumes:
       - ./apps/sora/public/uploads:/app/public/uploads
       - ./apps/sora/settings.bin:/app/settings.bin
@@ -16,6 +16,10 @@ services:
       - rabbitmq
       - mariadb
       - vote-processor
+    networks:
+      - sora-network
+      - db-network
+      - rabbitmq-network
     environment:
       AMQP_URL: "amqp://rabbitmq"
       DATABASE_URL: "mysql://user:password@mariadb/sora"
@@ -41,6 +45,11 @@ services:
     image: rabbitmq:3.9-alpine
     volumes:
       - rabbitmq_data:/var/lib/rabbitmq
+    ports:
+      - "15672:15672"
+      - "5672:5672"
+    networks:
+      - rabbitmq-network
 
   mariadb:
     image: mariadb:10.6
@@ -51,7 +60,15 @@ services:
       MYSQL_PASSWORD: password
     volumes:
       - mariadb_data:/var/lib/mysql
+    networks:
+      - db-network
 
 volumes:
   rabbitmq_data:
   mariadb_data:
+
+
+networks:
+  sora-network:
+  db-network:
+  rabbitmq-network:
