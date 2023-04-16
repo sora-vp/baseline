@@ -42,7 +42,7 @@ services:
       DATABASE_URL: "mysql://user:password@mariadb/sora"
 
   rabbitmq:
-    image: rabbitmq:3.9-alpine
+    image: rabbitmq:3.11.13-alpine
     volumes:
       - rabbitmq_data:/var/lib/rabbitmq
     ports:
@@ -52,12 +52,12 @@ services:
       - rabbitmq-network
 
   mariadb:
-    image: mariadb:10.6
+    image: mariadb:10.11.2
     environment:
-      MYSQL_ROOT_PASSWORD: password
-      MYSQL_DATABASE: sora
-      MYSQL_USER: user
-      MYSQL_PASSWORD: password
+      MARIADB_ROOT_PASSWORD: password
+      MARIADB_DATABASE: sora
+      MARIADB_MYSQL_LOCALHOST_USER: user
+      MARIADB_PASSWORD: password
     volumes:
       - mariadb_data:/var/lib/mysql
     networks:
@@ -66,7 +66,6 @@ services:
 volumes:
   rabbitmq_data:
   mariadb_data:
-
 
 networks:
   sora-network:
