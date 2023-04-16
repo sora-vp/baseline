@@ -15,9 +15,9 @@ Ini adalah branch untuk sora versi 2. Jika ingin menggunakan versi pertama, sila
 
 Secara ringkas, berikut ini perbedaan dengan versi yang pertama.
 
-- Repositori ini menggunakan sistem monorepo walaupun ada project yang berkaitan tetapi terpisah.
+- Repositori ini menggunakan sistem monorepo walaupun ada project yang berbeda repositori.
 - Terdapat sistem absensi [kode QR](https://id.wikipedia.org/wiki/Kode_QR) yang menggantikan tanda tangan, tetapi masih bersifat anonim untuk menjaga asas [LUBER JURDIL](https://id.wikipedia.org/wiki/Pemilihan_umum_di_Indonesia).
-- Terdapat consumer RabbitMQ yang dapat mencegah data ganda jika yang bernama [`vote-processor`](./apps/vote-processor/).
+- Terdapat consumer RabbitMQ yang dapat mencegah data ganda yang bernama [`vote-processor`](./apps/vote-processor/).
 - Memisahkan bagian server dengan pemilih maupun kehadiran dengan aplikasi desktop.
 
 Beberapa repositori yang dimaksud mencakup repositori dibawah ini.
@@ -35,6 +35,8 @@ Anda membutuhkan
 - RabbitMQ setidaknya versi 3.11.13, https://www.rabbitmq.com/download.html
 
 ## Pemakaian
+
+Dibawah ini cara pemakaian dengan instalasi manual, untuk penggunaan docker menyusul. Cek [#12](https://github.com/reacto11mecha/sora/issues/12) untuk kemajuannya.
 
 ### Cloning Dari Github
 
