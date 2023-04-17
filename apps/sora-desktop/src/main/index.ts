@@ -18,6 +18,19 @@ const store = new Store<{
   serverURL?: string;
 }>();
 
+const arduinoConnectionHandler = (
+  boards: Awaited<ReturnType<typeof SerialPort.list>>,
+  mainWindow: BrowserWindow
+) => {
+  const filteredBoards = boards.filter(
+    (board) =>
+      board.pnpId || board.manufacturer || board.vendorId || board.productId
+  );
+
+  if (filteredBoards.length > 0 && filteredBoards[0])
+    handleConnect(filteredBoards[0], port, mainWindow);
+};
+
 function createWindow(): void {
   // Create the browser window.
   const mainWindow = new BrowserWindow({
@@ -74,18 +87,17 @@ function createWindow(): void {
     mainWindow.loadFile(join(__dirname, "../renderer/index.html"));
   }
 
-  // Intial connection to arduino (if board exist)
-  SerialPort.list().then((value) => {
-    if (value.length > 0 && value[0]) handleConnect(value[0], port, mainWindow);
-  });
+  // Intial connection to arduino
+  SerialPort.list().then((boards) =>
+    arduinoConnectionHandler(boards, mainWindow)
+  );
 
   // Button module reconnect mechanism
   usb.on("attach", () => {
     if (!port) {
-      SerialPort.list().then((value) => {
-        if (value.length > 0 && value[0])
-          handleConnect(value[0], port, mainWindow);
-      });
+      SerialPort.list().then((boards) =>
+        arduinoConnectionHandler(boards, mainWindow)
+      );
     }
   });
 }
