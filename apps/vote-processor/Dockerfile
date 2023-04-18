@@ -28,4 +28,4 @@ RUN yarn turbo run build --filter=vote-processor
 RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 vote
 
-ENTRYPOINT yarn db:migrate:deploy && yarn yarn db:push && node apps/vote-processor
+ENTRYPOINT node apps/vote-processor
