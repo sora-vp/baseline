@@ -25,7 +25,7 @@ Beberapa repositori yang dimaksud mencakup repositori dibawah ini.
 - [sora-qrcode-web](https://github.com/reacto11mecha/sora-qrcode-web), repositori yang akan menghasilkan gambar kode QR yang bisa diunduh oleh partisipan.
 - [sora-button-module](https://github.com/reacto11mecha/sora-button-module), modul tombol yang bisa dibuat sendiri jika tidak ingin menggunakan mouse.
 
-## Instalasi
+## Konfigurasi Software
 
 #### Prerequisites
 
@@ -53,9 +53,42 @@ Setelah mengkloning repositori dari github ke mesin lokal, terdapat dua pilihan 
       Menggunakan Docker
    </summary>
 
-</details>
+#### Menjalankan docker compose
 
-<br />
+Masuk ke direktori root dari sora dan jalankan perintah ini di terminal supaya aplikasi ini dapat berjalan.
+
+```sh
+docker compose up -d
+```
+
+#### Migrasi prisma
+
+Docker mungkin sudah berjalan tetapi database masih kosong dan belum memiliki tabel, oleh karena itu perlu menjalankan migrasi. Berikut ini adalah langkah-langkah yang harus dilakukan.
+
+1. Masuk vote-processor
+
+   Cek terlebih dahulu dimana instance vote-processor berjalan dengan menggunakan `docker ps` dan akan muncul list seperti ini.
+
+   ![Mengecek instance docker yang sudah berjalan menggunakan docker ps](./assets/tutorial/001-docker-ps.png)
+
+   Dalam contoh ini kita mengetahui bahwa vote-processor memiliki container id `14f0142e93ee`.
+
+2. Jalankan migrasi
+
+   Setelah mengetahui container id, jalankan perintah `yarn db:migrate:deploy` dan `yarn db:push`
+
+   ```sh
+   docker exec -it <CONTAINER_ID> yarn db:migrate:deploy
+   docker exec -it <CONTAINER_ID> yarn db:push
+   ```
+
+   Kurang lebih hasilnya akan terlihat seperti ini.
+
+   ![Setelah db:migrate:deploy](./assets/tutorial/002-docker-db-migrate.png)
+
+   ![Setelah db:push](./assets/tutorial/003-docker-db-push.png)
+
+</details>
 
 <details>
    <summary>
@@ -133,6 +166,15 @@ Setelah selesai, jalankan sora dan vote-processor menggunakan pm2.
 
 ```sh
 pm2 start ecosystem.config.js
+```
+
+#### Menjalankan migrasi
+
+Database mungkin sudah berjalan tapi belum memiliki tabel, oleh karena itu diperlukan migrasi dari prisma untuk membuat tabel. Jalankan perintah dibawah ini untuk membuat tabel.
+
+```sh
+yarn db:migrate:deploy
+yarn db:push
 ```
 
 </details>
