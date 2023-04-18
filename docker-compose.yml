@@ -5,24 +5,19 @@ services:
     build:
       context: .
       dockerfile: ./apps/sora/Dockerfile
-      args:
-        DATABASE_URL: "mysql://user:password@mariadb/sora"
+    restart: always
     ports:
       - "3000:3000"
     volumes:
       - ./apps/sora/public/uploads:/app/public/uploads
-      - ./apps/sora/settings.bin:/app/settings.bin
+      # - ./apps/sora/settings.bin:/app/settings.bin
     depends_on:
       - rabbitmq
       - mariadb
       - vote-processor
-    networks:
-      - sora-network
-      - db-network
-      - rabbitmq-network
     environment:
       AMQP_URL: "amqp://rabbitmq"
-      DATABASE_URL: "mysql://user:password@mariadb/sora"
+      DATABASE_URL: "mysql://root:password@mariadb/sora"
       NEXTAUTH_SECRET: "very_super_secret_for_auth"
       NEXTAUTH_URL: "http://localhost:3000/"
       SETTINGS_SECRET: "VERY_SUPER_SECRET_FOR_SETTINGS"
@@ -31,15 +26,13 @@ services:
     build:
       context: .
       dockerfile: ./apps/vote-processor/Dockerfile
-      args:
-        AMQP_URL: "amqp://rabbitmq"
-        DATABASE_URL: "mysql://user:password@mariadb/sora"
     depends_on:
       - rabbitmq
       - mariadb
     environment:
       AMQP_URL: "amqp://rabbitmq"
-      DATABASE_URL: "mysql://user:password@mariadb/sora"
+      DATABASE_URL: "mysql://root:password@mariadb/sora"
+      TRPC_URL: "http://sora/api/trpc"
 
   rabbitmq:
     image: rabbitmq:3.11.13-alpine
@@ -48,8 +41,6 @@ services:
     ports:
       - "15672:15672"
       - "5672:5672"
-    networks:
-      - rabbitmq-network
 
   mariadb:
     image: mariadb:10.11.2
@@ -57,17 +48,11 @@ services:
       MARIADB_ROOT_PASSWORD: password
       MARIADB_DATABASE: sora
       MARIADB_MYSQL_LOCALHOST_USER: user
+      MYSQL_ROOT_HOST: mariadb
       MARIADB_PASSWORD: password
     volumes:
       - mariadb_data:/var/lib/mysql
-    networks:
-      - db-network
 
 volumes:
   rabbitmq_data:
   mariadb_data:
-
-networks:
-  sora-network:
-  db-network:
-  rabbitmq-network:
