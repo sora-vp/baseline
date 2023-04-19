@@ -1,6 +1,6 @@
 import { useSetting } from "@renderer/context/SettingContext";
 
-import Loading from "@renderer/components/PreScan/Loading";
+import Loading from "@renderer/components/Loading";
 
 import ErrorOcurred from "@renderer/components/PreScan/ErrorOccured";
 import CantVote from "@renderer/components/PreScan/CantVote";
@@ -13,7 +13,7 @@ const Main: React.FC = () => {
 
   if (isError) return <ErrorOcurred />;
 
-  if (isLoading && !isError) return <Loading />;
+  if (isLoading && !isError) return <Loading headingText="Mengambil data terbaru..." />;
 
   if (!isLoading && !canVoteNow && !isError) return <CantVote />;
 

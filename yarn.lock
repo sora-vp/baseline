@@ -1924,6 +1924,27 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@fontsource/lato@npm:^4.5.10":
+  version: 4.5.10
+  resolution: "@fontsource/lato@npm:4.5.10"
+  checksum: ab0a9a9e4f879f7639ad12639d1a1c2798677a9bd8af23303ca8a94af772ec5afbd4bbdfe298538bf38651c4c63b934b946e8e7c1083eb75fb453058496d233e
+  languageName: node
+  linkType: hard
+
+"@fontsource/roboto@npm:^4.5.8":
+  version: 4.5.8
+  resolution: "@fontsource/roboto@npm:4.5.8"
+  checksum: 460b6de2c9f7a172192c3f5bdd3aa11f78f0b6660dca9dc2b9d8207272b50c55b5a8f2da68e11e7fbaf44c7d3cf4191030eecce9def79fab75d4cc1de39754e2
+  languageName: node
+  linkType: hard
+
+"@fontsource/sora@npm:^4.5.12":
+  version: 4.5.12
+  resolution: "@fontsource/sora@npm:4.5.12"
+  checksum: f4aff41594aefeb63992ee642dddf72dfb9916dcfa3cbdce94cb0202d058b0d3d466ca41de7aea9ea40ad1430ec437fc978a9a6d4d70ea3cc9fdbf5af6613d13
+  languageName: node
+  linkType: hard
+
 "@gar/promisify@npm:^1.1.3":
   version: 1.1.3
   resolution: "@gar/promisify@npm:1.1.3"
@@ -3866,7 +3887,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"acorn@npm:^8.4.1, acorn@npm:^8.8.0":
+"acorn@npm:^8.4.1, acorn@npm:^8.8.0, acorn@npm:^8.8.2":
   version: 8.8.2
   resolution: "acorn@npm:8.8.2"
   bin:
@@ -4653,7 +4674,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"chokidar@npm:^3.5.1, chokidar@npm:^3.5.2":
+"chokidar@npm:^3.5.1, chokidar@npm:^3.5.2, chokidar@npm:^3.5.3":
   version: 3.5.3
   resolution: "chokidar@npm:3.5.3"
   dependencies:
@@ -6293,7 +6314,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"fast-glob@npm:^3.2.11, fast-glob@npm:^3.2.9":
+"fast-glob@npm:^3.2.11, fast-glob@npm:^3.2.12, fast-glob@npm:^3.2.9":
   version: 3.2.12
   resolution: "fast-glob@npm:3.2.12"
   dependencies:
@@ -9168,6 +9189,12 @@ __metadata:
   languageName: node
   linkType: hard
 
+"petuah@workspace:*, petuah@workspace:packages/petuah":
+  version: 0.0.0-use.local
+  resolution: "petuah@workspace:packages/petuah"
+  languageName: unknown
+  linkType: soft
+
 "phin@npm:^2.9.1":
   version: 2.9.3
   resolution: "phin@npm:2.9.3"
@@ -10466,6 +10493,9 @@ __metadata:
     "@electron/notarize": ^1.2.3
     "@emotion/react": ^11.10.6
     "@emotion/styled": ^11.10.6
+    "@fontsource/lato": ^4.5.10
+    "@fontsource/roboto": ^4.5.8
+    "@fontsource/sora": ^4.5.12
     "@nut-tree/nut-js": ^3.1.1
     "@tanstack/react-query": ^4.28.0
     "@trpc/client": ^10.18.0
@@ -10489,6 +10519,7 @@ __metadata:
     framer-motion: ^10.8.5
     id-generator: "workspace:*"
     luxon: ^3.3.0
+    petuah: "workspace:*"
     prettier: ^2.8.7
     qr-scanner: ^1.4.2
     react: ^18.2.0
@@ -10498,6 +10529,7 @@ __metadata:
     sora: "*"
     superjson: 1.12.2
     typescript: ^4.9.5
+    unplugin-fonts: ^1.0.3
     usb: ^2.9.0
     vite: ^4.2.1
   languageName: unknown
@@ -11138,12 +11170,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"tsconfig@workspace:packages/tsconfig":
-  version: 0.0.0-use.local
-  resolution: "tsconfig@workspace:packages/tsconfig"
-  languageName: unknown
-  linkType: soft
-
 "tslib@npm:2.4.0":
   version: 2.4.0
   resolution: "tslib@npm:2.4.0"
@@ -11410,6 +11436,34 @@ __metadata:
   languageName: node
   linkType: hard
 
+"unplugin-fonts@npm:^1.0.3":
+  version: 1.0.3
+  resolution: "unplugin-fonts@npm:1.0.3"
+  dependencies:
+    fast-glob: ^3.2.12
+    unplugin: ^1.3.1
+  peerDependencies:
+    "@nuxt/kit": ^3.0.0
+    vite: ^2.0.0 || ^3.0.0 || ^4.0.0
+  peerDependenciesMeta:
+    "@nuxt/kit":
+      optional: true
+  checksum: 0128603ec3b653e2ad36e42225d4db256fb142bbea77db206e8ca758f05ac16fa3a015f121d513620847407ced639faca654d0daa683bdc271aacf22eeb7ddd2
+  languageName: node
+  linkType: hard
+
+"unplugin@npm:^1.3.1":
+  version: 1.3.1
+  resolution: "unplugin@npm:1.3.1"
+  dependencies:
+    acorn: ^8.8.2
+    chokidar: ^3.5.3
+    webpack-sources: ^3.2.3
+    webpack-virtual-modules: ^0.5.0
+  checksum: 511187a927aa988907fa84ffbb968b665605ef0127331a26fdbea55674e52e85ea5da37d0f7773e0f190ceb7252b73f281ab0d25beeeeb4b2595b200a995e867
+  languageName: node
+  linkType: hard
+
 "update-browserslist-db@npm:^1.0.10":
   version: 1.0.10
   resolution: "update-browserslist-db@npm:1.0.10"
@@ -11660,6 +11714,20 @@ __metadata:
   version: 4.0.2
   resolution: "webidl-conversions@npm:4.0.2"
   checksum: c93d8dfe908a0140a4ae9c0ebc87a33805b416a33ee638a605b551523eec94a9632165e54632f6d57a39c5f948c4bab10e0e066525e9a4b87a79f0d04fbca374
+  languageName: node
+  linkType: hard
+
+"webpack-sources@npm:^3.2.3":
+  version: 3.2.3
+  resolution: "webpack-sources@npm:3.2.3"
+  checksum: 989e401b9fe3536529e2a99dac8c1bdc50e3a0a2c8669cbafad31271eadd994bc9405f88a3039cd2e29db5e6d9d0926ceb7a1a4e7409ece021fe79c37d9c4607
+  languageName: node
+  linkType: hard
+
+"webpack-virtual-modules@npm:^0.5.0":
+  version: 0.5.0
+  resolution: "webpack-virtual-modules@npm:0.5.0"
+  checksum: 22b59257b55c89d11ae295b588b683ee9fdf3aeb591bc7b6f88ac1d69cb63f4fcb507666ea986866dfae161a1fa534ad6fb4e2ea91bbcd0a6d454368d7d4c64b
   languageName: node
   linkType: hard
 

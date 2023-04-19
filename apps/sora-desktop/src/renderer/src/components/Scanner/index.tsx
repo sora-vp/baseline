@@ -5,6 +5,8 @@ import { useParticipant } from "@renderer/context/ParticipantContext";
 
 import UniversalErrorHandler from "../UniversalErrorHandler";
 import NormalScanner from "./NormalScanner";
+import Loading from "../Loading";
+
 import { Navigate } from "react-router-dom";
 
 const Scanner: React.FC = () => {
@@ -26,6 +28,8 @@ const Scanner: React.FC = () => {
   );
 
   if (qrId) return <Navigate to="/vote" />;
+
+  if (checkParticipantMutation.isLoading) return <Loading headingText="Mengecek status anda..." />;
 
   if (isQrInvalid || checkParticipantMutation.isError)
     return (
