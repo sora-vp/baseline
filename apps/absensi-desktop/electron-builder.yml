@@ -13,9 +13,9 @@ asarUnpack:
   - resources/*
 afterSign: build/notarize.js
 win:
-  executableName: absensi-desktop
+  executableName: sora-absensi-desktop
 nsis:
-  artifactName: ${name}-${version}-setup.${ext}
+  artifactName: ${name}-${version}-win-setup.${ext}
   shortcutName: ${productName}
   uninstallDisplayName: ${productName}
   createDesktopShortcut: always
@@ -27,16 +27,15 @@ mac:
     - NSDocumentsFolderUsageDescription: Application requests access to the user's Documents folder.
     - NSDownloadsFolderUsageDescription: Application requests access to the user's Downloads folder.
 dmg:
-  artifactName: ${name}-${version}.${ext}
+  artifactName: ${name}-${version}-mac.${ext}
 linux:
   target:
     - AppImage
-    - snap
     - deb
-  maintainer: electronjs.org
+  maintainer: rmecha.my.id
   category: Utility
 appImage:
-  artifactName: ${name}-${version}.${ext}
+  artifactName: ${name}-${version}-linux.${ext}
 npmRebuild: false
 publish:
   provider: generic
