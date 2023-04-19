@@ -1,0 +1,63 @@
+name: Membuat release untuk aplikasi desktop
+on:
+  push:
+    tags:
+      - "desktop-v*.*.*"
+
+env:
+  SKIP_ENV_VALIDATION: true
+
+jobs:
+  release-desktop:
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+
+    runs-on: ${{ matrix.os }}
+    name: Publish aplikasi desktop
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Install Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
+      - name: Install all dependencies
+        uses: ./.github/actions/yarn-nm-install
+
+      - name: Test Prettier
+        run: yarn format:check
+
+      - name: Test Code Linting
+        run: yarn lint
+
+      - name: Test Typing
+        run: |
+          yarn generate
+          yarn typecheck
+
+      - name: Build windows desktop
+        if: runner.os == 'Windows'
+        run: |
+          yarn build-desktop:win
+          Compress-Archive -Path .\apps\sora-desktop\dist\win-unpacked -Destination .\apps\sora-desktop\dist\win-unpacked.zip
+          Compress-Archive -Path .\apps\absensi-desktop\dist\win-unpacked -Destination .\apps\absensi-desktop\dist\win-unpacked.zip
+
+      - name: Build linux desktop
+        if: runner.os == 'Linux'
+        run: |
+          yarn build-desktop:linux
+          tar -czvf ./apps/sora-desktop/dist/linux-unpacked.tar.gz ./apps/sora-desktop/dist/linux-unpacked
+          tar -czvf ./apps/absensi-desktop/dist/linux-unpacked.tar.gz ./apps/absensi-desktop/dist/linux-unpacked
+
+      - name: Release 🚀
+        uses: softprops/action-gh-release@v1
+        if: startsWith(github.ref, 'refs/tags/')
+        with:
+          files: |
+            ./apps/*-desktop/dist/*.tar.gz
+            ./apps/*-desktop/dist/*.zip
+            ./apps/*-desktop/dist/*.exe
