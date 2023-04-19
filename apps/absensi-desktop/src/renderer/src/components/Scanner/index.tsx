@@ -4,6 +4,7 @@ import ScanningError from "./ScanningError";
 import NormalScanner from "./NormalScanner";
 
 import SuccessScan from "./SuccessScan";
+import Loading from "../Loading";
 
 import { trpc } from "@renderer/utils/trpc";
 
@@ -16,6 +17,9 @@ const Scanner: React.FC = () => {
     (invalid: boolean) => setInvalidQr(invalid),
     []
   );
+
+  if (participantAttend.isLoading)
+    return <Loading headingText="Mencoba untuk absen..." />;
 
   if (participantAttend.isSuccess)
     return <SuccessScan participantAttend={participantAttend} />;
