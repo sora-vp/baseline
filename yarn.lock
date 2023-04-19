@@ -7200,7 +7200,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "id-generator@workspace:packages/id-generator"
   dependencies:
-    nanoid: 3.x.x
+    nanoid: 3.3.4
   languageName: unknown
   linkType: soft
 
@@ -8465,7 +8465,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"nanoid@npm:3.x.x, nanoid@npm:^3.3.4":
+"nanoid@npm:3.3.4":
+  version: 3.3.4
+  resolution: "nanoid@npm:3.3.4"
+  bin:
+    nanoid: bin/nanoid.cjs
+  checksum: 2fddd6dee994b7676f008d3ffa4ab16035a754f4bb586c61df5a22cf8c8c94017aadd360368f47d653829e0569a92b129979152ff97af23a558331e47e37cd9c
+  languageName: node
+  linkType: hard
+
+"nanoid@npm:^3.3.4":
   version: 3.3.6
   resolution: "nanoid@npm:3.3.6"
   bin:
