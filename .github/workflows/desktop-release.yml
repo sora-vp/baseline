@@ -16,6 +16,9 @@ jobs:
     runs-on: ${{ matrix.os }}
     name: Publish aplikasi desktop
 
+    permissions:
+      contents: write
+
     steps:
       - name: Checkout
         uses: actions/checkout@v3
