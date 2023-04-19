@@ -60,4 +60,6 @@ jobs:
           files: |
             ./apps/*-desktop/dist/*.tar.gz
             ./apps/*-desktop/dist/*.zip
+            ./apps/*-desktop/dist/*.deb
+            ./apps/*-desktop/dist/*.AppImage
             ./apps/*-desktop/dist/*.exe
