@@ -13,7 +13,8 @@ const Main: React.FC = () => {
 
   if (isError) return <ErrorOcurred />;
 
-  if (isLoading && !isError) return <Loading headingText="Mengambil data terbaru..." />;
+  if (isLoading && !isError)
+    return <Loading headingText="Mengambil data terbaru..." />;
 
   if (!isLoading && !canVoteNow && !isError) return <CantVote />;
 

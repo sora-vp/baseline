@@ -27,18 +27,19 @@ const Loading = ({ headingText }: { headingText: string }) => {
         flexDirection="column"
         gap="2rem"
       >
-        <Flex
-          alignItems="center"
-          justifyContent="center"
-        >
+        <Flex alignItems="center" justifyContent="center">
           <Spinner thickness="4px" size="xl" />
-          <Heading as='h3' size='lg' ml="2em">{headingText}</Heading>
+          <Heading as="h3" size="lg" ml="2em">
+            {headingText}
+          </Heading>
         </Flex>
 
-        <Text width={["35%", "80%"]} fontSize='2xl' textAlign="center">{masterOogway}</Text>
+        <Text width={["35%", "80%"]} fontSize="2xl" textAlign="center">
+          {masterOogway}
+        </Text>
       </Box>
-    </HStack >
-  )
+    </HStack>
+  );
 };
 
 export default Loading;

@@ -29,7 +29,8 @@ const Scanner: React.FC = () => {
 
   if (qrId) return <Navigate to="/vote" />;
 
-  if (checkParticipantMutation.isLoading) return <Loading headingText="Mengecek status anda..." />;
+  if (checkParticipantMutation.isLoading)
+    return <Loading headingText="Mengecek status anda..." />;
 
   if (isQrInvalid || checkParticipantMutation.isError)
     return (

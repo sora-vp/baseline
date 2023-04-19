@@ -5,8 +5,7 @@ const theme = extendTheme({
     heading: `'Roboto', sans-serif`,
     body: `'Lato', sans-serif`,
   },
-})
-
+});
 
 import { AppSettingProvider } from "@renderer/context/AppSetting";
 

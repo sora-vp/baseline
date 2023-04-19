@@ -166,7 +166,8 @@ const Vote = () => {
     };
   }, [cannotPushKey, isOpen]);
 
-  if (isLoading) return <Loading />;
+  if (isLoading)
+    return <Loading headingText="Mengambil informasi kandidat..." />;
 
   if (!canVoteNow || isError)
     return <Minggat qrId={qrId} setQRCode={setQRCode} />;
