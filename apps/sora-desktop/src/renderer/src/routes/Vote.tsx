@@ -23,7 +23,7 @@ import {
 import { useNavigate } from "react-router-dom";
 
 import { BerhasilMemilihDanCapJari } from "@renderer/components/AfterVote/BerhasilMemilihDanCapJari";
-import Loading from "@renderer/components/PreScan/Loading";
+import Loading from "@renderer/components/Loading";
 import { useAppSetting } from "@renderer/context/AppSetting";
 import { useSetting } from "@renderer/context/SettingContext";
 
@@ -166,7 +166,8 @@ const Vote = () => {
     };
   }, [cannotPushKey, isOpen]);
 
-  if (isLoading) return <Loading />;
+  if (isLoading)
+    return <Loading headingText="Mengambil informasi kandidat..." />;
 
   if (!canVoteNow || isError)
     return <Minggat qrId={qrId} setQRCode={setQRCode} />;
