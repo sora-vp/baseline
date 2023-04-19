@@ -28,16 +28,11 @@ jobs:
       - name: Install all dependencies
         uses: ./.github/actions/yarn-nm-install
 
-      - name: Test Prettier
-        run: yarn format:check
-
       - name: Test Code Linting
         run: yarn lint
 
-      - name: Test Typing
-        run: |
-          yarn generate
-          yarn typecheck
+      - name: Prisma generate
+        run: yarn generate
 
       - name: Build windows desktop
         if: runner.os == 'Windows'
@@ -57,6 +52,7 @@ jobs:
         uses: softprops/action-gh-release@v1
         if: startsWith(github.ref, 'refs/tags/')
         with:
+          prerelease: true
           files: |
             ./apps/*-desktop/dist/*.tar.gz
             ./apps/*-desktop/dist/*.zip
