@@ -24,6 +24,10 @@ yarn-error.log*
 # turbo
 .turbo
 
+# Environment variable file
+.env
+.env*.local
+
 .pnp.*
 .yarn/*
 !.yarn/patches
