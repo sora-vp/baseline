@@ -6,40 +6,47 @@ services:
       context: .
       dockerfile: ./apps/sora/Dockerfile
       args:
-        DATABASE_URL: "mysql://user:password@mariadb/sora"
+        TURBO_TOKEN: ${TURBO_TOKEN}
+        TURBO_TEAM: ${TURBO_TEAM}
+        TURBO_API: ${TURBO_API}
+    restart: always
     ports:
       - "3000:3000"
     volumes:
-      - ./apps/sora/public/uploads:/app/public/uploads
-      - ./apps/sora/settings.bin:/app/settings.bin
+      - sora_data:/app/apps/sora/public/uploads
+      - sora_data:/app/settings.bin
     depends_on:
       - rabbitmq
       - mariadb
       - vote-processor
     networks:
-      - sora-network
-      - db-network
-      - rabbitmq-network
+      - database
+      - queue
     environment:
       AMQP_URL: "amqp://rabbitmq"
-      DATABASE_URL: "mysql://user:password@mariadb/sora"
-      NEXTAUTH_SECRET: "very_super_secret_for_auth"
+      DATABASE_URL: "mysql://root:${DATABASE_PASSWORD}@mariadb/${DATABASE_NAME:-sora}"
+      NEXTAUTH_SECRET: ${NEXTAUTH_SECRET}
       NEXTAUTH_URL: "http://localhost:3000/"
-      SETTINGS_SECRET: "VERY_SUPER_SECRET_FOR_SETTINGS"
+      SETTINGS_SECRET: ${SETTINGS_SECRET}
 
   vote-processor:
     build:
       context: .
       dockerfile: ./apps/vote-processor/Dockerfile
       args:
-        AMQP_URL: "amqp://rabbitmq"
-        DATABASE_URL: "mysql://user:password@mariadb/sora"
+        TURBO_TOKEN: ${TURBO_TOKEN}
+        TURBO_TEAM: ${TURBO_TEAM}
+        TURBO_API: ${TURBO_API}
     depends_on:
       - rabbitmq
       - mariadb
+    networks:
+      - database
+      - queue
     environment:
       AMQP_URL: "amqp://rabbitmq"
-      DATABASE_URL: "mysql://user:password@mariadb/sora"
+      DATABASE_URL: "mysql://root:${DATABASE_PASSWORD}@mariadb/${DATABASE_NAME:-sora}"
+      TRPC_URL: "http://sora/api/trpc" # Don't change this line
 
   rabbitmq:
     image: rabbitmq:3.11.13-alpine
@@ -49,25 +56,26 @@ services:
       - "15672:15672"
       - "5672:5672"
     networks:
-      - rabbitmq-network
+      - queue
 
   mariadb:
     image: mariadb:10.11.2
     environment:
-      MARIADB_ROOT_PASSWORD: password
-      MARIADB_DATABASE: sora
-      MARIADB_MYSQL_LOCALHOST_USER: user
-      MARIADB_PASSWORD: password
+      MARIADB_ROOT_PASSWORD: ${DATABASE_PASSWORD}
+      MARIADB_DATABASE: ${DATABASE_NAME:-sora}
+      MYSQL_ROOT_HOST: mariadb
     volumes:
       - mariadb_data:/var/lib/mysql
     networks:
-      - db-network
+      - database
 
 volumes:
   rabbitmq_data:
   mariadb_data:
+  sora_data:
 
 networks:
-  sora-network:
-  db-network:
-  rabbitmq-network:
+  database:
+    driver: bridge
+  queue:
+    driver: bridge

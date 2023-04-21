@@ -15,7 +15,4 @@ const result = dotenv.config({
   path: path.join(__dirname, "..", ".env"),
 });
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-if (result?.error) throw new Error(result.error as any);
-
-export const env = envSchema.parse(result.parsed);
+export const env = envSchema.parse(result.parsed ?? process.env);

@@ -27,22 +27,18 @@ Beberapa repositori yang dimaksud mencakup repositori dibawah ini.
 - [sora-qrcode-web](https://github.com/reacto11mecha/sora-qrcode-web), repositori yang akan menghasilkan gambar kode QR yang bisa diunduh oleh partisipan.
 - [sora-button-module](https://github.com/reacto11mecha/sora-button-module), modul tombol yang bisa dibuat sendiri jika tidak ingin menggunakan mouse.
 
-## Prerequisites
+## Konfigurasi Komputer Panitia
 
-Anda membutuhkan
+#### Prerequisites
+
+Setidaknya terdapat instalasi ini untuk kedepannya menjalankan repositori pendukung dan task kecil.
 
 - Node.js setidaknya versi 18.15.0 atau LTS, kunjungi https://nodejs.org/en
-- Yarn versi 3.5.0 atau versi stable, kunjungi https://yarnpkg.com/getting-started/install
-- Database MySQL atau sejenis seperti MariaDB versi 10.11.2, kunjungi https://mariadb.org/download
-- RabbitMQ setidaknya versi 3.11.13, https://www.rabbitmq.com/download.html
-
-## Pemakaian
-
-Dibawah ini cara pemakaian dengan instalasi manual, untuk penggunaan docker menyusul. Cek [#12](https://github.com/reacto11mecha/sora/issues/12) untuk kemajuannya.
+- npm (sudah bawaan Node.js) atau pnpm (kunjungi https://pnpm.io/installation)
 
 ### Cloning Dari Github
 
-Jalankan perintah ini Command Line.
+Jalankan perintah ini Command Line. Langkah ini adalah langkah awal yang berlaku untuk cara manual maupun docker.
 
 ```sh
 # HTTPS
@@ -52,7 +48,98 @@ git clone https://github.com/reacto11mecha/sora.git
 git clone git@github.com:reacto11mecha/sora.git
 ```
 
-### Menginstall package dan [`pm2`](https://npm.im/pm2)
+Setelah mengkloning repositori dari github ke mesin lokal, terdapat dua pilihan untuk menjalankan aplikasi ini. Pilih salah satu dari opsi yang ada di bawah ini
+
+<details>
+   <summary>
+      Menggunakan Docker
+   </summary>
+
+### Copy file [`.env.docker.example`](./.env.docker.example) ke `.env`
+
+Salin file tersebut dan ubah sesuai isinya, berikut ini adalah keterangan dari masing-masing key yang ada.
+
+Field yang wajib di isi.
+
+- `NEXTAUTH_SECRET`: Secret yang digunakan oleh NextAuth untuk autentikasi
+- `SETTINGS_SECRET`: Secret token yang akan mengencrypt file pengaturan agar tidak mudah diubah-ubah
+- `DATABASE_PASSWORD`: Secret yang akan mengatur password database agar bisa di akses oleh sora dan vote-processor.
+
+Untuk mengenerate secret `NEXTAUTH_SECRET` dan `SETTINGS_SECRET` bisa menggunakan snippet dibawah ini, jalankan di CLI dan gunakan hasilnya.
+
+> ⚠️ **Token harus berbeda satu sama lain!** Jadi harus dijalankan dua kali.
+
+```sh
+# Menggunakan Base64
+node -e 'console.log(require("crypto").randomBytes(50).toString("base64"));'
+
+# Atau menggunakan hex
+node -e 'console.log(require("crypto").randomBytes(50).toString("hex"));'
+```
+
+Opsional untuk diisi.
+
+- `DATABASE_NAME`: Jika ingin menggunakan nama database yang lain bisa mengubah field ini. Default value `sora`.
+- `TURBO_TOKEN`, `TURBO_TEAM`, `TURBO_API`: Field yang harus di isi ketika menggunakan fitur remote caching turborepo, kunjungi https://turbo.build/repo/docs/core-concepts/remote-caching
+
+> Di rekomendasikan menggunakan fitur remote caching dikarenakan docker akan build sora dan vote-processor dari awal, bisa menggunakan [turborepo-remote-cache](https://github.com/ducktors/turborepo-remote-cache) di jalankan komputer sendiri/lain atau [Free Hosted Remote Cache](https://ducktors.github.io/turborepo-remote-cache/free-hosted-remote-cache) (baca baik-baik disclaimernya).
+
+#### Menjalankan docker compose
+
+Masuk ke direktori root dari sora dan jalankan perintah ini di terminal supaya aplikasi ini dapat berjalan.
+
+```sh
+docker compose up -d
+```
+
+#### Migrasi prisma
+
+Docker mungkin sudah berjalan tetapi database masih kosong dan belum memiliki tabel, oleh karena itu perlu menjalankan migrasi. Berikut ini adalah langkah-langkah yang harus dilakukan.
+
+1. Masuk vote-processor
+
+   Cek terlebih dahulu dimana instance vote-processor berjalan dengan menggunakan `docker ps` dan akan muncul list seperti ini.
+
+   ![Mengecek instance docker yang sudah berjalan menggunakan docker ps](./assets/tutorial/001-docker-ps.png)
+
+   Dalam contoh ini kita mengetahui bahwa vote-processor memiliki container id `14f0142e93ee`.
+
+2. Jalankan migrasi
+
+   Setelah mengetahui container id, jalankan perintah `yarn db:migrate:deploy` dan `yarn db:push`
+
+   ```sh
+   docker exec -it <CONTAINER_ID> yarn db:migrate:deploy
+   docker exec -it <CONTAINER_ID> yarn db:push
+   ```
+
+   Kurang lebih hasilnya akan terlihat seperti ini.
+
+   ![Setelah db:migrate:deploy](./assets/tutorial/002-docker-db-migrate.png)
+
+   ![Setelah db:push](./assets/tutorial/003-docker-db-push.png)
+
+### Mengakses Instance
+
+Untuk mengakses instance ini, cek IP lokal yang di dapatkan mesin dan akses `http://<IP_MESIN>:3000/` lalu lakukan preparasi pemilihan.
+
+</details>
+
+<details>
+   <summary>
+      Cara Manual
+   </summary>
+
+#### Prerequisites
+
+Jika menggunakan cara manual, berikut ini list yang diperlukan jika ingin menjalankan aplikasi ini.
+
+- Node.js setidaknya versi 18.15.0 atau LTS, kunjungi https://nodejs.org/en
+- Yarn versi 3.5.0 atau versi stable, kunjungi https://yarnpkg.com/getting-started/install
+- Database MySQL atau sejenis seperti MariaDB versi 10.11.2, kunjungi https://mariadb.org/download
+- RabbitMQ setidaknya versi 3.11.13, https://www.rabbitmq.com/download.html
+
+#### Menginstall package dan [`pm2`](https://npm.im/pm2)
 
 Anda ke root directory project dan menginstall package yang diperlukan.
 
@@ -69,7 +156,7 @@ npm install -g pm2
 pnpm install -g pm2
 ```
 
-### Membuat prisma client
+#### Membuat prisma client
 
 Diperlukan untuk menjalankan perintah ini untuk membuat typing prisma sebagai ORM yang menjalin koneksi ke database.
 
@@ -77,33 +164,7 @@ Diperlukan untuk menjalankan perintah ini untuk membuat typing prisma sebagai OR
 yarn generate
 ```
 
-### Membuild aplikasi desktop
-
-Dikarenakan tidak ada pipeline yang dapat membuild aplikasi ini, oleh karena itu terlebih dahulu untuk membuild aplikasi desktop untuk absen dan voting.
-
-Jalankan perintah dibawah ini untuk membuat distribution untuk aplikasi desktop pemilih maupun absensi.
-
-```sh
-# Untuk sistem operasi windows
-build-desktop:win
-
-# Untuk sistem operasi linux
-build-desktop:linux
-```
-
-> Untuk mendistribusikan ke komputer absen atau pemilih, gunakan [`serve`](https://www.npmjs.com/package/serve) jika sudah siap komputer dan jaringan lokalnya.
->
-> Jangan lupa install secara global dan jalankan di root directory.
->
-> ```sh
-> # Untuk pemilihan
-> serve apps/sora
->
-> # Untuk absensi
-> serve apps/absensi
-> ```
-
-### Menjalankan backend dan processor
+#### Menjalankan backend dan processor
 
 Pertama-tama, copy file `.env.example` yang terdapat di masing-masing folder `apps/sora` dan `apps/vote-processor` ke file `.env` sesuai dengan folder asal.
 
@@ -141,3 +202,14 @@ Setelah selesai, jalankan sora dan vote-processor menggunakan pm2.
 ```sh
 pm2 start ecosystem.config.js
 ```
+
+#### Menjalankan migrasi
+
+Database mungkin sudah berjalan tapi belum memiliki tabel, oleh karena itu diperlukan migrasi dari prisma untuk membuat tabel. Jalankan perintah dibawah ini untuk membuat tabel.
+
+```sh
+yarn db:migrate:deploy
+yarn db:push
+```
+
+</details>
