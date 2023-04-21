@@ -57,10 +57,13 @@ Setelah mengkloning repositori dari github ke mesin lokal, terdapat dua pilihan 
 
 Salin file tersebut dan ubah sesuai isinya, berikut ini adalah keterangan dari masing-masing key yang ada.
 
+Field yang wajib di isi.
+
 - `NEXTAUTH_SECRET`: Secret yang digunakan oleh NextAuth untuk autentikasi
 - `SETTINGS_SECRET`: Secret token yang akan mengencrypt file pengaturan agar tidak mudah diubah-ubah
+- `DATABASE_PASSWORD`: Secret yang akan mengatur password database agar bisa di akses oleh sora dan vote-processor.
 
-Untuk mengenerate secret keduanya bisa menggunakan snippet dibawah ini, jalankan di CLI dan gunakan hasilnya.
+Untuk mengenerate secret `NEXTAUTH_SECRET` dan `SETTINGS_SECRET` bisa menggunakan snippet dibawah ini, jalankan di CLI dan gunakan hasilnya.
 
 > ⚠️ **Token harus berbeda satu sama lain!** Jadi harus dijalankan dua kali.
 
@@ -71,6 +74,13 @@ node -e 'console.log(require("crypto").randomBytes(50).toString("base64"));'
 # Atau menggunakan hex
 node -e 'console.log(require("crypto").randomBytes(50).toString("hex"));'
 ```
+
+Opsional untuk diisi.
+
+- `DATABASE_NAME`: Jika ingin menggunakan nama database yang lain bisa mengubah field ini. Default value `sora`.
+- `TURBO_TOKEN`, `TURBO_TEAM`, `TURBO_API`: Field yang harus di isi ketika menggunakan fitur remote caching turborepo, kunjungi https://turbo.build/repo/docs/core-concepts/remote-caching
+
+> Di rekomendasikan menggunakan fitur remote caching dikarenakan docker akan build sora dan vote-processor dari awal, bisa menggunakan [turborepo-remote-cache](https://github.com/ducktors/turborepo-remote-cache) di jalankan komputer sendiri/lain atau [Free Hosted Remote Cache](https://ducktors.github.io/turborepo-remote-cache/free-hosted-remote-cache) (baca baik-baik disclaimernya).
 
 #### Menjalankan docker compose
 
