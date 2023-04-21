@@ -29,7 +29,7 @@ Beberapa repositori yang dimaksud mencakup repositori dibawah ini.
 
 #### Prerequisites
 
-Setidaknya terdapat instalasi ini untuk kedepannya menjalankan repositori pendukung.
+Setidaknya terdapat instalasi ini untuk kedepannya menjalankan repositori pendukung dan task kecil.
 
 - Node.js setidaknya versi 18.15.0 atau LTS, kunjungi https://nodejs.org/en
 - npm (sudah bawaan Node.js) atau pnpm (kunjungi https://pnpm.io/installation)
@@ -52,6 +52,25 @@ Setelah mengkloning repositori dari github ke mesin lokal, terdapat dua pilihan 
    <summary>
       Menggunakan Docker
    </summary>
+
+### Copy file [`.env.docker.example`](./.env.docker.example) ke `.env`
+
+Salin file tersebut dan ubah sesuai isinya, berikut ini adalah keterangan dari masing-masing key yang ada.
+
+- `NEXTAUTH_SECRET`: Secret yang digunakan oleh NextAuth untuk autentikasi
+- `SETTINGS_SECRET`: Secret token yang akan mengencrypt file pengaturan agar tidak mudah diubah-ubah
+
+Untuk mengenerate secret keduanya bisa menggunakan snippet dibawah ini, jalankan di CLI dan gunakan hasilnya.
+
+> ⚠️ **Token harus berbeda satu sama lain!** Jadi harus dijalankan dua kali.
+
+```sh
+# Menggunakan Base64
+node -e 'console.log(require("crypto").randomBytes(50).toString("base64"));'
+
+# Atau menggunakan hex
+node -e 'console.log(require("crypto").randomBytes(50).toString("hex"));'
+```
 
 #### Menjalankan docker compose
 
@@ -87,6 +106,10 @@ Docker mungkin sudah berjalan tetapi database masih kosong dan belum memiliki ta
    ![Setelah db:migrate:deploy](./assets/tutorial/002-docker-db-migrate.png)
 
    ![Setelah db:push](./assets/tutorial/003-docker-db-push.png)
+
+### Mengakses Instance
+
+Untuk mengakses instance ini, cek IP lokal yang di dapatkan mesin dan akses `http://<IP_MESIN>:3000/` lalu lakukan preparasi pemilihan.
 
 </details>
 
