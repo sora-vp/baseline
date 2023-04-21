@@ -25,7 +25,7 @@ Beberapa repositori yang dimaksud mencakup repositori dibawah ini.
 - [sora-qrcode-web](https://github.com/reacto11mecha/sora-qrcode-web), repositori yang akan menghasilkan gambar kode QR yang bisa diunduh oleh partisipan.
 - [sora-button-module](https://github.com/reacto11mecha/sora-button-module), modul tombol yang bisa dibuat sendiri jika tidak ingin menggunakan mouse.
 
-## Konfigurasi Software
+## Konfigurasi Komputer Panitia
 
 #### Prerequisites
 
