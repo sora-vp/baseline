@@ -1,6 +1,6 @@
 <p align="center">
    <img width="300" height="300" src="./apps/sora/public/sora.png" />
-   <h2 align="center">SORA</h2>
+   <h1 align="center">SORA</h1>
    
    [![Lint, TS, Prettier Check](https://github.com/reacto11mecha/sora/actions/workflows/ci.yml/badge.svg)](https://github.com/reacto11mecha/sora/actions/workflows/ci.yml) [![CodeQL](https://github.com/reacto11mecha/sora/actions/workflows/codeql.yml/badge.svg)](https://github.com/reacto11mecha/sora/actions/workflows/codeql.yml)
 </p>
@@ -13,7 +13,7 @@ Project ini adalah hasil rebuild [NVA13](https://github.com/sekilas13/nva13) yan
 
 Ini adalah branch untuk sora versi 2. Jika ingin menggunakan versi pertama, silahkan menuju ke branch [v1](https://github.com/reacto11mecha/sora/tree/v1) jika ingin menggunakan versi awal.
 
-# Perbedaan dengan versi sebelumnya
+## Perbedaan dengan versi sebelumnya
 
 Secara ringkas, berikut ini perbedaan dengan versi yang pertama.
 
@@ -27,9 +27,18 @@ Beberapa repositori yang dimaksud mencakup repositori dibawah ini.
 - [sora-qrcode-web](https://github.com/reacto11mecha/sora-qrcode-web), repositori yang akan menghasilkan gambar kode QR yang bisa diunduh oleh partisipan.
 - [sora-button-module](https://github.com/reacto11mecha/sora-button-module), modul tombol yang bisa dibuat sendiri jika tidak ingin menggunakan mouse.
 
-## Konfigurasi Komputer Panitia
+## Fitur-fitur yang tersedia
 
-#### Prerequisites
+1. Dashboard admin yang memiliki sistem login untuk mengelola berjalannya pemilihan.
+2. Terdapat pengelola kandidat, peserta pemilihan, pengaturan kapan dan berhenti pemilihan, sudah bisa memilih atau absen, juga statistik pemilihan.
+3. Fitur upload csv dan pembuat pdf juga export json untuk [sora-qrcode-web](https://github.com/reacto11mecha/sora-qrcode-web).
+4. Peserta pemilihan harus menggunakan QR Code untuk menggunakan hak suara mereka, QR tersebut didapat dari panitia yang mengirimkan PDF yang berisikan list peserta.
+5. Peserta yang ingin memilih terlebih dahulu absen masuk, setelah itu dia bisa memilih.
+6. Aplikasi desktop untuk pemilih bisa menerima sinyal keyboard angka 1-5, Esc, dan Enter untuk memilih. Selain itu juga bisa menerima input dari custom keyboard buatan sendiri menggunakan [sora-button-module](https://github.com/reacto11mecha/sora-button-module).
+
+## Konfigurasi Komputer Utama (Administrator)
+
+### Prerequisites
 
 Setidaknya terdapat instalasi ini untuk kedepannya menjalankan repositori pendukung dan task kecil.
 
@@ -213,3 +222,46 @@ yarn db:push
 ```
 
 </details>
+
+## Konfigurasi semua komputer pemilih dan absensi
+
+### Instalasi jaringan
+
+Komputer pemilih dapat menggunakan laptop atau komputer yang dilengkapi dengan kamera bawaan atau menggunakan kamera eksternal apapun untuk membaca QR Code yang ditunjukkan oleh peserta. Untuk setiap pemilihan, dibutuhkan setidaknya 3 perangkat yaitu komputer administrator, komputer pemilih, dan komputer absensi. Jumlah komputer yang digunakan dapat menyesuaikan ketersediaan perangkat yang ada.
+
+Untuk instalasi jaringan, dapat menggunakan Switch Hub atau Router WiFi. Disarankan menggunakan Switch Hub karena jaringan yang terhubung benar-benar terisolasi dari jaringan luar.
+
+Namun, jika hanya tersedia Router WiFi, ada beberapa hal yang harus dilakukan untuk meningkatkan keamanan, yaitu:
+
+1. Gunakan WPA2/WPA3 dengan password yang acak, tidak mudah ditebak, dan cukup panjang.
+2. Matikan akses WPS, karena fitur ini dapat mempermudah penyerang untuk mendapatkan akses ke jaringan.
+3. Gunakan daftar putih (whitelist) berdasarkan MAC address untuk membatasi akses ke jaringan hanya pada perangkat yang diizinkan.
+4. Batasi jangkauan jaringan sesuai dengan kondisi lapangan, jika router WiFi memiliki fitur ini.
+
+Jika dibuatkan diagram, instalasi jaringan akan terlihat seperti ini:
+
+```mermaid
+graph LR
+   A[Komputer Administrator]
+   B[Switch/Router]
+
+   subgraph Komputer Pemilih
+   C[Komputer 1]
+   D[Komputer 2]
+   E[Komputer 3]
+   F[Komputer 4]
+   G[Komputer 5]
+   end
+
+   H[Komputer Absensi]
+
+   A ------ B
+
+   B ------ C
+   B ------ D
+   B ------ E
+   B ------ F
+   B ------ G
+
+   B ------ H
+```
