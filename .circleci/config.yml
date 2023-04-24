@@ -21,15 +21,12 @@ jobs:
       - checkout
       - node/install:
           node-version: "18.15.0"
-      - node/install-packages:
-          check-cache: always
-          pkg-manager: yarn-berry
-          with-cache: false
       - run: node --version
       - run:
           name: Using latest yarn
           command: |
-            yarn set version stable
+            corepack enable
+            corepack prepare yarn@stable --activate
       - run: yarn -v
       - run:
           name: Install all dependencies
