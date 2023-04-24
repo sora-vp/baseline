@@ -9,7 +9,7 @@ executors:
       image: ubuntu-2004:2023.04.2
   win:
     machine:
-      image: windows-server-2019-vs2019:2022.08.1
+      image: win/server-2022
 
 jobs:
   desktop-builder:
