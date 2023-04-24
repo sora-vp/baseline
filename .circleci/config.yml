@@ -19,11 +19,12 @@ jobs:
     executor: << parameters.os >>
     steps:
       - checkout
+      - node/install:
+          node-version: "18.15.0"
       - node/install-packages:
           check-cache: always
           pkg-manager: yarn-berry
           with-cache: false
-          node-version: "18.15.0"
       - run: node --version
       - run:
           name: Using latest yarn
