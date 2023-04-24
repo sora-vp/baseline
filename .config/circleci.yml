@@ -1,0 +1,52 @@
+version: 2.1
+
+orbs:
+  node: circleci/node@5.0.2
+
+executors:
+  linux:
+    machine:
+      image: ubuntu-2004:2023.04.2
+  win:
+    machine:
+      image: windows-server-2019-vs2019:2022.08.1
+
+jobs:
+  desktop-builder:
+    parameters:
+      os:
+        type: executor
+    executor: << parameters.os >>
+    steps:
+      - checkout
+      - node/install:
+          install-yarn: true
+          node-version: "18.15.0"
+      - run: node --version
+      - run:
+          name: Enable corepack and using latest yarn
+          run: corepack enable && corepack corepack prepare yarn@3.5.0 --activate
+      - run:
+          name: Install all dependencies
+          command: |
+            yarn install
+      - run:
+          name: Test Code Linting
+          command: |
+            yarn lint
+      - run:
+          name: Prisma generate
+          command: |
+            yarn generate
+      - run:
+          name: Typescript typechecking
+          command: |
+            yarn typecheck
+
+workflows:
+  all-builds:
+    jobs:
+      - desktop-builder:
+          matrix:
+            parameters:
+              os: [linux, win]
