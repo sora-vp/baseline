@@ -25,7 +25,8 @@ jobs:
       - run: node --version
       - run:
           name: Enable corepack and using latest yarn
-          run: corepack enable && corepack corepack prepare yarn@3.5.0 --activate
+          command: |
+            corepack enable && corepack corepack prepare yarn@3.5.0 --activate
       - run:
           name: Install all dependencies
           command: |
