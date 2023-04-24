@@ -2,12 +2,12 @@ version: 2.1
 
 orbs:
   node: circleci/node@5.0.2
+  win: circleci/windows@4.1.1
 
 executors:
   linux:
     machine:
       image: ubuntu-2004:2023.04.2
-  win: win/server-2022
 
 jobs:
   desktop-builder:
