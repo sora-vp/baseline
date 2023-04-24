@@ -16,9 +16,6 @@ jobs:
     runs-on: ${{ matrix.os }}
     name: Publish aplikasi desktop
 
-    permissions:
-      contents: write
-
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -36,6 +33,12 @@ jobs:
 
       - name: Prisma generate
         run: yarn generate
+
+      - name: Disable Windows Defender
+        if: runner.os == 'Windows'
+        run: |
+          Set-MpPreference -DisableRealtimeMonitoring $true
+          net stop "WinDefend"
 
       - name: Build windows desktop
         if: runner.os == 'Windows'
