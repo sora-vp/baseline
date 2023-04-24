@@ -20,13 +20,16 @@ jobs:
     steps:
       - checkout
       - node/install:
-          install-yarn: true
+          check-cache: always
+          pkg-manager: yarn-berry
+          with-cache: false
           node-version: "18.15.0"
       - run: node --version
       - run:
-          name: Enable corepack and using latest yarn
+          name: Using latest yarn
           command: |
-            corepack enable && corepack corepack prepare yarn@3.5.0 --activate
+            yarn set version stable
+      - run: yarn -v
       - run:
           name: Install all dependencies
           command: |
