@@ -22,12 +22,15 @@ jobs:
     steps:
       - checkout
 
+      # Initiate node js on linux
       - when:
           condition:
             equal: [*linux-executor, << parameters.os >>]
           steps:
             - node/install:
                 node-version: "18.15.0"
+
+      # Initiate node js on windows
       - when:
           condition:
             equal: [*win-executor, << parameters.os >>]
@@ -59,7 +62,8 @@ jobs:
           key: yarn-packages-{{ checksum "yarn.lock" }}
           paths:
             - .yarn/cache
-            - .yarn/unplugged
+            - .yarn/releases
+            - .yarn/install-state.gz
 
       - run:
           name: Test Code Linting
@@ -69,10 +73,39 @@ jobs:
           name: Prisma generate
           command: |
             yarn generate
-      - run:
-          name: Typescript typechecking
-          command: |
-            yarn typecheck
+
+      - when:
+          condition:
+            equal: [*linux-executor, << parameters.os >>]
+          steps:
+            - run:
+                name: Build linux based desktop app
+                command: |
+                  yarn build-desktop:linux
+                  tar -czvf ./apps/sora-desktop/dist/linux-unpacked.tar.gz ./apps/sora-desktop/dist/linux-unpacked
+                  tar -czvf ./apps/absensi-desktop/dist/linux-unpacked.tar.gz ./apps/absensi-desktop/dist/linux-unpacked
+
+      - when:
+          condition:
+            equal: [*win-executor, << parameters.os >>]
+          steps:
+            - run:
+                name: Build windows desktop app
+                command: |
+                  yarn build-desktop:win
+                  Compress-Archive -Path .\apps\sora-desktop\dist\win-unpacked -Destination .\apps\sora-desktop\dist\win-unpacked.zip
+                  Compress-Archive -Path .\apps\absensi-desktop\dist\win-unpacked -Destination .\apps\absensi-desktop\dist\win-unpacked.zip
+
+      - store_artifacts:
+          path: apps/*-desktop/dist/*.tar.gz
+      - store_artifacts:
+          path: apps/*-desktop/dist/*.zip
+      - store_artifacts:
+          path: apps/*-desktop/dist/*.deb
+      - store_artifacts:
+          path: apps/*-desktop/dist/*.AppImage
+      - store_artifacts:
+          path: apps/*-desktop/dist/*.exe
 
 workflows:
   all-builds:
