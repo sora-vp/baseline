@@ -4,10 +4,10 @@ orbs:
   node: circleci/node@5.0.2
 
 executors:
-  linux:
+  linux: &linux-executor
     machine:
       image: ubuntu-2004:2023.04.2
-  win:
+  win: &win-executor
     machine:
       image: windows-server-2022-gui:current
       resource_class: windows.medium
@@ -21,8 +21,28 @@ jobs:
     executor: << parameters.os >>
     steps:
       - checkout
-      - node/install:
-          node-version: "18.15.0"
+
+      - when:
+          condition:
+            equal: [*linux-executor, << parameters.os >>]
+          steps:
+            - node/install:
+                node-version: "18.15.0"
+      - when:
+          condition:
+            equal: [*win-executor, << parameters.os >>]
+          steps:
+            - run: choco install wget -y
+            - run:
+              command: wget https://nodejs.org/dist/v18.15.0/node-v18.15.0-x86.msi -P C:\Users\circleci\Downloads\
+              shell: cmd.exe
+            - run: MsiExec.exe /i C:\Users\circleci\Downloads\node-v18.15.0-x86.msi /qn
+            - run:
+                command: |
+                  Start-Process powershell -verb runAs -Args "-start GeneralProfile"
+                  nvm install 18.15.0
+                  nvm use 18.15.0
+
       - run: node --version
       - run:
           name: Using latest yarn
