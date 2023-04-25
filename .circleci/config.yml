@@ -120,10 +120,23 @@ jobs:
 
       - store_artifacts:
           path: apps/sora-desktop/dist-desktop
-          destination: sora-desktop
+          destination: desktop
       - store_artifacts:
           path: apps/absensi-desktop/dist-desktop
-          destination: absensi-desktop
+          destination: desktop
+
+    publish-github-release:
+      docker:
+        - image: circleci/golang:1.8
+      steps:
+        - attach_workspace:
+            at: ./artifacts
+        - run:
+            name: "Publish Release on GitHub"
+            command: |
+              go get github.com/tcnksm/ghr
+              VERSION=$(my-binary --version)
+              ghr -t ${GITHUB_TOKEN} -u ${CIRCLE_PROJECT_USERNAME} -r ${CIRCLE_PROJECT_REPONAME} -c ${CIRCLE_SHA1} -delete ${VERSION} ./artifacts/
 
 workflows:
   all-builds:
@@ -132,3 +145,14 @@ workflows:
           matrix:
             parameters:
               os: [linux, win]
+          filters:
+            tags:
+              only: /^desktop-v\d+\.\d+\.\d+/
+      - publish-github-release:
+          requires:
+            - desktop-builder
+          filters:
+            branches:
+              ignore: /.*/
+            tags:
+              only: /^desktop-v\d+\.\d+\.\d+/
