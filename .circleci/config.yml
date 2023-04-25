@@ -73,10 +73,6 @@ jobs:
           name: Test Code Linting
           command: |
             yarn lint
-      - run:
-          name: Prisma generate
-          command: |
-            yarn generate
 
       - when:
           condition:
@@ -134,9 +130,9 @@ jobs:
       - run:
           name: "Publish Release on GitHub"
           command: |
-            ls
+            ls artifacts/desktop
             go install github.com/tcnksm/ghr@latest
-            ghr -t ${GITHUB_TOKEN} -u ${CIRCLE_PROJECT_USERNAME} -r ${CIRCLE_PROJECT_REPONAME} -draft -c ${CIRCLE_SHA1} ./artifacts/
+            ghr -t ${GITHUB_TOKEN} -u ${CIRCLE_PROJECT_USERNAME} -r ${CIRCLE_PROJECT_REPONAME} -draft -c ${CIRCLE_SHA1} ./artifacts/desktop
 
 workflows:
   all-builds:
