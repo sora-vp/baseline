@@ -53,6 +53,10 @@ jobs:
             corepack enable
             corepack prepare yarn@stable --activate
       - run: yarn -v
+      - restore_cache:
+          name: Restore yarn package cache
+          keys:
+            - yarn-packages-{{ checksum "yarn.lock" }}
       - run:
           name: Install all dependencies
           command: |
@@ -84,6 +88,7 @@ jobs:
                   yarn build-desktop:linux
                   tar -czvf ./apps/sora-desktop/dist/linux-unpacked.tar.gz ./apps/sora-desktop/dist/linux-unpacked
                   tar -czvf ./apps/absensi-desktop/dist/linux-unpacked.tar.gz ./apps/absensi-desktop/dist/linux-unpacked
+                  dir
 
       - when:
           condition:
@@ -95,6 +100,7 @@ jobs:
                   yarn build-desktop:win
                   Compress-Archive -Path .\apps\sora-desktop\dist\win-unpacked -Destination .\apps\sora-desktop\dist\win-unpacked.zip
                   Compress-Archive -Path .\apps\absensi-desktop\dist\win-unpacked -Destination .\apps\absensi-desktop\dist\win-unpacked.zip
+                  ls -a
 
       - store_artifacts:
           path: apps/*-desktop/dist/*.tar.gz
