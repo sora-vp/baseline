@@ -107,8 +107,8 @@ jobs:
                 name: Build windows desktop app
                 command: |
                   yarn build-desktop:win
-                  Compress-Archive -Path .\apps\sora-desktop\dist\sora-desktop-win-unpacked -Destination .\apps\sora-desktop\dist\win-unpacked.zip
-                  Compress-Archive -Path .\apps\absensi-desktop\dist\absensi-desktop-win-unpacked -Destination .\apps\absensi-desktop\dist\win-unpacked.zip
+                  Compress-Archive -Path .\apps\sora-desktop\dist\win-unpacked -Destination .\apps\sora-desktop\dist\sora-desktop-win-unpacked.zip
+                  Compress-Archive -Path .\apps\absensi-desktop\dist\win-unpacked -Destination .\apps\absensi-desktop\dist\absensi-desktop-win-unpacked.zip
                   mkdir .\apps\sora-desktop\dist-desktop
                   mkdir .\apps\absensi-desktop\dist-desktop
 
@@ -135,7 +135,6 @@ jobs:
           name: "Publish Release on GitHub"
           command: |
             go install github.com/tcnksm/ghr@latest
-            VERSION=$(my-binary --version)
             ghr -t ${GITHUB_TOKEN} -u ${CIRCLE_PROJECT_USERNAME} -r ${CIRCLE_PROJECT_REPONAME} -draft -c ${CIRCLE_SHA1} ./artifacts/
 
 workflows:
