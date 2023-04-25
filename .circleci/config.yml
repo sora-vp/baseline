@@ -101,13 +101,11 @@ jobs:
                   Compress-Archive -Path .\apps\absensi-desktop\dist\win-unpacked -Destination .\apps\absensi-desktop\dist\win-unpacked.zip
 
       - store_artifacts:
-          path: |
-            apps/*-desktop/dist/*.tar.gz
-            apps/*-desktop/dist/*.zip
-            apps/*-desktop/dist/*.deb
-            apps/*-desktop/dist/*.AppImage
-            apps/*-desktop/dist/*.exe
-          destination: artifacts
+          path: apps/sora-desktop/dist
+          destination: sora-desktop
+      - store_artifacts:
+          path: apps/absensi-desktop/dist
+          destination: absensi-desktop
 
 workflows:
   all-builds:
