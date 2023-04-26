@@ -1,0 +1,163 @@
+version: 2.1
+
+orbs:
+  node: circleci/node@5.0.2
+
+executors:
+  linux: &linux-executor
+    machine:
+      image: ubuntu-2004:2023.04.2
+  win: &win-executor
+    machine:
+      image: windows-server-2022-gui:current
+      resource_class: windows.medium
+      shell: powershell.exe -ExecutionPolicy Bypass
+
+jobs:
+  desktop-builder:
+    parameters:
+      os:
+        type: executor
+    executor: << parameters.os >>
+    steps:
+      - checkout
+
+      # initiate workspace
+      - attach_workspace:
+          at: .
+
+      # Initiate node js on linux
+      - when:
+          condition:
+            equal: [*linux-executor, << parameters.os >>]
+          steps:
+            - node/install:
+                node-version: "18.15.0"
+
+      # Initiate node js on windows
+      - when:
+          condition:
+            equal: [*win-executor, << parameters.os >>]
+          steps:
+            - run: choco install wget -y
+            - run:
+                command: wget https://nodejs.org/dist/v18.15.0/node-v18.15.0-x86.msi -P C:\Users\circleci\Downloads\
+                shell: cmd.exe
+            - run: MsiExec.exe /i C:\Users\circleci\Downloads\node-v18.15.0-x86.msi /qn
+            - run:
+                command: |
+                  Start-Process powershell -verb runAs -Args "-start GeneralProfile"
+                  nvm install 18.15.0
+                  nvm use 18.15.0
+
+      - run: node --version
+      - run:
+          name: Using latest yarn
+          command: |
+            corepack enable
+            corepack prepare yarn@stable --activate
+      - run: yarn -v
+      - restore_cache:
+          name: Restore yarn package cache
+          keys:
+            - yarn-packages-{{ checksum "yarn.lock" }}
+      - run:
+          name: Install all dependencies
+          command: |
+            yarn install
+      - save_cache:
+          name: Save Yarn Package Cache
+          key: yarn-packages-{{ checksum "yarn.lock" }}
+          paths:
+            - .yarn/cache
+            - .yarn/releases
+            - .yarn/install-state.gz
+
+      - run:
+          name: Test Code Linting
+          command: |
+            yarn lint
+
+      - when:
+          condition:
+            equal: [*linux-executor, << parameters.os >>]
+          steps:
+            - run:
+                name: Build linux based desktop app
+                command: |
+                  yarn build-desktop:linux
+                  tar -czvf ./apps/sora-desktop/dist/sora-desktop-linux-unpacked.tar.gz ./apps/sora-desktop/dist/linux-unpacked
+                  tar -czvf ./apps/absensi-desktop/dist/absensi-desktop-linux-unpacked.tar.gz ./apps/absensi-desktop/dist/linux-unpacked
+                  mkdir ./apps/sora-desktop/dist-desktop
+                  mkdir ./apps/absensi-desktop/dist-desktop
+
+                  cp ./apps/sora-desktop/dist/*.tar.gz ./apps/sora-desktop/dist-desktop
+                  cp ./apps/sora-desktop/dist/*.deb ./apps/sora-desktop/dist-desktop
+                  cp ./apps/sora-desktop/dist/*.AppImage ./apps/sora-desktop/dist-desktop
+
+                  cp ./apps/absensi-desktop/dist/*.tar.gz ./apps/absensi-desktop/dist-desktop
+                  cp ./apps/absensi-desktop/dist/*.deb ./apps/absensi-desktop/dist-desktop
+                  cp ./apps/absensi-desktop/dist/*.AppImage ./apps/absensi-desktop/dist-desktop
+
+                  mkdir dist
+                  cp ./apps/sora-desktop/dist-desktop/* ./dist
+                  cp ./apps/absensi-desktop/dist-desktop/* ./dist
+
+      - when:
+          condition:
+            equal: [*win-executor, << parameters.os >>]
+          steps:
+            - run:
+                name: Build windows desktop app
+                command: |
+                  yarn build-desktop:win
+                  Compress-Archive -Path .\apps\sora-desktop\dist\win-unpacked -Destination .\apps\sora-desktop\dist\sora-desktop-win-unpacked.zip
+                  Compress-Archive -Path .\apps\absensi-desktop\dist\win-unpacked -Destination .\apps\absensi-desktop\dist\absensi-desktop-win-unpacked.zip
+                  mkdir .\apps\sora-desktop\dist-desktop
+                  mkdir .\apps\absensi-desktop\dist-desktop
+
+                  cp .\apps\sora-desktop\dist\*.zip .\apps\sora-desktop\dist-desktop
+                  cp .\apps\sora-desktop\dist\*.exe .\apps\sora-desktop\dist-desktop
+
+                  cp .\apps\absensi-desktop\dist\*.zip .\apps\absensi-desktop\dist-desktop
+                  cp .\apps\absensi-desktop\dist\*.exe .\apps\absensi-desktop\dist-desktop
+
+                  mkdir dist
+                  cp .\apps\sora-desktop\dist-desktop\* .\dist\
+                  cp .\apps\absensi-desktop\dist-desktop\* .\dist\
+
+      - persist_to_workspace:
+          root: .
+          paths:
+            - dist
+
+  publish-github-release:
+    docker:
+      - image: cimg/go:1.20.3
+    steps:
+      - attach_workspace:
+          at: .
+      - run:
+          name: "Publish Release on GitHub"
+          command: |
+            go install github.com/tcnksm/ghr@latest
+            ghr -t ${GITHUB_TOKEN} -u ${CIRCLE_PROJECT_USERNAME} -r ${CIRCLE_PROJECT_REPONAME} -draft -c ${CIRCLE_SHA1} ${CIRCLE_TAG} dist/
+
+workflows:
+  all-builds:
+    jobs:
+      - desktop-builder:
+          matrix:
+            parameters:
+              os: [linux, win]
+          filters:
+            tags:
+              only: /^desktop-v\d+\.\d+\.\d+/
+      - publish-github-release:
+          requires:
+            - desktop-builder
+          filters:
+            branches:
+              ignore: /.*/
+            tags:
+              only: /^desktop-v\d+\.\d+\.\d+/
