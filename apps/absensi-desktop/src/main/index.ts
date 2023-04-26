@@ -28,6 +28,9 @@ function createWindow(): void {
     {
       label: "View",
       submenu: [
+        { role: "zoomIn" },
+        { role: "zoomOut" },
+        { type: "separator" },
         { role: "reload" },
         { role: "forceReload" },
         { role: "toggleDevTools" },
