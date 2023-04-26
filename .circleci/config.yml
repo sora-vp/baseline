@@ -136,7 +136,7 @@ jobs:
       - image: cimg/go:1.20.3
     steps:
       - attach_workspace:
-          at: ./artifacts
+          at: .
       - run:
           name: "Publish Release on GitHub"
           command: |
