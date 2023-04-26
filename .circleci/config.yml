@@ -22,6 +22,10 @@ jobs:
     steps:
       - checkout
 
+      # initiate workspace
+      - attach_workspace:
+          at: .
+
       # Initiate node js on linux
       - when:
           condition:
@@ -95,6 +99,10 @@ jobs:
                   cp ./apps/absensi-desktop/dist/*.deb ./apps/absensi-desktop/dist-desktop
                   cp ./apps/absensi-desktop/dist/*.AppImage ./apps/absensi-desktop/dist-desktop
 
+                  mkdir dist
+                  cp ./apps/sora-desktop/dist-desktop/* ./dist
+                  cp ./apps/absensi-desktop/dist-desktop/* ./dist
+
       - when:
           condition:
             equal: [*win-executor, << parameters.os >>]
@@ -114,12 +122,14 @@ jobs:
                   cp .\apps\absensi-desktop\dist\*.zip .\apps\absensi-desktop\dist-desktop
                   cp .\apps\absensi-desktop\dist\*.exe .\apps\absensi-desktop\dist-desktop
 
-      - store_artifacts:
-          path: apps/sora-desktop/dist-desktop
-          destination: desktop
-      - store_artifacts:
-          path: apps/absensi-desktop/dist-desktop
-          destination: desktop
+                  mkdir dist
+                  cp .\apps\sora-desktop\dist-desktop\* .\dist\
+                  cp .\apps\absensi-desktop\dist-desktop\* .\dist\
+
+      - persist_to_workspace:
+          root: .
+          paths:
+            - dist
 
   publish-github-release:
     docker:
@@ -130,9 +140,8 @@ jobs:
       - run:
           name: "Publish Release on GitHub"
           command: |
-            ls artifacts
             go install github.com/tcnksm/ghr@latest
-            ghr -t ${GITHUB_TOKEN} -u ${CIRCLE_PROJECT_USERNAME} -r ${CIRCLE_PROJECT_REPONAME} -draft -c ${CIRCLE_SHA1} ./artifacts/desktop
+            ghr -t ${GITHUB_TOKEN} -u ${CIRCLE_PROJECT_USERNAME} -r ${CIRCLE_PROJECT_REPONAME} -draft -c ${CIRCLE_SHA1} ./dist
 
 workflows:
   all-builds:
