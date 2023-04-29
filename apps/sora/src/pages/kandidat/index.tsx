@@ -144,9 +144,9 @@ const Candidate = () => {
               <HStack>
                 <TableContainer w="100%" h="100%">
                   {!candidateQuery.isLoading &&
-                    !candidateQuery.isError &&
-                    candidateQuery.data.length > 0 &&
-                    counterQuery.data ? (
+                  !candidateQuery.isError &&
+                  candidateQuery.data.length > 0 &&
+                  counterQuery.data ? (
                     <Stack direction="row" mr="2" mt="3" mb="3">
                       <Badge fontSize="1.3em">
                         <Tooltip label="Jumlah suara masuk ke masing-masing kandidat terpilih">
@@ -184,8 +184,8 @@ const Candidate = () => {
 
                   <Table variant="simple">
                     {!candidateQuery.isLoading &&
-                      !candidateQuery.isError &&
-                      candidateQuery.data.length < 1 ? (
+                    !candidateQuery.isError &&
+                    candidateQuery.data.length < 1 ? (
                       <TableCaption>
                         Tidak ada kandidat yang tersedia, silahkan tambahkan
                         kandidat terlebih dahulu.
