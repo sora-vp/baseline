@@ -58,7 +58,7 @@ export const candidateRouter = createTRPCRouter({
       },
     });
 
-    if (!candidates)
+    if (!candidates || candidates.length < 1)
       throw new TRPCError({
         code: "NOT_FOUND",
         message: "Belum ada kandidat yang terdaftar",
