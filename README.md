@@ -265,3 +265,27 @@ graph LR
 
    B ------ H
 ```
+
+Kemudian cek konektivitas dari semua komputer pemilih dan komputer absensi, apakah berhasil terhubung atau tidak. Caranya tinggal menggunakan command `ping`.
+
+Asumsikan komputer administrator berjalan pada IP `192.168.100.2`, berarti jalankan perintah dibawah ini.
+
+```sh
+ping 192.168.100.2
+```
+
+Jika berhasil, kurang lebih akan terlihat seperti ini.
+
+![Gambaran jika berhasil ping](assets/tutorial/004-ping-host.png)
+
+### Instalasi kedua aplikasi desktop (pemilih dan absensi)
+
+Silahkan pergi ke bagian [releases](https://github.com/reacto11mecha/sora/releases) dan pilih aplikasi desktop yang sesuai. Untuk absensi di awali dengan `absensi-desktop-` sedangkan `sora-desktop-` menandakan bahwa aplikasi tersebut adalah aplikasi pemilihan. Tersedia untuk os windows dan linux 64 bit.
+
+> Karena belum ada codesigning, maka antivirus membaca aplikasi ini mengandung virus. Matikan antivirus jika ingin menggunakan aplikasi ini.
+
+> Note di windows: TODO
+
+### Setup pertama kali aplikasi desktop
+
+TODO
