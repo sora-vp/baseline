@@ -1,4 +1,0 @@
-packages/database/generated-prisma/**
-**/dist
-apps/*/.next
-out/
