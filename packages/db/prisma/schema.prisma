@@ -1,0 +1,38 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+    provider = "prisma-client-js"
+    previewFeatures = ["jsonProtocol"]
+}
+
+datasource db {
+    provider = "mysql"
+    url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(cuid())
+  name      String   @db.VarChar(50)
+  email     String   @unique
+  password  String
+  createdAt DateTime @default(now())
+}
+
+model Candidate {
+  id      Int    @id @default(autoincrement())
+  counter Int    @default(0)
+  name    String @unique
+  img     String @unique @db.VarChar(50)
+}
+
+model Participant {
+  id              Int       @id @default(autoincrement())
+  name            String    @unique @db.VarChar(255)
+  qrId            String    @unique @db.VarChar(30)
+  alreadyAttended Boolean   @default(false)
+  attendedAt      DateTime?
+  alreadyChoosing Boolean   @default(false)
+  choosingAt      DateTime?
+}
+

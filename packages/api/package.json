@@ -1,0 +1,32 @@
+{
+  "name": "@sora/api",
+  "version": "0.1.0",
+  "main": "./index.ts",
+  "types": "./index.ts",
+  "license": "MIT",
+  "scripts": {
+    "clean": "rm -rf .turbo node_modules",
+    "lint": "eslint .",
+    "lint:fix": "pnpm lint --fix",
+    "type-check": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@sora/auth": "^0.1.0",
+    "@sora/db": "^0.1.0",
+    "@sora/id-generator": "^0.1.0",
+    "@trpc/client": "^10.27.1",
+    "@trpc/server": "^10.27.1",
+    "amqplib": "^0.10.3",
+    "bcrypt": "^5.1.0",
+    "superjson": "1.9.1",
+    "zod": "^3.21.4"
+  },
+  "devDependencies": {
+    "@sora/eslint-config": "^0.1.0",
+    "@types/amqplib": "^0.10.1",
+    "@types/bcrypt": "^5.0.0",
+    "@types/node": "^20.2.5",
+    "eslint": "^8.40.0",
+    "typescript": "^5.0.4"
+  }
+}
