@@ -29,7 +29,7 @@
   },
   "packageManager": "yarn@3.5.0",
   "workspaces": [
-    "apps/sora",
+    "apps/web",
     "packages/api",
     "packages/auth",
     "packages/db",
