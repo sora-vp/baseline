@@ -53,10 +53,10 @@ const PengaturanWaktu = () => {
     onSuccess(result) {
       if (result.startTime && result.endTime)
         reset({
-          startTime: DateTime.fromISO(result.startTime as unknown as string)
+          startTime: DateTime.fromJSDate(result.startTime)
             .toLocal()
             .toJSDate(),
-          endTime: DateTime.fromISO(result.endTime as unknown as string)
+          endTime: DateTime.fromJSDate(result.endTime)
             .toLocal()
             .toJSDate(),
         });
@@ -71,6 +71,8 @@ const PengaturanWaktu = () => {
         position: "top-right",
         isClosable: true,
       });
+
+      settingsQuery.refetch()
     },
 
     onError(result) {

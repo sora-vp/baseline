@@ -1,5 +1,5 @@
 <p align="center">
-   <img width="300" height="300" src="./apps/sora/public/sora.png" />
+   <img width="300" height="300" src="./apps/web/public/sora.png" />
    <h1 align="center">SORA</h1>
    
    [![Lint, TS, Prettier Check](https://github.com/reacto11mecha/sora/actions/workflows/ci.yml/badge.svg)](https://github.com/reacto11mecha/sora/actions/workflows/ci.yml) [![CodeQL](https://github.com/reacto11mecha/sora/actions/workflows/codeql.yml/badge.svg)](https://github.com/reacto11mecha/sora/actions/workflows/codeql.yml)
@@ -71,10 +71,9 @@ Salin file tersebut dan ubah sesuai isinya, berikut ini adalah keterangan dari m
 Field yang wajib di isi.
 
 - `NEXTAUTH_SECRET`: Secret yang digunakan oleh NextAuth untuk autentikasi
-- `SETTINGS_SECRET`: Secret token yang akan mengencrypt file pengaturan agar tidak mudah diubah-ubah
 - `DATABASE_PASSWORD`: Secret yang akan mengatur password database agar bisa di akses oleh sora dan vote-processor.
 
-Untuk mengenerate secret `NEXTAUTH_SECRET` dan `SETTINGS_SECRET` bisa menggunakan snippet dibawah ini, jalankan di CLI dan gunakan hasilnya.
+Untuk mengenerate secret `NEXTAUTH_SECRET` bisa menggunakan snippet dibawah ini, jalankan di CLI dan gunakan hasilnya.
 
 > ⚠️ **Token harus berbeda satu sama lain!** Jadi harus dijalankan dua kali.
 
@@ -118,7 +117,6 @@ Docker mungkin sudah berjalan tetapi database masih kosong dan belum memiliki ta
    Setelah mengetahui container id, jalankan perintah `yarn db:migrate:deploy` dan `yarn db:push`
 
    ```sh
-   docker exec -it <CONTAINER_ID> yarn db:migrate:deploy
    docker exec -it <CONTAINER_ID> yarn db:push
    ```
 
@@ -183,12 +181,9 @@ Keterangan field yang ada:
 - `DATABASE_URL`: URL Database MySQL yang akan dijadikan penyimpanan data.
 - `NEXTAUTH_SECRET`: Secret yang digunakan oleh NextAuth untuk autentikasi
 - `NEXTAUTH_URL`: URL yang nantinya akan digunakan pada saat production. Biarkan saja valuenya seperti contoh.
-- `SETTINGS_SECRET`: Secret token yang akan mengencrypt file pengaturan agar tidak mudah diubah-ubah
 - `TRPC_URL`: URL endpoint dimana `vote-processor` dapat terhubung ke `sora`, biarkan default jika berjalan di komputer yang sama.
 
 Untuk mengenerate secret `NEXTAUTH_SECRET` dan `SETTINGS_SECRET` bisa menggunakan snippet dibawah ini, jalankan di CLI dan gunakan hasilnya.
-
-> ⚠️ **Token harus berbeda satu sama lain!** Jadi harus dijalankan dua kali.
 
 ```sh
 # Menggunakan Base64
@@ -217,7 +212,6 @@ pm2 start ecosystem.config.js
 Database mungkin sudah berjalan tapi belum memiliki tabel, oleh karena itu diperlukan migrasi dari prisma untuk membuat tabel. Jalankan perintah dibawah ini untuk membuat tabel.
 
 ```sh
-yarn db:migrate:deploy
 yarn db:push
 ```
 

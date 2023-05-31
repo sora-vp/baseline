@@ -11,13 +11,9 @@ import {
   TambahPesertaValidationSchema,
   UpdateParticipantValidationSchema,
 } from "@sora/schema-config/admin.participant.schema";
+import { canAttendNow } from "@sora/settings";
 
 import { createTRPCRouter, protectedProcedure, publicProcedure } from "../trpc";
-
-// import { canAttendNow } from "~/utils/canDoSomething";
-
-// Dummy fn, will replace later
-const canAttendNow = () => new Promise((resolve) => resolve(true));
 
 export const participantRouter = createTRPCRouter({
   getParticipantPaginated: protectedProcedure
@@ -139,7 +135,7 @@ export const participantRouter = createTRPCRouter({
   deleteParticipant: protectedProcedure
     .input(DeletePesertaValidationSchema)
     .mutation(async ({ input }) => {
-      const participantCanAttend = await canAttendNow();
+      const participantCanAttend = canAttendNow();
 
       if (participantCanAttend)
         throw new TRPCError({
@@ -210,7 +206,7 @@ export const participantRouter = createTRPCRouter({
   participantAttend: publicProcedure
     .input(ParticipantAttendValidationSchema)
     .mutation(async ({ input }) => {
-      const participantCanAttend = await canAttendNow();
+      const participantCanAttend = canAttendNow();
 
       if (!participantCanAttend)
         throw new TRPCError({

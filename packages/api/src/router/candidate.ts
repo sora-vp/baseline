@@ -7,14 +7,10 @@ import {
   adminGetSpecificCandidateValidationSchema,
   upvoteValidationSchema,
 } from "@sora/schema-config/admin.candidate.schema";
+import { canVoteNow } from "@sora/settings";
 
 import { env } from "../../env.mjs";
 import { createTRPCRouter, protectedProcedure, publicProcedure } from "../trpc";
-
-// import { canVoteNow } from "~/utils/canDoSomething";
-
-// Dummy fn, will replace later
-const canVoteNow = () => new Promise((resolve) => resolve(true));
 
 const QUEUE_NAME = "vote_queue";
 
@@ -95,7 +91,7 @@ export const candidateRouter = createTRPCRouter({
   adminDeleteCandidate: protectedProcedure
     .input(adminDeleteCandidateValidationSchema)
     .mutation(async ({ input }) => {
-      const inVotingCondition = await canVoteNow();
+      const inVotingCondition = canVoteNow();
 
       if (inVotingCondition)
         throw new TRPCError({
@@ -133,57 +129,52 @@ export const candidateRouter = createTRPCRouter({
 
         try {
           const messageFromQueue: { success: boolean; message?: string } =
-            await new Promise(
-              // eslint-disable-next-line @typescript-eslint/no-misused-promises
-              async (resolve, reject) => {
-                const channel = await connection.createChannel();
+            await new Promise(async (resolve, reject) => {
+              const channel = await connection.createChannel();
 
-                const { queue } = await channel.assertQueue(QUEUE_NAME, {
-                  durable: true,
-                });
+              const { queue } = await channel.assertQueue(QUEUE_NAME, {
+                durable: true,
+              });
 
-                const payload = JSON.stringify(input);
+              const payload = JSON.stringify(input);
 
-                const response = await channel.assertQueue("");
-                const correlationId = response.queue;
+              const response = await channel.assertQueue("");
+              const correlationId = response.queue;
 
-                // eslint-disable-next-line @typescript-eslint/no-misused-promises
-                const timeout = setTimeout(async () => {
-                  await channel.deleteQueue(QUEUE_NAME);
-                  await channel.close();
+              const timeout = setTimeout(async () => {
+                await channel.deleteQueue(QUEUE_NAME);
+                await channel.close();
 
-                  reject(
-                    new Error("Timeout: No response received from consumer."),
-                  );
-                }, 30_000);
-
-                await channel.consume(
-                  correlationId,
-                  (msg) => {
-                    if (!msg) {
-                      reject(
-                        "Publisher has been cancelled or channel has been closed.",
-                      );
-                      return;
-                    }
-
-                    if (msg.properties.correlationId === correlationId) {
-                      clearTimeout(timeout);
-
-                      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-                      resolve(JSON.parse(msg.content.toString()));
-                      channel.ack(msg);
-                    }
-                  },
-                  { noAck: true },
+                reject(
+                  new Error("Timeout: No response received from consumer."),
                 );
+              }, 30_000);
 
-                channel.sendToQueue(queue, Buffer.from(payload), {
-                  correlationId,
-                  replyTo: correlationId,
-                });
-              },
-            );
+              await channel.consume(
+                correlationId,
+                (msg) => {
+                  if (!msg) {
+                    reject(
+                      "Publisher has been cancelled or channel has been closed.",
+                    );
+                    return;
+                  }
+
+                  if (msg.properties.correlationId === correlationId) {
+                    clearTimeout(timeout);
+
+                    resolve(JSON.parse(msg.content.toString()));
+                    channel.ack(msg);
+                  }
+                },
+                { noAck: true },
+              );
+
+              channel.sendToQueue(queue, Buffer.from(payload), {
+                correlationId,
+                replyTo: correlationId,
+              });
+            });
 
           if (!messageFromQueue.success)
             throw new TRPCError({
