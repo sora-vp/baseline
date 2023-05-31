@@ -1,27 +1,26 @@
+import { useEffect, useMemo, useRef, useState } from "react";
+import Head from "next/head";
+import NextLink from "next/link";
 import {
-  useColorModeValue,
-  VStack,
-  HStack,
   Box,
-  Text,
+  HStack,
   Link,
   Spinner,
+  Text,
+  VStack,
+  useColorModeValue,
 } from "@chakra-ui/react";
-import { useState, useEffect, useMemo, useRef } from "react";
-import Head from "next/head";
 import {
-  BarChart,
   Bar,
+  BarChart,
+  CartesianGrid,
+  Legend,
+  Tooltip,
   XAxis,
   YAxis,
-  CartesianGrid,
-  Tooltip,
-  Legend,
 } from "recharts";
-import NextLink from "next/link";
 
 import { api } from "~/utils/api";
-
 import Sidebar from "~/components/Sidebar";
 
 const Statistik = () => {
@@ -42,7 +41,7 @@ const Statistik = () => {
         name: kandidat.name,
         ["Yang Memilih"]: kandidat.counter,
       })),
-    [candidateQuery.data]
+    [candidateQuery.data],
   );
 
   const tooltipColor = useColorModeValue("white", "#171923");

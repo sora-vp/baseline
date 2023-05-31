@@ -1,14 +1,14 @@
+import { useEffect, useRef, type InputHTMLAttributes } from "react";
 import {
-  useToast,
   AspectRatio,
   Box,
-  Stack,
   Heading,
-  Text,
   Input,
+  Stack,
+  Text,
+  useToast,
   type InputProps,
 } from "@chakra-ui/react";
-import { useEffect, useRef, type InputHTMLAttributes } from "react";
 
 export type IIBType = {
   imgFromInput: string | null;
@@ -52,7 +52,7 @@ export default function InputImageBox({
 
       if (
         Array.from(files).some(
-          (file: File) => !extensions.some((format) => file.type === format)
+          (file: File) => !extensions.some((format) => file.type === format),
         )
       ) {
         toast({

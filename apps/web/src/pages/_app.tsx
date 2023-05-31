@@ -1,12 +1,12 @@
 // src/pages/_app.tsx
-import { ChakraProvider } from "@chakra-ui/react";
-import { SessionProvider } from "next-auth/react";
-import type { Session } from "next-auth";
+
 import type { AppType } from "next/app";
+import { ChakraProvider } from "@chakra-ui/react";
+import type { Session } from "next-auth";
+import { SessionProvider } from "next-auth/react";
 
 import "react-datepicker/dist/react-datepicker.css";
 import "~/components/DatePicker/chakra-support.css";
-
 import { api } from "~/utils/api";
 
 const MyApp: AppType<{ session: Session | null }> = ({

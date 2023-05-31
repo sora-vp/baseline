@@ -1,63 +1,60 @@
 import { useMemo, useRef, useState } from "react";
+import Head from "next/head";
+import NextLink from "next/link";
 import {
-  useToast,
-  useColorModeValue,
-  useDisclosure,
-  VStack,
-  HStack,
-  Box,
-  Text,
-  Button,
-  Spinner,
-
-  // Table
-  Table,
-  Thead,
-  Tbody,
-  Tr,
-  Th,
-  Td,
-  TableContainer,
-
   // Alert dialog
   AlertDialog,
   AlertDialogBody,
+  AlertDialogCloseButton,
+  AlertDialogContent,
   AlertDialogFooter,
   AlertDialogHeader,
-  AlertDialogContent,
   AlertDialogOverlay,
-  AlertDialogCloseButton,
+  Box,
+  Button,
   Flex,
-  Tooltip,
+  HStack,
   IconButton,
+  NumberDecrementStepper,
+  NumberIncrementStepper,
   NumberInput,
   NumberInputField,
-  NumberIncrementStepper,
-  NumberDecrementStepper,
   NumberInputStepper,
   Select,
+  Spinner,
+  // Table
+  Table,
+  TableContainer,
+  Tbody,
+  Td,
+  Text,
+  Th,
+  Thead,
+  Tooltip,
+  Tr,
+  VStack,
+  useColorModeValue,
+  useDisclosure,
+  useToast,
 } from "@chakra-ui/react";
-import Head from "next/head";
-import NextLink from "next/link";
-import { GrPrevious, GrNext } from "react-icons/gr";
+import {
+  createColumnHelper,
+  flexRender,
+  getCoreRowModel,
+  useReactTable,
+  type PaginationState,
+} from "@tanstack/react-table";
 import { BiFirstPage, BiLastPage } from "react-icons/bi";
 import {
-  BsFillFilePdfFill,
   BsFiletypeCsv,
-  BsQrCode,
   BsFiletypeJson,
+  BsFillFilePdfFill,
+  BsQrCode,
 } from "react-icons/bs";
+import { GrNext, GrPrevious } from "react-icons/gr";
 
 import { api, type RouterOutputs } from "~/utils/api";
 import Sidebar from "~/components/Sidebar";
-
-import {
-  useReactTable,
-  getCoreRowModel,
-  flexRender,
-  createColumnHelper,
-  type PaginationState,
-} from "@tanstack/react-table";
 
 const columnHelper =
   createColumnHelper<
@@ -146,7 +143,7 @@ const Peserta = () => {
       pageIndex,
       pageSize,
     }),
-    [pageIndex, pageSize]
+    [pageIndex, pageSize],
   );
 
   const participantQuery = api.participant.getParticipantPaginated.useQuery(
@@ -165,7 +162,7 @@ const Peserta = () => {
       },
       refetchInterval: 5000,
       refetchOnWindowFocus: false,
-    }
+    },
   );
   const settingsQuery = api.settings.getSettings.useQuery(undefined, {
     refetchInterval: 5000,
@@ -190,7 +187,7 @@ const Peserta = () => {
 
       element.setAttribute(
         "href",
-        "data:application/json;charset=utf-8," + encodeURIComponent(data)
+        "data:application/json;charset=utf-8," + encodeURIComponent(data),
       );
       element.setAttribute("download", "data-partisipan.json");
 
@@ -341,7 +338,7 @@ const Peserta = () => {
                             <Th key={header.id}>
                               {flexRender(
                                 header.column.columnDef.header,
-                                header.getContext()
+                                header.getContext(),
                               )}
                             </Th>
                           ))}
@@ -370,7 +367,7 @@ const Peserta = () => {
                             <Td key={cell.id}>
                               {flexRender(
                                 cell.column.columnDef.cell,
-                                cell.getContext()
+                                cell.getContext(),
                               )}
                             </Td>
                           ))}

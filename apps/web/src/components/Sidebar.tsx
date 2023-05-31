@@ -1,12 +1,11 @@
-import { SidebarWrapper } from "ui";
-
 import {
   FiHome,
+  FiSettings,
+  FiTrendingUp,
   FiUser,
   FiUsers,
-  FiTrendingUp,
-  FiSettings,
 } from "react-icons/fi";
+import { SidebarWrapper } from "ui";
 
 const Sidebar = SidebarWrapper([
   { name: "Beranda", icon: FiHome, href: "/" },

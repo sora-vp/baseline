@@ -1,39 +1,37 @@
 import { useRef, useState } from "react";
+import Head from "next/head";
+import NextLink from "next/link";
 import {
-  useToast,
-  useColorModeValue,
-  useDisclosure,
-  VStack,
-  HStack,
-  Box,
-  Text,
-  Button,
-  Spinner,
-  Tooltip,
-
-  // Table
-  Table,
-  Thead,
-  Tbody,
-  Tr,
-  Th,
-  Td,
-  TableContainer,
-  TableCaption,
-  Stack,
-  Badge,
-
   // Alert dialog
   AlertDialog,
   AlertDialogBody,
+  AlertDialogCloseButton,
+  AlertDialogContent,
   AlertDialogFooter,
   AlertDialogHeader,
-  AlertDialogContent,
   AlertDialogOverlay,
-  AlertDialogCloseButton,
+  Badge,
+  Box,
+  Button,
+  HStack,
+  Spinner,
+  Stack,
+  // Table
+  Table,
+  TableCaption,
+  TableContainer,
+  Tbody,
+  Td,
+  Text,
+  Th,
+  Thead,
+  Tooltip,
+  Tr,
+  VStack,
+  useColorModeValue,
+  useDisclosure,
+  useToast,
 } from "@chakra-ui/react";
-import Head from "next/head";
-import NextLink from "next/link";
 
 import { api } from "~/utils/api";
 import Sidebar from "~/components/Sidebar";
@@ -59,7 +57,7 @@ const Candidate = () => {
     {
       refetchInterval: 2500,
       refetchIntervalInBackground: true,
-    }
+    },
   );
 
   const candidateDeleteMutation =
@@ -92,7 +90,7 @@ const Candidate = () => {
 
   const getNama = () => {
     const currentCandidate = candidateQuery.data?.find(
-      (p) => p.id === currentID
+      (p) => p.id === currentID,
     );
 
     return currentCandidate?.name;

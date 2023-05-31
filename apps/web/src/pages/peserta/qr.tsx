@@ -1,18 +1,18 @@
+import { useCallback, useRef, useState } from "react";
 import Head from "next/head";
 import {
-  useColorModeValue,
-  VStack,
-  HStack,
   Box,
-  Text,
-  Input,
-  FormLabel,
   FormControl,
   FormHelperText,
+  FormLabel,
+  HStack,
+  Input,
+  Text,
+  VStack,
+  useColorModeValue,
 } from "@chakra-ui/react";
-import QRCode from "qrcode";
 import debounce from "lodash/debounce";
-import { useCallback, useRef, useState } from "react";
+import QRCode from "qrcode";
 
 import Sidebar from "~/components/Sidebar";
 
@@ -34,7 +34,7 @@ const QRCodePage = () => {
 
       QRCode.toCanvas(canvasRef.current, qrValue, { width: 296 });
     }, 500),
-    []
+    [],
   );
 
   return (

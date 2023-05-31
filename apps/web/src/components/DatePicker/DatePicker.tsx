@@ -1,6 +1,6 @@
 import React, { type HTMLAttributes } from "react";
-import ReactDatePicker, { type ReactDatePickerProps } from "react-datepicker";
 import { useColorMode } from "@chakra-ui/react";
+import ReactDatePicker, { type ReactDatePickerProps } from "react-datepicker";
 
 type Props = {
   selectedDate: Date | null;

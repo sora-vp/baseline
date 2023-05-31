@@ -1,26 +1,25 @@
-import Head from "next/head";
 import { useState } from "react";
-
-import { BsMoonFill, BsSun } from "react-icons/bs";
+import Head from "next/head";
 import {
-  useColorMode,
+  Button,
   Flex,
   HStack,
   Heading,
-  Button,
   Icon,
   Input,
-  Select,
-  VStack,
-  Table,
-  Text,
-  Thead,
-  Tbody,
-  Tr,
-  Th,
-  Td,
   Link,
+  Select,
+  Table,
+  Tbody,
+  Td,
+  Text,
+  Th,
+  Thead,
+  Tr,
+  VStack,
+  useColorMode,
 } from "@chakra-ui/react";
+import { BsMoonFill, BsSun } from "react-icons/bs";
 
 import { api } from "~/utils/api";
 
@@ -43,7 +42,7 @@ const PDFPage = () => {
       {
         refetchOnReconnect: false,
         refetchOnWindowFocus: false,
-      }
+      },
     );
 
   return (
@@ -140,7 +139,7 @@ const PDFPage = () => {
                     </Link>
                   </Td>
                 </Tr>
-              )
+              ),
             )}
           </Tbody>
         </Table>
