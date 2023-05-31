@@ -35,7 +35,7 @@ export const ClientRegisterSchemaValidator =
       passConfirm: z.string().min(6, {
         message: "Konfirmasi kata sandi diperlukan setidaknya 6 karakter!",
       }),
-    })
+    }),
   ).refine((data) => data.password === data.passConfirm, {
     message: "Konfirmasi kata sandi tidak sama!",
     path: ["passConfirm"],
@@ -57,7 +57,7 @@ export const ClientChangePasswordSchemaValidator =
       konfirmasi: z.string().min(1, {
         message: "Konfirmasi kata sandi diperlukan setidaknya 6 karakter!",
       }),
-    })
+    }),
   ).refine((data) => data.baru === data.konfirmasi, {
     message: "Konfirmasi kata sandi tidak sama!",
     path: ["konfirmasi"],

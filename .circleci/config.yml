@@ -144,20 +144,20 @@ jobs:
             ghr -t ${GITHUB_TOKEN} -u ${CIRCLE_PROJECT_USERNAME} -r ${CIRCLE_PROJECT_REPONAME} -draft -c ${CIRCLE_SHA1} ${CIRCLE_TAG} dist/
 
 workflows:
-  all-builds:
-    jobs:
-      - desktop-builder:
-          matrix:
-            parameters:
-              os: [linux, win]
-          filters:
-            tags:
-              only: /^desktop-v\d+\.\d+\.\d+/
-      - publish-github-release:
-          requires:
-            - desktop-builder
-          filters:
-            branches:
-              ignore: /.*/
-            tags:
-              only: /^desktop-v\d+\.\d+\.\d+/
+  # all-builds:
+  #   jobs:
+  #     - desktop-builder:
+  #         matrix:
+  #           parameters:
+  #             os: [linux, win]
+  #         filters:
+  #           tags:
+  #             only: /^desktop-v\d+\.\d+\.\d+/
+  #     - publish-github-release:
+  #         requires:
+  #           - desktop-builder
+  #         filters:
+  #           branches:
+  #             ignore: /.*/
+  #           tags:
+  #             only: /^desktop-v\d+\.\d+\.\d+/

@@ -57,9 +57,3 @@ runs:
         # Other environment variables
         HUSKY: "0" # By default do not run HUSKY install
         PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: ${{ inputs.playwright-skip-browser-download }}
-
-    - name: Prisma generate schema and types
-      shell: bash
-      run: |
-        yarn generate
-        yarn dlx turbo build --filter database

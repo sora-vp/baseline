@@ -49,7 +49,7 @@ export const authOptions: NextAuthOptions = {
         if (!user) throw new Error("Pengguna tidak ditemukan!");
 
         const isValidPassword = await bcrypt.compare(
-          credentials?.password ,
+          credentials?.password,
           user.password,
         );
 
