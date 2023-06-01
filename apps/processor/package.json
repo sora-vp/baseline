@@ -29,6 +29,7 @@
   "dependencies": {
     "@sora/api": "^0.1.0",
     "@sora/db": "^0.1.0",
+    "@sora/id-generator": "^0.1.0",
     "@trpc/client": "^10.27.1",
     "@trpc/server": "^10.27.1",
     "amqplib": "^0.10.3",

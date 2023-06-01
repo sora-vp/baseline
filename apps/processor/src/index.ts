@@ -2,6 +2,7 @@ import amqp from "amqplib";
 import { z } from "zod";
 
 import { Prisma, prisma, type Participant } from "@sora/db";
+import { validateId } from "@sora/id-generator";
 
 import { canVoteNow } from "./canVoteNow";
 import { env } from "./env";
@@ -13,7 +14,7 @@ const inputValidator = z.object({
     (a) => parseInt(z.string().parse(a), 10),
     z.number().positive(),
   ),
-  qrId: z.string(),
+  qrId: z.string().refine(validateId),
 });
 
 const consumeMessagesFromQueue = async () => {
