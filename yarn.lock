@@ -11223,9 +11223,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"sora-attendance-desktop@workspace:apps/desktop/presence":
+"sora-attendance-desktop@workspace:apps/desktop/attendance":
   version: 0.0.0-use.local
-  resolution: "sora-attendance-desktop@workspace:apps/desktop/presence"
+  resolution: "sora-attendance-desktop@workspace:apps/desktop/attendance"
   dependencies:
     "@chakra-ui/react": ^2.6.1
     "@electron-toolkit/preload": ^1.0.3
@@ -11273,9 +11273,9 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"sora-chooser-desktop@workspace:apps/desktop/attendance":
+"sora-chooser-desktop@workspace:apps/desktop/chooser":
   version: 0.0.0-use.local
-  resolution: "sora-chooser-desktop@workspace:apps/desktop/attendance"
+  resolution: "sora-chooser-desktop@workspace:apps/desktop/chooser"
   dependencies:
     "@chakra-ui/react": ^2.6.1
     "@electron-toolkit/preload": ^1.0.3
