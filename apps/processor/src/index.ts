@@ -10,10 +10,7 @@ import { logger } from "./logger";
 import { trpc } from "./trpc";
 
 const inputValidator = z.object({
-  id: z.preprocess(
-    (a) => parseInt(z.string().parse(a), 10),
-    z.number().positive(),
-  ),
+  id: z.number().positive(),
   qrId: z.string().refine(validateId),
 });
 

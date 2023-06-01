@@ -12,7 +12,13 @@ const __dirname = path.dirname(__filename);
 const config = {
   reactStrictMode: true,
   /** Enables hot reloading for local packages without a build step */
-  transpilePackages: ["@sora/api", "@sora/auth", "@sora/db"],
+  transpilePackages: [
+    "@sora/api",
+    "@sora/auth",
+    "@sora/db",
+    "@sora/id-generator",
+    "@sora/ui",
+  ],
   /** We already do linting and typechecking as separate tasks in CI */
   eslint: { ignoreDuringBuilds: true },
   typescript: { ignoreBuildErrors: true },

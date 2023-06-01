@@ -11,7 +11,7 @@ export const env = createEnv({
   },
   runtimeEnv: {
     AMQP_URL: process.env.AMQP_URL,
-    TRPC_URL: process.env.TRPC_URL,
+    TRPC_URL: process.env.TRPC_URL ?? "http://127.0.0.1:3000/api/trpc",
   },
   skipValidation: !!process.env.CI || !!process.env.SKIP_ENV_VALIDATION,
 });
