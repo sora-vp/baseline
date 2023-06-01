@@ -31,8 +31,8 @@ const PengaturanPerilaku = () => {
   const settingsQuery = api.settings.getSettings.useQuery(undefined, {
     onSuccess(data) {
       reset({
-        canVote: data.canVote !== null && data.canVote !== false,
-        canAttend: data.canAttend !== null && data.canAttend !== false,
+        canVote: data.canVote,
+        canAttend: data.canAttend,
       });
     },
   });
@@ -45,6 +45,8 @@ const PengaturanPerilaku = () => {
         position: "top-right",
         isClosable: true,
       });
+
+      settingsQuery.refetch()
     },
 
     onError(result) {

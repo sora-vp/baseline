@@ -5,7 +5,7 @@
     "node": ">=v18.16.0"
   },
   "scripts": {
-    "build": "turbo run build --filter=@sora/web --filter=@sora/vote-processor",
+    "build": "turbo run build --filter=@sora/web --filter=@sora/processor",
     "clean": "git clean -xdf node_modules",
     "clean:workspaces": "turbo clean",
     "db:generate": "turbo db:generate",
@@ -13,7 +13,7 @@
     "dev:web": "turbo run dev --scope=@sora/web",
     "dev:sora": "turbo run dev --scope=@sora/chooser-desktop",
     "dev:absensi": "turbo run dev --scope=@sora/attendance-desktop",
-    "dev:processor": "turbo run dev --scope=@sora/vote-processor",
+    "dev:processor": "turbo run dev --scope=@sora/processor",
     "build-desktop:win": "turbo run build-win --filter '*-desktop'",
     "build-desktop:linux": "turbo run build-linux --filter '*-desktop'",
     "format": "prettier --write \"**/*.{js,cjs,mjs,ts,tsx,md,json}\" --ignore-path .gitignore",
@@ -36,6 +36,7 @@
   "packageManager": "yarn@3.5.0",
   "workspaces": [
     "apps/web",
+    "apps/processor",
     "packages/api",
     "packages/auth",
     "packages/db",
