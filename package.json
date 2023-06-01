@@ -38,6 +38,7 @@
   "workspaces": [
     "apps/web",
     "apps/processor",
+    "apps/desktop/*",
     "packages/api",
     "packages/auth",
     "packages/db",

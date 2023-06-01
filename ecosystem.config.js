@@ -14,9 +14,8 @@ module.exports = {
   apps: [
     {
       name: "web",
-      script: path.join(nodeModulesDir, "next/dist/bin/next"),
+      script: path.join(appsDir, "web/.next/standalone/apps/web/server.js"),
       cwd: path.join(appsDir, "web"),
-      args: "start -p 3000",
       env: {
         NODE_ENV: "production",
         ...actualEnv,
