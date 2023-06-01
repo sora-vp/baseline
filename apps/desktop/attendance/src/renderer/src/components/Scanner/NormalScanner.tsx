@@ -1,5 +1,5 @@
 import { useEffect, useRef } from "react";
-import { Box, HStack, Text } from "@chakra-ui/react";
+import { Box, HStack, Text, useToast } from "@chakra-ui/react";
 import styles from "@renderer/styles/components/Scanner.module.css";
 import { trpc } from "@renderer/utils/trpc";
 import QrScanner from "qr-scanner";
@@ -8,20 +8,22 @@ import { validateId } from "@sora/id-generator";
 
 const NormalScanner = ({
   setInvalidQr,
-  checkParticipantMutation,
+  participantAttend,
 }: {
   setInvalidQr: (invalid: boolean) => void;
-  checkParticipantMutation: ReturnType<
-    typeof trpc.participant.isParticipantAlreadyAttended.useMutation
+  participantAttend: ReturnType<
+    typeof trpc.participant.participantAttend.useMutation
   >;
 }) => {
+  const toast = useToast();
+
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   const videoRef = useRef<HTMLVideoElement>(null!);
 
   useEffect(() => {
     const qrScanner = new QrScanner(
       videoRef.current,
-      async ({ data }) => {
+      ({ data }) => {
         // Bug from QR Scanner
         if (!data || data === "") return;
 
@@ -31,11 +33,20 @@ const NormalScanner = ({
 
         if (!isValidQr) return setInvalidQr(true);
 
-        checkParticipantMutation.mutate(data);
+        participantAttend.mutate(data);
       },
       {
         highlightCodeOutline: true,
         highlightScanRegion: true,
+        onDecodeError: (error) => {
+          if (error instanceof Error)
+            toast({
+              description: `Error: ${error.message}`,
+              status: "error",
+              duration: 5000,
+              position: "top-right",
+            });
+        },
       },
     );
 

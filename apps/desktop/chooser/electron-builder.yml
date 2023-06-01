@@ -1,5 +1,5 @@
-appId: rmecha.my.id.sora-absensi
-productName: absensi-desktop
+appId: rmecha.my.id.sora-pemilih
+productName: sora-desktop
 directories:
   buildResources: build
 files:
@@ -10,10 +10,10 @@ files:
   - "!{.env,.env.*,.npmrc,pnpm-lock.yaml}"
   - "!{tsconfig.json,tsconfig.node.json,tsconfig.web.json}"
 asarUnpack:
-  - resources/*
+  - resources/**
 afterSign: build/notarize.js
 win:
-  executableName: sora-absensi-desktop
+  executableName: sora-chooser-desktop
 # nsis:
 #   artifactName: ${name}-${version}-win-setup.${ext}
 #   shortcutName: ${productName}

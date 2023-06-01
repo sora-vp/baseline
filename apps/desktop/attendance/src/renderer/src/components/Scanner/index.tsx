@@ -1,49 +1,41 @@
 import { useCallback, useState } from "react";
-import { useParticipant } from "@renderer/context/ParticipantContext";
 import { trpc } from "@renderer/utils/trpc";
-import { Navigate } from "react-router-dom";
 
 import Loading from "../Loading";
-import UniversalErrorHandler from "../UniversalErrorHandler";
 import NormalScanner from "./NormalScanner";
+import ScanningError from "./ScanningError";
+import SuccessScan from "./SuccessScan";
 
 const Scanner: React.FC = () => {
-  const { qrId, setQRCode } = useParticipant();
-
   const [isQrInvalid, setInvalidQr] = useState<boolean>(false);
 
-  const checkParticipantMutation =
-    trpc.participant.isParticipantAlreadyAttended.useMutation({
-      onSuccess() {
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        setQRCode(checkParticipantMutation.variables!);
-      },
-    });
+  const participantAttend = trpc.participant.participantAttend.useMutation();
 
   const setIsQrValid = useCallback(
     (invalid: boolean) => setInvalidQr(invalid),
     [],
   );
 
-  if (qrId) return <Navigate to="/vote" />;
+  if (participantAttend.isLoading)
+    return <Loading headingText="Mencoba untuk absen..." />;
 
-  if (checkParticipantMutation.isLoading)
-    return <Loading headingText="Mengecek status anda..." />;
+  if (participantAttend.isSuccess)
+    return <SuccessScan participantAttend={participantAttend} />;
 
-  if (isQrInvalid || checkParticipantMutation.isError)
+  if (isQrInvalid || participantAttend.isError)
     return (
-      <UniversalErrorHandler
-        title="Gagal Verifikasi!"
+      <ScanningError
         message={
-          checkParticipantMutation.isError
-            ? checkParticipantMutation.error.message
+          participantAttend.isError
+            ? participantAttend.error.message
             : "QR Code yang anda tunjukkan tidak valid. Beritahu panitia untuk memperbaiki masalah ini."
         }
       />
     );
+
   return (
     <NormalScanner
-      checkParticipantMutation={checkParticipantMutation}
+      participantAttend={participantAttend}
       setInvalidQr={setIsQrValid}
     />
   );

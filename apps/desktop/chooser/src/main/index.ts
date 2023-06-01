@@ -9,12 +9,31 @@ import {
   type MenuItemConstructorOptions,
 } from "electron";
 import Store from "electron-store";
+import { SerialPort } from "serialport";
+import { usb } from "usb";
 
 import icon from "../../resources/icon.png?asset";
+import { handleConnect } from "./keyboard";
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+let port: SerialPort | undefined;
 
 const store = new Store<{
   serverURL?: string;
 }>();
+
+const arduinoConnectionHandler = (
+  boards: Awaited<ReturnType<typeof SerialPort.list>>,
+  mainWindow: BrowserWindow,
+) => {
+  const filteredBoards = boards.filter(
+    (board) =>
+      board.pnpId || board.manufacturer || board.vendorId || board.productId,
+  );
+
+  if (filteredBoards.length > 0 && filteredBoards[0])
+    handleConnect(filteredBoards[0], port, mainWindow);
+};
 
 function createWindow(): void {
   // Create the browser window.
@@ -74,6 +93,20 @@ function createWindow(): void {
   } else {
     mainWindow.loadFile(join(__dirname, "../renderer/index.html"));
   }
+
+  // Intial connection to arduino
+  SerialPort.list().then((boards) =>
+    arduinoConnectionHandler(boards, mainWindow),
+  );
+
+  // Button module reconnect mechanism
+  usb.on("attach", () => {
+    if (!port) {
+      SerialPort.list().then((boards) =>
+        arduinoConnectionHandler(boards, mainWindow),
+      );
+    }
+  });
 }
 
 // This method will be called when Electron has finished

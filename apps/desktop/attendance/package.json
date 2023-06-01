@@ -1,10 +1,10 @@
 {
-  "name": "@sora/chooser-desktop",
+  "name": "sora-attendance-desktop",
   "version": "2.1.0",
-  "license": "GPL-3.0",
-  "description": "Aplikasi desktop untuk memilih kandidat",
+  "description": "Aplikasi desktop untuk interface absensi sora",
   "main": "./out/main/index.js",
   "author": "Ezra Khairan Permana <ezrakhairan123@gmail.com>",
+  "license": "GPL-3.0",
   "homepage": "https://github.com/reacto11mecha/sora#readme",
   "scripts": {
     "lint": "eslint . --ext .js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix",
@@ -21,10 +21,7 @@
   "dependencies": {
     "@electron-toolkit/preload": "^1.0.3",
     "@electron-toolkit/utils": "^1.0.2",
-    "@nut-tree/nut-js": "^3.1.1",
-    "electron-store": "^8.1.0",
-    "serialport": "10.5.0",
-    "usb": "^2.9.0"
+    "electron-store": "^8.1.0"
   },
   "devDependencies": {
     "@chakra-ui/react": "^2.6.1",
@@ -40,6 +37,7 @@
     "@sora/petuah": "^0.1.0",
     "@tanstack/react-query": "^4.29.5",
     "@trpc/client": "^10.27.1",
+    "@trpc/next": "^10.27.1",
     "@trpc/react-query": "^10.27.1",
     "@trpc/server": "^10.27.1",
     "@types/luxon": "^3.3.0",
@@ -58,6 +56,7 @@
     "eslint-plugin-react": "7.32.2",
     "framer-motion": "^10.12.16",
     "luxon": "^3.3.0",
+    "prettier": "^2.8.8",
     "qr-scanner": "^1.4.2",
     "react": "18.2.0",
     "react-dom": "18.2.0",

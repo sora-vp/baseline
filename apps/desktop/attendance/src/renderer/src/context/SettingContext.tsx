@@ -1,16 +1,12 @@
 import { createContext, useContext, useMemo, useState } from "react";
 import { useToast } from "@chakra-ui/react";
-import { trpc, type RouterOutput } from "@renderer/utils/trpc";
+import { trpc } from "@renderer/utils/trpc";
 import { DateTime } from "luxon";
 
-import { useParticipant } from "./ParticipantContext";
-
 interface ISettingContext {
-  canVoteNow: boolean;
+  canAttend: boolean;
   isLoading: boolean;
   isError: boolean;
-  isCandidatesExist: boolean;
-  candidates: RouterOutput["candidate"]["candidateList"] | undefined;
 }
 
 export const SettingContext = createContext<ISettingContext>(
@@ -24,22 +20,7 @@ export const SettingProvider = ({
 }) => {
   const toast = useToast();
 
-  const { qrId, setQRCode } = useParticipant();
-
-  const [canVoteNow, setCanVote] = useState<boolean>(false);
-
-  const candidateQuery = trpc.candidate.candidateList.useQuery(undefined, {
-    refetchOnWindowFocus: false,
-
-    onError(error) {
-      toast({
-        description: `Error: ${error.message}`,
-        status: "error",
-        duration: 5000,
-        position: "top-right",
-      });
-    },
-  });
+  const [canAttend, setCanAttend] = useState<boolean>(false);
 
   const settingsQuery = trpc.settings.getSettings.useQuery(undefined, {
     refetchInterval: 2500,
@@ -55,16 +36,11 @@ export const SettingProvider = ({
 
       const currentTime = new Date().getTime();
 
-      const canVote =
+      setCanAttend(
         (waktuMulai as number) <= currentTime &&
-        (waktuSelesai as number) >= currentTime &&
-        result.canVote;
-
-      setCanVote(canVote);
-
-      if (!canVote && qrId) setQRCode(null);
-
-      if (candidateQuery.isError) candidateQuery.refetch();
+          (waktuSelesai as number) >= currentTime &&
+          result.canAttend,
+      );
     },
 
     onError(error) {
@@ -77,31 +53,17 @@ export const SettingProvider = ({
     },
   });
 
-  const isCandidatesExist = useMemo(
-    () => (candidateQuery.data && candidateQuery.data.length > 1) || false,
-    [candidateQuery.data],
-  );
-
-  const isLoading = useMemo(
-    () => candidateQuery.isLoading || settingsQuery.isLoading,
-    [candidateQuery.isLoading, settingsQuery.isLoading],
-  );
-
-  const isError = useMemo(
-    () => candidateQuery.isError || settingsQuery.isError,
-    [candidateQuery.isError, settingsQuery.isError],
+  const propsValue = useMemo(
+    () => ({
+      canAttend,
+      isError: settingsQuery.isError,
+      isLoading: settingsQuery.isLoading,
+    }),
+    [canAttend, settingsQuery.isError, settingsQuery.isLoading],
   );
 
   return (
-    <SettingContext.Provider
-      value={{
-        canVoteNow,
-        isLoading,
-        isError,
-        isCandidatesExist,
-        candidates: candidateQuery.data,
-      }}
-    >
+    <SettingContext.Provider value={propsValue}>
       {children}
     </SettingContext.Provider>
   );

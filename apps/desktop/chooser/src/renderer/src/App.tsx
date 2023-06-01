@@ -3,6 +3,7 @@ import {
   ensureHasAppSetting,
   useAppSetting,
 } from "@renderer/context/AppSetting";
+import { ParticipantProvider } from "@renderer/context/ParticipantContext";
 import { SettingProvider } from "@renderer/context/SettingContext";
 import { trpc } from "@renderer/utils/trpc";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
@@ -12,11 +13,16 @@ import superjson from "superjson";
 
 import Main from "./routes/Main";
 import Setting from "./routes/Setting";
+import Vote from "./routes/Vote";
 
 const router = createHashRouter([
   {
     path: "/",
     element: <Main />,
+  },
+  {
+    path: "/vote",
+    element: <Vote />,
   },
   {
     path: "/setting",
@@ -54,9 +60,11 @@ const App: React.FC = () => {
   return (
     <trpc.Provider client={trpcClient} queryClient={queryClient}>
       <QueryClientProvider client={queryClient}>
-        <SettingProvider>
-          <RouterProvider router={router} />
-        </SettingProvider>
+        <ParticipantProvider>
+          <SettingProvider>
+            <RouterProvider router={router} />
+          </SettingProvider>
+        </ParticipantProvider>
       </QueryClientProvider>
     </trpc.Provider>
   );

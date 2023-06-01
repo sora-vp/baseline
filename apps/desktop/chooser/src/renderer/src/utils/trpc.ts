@@ -5,4 +5,4 @@ import type { AppRouter } from "@sora/api";
 
 export const trpc = createTRPCReact<AppRouter>();
 
-export type AppRouterOutput = inferRouterOutputs<AppRouter>;
+export type RouterOutput = inferRouterOutputs<AppRouter>;

@@ -87,22 +87,22 @@ jobs:
                 command: |
                   yarn db:generate
                   yarn build-desktop:linux
-                  tar -czvf ./apps/sora-desktop/dist/sora-desktop-linux-unpacked.tar.gz ./apps/sora-desktop/dist/linux-unpacked
-                  tar -czvf ./apps/absensi-desktop/dist/absensi-desktop-linux-unpacked.tar.gz ./apps/absensi-desktop/dist/linux-unpacked
-                  mkdir ./apps/sora-desktop/dist-desktop
-                  mkdir ./apps/absensi-desktop/dist-desktop
+                  tar -czvf ./apps/desktop/chooser/dist/sora-desktop-linux-unpacked.tar.gz ./apps/desktop/chooser/dist/linux-unpacked
+                  tar -czvf ./apps/desktop/attendance/dist/absensi-desktop-linux-unpacked.tar.gz ./apps/desktop/attendance/dist/linux-unpacked
+                  mkdir ./apps/desktop/chooser/dist-desktop
+                  mkdir ./apps/desktop/attendance/dist-desktop
 
-                  cp ./apps/sora-desktop/dist/*.tar.gz ./apps/sora-desktop/dist-desktop
-                  cp ./apps/sora-desktop/dist/*.deb ./apps/sora-desktop/dist-desktop
-                  cp ./apps/sora-desktop/dist/*.AppImage ./apps/sora-desktop/dist-desktop
+                  cp ./apps/desktop/chooser/dist/*.tar.gz ./apps/desktop/chooser/dist-desktop
+                  cp ./apps/desktop/chooser/dist/*.deb ./apps/desktop/chooser/dist-desktop
+                  cp ./apps/desktop/chooser/dist/*.AppImage ./apps/desktop/chooser/dist-desktop
 
-                  cp ./apps/absensi-desktop/dist/*.tar.gz ./apps/absensi-desktop/dist-desktop
-                  cp ./apps/absensi-desktop/dist/*.deb ./apps/absensi-desktop/dist-desktop
-                  cp ./apps/absensi-desktop/dist/*.AppImage ./apps/absensi-desktop/dist-desktop
+                  cp ./apps/desktop/attendance/dist/*.tar.gz ./apps/desktop/attendance/dist-desktop
+                  cp ./apps/desktop/attendance/dist/*.deb ./apps/desktop/attendance/dist-desktop
+                  cp ./apps/desktop/attendance/dist/*.AppImage ./apps/desktop/attendance/dist-desktop
 
                   mkdir dist
-                  cp ./apps/sora-desktop/dist-desktop/* ./dist
-                  cp ./apps/absensi-desktop/dist-desktop/* ./dist
+                  cp ./apps/desktop/chooser/dist-desktop/* ./dist
+                  cp ./apps/desktop/attendance/dist-desktop/* ./dist
 
       - when:
           condition:
@@ -113,20 +113,20 @@ jobs:
                 command: |
                   yarn db:generate
                   yarn build-desktop:win
-                  Compress-Archive -Path .\apps\sora-desktop\dist\win-unpacked -Destination .\apps\sora-desktop\dist\sora-desktop-win-unpacked.zip
-                  Compress-Archive -Path .\apps\absensi-desktop\dist\win-unpacked -Destination .\apps\absensi-desktop\dist\absensi-desktop-win-unpacked.zip
-                  mkdir .\apps\sora-desktop\dist-desktop
-                  mkdir .\apps\absensi-desktop\dist-desktop
+                  Compress-Archive -Path .\apps\desktop\chooser\dist\win-unpacked -Destination .\apps\desktop\chooser\dist\sora-desktop-win-unpacked.zip
+                  Compress-Archive -Path .\apps\desktop\attendance\dist\win-unpacked -Destination .\apps\desktop\attendance\dist\absensi-desktop-win-unpacked.zip
+                  mkdir .\apps\desktop\chooser\dist-desktop
+                  mkdir .\apps\desktop\attendance\dist-desktop
 
-                  cp .\apps\sora-desktop\dist\*.zip .\apps\sora-desktop\dist-desktop
-                  cp .\apps\sora-desktop\dist\*.exe .\apps\sora-desktop\dist-desktop
+                  cp .\apps\desktop\chooser\dist\*.zip .\apps\desktop\chooser\dist-desktop
+                  cp .\apps\desktop\chooser\dist\*.exe .\apps\desktop\chooser\dist-desktop
 
-                  cp .\apps\absensi-desktop\dist\*.zip .\apps\absensi-desktop\dist-desktop
-                  cp .\apps\absensi-desktop\dist\*.exe .\apps\absensi-desktop\dist-desktop
+                  cp .\apps\desktop\attendance\dist\*.zip .\apps\desktop\attendance\dist-desktop
+                  cp .\apps\desktop\attendance\dist\*.exe .\apps\desktop\attendance\dist-desktop
 
                   mkdir dist
-                  cp .\apps\sora-desktop\dist-desktop\* .\dist\
-                  cp .\apps\absensi-desktop\dist-desktop\* .\dist\
+                  cp .\apps\desktop\chooser\dist-desktop\* .\dist\
+                  cp .\apps\desktop\attendance\dist-desktop\* .\dist\
 
       - persist_to_workspace:
           root: .

@@ -3135,56 +3135,6 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@sora/attendance-desktop@workspace:apps/desktop/presence":
-  version: 0.0.0-use.local
-  resolution: "@sora/attendance-desktop@workspace:apps/desktop/presence"
-  dependencies:
-    "@chakra-ui/react": ^2.6.1
-    "@electron-toolkit/preload": ^1.0.3
-    "@electron-toolkit/tsconfig": ^1.0.1
-    "@electron-toolkit/utils": ^1.0.2
-    "@electron/notarize": ^1.2.3
-    "@emotion/react": ^11.11.0
-    "@emotion/styled": ^11.11.0
-    "@fontsource/lato": ^4.5.10
-    "@fontsource/roboto": ^4.5.8
-    "@fontsource/sora": ^4.5.12
-    "@sora/api": ^0.1.0
-    "@sora/id-generator": ^0.1.0
-    "@sora/petuah": ^0.1.0
-    "@tanstack/react-query": ^4.29.5
-    "@trpc/client": ^10.27.1
-    "@trpc/next": ^10.27.1
-    "@trpc/react-query": ^10.27.1
-    "@trpc/server": ^10.27.1
-    "@types/luxon": ^3.3.0
-    "@types/node": ^20.2.5
-    "@types/react": ^18.2.6
-    "@types/react-dom": ^18.2.4
-    "@typescript-eslint/eslint-plugin": ^5.59.2
-    "@typescript-eslint/parser": ^5.59.2
-    "@vitejs/plugin-react": ^3.1.0
-    electron: 25.0.1
-    electron-builder: 24.4.0
-    electron-store: ^8.1.0
-    electron-vite: ^1.0.21
-    eslint: ^8.40.0
-    eslint-config-prettier: ^8.8.0
-    eslint-plugin-prettier: ^4.2.1
-    eslint-plugin-react: 7.32.2
-    framer-motion: ^10.12.16
-    luxon: ^3.3.0
-    prettier: ^2.8.8
-    qr-scanner: ^1.4.2
-    react: 18.2.0
-    react-dom: 18.2.0
-    react-router-dom: ^6.9.0
-    superjson: 1.9.1
-    typescript: ^5.0.4
-    vite: ^4.2.1
-  languageName: unknown
-  linkType: soft
-
 "@sora/auth@^0.1.0, @sora/auth@workspace:packages/auth":
   version: 0.0.0-use.local
   resolution: "@sora/auth@workspace:packages/auth"
@@ -3200,57 +3150,6 @@ __metadata:
     react-dom: 18.2.0
     typescript: ^5.0.4
     zod: ^3.21.4
-  languageName: unknown
-  linkType: soft
-
-"@sora/chooser-desktop@workspace:apps/desktop/attendance":
-  version: 0.0.0-use.local
-  resolution: "@sora/chooser-desktop@workspace:apps/desktop/attendance"
-  dependencies:
-    "@chakra-ui/react": ^2.6.1
-    "@electron-toolkit/preload": ^1.0.3
-    "@electron-toolkit/tsconfig": ^1.0.1
-    "@electron-toolkit/utils": ^1.0.2
-    "@electron/notarize": ^1.2.3
-    "@emotion/react": ^11.11.0
-    "@emotion/styled": ^11.11.0
-    "@fontsource/lato": ^4.5.10
-    "@fontsource/roboto": ^4.5.8
-    "@fontsource/sora": ^4.5.12
-    "@nut-tree/nut-js": ^3.1.1
-    "@sora/api": ^0.1.0
-    "@sora/id-generator": ^0.1.0
-    "@sora/petuah": ^0.1.0
-    "@tanstack/react-query": ^4.29.5
-    "@trpc/client": ^10.27.1
-    "@trpc/react-query": ^10.27.1
-    "@trpc/server": ^10.27.1
-    "@types/luxon": ^3.3.0
-    "@types/node": ^20.2.5
-    "@types/react": ^18.2.6
-    "@types/react-dom": ^18.2.4
-    "@typescript-eslint/eslint-plugin": ^5.59.2
-    "@typescript-eslint/parser": ^5.59.2
-    "@vitejs/plugin-react": ^3.1.0
-    electron: 25.0.1
-    electron-builder: 24.4.0
-    electron-store: ^8.1.0
-    electron-vite: ^1.0.21
-    eslint: ^8.40.0
-    eslint-config-prettier: ^8.8.0
-    eslint-plugin-prettier: ^4.2.1
-    eslint-plugin-react: 7.32.2
-    framer-motion: ^10.12.16
-    luxon: ^3.3.0
-    qr-scanner: ^1.4.2
-    react: 18.2.0
-    react-dom: 18.2.0
-    react-router-dom: ^6.9.0
-    serialport: 10.5.0
-    superjson: 1.9.1
-    typescript: ^5.0.4
-    usb: ^2.9.0
-    vite: ^4.2.1
   languageName: unknown
   linkType: soft
 
@@ -11323,6 +11222,107 @@ __metadata:
   checksum: 4a290dd0f3edf49894bb72c631ee304dc3f9be0752c43d516808a365f341821f5cf49997c80ee7c0e67167e0e5131dc71afe7c58812858eb965d6b9746c0cac7
   languageName: node
   linkType: hard
+
+"sora-attendance-desktop@workspace:apps/desktop/presence":
+  version: 0.0.0-use.local
+  resolution: "sora-attendance-desktop@workspace:apps/desktop/presence"
+  dependencies:
+    "@chakra-ui/react": ^2.6.1
+    "@electron-toolkit/preload": ^1.0.3
+    "@electron-toolkit/tsconfig": ^1.0.1
+    "@electron-toolkit/utils": ^1.0.2
+    "@electron/notarize": ^1.2.3
+    "@emotion/react": ^11.11.0
+    "@emotion/styled": ^11.11.0
+    "@fontsource/lato": ^4.5.10
+    "@fontsource/roboto": ^4.5.8
+    "@fontsource/sora": ^4.5.12
+    "@sora/api": ^0.1.0
+    "@sora/id-generator": ^0.1.0
+    "@sora/petuah": ^0.1.0
+    "@tanstack/react-query": ^4.29.5
+    "@trpc/client": ^10.27.1
+    "@trpc/next": ^10.27.1
+    "@trpc/react-query": ^10.27.1
+    "@trpc/server": ^10.27.1
+    "@types/luxon": ^3.3.0
+    "@types/node": ^20.2.5
+    "@types/react": ^18.2.6
+    "@types/react-dom": ^18.2.4
+    "@typescript-eslint/eslint-plugin": ^5.59.2
+    "@typescript-eslint/parser": ^5.59.2
+    "@vitejs/plugin-react": ^3.1.0
+    electron: 25.0.1
+    electron-builder: 24.4.0
+    electron-store: ^8.1.0
+    electron-vite: ^1.0.21
+    eslint: ^8.40.0
+    eslint-config-prettier: ^8.8.0
+    eslint-plugin-prettier: ^4.2.1
+    eslint-plugin-react: 7.32.2
+    framer-motion: ^10.12.16
+    luxon: ^3.3.0
+    prettier: ^2.8.8
+    qr-scanner: ^1.4.2
+    react: 18.2.0
+    react-dom: 18.2.0
+    react-router-dom: ^6.9.0
+    superjson: 1.9.1
+    typescript: ^5.0.4
+    vite: ^4.2.1
+  languageName: unknown
+  linkType: soft
+
+"sora-chooser-desktop@workspace:apps/desktop/attendance":
+  version: 0.0.0-use.local
+  resolution: "sora-chooser-desktop@workspace:apps/desktop/attendance"
+  dependencies:
+    "@chakra-ui/react": ^2.6.1
+    "@electron-toolkit/preload": ^1.0.3
+    "@electron-toolkit/tsconfig": ^1.0.1
+    "@electron-toolkit/utils": ^1.0.2
+    "@electron/notarize": ^1.2.3
+    "@emotion/react": ^11.11.0
+    "@emotion/styled": ^11.11.0
+    "@fontsource/lato": ^4.5.10
+    "@fontsource/roboto": ^4.5.8
+    "@fontsource/sora": ^4.5.12
+    "@nut-tree/nut-js": ^3.1.1
+    "@sora/api": ^0.1.0
+    "@sora/id-generator": ^0.1.0
+    "@sora/petuah": ^0.1.0
+    "@tanstack/react-query": ^4.29.5
+    "@trpc/client": ^10.27.1
+    "@trpc/react-query": ^10.27.1
+    "@trpc/server": ^10.27.1
+    "@types/luxon": ^3.3.0
+    "@types/node": ^20.2.5
+    "@types/react": ^18.2.6
+    "@types/react-dom": ^18.2.4
+    "@typescript-eslint/eslint-plugin": ^5.59.2
+    "@typescript-eslint/parser": ^5.59.2
+    "@vitejs/plugin-react": ^3.1.0
+    electron: 25.0.1
+    electron-builder: 24.4.0
+    electron-store: ^8.1.0
+    electron-vite: ^1.0.21
+    eslint: ^8.40.0
+    eslint-config-prettier: ^8.8.0
+    eslint-plugin-prettier: ^4.2.1
+    eslint-plugin-react: 7.32.2
+    framer-motion: ^10.12.16
+    luxon: ^3.3.0
+    qr-scanner: ^1.4.2
+    react: 18.2.0
+    react-dom: 18.2.0
+    react-router-dom: ^6.9.0
+    serialport: 10.5.0
+    superjson: 1.9.1
+    typescript: ^5.0.4
+    usb: ^2.9.0
+    vite: ^4.2.1
+  languageName: unknown
+  linkType: soft
 
 "sora-root@workspace:.":
   version: 0.0.0-use.local
