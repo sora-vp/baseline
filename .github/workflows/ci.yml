@@ -28,6 +28,4 @@ jobs:
         run: yarn lint
 
       - name: Test Typing
-        run: |
-          yarn generate
-          yarn typecheck
+        run: yarn type-check

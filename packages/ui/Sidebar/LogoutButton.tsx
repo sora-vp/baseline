@@ -1,20 +1,20 @@
-import { useState, useRef } from "react";
+import { useRef, useState } from "react";
+import Router from "next/router";
 import {
-  useDisclosure,
-  useToast,
-  Flex,
-  Icon,
-  Button,
   AlertDialog,
   AlertDialogBody,
+  AlertDialogContent,
   AlertDialogFooter,
   AlertDialogHeader,
-  AlertDialogContent,
   AlertDialogOverlay,
+  Button,
+  Flex,
+  Icon,
+  useDisclosure,
+  useToast,
 } from "@chakra-ui/react";
-import Router from "next/router";
-import { BsDoorOpen } from "react-icons/bs";
 import { signOut } from "next-auth/react";
+import { BsDoorOpen } from "react-icons/bs";
 
 const LogoutButton = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();

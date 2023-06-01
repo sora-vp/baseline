@@ -13,8 +13,7 @@ services:
     ports:
       - "3000:3000"
     volumes:
-      - sora_data:/app/apps/sora/public/uploads
-      - sora_data:/app/settings.bin
+      - sora_data:/app/apps/web/public/uploads
     depends_on:
       - rabbitmq
       - mariadb

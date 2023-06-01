@@ -1,4 +1,4 @@
-import { useColorMode, Flex, Button, Icon } from "@chakra-ui/react";
+import { Button, Flex, Icon, useColorMode } from "@chakra-ui/react";
 import { BsMoonFill, BsSun } from "react-icons/bs";
 
 const ModeToggler = () => {

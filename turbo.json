@@ -1,32 +1,54 @@
 {
-  "$schema": "https://turbo.build/schema.json",
+  "$schema": "https://turborepo.org/schema.json",
+  "globalDependencies": ["**/.env"],
   "pipeline": {
-    "build": {
-      "dependsOn": ["^build"],
-      "outputs": [".next/**", "dist/**", "!.next/cache/**"]
-    },
-    "lint": {
-      "outputs": []
-    },
-    "typecheck": {
-      "outputs": []
-    },
-    "dev": {
+    "db:generate": {
+      "inputs": ["prisma/schema.prisma"],
       "cache": false
     },
+    "db:push": {
+      "inputs": ["prisma/schema.prisma"],
+      "cache": false
+    },
+    "dev": {
+      "persistent": true,
+      "cache": false
+    },
+    "build": {
+      "dependsOn": ["^build", "^db:generate"],
+      "outputs": [".next/**", "dist/**"]
+    },
     "build-win": {
-      "dependsOn": ["build"],
+      "dependsOn": ["^db:generate"],
       "outputs": ["dist/**", "out/**"]
     },
     "build-linux": {
-      "dependsOn": ["build"],
+      "dependsOn": ["^db:generate"],
       "outputs": ["dist/**", "out/**"]
     },
-    "db:migrate:deploy": {},
-    "db:push": {},
-    "db:seed": {},
-    "generate": {
-      "dependsOn": ["^generate"]
+    "lint": {},
+    "lint:fix": {},
+    "clean": {
+      "cache": false
+    },
+    "//#clean": {
+      "cache": false
+    },
+    "type-check": {
+      "dependsOn": ["^db:generate"],
+      "cache": false
     }
-  }
+  },
+  "globalEnv": [
+    "CI",
+    "AMQP_URL",
+    "TRPC_URL",
+    "DATABASE_URL",
+    "NEXTAUTH_SECRET",
+    "NEXTAUTH_URL",
+    "NODE_ENV",
+    "SKIP_ENV_VALIDATION",
+    "VERCEL",
+    "VERCEL_URL"
+  ]
 }
