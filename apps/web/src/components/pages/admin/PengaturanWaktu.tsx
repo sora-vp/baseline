@@ -53,12 +53,8 @@ const PengaturanWaktu = () => {
     onSuccess(result) {
       if (result.startTime && result.endTime)
         reset({
-          startTime: DateTime.fromJSDate(result.startTime)
-            .toLocal()
-            .toJSDate(),
-          endTime: DateTime.fromJSDate(result.endTime)
-            .toLocal()
-            .toJSDate(),
+          startTime: DateTime.fromJSDate(result.startTime).toLocal().toJSDate(),
+          endTime: DateTime.fromJSDate(result.endTime).toLocal().toJSDate(),
         });
     },
   });
@@ -72,7 +68,7 @@ const PengaturanWaktu = () => {
         isClosable: true,
       });
 
-      settingsQuery.refetch()
+      settingsQuery.refetch();
     },
 
     onError(result) {

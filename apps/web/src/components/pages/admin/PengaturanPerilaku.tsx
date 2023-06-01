@@ -46,7 +46,7 @@ const PengaturanPerilaku = () => {
         isClosable: true,
       });
 
-      settingsQuery.refetch()
+      settingsQuery.refetch();
     },
 
     onError(result) {

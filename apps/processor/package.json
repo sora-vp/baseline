@@ -32,7 +32,7 @@
     "@trpc/client": "^10.27.1",
     "@trpc/server": "^10.27.1",
     "amqplib": "^0.10.3",
-    "dotenv": "^16.0.3",
+    "dotenv": "^16.1.3",
     "luxon": "^3.3.0",
     "pino": "^8.11.0",
     "pino-pretty": "^10.0.0",
