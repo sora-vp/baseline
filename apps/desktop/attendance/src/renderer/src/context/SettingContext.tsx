@@ -47,16 +47,10 @@ export const SettingProvider = ({
 
     onSuccess(result) {
       const waktuMulai = result.startTime
-        ? DateTime.fromJSDate(result.startTime)
-          .toLocal()
-          .toJSDate()
-          .getTime()
+        ? DateTime.fromJSDate(result.startTime).toLocal().toJSDate().getTime()
         : null;
       const waktuSelesai = result.endTime
-        ? DateTime.fromJSDate(result.endTime)
-          .toLocal()
-          .toJSDate()
-          .getTime()
+        ? DateTime.fromJSDate(result.endTime).toLocal().toJSDate().getTime()
         : null;
 
       const currentTime = new Date().getTime();
