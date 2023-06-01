@@ -9,13 +9,15 @@ const root = path.join(__dirname);
 
 const nodeModulesDir = path.join(root, "node_modules");
 const appsDir = path.join(root, "apps");
+const packagesDir = path.join(root, "packages");
 
 module.exports = {
   apps: [
     {
       name: "web",
-      script: path.join(appsDir, "web/.next/standalone/apps/web/server.js"),
+      script: path.join(nodeModulesDir, "next/dist/bin/next"),
       cwd: path.join(appsDir, "web"),
+      args: "start -p 3000",
       env: {
         NODE_ENV: "production",
         ...actualEnv,
@@ -24,7 +26,7 @@ module.exports = {
     {
       name: "processor",
       script: path.join(appsDir, "processor/dist/index.js"),
-      cwd: path.join(appsDir, "processor"),
+      cwd: path.join(packagesDir, "db"),
       env: {
         NODE_ENV: "production",
         ...actualEnv,
