@@ -1,13 +1,12 @@
 import {
   createContext,
+  useCallback,
   useContext,
+  useEffect,
   useMemo,
   useState,
-  useEffect,
-  useCallback,
 } from "react";
 import { useToast } from "@chakra-ui/react";
-
 import Setting from "@renderer/routes/Setting";
 
 interface IAppSetting {
@@ -32,7 +31,7 @@ export const AppSettingProvider = ({
 
       await window.electron.ipcRenderer.invoke(
         "set-server-url",
-        serverURL.origin
+        serverURL.origin,
       );
 
       toast({
@@ -60,7 +59,7 @@ export const AppSettingProvider = ({
   useEffect(() => {
     const composeAsync = async () => {
       const storeValue = await window.electron.ipcRenderer.invoke(
-        "get-server-url"
+        "get-server-url",
       );
 
       setServerUrlState(storeValue);

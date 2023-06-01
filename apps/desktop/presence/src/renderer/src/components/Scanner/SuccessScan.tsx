@@ -1,6 +1,5 @@
 import { useEffect } from "react";
 import { Box, HStack, Heading } from "@chakra-ui/react";
-
 import { trpc } from "@renderer/utils/trpc";
 
 const SuccessScan = ({

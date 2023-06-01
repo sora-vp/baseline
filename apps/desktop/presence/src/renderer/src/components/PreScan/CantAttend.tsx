@@ -1,4 +1,4 @@
-import { Box, Text, HStack, Heading } from "@chakra-ui/react";
+import { Box, HStack, Heading, Text } from "@chakra-ui/react";
 
 const CantAttend: React.FC = () => (
   <HStack h={"100vh"} justifyContent="center">

@@ -1,8 +1,7 @@
-import { createContext, useContext, useState, useMemo } from "react";
+import { createContext, useContext, useMemo, useState } from "react";
 import { useToast } from "@chakra-ui/react";
-import { DateTime } from "luxon";
-
 import { trpc } from "@renderer/utils/trpc";
+import { DateTime } from "luxon";
 
 interface ISettingContext {
   canAttend: boolean;
@@ -11,7 +10,7 @@ interface ISettingContext {
 }
 
 export const SettingContext = createContext<ISettingContext>(
-  {} as ISettingContext
+  {} as ISettingContext,
 );
 
 export const SettingProvider = ({
@@ -29,24 +28,18 @@ export const SettingProvider = ({
 
     onSuccess(result) {
       const waktuMulai = result.startTime
-        ? DateTime.fromJSDate(result.startTime)
-          .toLocal()
-          .toJSDate()
-          .getTime()
+        ? DateTime.fromJSDate(result.startTime).toLocal().toJSDate().getTime()
         : null;
       const waktuSelesai = result.endTime
-        ? DateTime.fromJSDate(result.endTime)
-          .toLocal()
-          .toJSDate()
-          .getTime()
+        ? DateTime.fromJSDate(result.endTime).toLocal().toJSDate().getTime()
         : null;
 
       const currentTime = new Date().getTime();
 
       setCanAttend(
         (waktuMulai as number) <= currentTime &&
-        (waktuSelesai as number) >= currentTime &&
-        result.canAttend
+          (waktuSelesai as number) >= currentTime &&
+          result.canAttend,
       );
     },
 
@@ -66,7 +59,7 @@ export const SettingProvider = ({
       isError: settingsQuery.isError,
       isLoading: settingsQuery.isLoading,
     }),
-    [canAttend, settingsQuery.isError, settingsQuery.isLoading]
+    [canAttend, settingsQuery.isError, settingsQuery.isLoading],
   );
 
   return (

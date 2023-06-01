@@ -1,11 +1,10 @@
-import QrScanner from "qr-scanner";
-import { validateId } from "@sora/id-generator";
-import { useRef, useEffect } from "react";
-
-import { useToast, Box, Text, HStack } from "@chakra-ui/react";
+import { useEffect, useRef } from "react";
+import { Box, HStack, Text, useToast } from "@chakra-ui/react";
 import styles from "@renderer/styles/components/Scanner.module.css";
-
 import { trpc } from "@renderer/utils/trpc";
+import QrScanner from "qr-scanner";
+
+import { validateId } from "@sora/id-generator";
 
 const NormalScanner = ({
   setInvalidQr,
@@ -48,7 +47,7 @@ const NormalScanner = ({
               position: "top-right",
             });
         },
-      }
+      },
     );
 
     qrScanner.start();

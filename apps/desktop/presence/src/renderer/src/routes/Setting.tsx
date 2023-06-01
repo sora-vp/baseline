@@ -1,13 +1,13 @@
-import { useState, useCallback, useEffect } from "react";
+import { useCallback, useEffect, useState } from "react";
 import {
   Box,
   Button,
+  FormControl,
+  FormErrorMessage,
+  FormHelperText,
+  FormLabel,
   HStack,
   Heading,
-  FormControl,
-  FormLabel,
-  FormHelperText,
-  FormErrorMessage,
   Input,
   useToast,
 } from "@chakra-ui/react";
@@ -23,7 +23,7 @@ const Setting = () => {
 
       await window.electron.ipcRenderer.invoke(
         "set-server-url",
-        serverURL.origin
+        serverURL.origin,
       );
 
       toast({
@@ -52,7 +52,7 @@ const Setting = () => {
   useEffect(() => {
     const composeAsync = async () => {
       const storeValue = await window.electron.ipcRenderer.invoke(
-        "get-server-url"
+        "get-server-url",
       );
 
       setFormURL(storeValue);

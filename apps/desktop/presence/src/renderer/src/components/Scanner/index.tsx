@@ -1,12 +1,10 @@
-import { useState, useCallback } from "react";
-
-import ScanningError from "./ScanningError";
-import NormalScanner from "./NormalScanner";
-
-import SuccessScan from "./SuccessScan";
-import Loading from "../Loading";
-
+import { useCallback, useState } from "react";
 import { trpc } from "@renderer/utils/trpc";
+
+import Loading from "../Loading";
+import NormalScanner from "./NormalScanner";
+import ScanningError from "./ScanningError";
+import SuccessScan from "./SuccessScan";
 
 const Scanner: React.FC = () => {
   const [isQrInvalid, setInvalidQr] = useState<boolean>(false);
@@ -15,7 +13,7 @@ const Scanner: React.FC = () => {
 
   const setIsQrValid = useCallback(
     (invalid: boolean) => setInvalidQr(invalid),
-    []
+    [],
   );
 
   if (participantAttend.isLoading)

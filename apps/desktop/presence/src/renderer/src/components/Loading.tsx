@@ -1,7 +1,7 @@
-import wiseWord from "@sora/petuah/petuah.json";
-
-import { Box, Heading, Text, HStack, Spinner, Flex } from "@chakra-ui/react";
 import { useMemo } from "react";
+import { Box, Flex, HStack, Heading, Spinner, Text } from "@chakra-ui/react";
+
+import wiseWord from "@sora/petuah/petuah.json";
 
 const Loading = ({ headingText }: { headingText: string }) => {
   const masterOogway = useMemo(() => {

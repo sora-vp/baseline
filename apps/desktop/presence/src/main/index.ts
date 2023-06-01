@@ -1,10 +1,16 @@
-import { app, shell, BrowserWindow, ipcMain, Menu } from "electron";
 import { join } from "path";
+import { electronApp, is, optimizer } from "@electron-toolkit/utils";
+import {
+  BrowserWindow,
+  Menu,
+  app,
+  ipcMain,
+  shell,
+  type MenuItemConstructorOptions,
+} from "electron";
 import Store from "electron-store";
-import { electronApp, optimizer, is } from "@electron-toolkit/utils";
-import icon from "../../resources/icon.png?asset";
 
-import type { MenuItemConstructorOptions } from "electron";
+import icon from "../../resources/icon.png?asset";
 
 const store = new Store<{
   serverURL?: string;

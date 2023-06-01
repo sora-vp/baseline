@@ -1,16 +1,14 @@
-import { useState, useEffect } from "react";
-
-import superjson from "superjson";
-import { httpBatchLink } from "@trpc/client";
-import { createHashRouter, RouterProvider } from "react-router-dom";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-
-import { trpc } from "@renderer/utils/trpc";
-import { SettingProvider } from "@renderer/context/SettingContext";
+import { useEffect, useState } from "react";
 import {
-  useAppSetting,
   ensureHasAppSetting,
+  useAppSetting,
 } from "@renderer/context/AppSetting";
+import { SettingProvider } from "@renderer/context/SettingContext";
+import { trpc } from "@renderer/utils/trpc";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { httpBatchLink } from "@trpc/client";
+import { RouterProvider, createHashRouter } from "react-router-dom";
+import superjson from "superjson";
 
 import Main from "./routes/Main";
 import Setting from "./routes/Setting";
@@ -38,7 +36,7 @@ const App: React.FC = () => {
           url: `${serverURL as string}/api/trpc`,
         }),
       ],
-    })
+    }),
   );
 
   useEffect(() => {

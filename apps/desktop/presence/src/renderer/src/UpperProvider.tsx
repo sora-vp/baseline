@@ -1,4 +1,7 @@
 import { ChakraProvider, extendTheme } from "@chakra-ui/react";
+import { AppSettingProvider } from "@renderer/context/AppSetting";
+
+import App from "./App";
 
 const theme = extendTheme({
   fonts: {
@@ -6,10 +9,6 @@ const theme = extendTheme({
     body: `'Lato', sans-serif`,
   },
 });
-
-import { AppSettingProvider } from "@renderer/context/AppSetting";
-
-import App from "./App";
 
 const UpperProvider = () => (
   <ChakraProvider theme={theme}>
