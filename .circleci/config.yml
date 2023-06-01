@@ -143,7 +143,7 @@ jobs:
           name: "Publish Release on GitHub"
           command: |
             go install github.com/tcnksm/ghr@latest
-            ghr -t ${GITHUB_TOKEN} -u ${CIRCLE_PROJECT_USERNAME} -r ${CIRCLE_PROJECT_REPONAME} -draft -c ${CIRCLE_SHA1} ${CIRCLE_TAG} dist/ -body "Note: Note: karena belum ada code signing yang tersedia, maka pada saat instalasi dimohon untuk mematikan antivirus yang ada." -n "Release aplikasi desktop versi $(CIRCLE_TAG)"
+            ghr -body "Note: Note: karena belum ada code signing yang tersedia, maka pada saat instalasi dimohon untuk mematikan antivirus yang ada." -n "Release aplikasi desktop versi $(CIRCLE_TAG)" -t ${GITHUB_TOKEN} -u ${CIRCLE_PROJECT_USERNAME} -r ${CIRCLE_PROJECT_REPONAME} -draft -c ${CIRCLE_SHA1} ${CIRCLE_TAG} dist/
 
 workflows:
   all-builds:
