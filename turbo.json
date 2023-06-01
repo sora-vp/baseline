@@ -18,6 +18,14 @@
       "dependsOn": ["^build", "^db:generate"],
       "outputs": [".next/**", "dist/**"]
     },
+    "build-win": {
+      "dependsOn": ["^db:generate"],
+      "outputs": ["dist/**", "out/**"]
+    },
+    "build-linux": {
+      "dependsOn": ["^db:generate"],
+      "outputs": ["dist/**", "out/**"]
+    },
     "lint": {},
     "lint:fix": {},
     "clean": {

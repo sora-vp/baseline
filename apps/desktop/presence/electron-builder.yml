@@ -14,11 +14,11 @@ asarUnpack:
 afterSign: build/notarize.js
 win:
   executableName: sora-absensi-desktop
-nsis:
-  artifactName: ${name}-${version}-win-setup.${ext}
-  shortcutName: ${productName}
-  uninstallDisplayName: ${productName}
-  createDesktopShortcut: always
+# nsis:
+#   artifactName: ${name}-${version}-win-setup.${ext}
+#   shortcutName: ${productName}
+#   uninstallDisplayName: ${productName}
+#   createDesktopShortcut: always
 mac:
   entitlementsInherit: build/entitlements.mac.plist
   extendInfo:
@@ -36,7 +36,7 @@ linux:
   category: Utility
 appImage:
   artifactName: ${name}-${version}-linux.${ext}
-npmRebuild: false
+npmRebuild: true
 publish:
   provider: generic
   url: https://example.com/auto-updates
