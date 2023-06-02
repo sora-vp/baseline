@@ -1,6 +1,6 @@
 import { TRPCError } from "@trpc/server";
 
-import { prisma } from "@sora/db";
+import { prisma, type Participant } from "@sora/db";
 import { nanoid } from "@sora/id-generator";
 import {
   DeletePesertaValidationSchema,
@@ -214,28 +214,31 @@ export const participantRouter = createTRPCRouter({
           message: "Belum diperbolehkan untuk melakukan absensi!",
         });
 
-      const participant = await prisma.participant.findUnique({
-        where: { qrId: input },
-      });
+      await prisma.$transaction(async (tx) => {
+        const _participant = await tx.$queryRaw<
+          Participant[]
+        >`SELECT * FROM participant WHERE qrId = ${input} FOR UPDATE`;
+        const participant = _participant[0];
 
-      if (!participant)
-        throw new TRPCError({
-          code: "NOT_FOUND",
-          message: "Peserta pemilihan tidak dapat ditemukan!",
+        if (!participant)
+          throw new TRPCError({
+            code: "NOT_FOUND",
+            message: "Peserta pemilihan tidak dapat ditemukan!",
+          });
+
+        if (participant.alreadyAttended)
+          throw new TRPCError({
+            code: "BAD_REQUEST",
+            message: "Kamu sudah absen!",
+          });
+
+        await tx.participant.update({
+          where: { qrId: input },
+          data: {
+            alreadyAttended: true,
+            attendedAt: new Date(),
+          },
         });
-
-      if (participant.alreadyAttended)
-        throw new TRPCError({
-          code: "BAD_REQUEST",
-          message: "Kamu sudah absen!",
-        });
-
-      await prisma.participant.update({
-        where: { qrId: input },
-        data: {
-          alreadyAttended: true,
-          attendedAt: new Date(),
-        },
       });
 
       return { message: "Berhasil melakukan absensi!" };
