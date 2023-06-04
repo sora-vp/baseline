@@ -68,7 +68,7 @@ test.describe("Check login page form validation", () => {
     await expect(page).toHaveURL("/login");
   };
 
-  test("All input box should throw an error", async ({ page }) => {
+  test("All input box should complain", async ({ page }) => {
     await goToLogin(page);
 
     await page.getByRole("button", { name: "Login" }).click();
@@ -136,13 +136,32 @@ test.describe("Check registration page form validation", () => {
     await expect(page).toHaveURL("/register");
   };
 
+  test("All input box should complain", async ({ page }) => {
+    await goToRegistration(page);
+
+    await page.getByRole("button", { name: "Register" }).click();
+
+    await expect(
+      page.locator("div.chakra-form__error-message").first(),
+    ).toHaveText("Bidang email harus di isi!");
+    await expect(
+      page.locator("div.chakra-form__error-message").nth(1),
+    ).toHaveText("Bidang nama harus di isi!");
+    await expect(
+      page.locator("div.chakra-form__error-message").nth(2),
+    ).toHaveText("Kata sandi harus di isi!");
+    await expect(
+      page.locator("div.chakra-form__error-message").nth(3),
+    ).toHaveText("Konfirmasi kata sandi diperlukan setidaknya 6 karakter!");
+  });
+
   for (const input of invalidEmailInputs) {
     test(`Email input isn't a valid email, input: ${input}`, async ({
       page,
     }) => {
       await goToRegistration(page);
 
-      await page.locator('input[type="email"]').type(input);
+      await page.locator('input[type="text"]').first().type(input);
 
       await page.getByRole("button", { name: "Register" }).click();
 
@@ -151,4 +170,20 @@ test.describe("Check registration page form validation", () => {
       ).toHaveText("Bidang email harus berupa email yang valid!");
     });
   }
+
+  test("All input box wouldn't complain", async ({ page }) => {
+    await goToRegistration(page);
+
+    await page.locator('input[type="text"]').first().type("test123@mail.com");
+    await page.locator('input[type="text"]').nth(1).type("User Test");
+
+    await page.locator('input[type="password"]').first().type("123456");
+    await page.locator('input[type="password"]').nth(1).type("123456");
+
+    await page.getByRole("button", { name: "Register" }).click();
+
+    await expect(
+      page.getByRole("button", { name: "Register" }),
+    ).toHaveAttribute("disabled", "");
+  });
 });
