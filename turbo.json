@@ -1,6 +1,6 @@
 {
   "$schema": "https://turborepo.org/schema.json",
-  "globalDependencies": ["**/.env"],
+  "globalDependencies": ["**/.env", "**/.env.test"],
   "pipeline": {
     "db:generate": {
       "inputs": ["prisma/schema.prisma"],
@@ -25,6 +25,17 @@
     "build-linux": {
       "dependsOn": ["^db:generate"],
       "outputs": ["dist/**", "out/**"]
+    },
+    "e2e": {
+      "dependsOn": ["^build"],
+      "cache": false
+    },
+    "e2e:ui": {
+      "dependsOn": ["^build"],
+      "cache": false
+    },
+    "e2e:report": {
+      "cache": false
     },
     "lint": {},
     "lint:fix": {},

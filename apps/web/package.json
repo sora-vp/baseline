@@ -3,8 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "e2e": "playwright test",
-    "e2e:ui": "playwright test --ui",
+    "e2e": "yarn with-env-test playwright test",
+    "e2e:ui": "yarn with-env-test playwright test --ui",
+    "e2e:report": "playwright show-report",
     "build": "yarn with-env next build",
     "clean": "git clean -xdf .next .turbo node_modules",
     "dev": "yarn with-env next dev",
@@ -12,7 +13,8 @@
     "lint:fix": "pnpm lint --fix",
     "start": "yarn with-env next start",
     "type-check": "tsc --noEmit",
-    "with-env": "dotenv -e ../../.env --"
+    "with-env": "dotenv -e ../../.env --",
+    "with-env-test": "dotenv -e ../../.env --"
   },
   "dependencies": {
     "@chakra-ui/react": "^2.6.1",
