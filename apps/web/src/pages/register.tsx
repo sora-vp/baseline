@@ -148,7 +148,7 @@ const Register: NextPage = () => {
             >
               <FormLabel htmlFor="email">Email</FormLabel>
               <Input
-                type="email"
+                type="text"
                 placeholder="Masukan email"
                 disabled={registerUser.isLoading}
                 {...register("email")}
