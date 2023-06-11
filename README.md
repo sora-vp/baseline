@@ -19,7 +19,7 @@ Secara ringkas, berikut ini perbedaan dengan versi yang pertama.
 
 - Repositori ini menggunakan sistem monorepo walaupun ada project yang berbeda repositori.
 - Terdapat sistem absensi [kode QR](https://id.wikipedia.org/wiki/Kode_QR) yang menggantikan tanda tangan, tetapi masih bersifat anonim untuk menjaga asas [LUBER JURDIL](https://id.wikipedia.org/wiki/Pemilihan_umum_di_Indonesia).
-- Terdapat consumer RabbitMQ yang dapat mencegah data ganda yang bernama [`processor`](./apps/processor/).
+- Menerapkan RPC RabbitMQ untuk mencegah kehilangan status pada saat pemadaman listrik juga pengaman voting yang bernama [`processor`](./apps/processor/).
 - Memisahkan bagian server dengan pemilih maupun kehadiran dengan aplikasi desktop.
 
 Beberapa repositori yang dimaksud mencakup repositori dibawah ini.
@@ -31,7 +31,7 @@ Beberapa repositori yang dimaksud mencakup repositori dibawah ini.
 
 1. Dashboard admin yang memiliki sistem login untuk mengelola berjalannya pemilihan.
 2. Terdapat pengelola kandidat, peserta pemilihan, pengaturan kapan dan berhenti pemilihan, sudah bisa memilih atau absen, juga statistik pemilihan.
-3. Fitur upload csv dan pembuat pdf juga export json untuk [sora-qrcode-web](https://github.com/reacto11mecha/sora-qrcode-web).
+3. Fitur upload csv untuk input data peserta yang valid, pembuat pdf, juga export json untuk [sora-qrcode-web](https://github.com/reacto11mecha/sora-qrcode-web).
 4. Peserta pemilihan harus menggunakan QR Code untuk menggunakan hak suara mereka, QR tersebut didapat dari panitia yang mengirimkan PDF yang berisikan list peserta.
 5. Peserta yang ingin memilih terlebih dahulu absen masuk, setelah itu dia bisa memilih.
 6. Aplikasi desktop untuk pemilih bisa menerima sinyal keyboard angka 1-5, Esc, dan Enter untuk memilih. Selain itu juga bisa menerima input dari custom keyboard buatan sendiri menggunakan [sora-button-module](https://github.com/reacto11mecha/sora-button-module).
@@ -190,7 +190,7 @@ Jika berhasil, kurang lebih akan terlihat seperti ini.
 
 ### Instalasi kedua aplikasi desktop (pemilih dan absensi)
 
-Silahkan pergi ke bagian [releases](https://github.com/reacto11mecha/sora/releases) dan pilih aplikasi desktop yang sesuai. Untuk absensi di awali dengan `absensi-desktop-` sedangkan `sora-desktop-` menandakan bahwa aplikasi tersebut adalah aplikasi pemilihan. Tersedia untuk os windows dan linux 64 bit.
+Silahkan pergi ke bagian [releases](https://github.com/reacto11mecha/sora/releases) dan pilih aplikasi desktop yang sesuai. Untuk absensi di awali dengan `absensi-desktop-` atau `sora-attendance`. Sedangkan `sora-chooser` atau `sora-desktop` menandakan bahwa aplikasi tersebut adalah aplikasi pemilihan. Tersedia untuk os windows dan linux 64 bit.
 
 > Karena belum ada codesigning, maka antivirus membaca aplikasi ini mengandung virus. Matikan antivirus jika ingin menggunakan aplikasi ini.
 
