@@ -1,5 +1,7 @@
 import { expect, test, type Page } from "@playwright/test";
 
+import { prisma } from "@sora/db";
+
 test.describe("There will be a redirection", () => {
   const PROTECTED_PAGE = [
     "/",
@@ -171,7 +173,14 @@ test.describe("Check registration page form validation", () => {
     });
   }
 
-  test("All input box wouldn't complain", async ({ page }) => {
+  test("All input box wouldn't complain and test registration ability", async ({
+    page,
+  }) => {
+    await prisma.$connect();
+
+    // Delete all users before inserting new one
+    await prisma.user.deleteMany();
+
     await goToRegistration(page);
 
     await page.locator('input[type="text"]').first().type("test123@mail.com");
@@ -185,5 +194,22 @@ test.describe("Check registration page form validation", () => {
     await expect(
       page.getByRole("button", { name: "Register" }),
     ).toHaveAttribute("disabled", "");
+
+    const heading = page.locator("h2");
+
+    await heading.waitFor();
+
+    await expect(page.locator("h2")).toContainText("Login Administrator");
+
+    expect(page.url().includes("/login")).toBe(true);
+
+    const user = await prisma.user.findUnique({
+      where: {
+        email: "test123@mail.com",
+      },
+    });
+
+    expect(user).not.toBeNull();
+    await prisma.$disconnect();
   });
 });

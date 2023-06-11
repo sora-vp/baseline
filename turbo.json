@@ -30,6 +30,10 @@
       "dependsOn": ["^build"],
       "cache": false
     },
+    "e2e:db-push": {
+      "inputs": ["prisma/schema.prisma"],
+      "cache": false
+    },
     "e2e:ui": {
       "dependsOn": ["^build"],
       "cache": false

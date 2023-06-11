@@ -14,7 +14,7 @@
     "start": "yarn with-env next start",
     "type-check": "tsc --noEmit",
     "with-env": "dotenv -e ../../.env --",
-    "with-env-test": "dotenv -e ../../.env --"
+    "with-env-test": "dotenv -e ../../.env.test --"
   },
   "dependencies": {
     "@chakra-ui/react": "^2.6.1",
