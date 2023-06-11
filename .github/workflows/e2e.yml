@@ -50,7 +50,7 @@ jobs:
         run: yarn turbo run build --filter=@sora/web 
 
       - name: Install playwright browser
-        run: npx playwright install
+        run: npx playwright install --with-deps
 
       - name: Run E2E
         run: yarn e2e
