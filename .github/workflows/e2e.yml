@@ -1,0 +1,34 @@
+name: End to End testing for web
+on: [pull_request, push]
+
+env:
+  SKIP_ENV_VALIDATION: true
+
+jobs:
+  e2e:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Install Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
+      - name: Install all dependencies
+        uses: ./.github/actions/yarn-nm-install
+
+      - name: Is docker available
+        run: |
+          docker version
+          docker run --rm hello-world
+      # - name: Test Prettier
+      #   run: yarn format:check
+      #
+      # - name: Test Code Linting
+      #   run: yarn lint
+      #
+      # - name: Test Typing
+      #   run: yarn type-check
