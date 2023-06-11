@@ -25,6 +25,11 @@ test.beforeAll(async ({ browser }) => {
   await page.waitForURL("/");
   await expect(page).toHaveURL("/");
 
+  await page.locator('[id="__next"]').getByText("Dashboard Admin").waitFor();
+  await expect(
+    page.locator('[id="__next"]').getByText("Dashboard Admin"),
+  ).toBeVisible();
+
   await page.getByRole("link").filter({ hasText: "Kandidat" }).click();
 
   await page.waitForURL("/kandidat");
@@ -42,4 +47,13 @@ test.afterAll(async () => {
   await page.close();
 });
 
-test("Create new candidate", async () => {});
+test("Create new candidate", async () => {
+  await page
+    .getByRole("button", { name: "Tambah Kandidat Baru", disabled: false })
+    .waitFor();
+  await page
+    .getByRole("button", { name: "Tambah Kandidat Baru", disabled: false })
+    .click();
+
+  await page.waitForURL("/kandidat/tambah");
+});

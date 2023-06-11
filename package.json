@@ -34,7 +34,7 @@
     "dotenv": "^16.1.3",
     "eslint": "^8.40.0",
     "prettier": "^2.8.8",
-    "turbo": "^1.9.8",
+    "turbo": "latest",
     "typescript": "^5.0.4"
   },
   "packageManager": "yarn@3.5.0",
