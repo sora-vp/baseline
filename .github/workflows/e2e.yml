@@ -2,7 +2,10 @@ name: End to End testing for web
 on: [pull_request, push]
 
 env:
-  SKIP_ENV_VALIDATION: true
+  DATABASE_URL: "mysql://root:password@localhost:3306/sora-test-e2e"
+  NEXTAUTH_SECRET: "askdhsakjndkasudasludaksjd"
+  NEXTAUTH_URL: "http://localhost:3000"
+  AMQP_URL: "amqp://localhost"
 
 jobs:
   e2e:
@@ -20,15 +23,28 @@ jobs:
       - name: Install all dependencies
         uses: ./.github/actions/yarn-nm-install
 
-      - name: Is docker available
+      - name: Pull MariaDB image
+        run: docker pull mariadb
+
+      - name: Start MariaDB container
         run: |
-          docker version
-          docker run --rm hello-world
-      # - name: Test Prettier
-      #   run: yarn format:check
-      #
-      # - name: Test Code Linting
-      #   run: yarn lint
-      #
-      # - name: Test Typing
-      #   run: yarn type-check
+          docker run -d --name mariadb_container -p 3306:3306 -e MYSQL_ROOT_PASSWORD=password mariadb
+
+      - name: Wait for MariaDB port
+        run: |
+          until nc -z localhost 3306; do sleep 1; done
+
+      - name: Test Prettier
+        run: yarn format:check
+
+      - name: Test Code Linting
+        run: yarn lint
+
+      - name: Test Typing
+        run: yarn type-check
+
+      - name: Build web
+        run: yarn turbo run build --filter=@sora/web 
+
+      - name: Run E2E
+        run: yarn e2e
