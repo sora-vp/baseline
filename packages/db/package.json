@@ -9,14 +9,16 @@
     "db:generate": "yarn with-env prisma generate",
     "db:push": "yarn with-env prisma db push --skip-generate",
     "dev": "yarn with-env prisma studio --port 5556",
-    "with-env": "dotenv -e ../../.env --"
+    "e2e:db-push": "yarn with-env-test prisma db push --skip-generate",
+    "with-env": "dotenv -e ../../.env --",
+    "with-env-test": "dotenv -e ../../.env.test --"
   },
   "dependencies": {
-    "@prisma/client": "^4.14.1"
+    "@prisma/client": "^4.15.0"
   },
   "devDependencies": {
     "dotenv-cli": "^7.2.1",
-    "prisma": "^4.14.1",
+    "prisma": "^4.15.0",
     "typescript": "^5.0.4"
   }
 }
