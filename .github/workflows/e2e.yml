@@ -34,6 +34,9 @@ jobs:
         run: |
           until nc -z localhost 3306; do sleep 1; done
 
+      - name: Seed database
+        run: yarn e2e:db-push
+
       - name: Test Prettier
         run: yarn format:check
 
