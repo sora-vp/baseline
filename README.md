@@ -198,4 +198,12 @@ Silahkan pergi ke bagian [releases](https://github.com/reacto11mecha/sora/releas
 
 ### Setup pertama kali aplikasi desktop
 
-TODO
+Untuk setup pertama kali, akan muncul menu pengaturan untuk mengatur alamat server berada. Setelah itu aplikasi akan jalan sebagai mana mestinya. Jika gagal terhubung, cek kembali apakah server sudah berjalan atau pengaturan firewall ada yang salah harus diperbaiki.
+
+### Setup dari sisi web
+
+Sebelum acara pemilihan berlangsung, harus ada yang di persiapkan sebelum pemilihan bisa dilaksanakan. Berikut ini hal-hal yang harus disiapkan.
+
+1. #### Upload data partisipan yang sah untuk memilih
+
+   Pada versi kedua ini butuh data partisipan yang sah supaya peserta dapat memilih kandidat yang mereka jagokan. Format file berupa csv yang bisa ditemukan di sini.
