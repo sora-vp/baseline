@@ -5,13 +5,20 @@ import { validateId } from "@sora/id-generator";
 const baseNameSchema = z
   .string()
   .min(1, { message: "Diperlukan nama peserta!" });
+const baseSubpartSchema = z
+  .string()
+  .min(1, { message: "Diperlukan bagian darimana peserta ini!" })
+  .regex(/^[a-zA-Z\-_]+$/, {
+    message: "Bagian dari peserta tidak sesuai format!",
+  });
 
 export const TambahPesertaValidationSchema = z.object({
   name: baseNameSchema,
+  subpart: baseSubpartSchema,
 });
 
 export const TambahPesertaManyValidationSchema = z.array(
-  z.object({ Nama: baseNameSchema }),
+  z.object({ Nama: baseNameSchema, "Bagian Dari": baseSubpartSchema }),
 );
 
 export const UploadPartisipanValidationSchema = z.object({
@@ -35,8 +42,8 @@ export const PaginatedParticipantValidationSchema = z.object({
   pageIndex: z.number().min(0),
 });
 
-export const ParticipantByCategoryValidationSchema = z.object({
-  category: z.string(),
+export const ParticipantBySubpartValidationSchema = z.object({
+  subpart: z.string(),
 });
 
 export const ParticipantAttendValidationSchema = z.string().refine(validateId);

@@ -6,7 +6,7 @@ import {
   DeletePesertaValidationSchema,
   PaginatedParticipantValidationSchema,
   ParticipantAttendValidationSchema,
-  ParticipantByCategoryValidationSchema,
+  ParticipantBySubpartValidationSchema,
   TambahPesertaManyValidationSchema,
   TambahPesertaValidationSchema,
   UpdateParticipantValidationSchema,
@@ -90,6 +90,7 @@ export const participantRouter = createTRPCRouter({
       await prisma.participant.create({
         data: {
           name: input.name,
+          subpart: input.subpart,
           qrId: nanoid(),
         },
       });
@@ -100,8 +101,9 @@ export const participantRouter = createTRPCRouter({
   insertManyParticipant: protectedProcedure
     .input(TambahPesertaManyValidationSchema)
     .mutation(async ({ input }) => {
-      const okToInsert = input.map(({ Nama }) => ({
-        name: Nama,
+      const okToInsert = input.map((data) => ({
+        name: data.Nama,
+        subpart: data["Bagian Dari"],
         qrId: nanoid(),
       }));
 
@@ -171,7 +173,7 @@ export const participantRouter = createTRPCRouter({
       return { message: "Berhasil menghapus peserta!" };
     }),
 
-  categories: protectedProcedure.query(async () => {
+  subparts: protectedProcedure.query(async () => {
     const participants = await prisma.participant.findMany();
 
     if (!participants)
@@ -180,23 +182,19 @@ export const participantRouter = createTRPCRouter({
         message: "Data peserta pemilihan masih kosong!",
       });
 
-    const categories = [
-      ...new Set(participants.map(({ name }) => name.split("|")[0])),
-    ].map((text) => text?.trim());
+    const subparts = [...new Set(participants.map(({ subpart }) => subpart))];
 
-    return { categories };
+    return { subparts };
   }),
 
-  getParticipantByCategory: protectedProcedure
-    .input(ParticipantByCategoryValidationSchema)
+  getParticipantBySubpart: protectedProcedure
+    .input(ParticipantBySubpartValidationSchema)
     .query(async ({ input }) => {
-      if (input.category === "") return { participants: [] };
+      if (input.subpart === "") return { participants: [] };
 
       const participants = await prisma.participant.findMany({
         where: {
-          name: {
-            startsWith: `${input.category} | `,
-          },
+          subpart: input.subpart,
         },
       });
 
