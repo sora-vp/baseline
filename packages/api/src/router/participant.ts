@@ -78,6 +78,7 @@ export const participantRouter = createTRPCRouter({
         },
         data: {
           name: input.name,
+          subpart: input.subpart,
         },
       });
 

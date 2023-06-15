@@ -65,6 +65,9 @@ const columns = [
   columnHelper.accessor((row) => row.name, {
     id: "Nama",
   }),
+  columnHelper.accessor((row) => row.subpart, {
+    id: "Bagian Dari",
+  }),
   columnHelper.accessor((row) => row.qrId, {
     id: "QR ID",
     cell: (info) => {

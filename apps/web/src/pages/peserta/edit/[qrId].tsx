@@ -79,6 +79,7 @@ const EditPesertaWithID = () => {
   const onSubmit = (data: FormValues) =>
     participantMutation.mutate({
       name: data.name,
+      subpart: data.subpart,
       qrId: router.query.qrId as string,
     });
 
@@ -121,6 +122,25 @@ const EditPesertaWithID = () => {
                   />
                   <FormErrorMessage>
                     {formState.errors?.name?.message}
+                  </FormErrorMessage>
+                </FormControl>
+
+                <FormControl
+                  isInvalid={formState.errors?.subpart as unknown as boolean}
+                >
+                  <FormLabel htmlFor="subpart">Peserta Bagian Dari</FormLabel>
+                  <Input
+                    mt={4}
+                    type="text"
+                    placeholder="Masukan Peserta Bagian Dari"
+                    isDisabled={
+                      specificParticipantQuery.isLoading ||
+                      participantMutation.isLoading
+                    }
+                    {...register("subpart")}
+                  />
+                  <FormErrorMessage>
+                    {formState.errors?.subpart?.message}
                   </FormErrorMessage>
                 </FormControl>
 

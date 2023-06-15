@@ -118,7 +118,7 @@ const PDFPage = () => {
               (participant, idx) => (
                 <Tr key={idx}>
                   <Td>{++idx}</Td>
-                  <Td>{participant.subpart}</Td>
+                  <Td>{participant.name}</Td>
                   <Td>
                     <Text as="pre">{participant.qrId}</Text>
                   </Td>
