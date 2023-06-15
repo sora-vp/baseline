@@ -47,7 +47,7 @@ jobs:
         run: yarn type-check
 
       - name: Build web
-        run: yarn turbo run build --filter=@sora/web 
+        run: yarn turbo run build --filter=@sora/web
 
       - name: Install playwright browser
         run: npx playwright install --with-deps

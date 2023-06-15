@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import Head from "next/head";
 import {
   Button,
@@ -26,24 +26,33 @@ import { api } from "~/utils/api";
 const PDFPage = () => {
   const { colorMode, toggleColorMode } = useColorMode();
 
-  const [categoryValue, setCategory] = useState<string>("");
+  const [subpartValue, setSubpart] = useState<string>("");
   const [mainWeb, setMainWeb] = useState<string>("");
 
-  const categoriesQuery = api.participant.categories.useQuery(undefined, {
+  const subpartsQuery = api.participant.subparts.useQuery(undefined, {
     refetchOnReconnect: false,
     refetchOnWindowFocus: false,
   });
 
-  const participantByCategoryQuery =
-    api.participant.getParticipantByCategory.useQuery(
+  const participantBySubpartQuery =
+    api.participant.getParticipantBySubpart.useQuery(
       {
-        category: categoryValue,
+        subpart: subpartValue,
       },
       {
         refetchOnReconnect: false,
         refetchOnWindowFocus: false,
       },
     );
+
+  const allParticipants = useMemo(
+    () =>
+      participantBySubpartQuery.data?.participants.map((participant) => ({
+        ...participant,
+        link: `${mainWeb}/qr/${participant.qrId}`,
+      })) ?? [],
+    [participantBySubpartQuery.data?.participants, mainWeb],
+  );
 
   return (
     <>
@@ -78,12 +87,12 @@ const PDFPage = () => {
           </Button>
           <Select
             placeholder="Pilih kategori peserta pemilihan"
-            value={categoryValue}
-            onChange={(e) => setCategory(e.target.value)}
+            value={subpartValue}
+            onChange={(e) => setSubpart(e.target.value)}
           >
-            {categoriesQuery.data?.categories.map((category) => (
-              <option key={category} value={category}>
-                {category}
+            {subpartsQuery.data?.subparts.map((subpart) => (
+              <option key={subpart} value={subpart}>
+                {subpart}
               </option>
             ))}
           </Select>
@@ -95,9 +104,7 @@ const PDFPage = () => {
           <Button
             w="12em"
             isDisabled={
-              categoriesQuery.isLoading ||
-              categoryValue === "" ||
-              mainWeb === ""
+              subpartsQuery.isLoading || subpartValue === "" || mainWeb === ""
             }
             colorScheme="orange"
             onClick={() => window.print()}
@@ -116,31 +123,20 @@ const PDFPage = () => {
             </Tr>
           </Thead>
           <Tbody>
-            {participantByCategoryQuery.data?.participants.map(
-              (participant, idx) => (
-                <Tr key={idx}>
-                  <Td>{++idx}</Td>
-                  <Td>
-                    {participant.name
-                      .replace(categoryValue, "")
-                      .replace("|", "")
-                      .trim()}
-                  </Td>
-                  <Td>
-                    <Text as="pre">{participant.qrId}</Text>
-                  </Td>
-                  <Td>
-                    <Link
-                      href={`${mainWeb}/qr/${participant.qrId}`}
-                      isExternal
-                      color="blue.500"
-                    >
-                      Klik Disini
-                    </Link>
-                  </Td>
-                </Tr>
-              ),
-            )}
+            {allParticipants.map((participant, idx) => (
+              <Tr key={idx}>
+                <Td>{++idx}</Td>
+                <Td>{participant.name}</Td>
+                <Td>
+                  <Text as="pre">{participant.qrId}</Text>
+                </Td>
+                <Td>
+                  <Link href={participant.link} isExternal color="blue.500">
+                    Klik Disini
+                  </Link>
+                </Td>
+              </Tr>
+            ))}
           </Tbody>
         </Table>
       </Flex>

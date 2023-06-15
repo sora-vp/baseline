@@ -99,6 +99,22 @@ const HalamanTambah = () => {
                   </FormErrorMessage>
                 </FormControl>
 
+                <FormControl
+                  isInvalid={formState.errors?.subpart as unknown as boolean}
+                  mt={4}
+                >
+                  <FormLabel htmlFor="name">Peserta Bagian Dari</FormLabel>
+                  <Input
+                    type="text"
+                    placeholder="Masukan Peserta Bagian Dari"
+                    isDisabled={participantMutation.isLoading}
+                    {...register("subpart")}
+                  />
+                  <FormErrorMessage>
+                    {formState.errors?.subpart?.message}
+                  </FormErrorMessage>
+                </FormControl>
+
                 <Button
                   width="full"
                   mt={4}

@@ -16,7 +16,7 @@
     "dev:processor": "turbo run dev --scope=@sora/processor",
     "build-desktop:win": "turbo run build-win --filter 'sora-*-desktop'",
     "build-desktop:linux": "turbo run build-linux --filter 'sora-*-desktop'",
-    "format": "prettier --write \"**/*.{js,cjs,mjs,ts,tsx,md,json}\" --ignore-path .gitignore",
+    "format": "prettier --write \"**/*.{js,cjs,mjs,ts,tsx,md,json,yml}\" --ignore-path .gitignore",
     "format:check": "prettier --check \"**/*.{ts,tsx,js,jsx,css,md}\" --ignore-path .gitignore",
     "lint": "turbo lint && manypkg check",
     "lint:fix": "turbo lint:fix && manypkg fix",
