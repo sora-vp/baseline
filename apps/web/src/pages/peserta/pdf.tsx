@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import Head from "next/head";
 import {
   Button,
@@ -44,6 +44,15 @@ const PDFPage = () => {
         refetchOnWindowFocus: false,
       },
     );
+
+  const allParticipants = useMemo(
+    () =>
+      participantBySubpartQuery.data?.participants.map((participant) => ({
+        ...participant,
+        link: `${mainWeb}/qr/${participant.qrId}`,
+      })) ?? [],
+    [participantBySubpartQuery.data?.participant, mainWeb],
+  );
 
   return (
     <>
@@ -114,26 +123,20 @@ const PDFPage = () => {
             </Tr>
           </Thead>
           <Tbody>
-            {participantBySubpartQuery.data?.participants.map(
-              (participant, idx) => (
-                <Tr key={idx}>
-                  <Td>{++idx}</Td>
-                  <Td>{participant.name}</Td>
-                  <Td>
-                    <Text as="pre">{participant.qrId}</Text>
-                  </Td>
-                  <Td>
-                    <Link
-                      href={`${mainWeb}/qr/${participant.qrId}`}
-                      isExternal
-                      color="blue.500"
-                    >
-                      Klik Disini
-                    </Link>
-                  </Td>
-                </Tr>
-              ),
-            )}
+            {allParticipants.map((participant, idx) => (
+              <Tr key={idx}>
+                <Td>{++idx}</Td>
+                <Td>{participant.name}</Td>
+                <Td>
+                  <Text as="pre">{participant.qrId}</Text>
+                </Td>
+                <Td>
+                  <Link href={participant.link} isExternal color="blue.500">
+                    Klik Disini
+                  </Link>
+                </Td>
+              </Tr>
+            ))}
           </Tbody>
         </Table>
       </Flex>

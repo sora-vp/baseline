@@ -40,7 +40,7 @@ export const participantRouter = createTRPCRouter({
     .query(async ({ input: qrId }) => {
       const participant = await prisma.participant.findUnique({
         where: { qrId },
-        select: { name: true, qrId: true },
+        select: { name: true, qrId: true, subpart: true },
       });
 
       if (!participant)
@@ -63,13 +63,6 @@ export const participantRouter = createTRPCRouter({
         throw new TRPCError({
           code: "NOT_FOUND",
           message: "Peserta pemilihan tidak dapat ditemukan!",
-        });
-
-      if (participant.name === input.name)
-        throw new TRPCError({
-          code: "BAD_REQUEST",
-          message:
-            "Nama yang ingin diperbarui tidak boleh sama dengan nama yang lama!",
         });
 
       await prisma.participant.update({
@@ -175,7 +168,9 @@ export const participantRouter = createTRPCRouter({
     }),
 
   subparts: protectedProcedure.query(async () => {
-    const participants = await prisma.participant.findMany();
+    const participants = await prisma.participant.findMany({
+      select: { subpart: true },
+    });
 
     if (!participants)
       throw new TRPCError({

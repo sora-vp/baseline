@@ -127,10 +127,10 @@ const EditPesertaWithID = () => {
 
                 <FormControl
                   isInvalid={formState.errors?.subpart as unknown as boolean}
+                  mt={4}
                 >
                   <FormLabel htmlFor="subpart">Peserta Bagian Dari</FormLabel>
                   <Input
-                    mt={4}
                     type="text"
                     placeholder="Masukan Peserta Bagian Dari"
                     isDisabled={

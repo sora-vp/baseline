@@ -101,10 +101,10 @@ const HalamanTambah = () => {
 
                 <FormControl
                   isInvalid={formState.errors?.subpart as unknown as boolean}
+                  mt={4}
                 >
                   <FormLabel htmlFor="name">Peserta Bagian Dari</FormLabel>
                   <Input
-                    mt={4}
                     type="text"
                     placeholder="Masukan Peserta Bagian Dari"
                     isDisabled={participantMutation.isLoading}
