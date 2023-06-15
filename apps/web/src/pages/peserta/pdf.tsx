@@ -51,7 +51,7 @@ const PDFPage = () => {
         ...participant,
         link: `${mainWeb}/qr/${participant.qrId}`,
       })) ?? [],
-    [participantBySubpartQuery.data?.participant, mainWeb],
+    [participantBySubpartQuery.data?.participants, mainWeb],
   );
 
   return (
