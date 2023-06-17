@@ -1,5 +1,9 @@
 import { defineConfig, devices } from "@playwright/test";
 
+
+
+
+
 /**
  * Read environment variables from file.
  * https://github.com/motdotla/dotenv
@@ -33,18 +37,61 @@ export default defineConfig({
   /* Configure projects for major browsers */
   projects: [
     {
+      name: "setup",
+
+      testMatch: /.*\.setup\.ts/,
+    },
+    {
       name: "chromium",
-      use: { ...devices["Desktop Chrome"] },
+      grep: /.*spec.ts/,
+      grepInvert: /.*test.ts/,
+      use: {
+        ...devices["Desktop Chrome"],
+        storageState: "e2e/.auth/storageState.json",
+      },
+      dependencies: ["setup"],
     },
 
     {
       name: "firefox",
-      use: { ...devices["Desktop Firefox"] },
+      grep: /.*spec.ts/,
+      grepInvert: /.*test.ts/,
+      use: {
+        ...devices["Desktop Firefox"],
+        storageState: "e2e/.auth/storageState.json",
+      },
+      dependencies: ["setup"],
     },
-
     {
       name: "webkit",
-      use: { ...devices["Desktop Safari"] },
+      use: {
+        ...devices["Desktop Safari"],
+        storageState: "e2e/.auth/storageState.json",
+      },
+      dependencies: ["setup"],
+    },
+
+    // Before login test
+    {
+      name: "chromium - before login",
+      testMatch: "beforeLogin.test.ts",
+      use: {
+        ...devices["Desktop Chrome"],
+      },
+    },
+    {
+      name: "firefox - before login",
+      testMatch: "beforeLogin.test.ts",
+      use: {
+        ...devices["Desktop Firefox"],
+      },
+    },
+    {
+      name: "webkit - before login",
+      testMatch: "beforeLogin.test.ts",
+      use: {
+        ...devices["Desktop Safari"],
+      },
     },
 
     /* Test against mobile viewports. */

@@ -2,58 +2,88 @@ import { expect, test, type Page } from "@playwright/test";
 
 import { prisma } from "@sora/db";
 
-test.describe.configure({ mode: "serial" });
+test.describe("Add new candidate page testing", () => {
+  const goToCandidateAddPage = async (page: Page) => {
+    await page.goto("/kandidat");
 
-let page: Page;
+    await page
+      .getByRole("button", { name: "Tambah Kandidat Baru", disabled: false })
+      .waitFor();
+    await page
+      .getByRole("button", { name: "Tambah Kandidat Baru", disabled: false })
+      .click();
 
-test.beforeAll(async ({ browser }) => {
-  page = await browser.newPage();
+    await page.waitForURL("/kandidat/tambah");
 
-  // Login process
-  await page.goto("/login");
+    await page
+      .getByRole("paragraph")
+      .filter({ hasText: "Tambah Kandidat Baru" })
+      .waitFor();
 
-  await expect(page.locator("h2")).toContainText("Login Administrator");
-  await expect(page).toHaveURL("/login");
+    await expect(
+      page.getByRole("paragraph").filter({ hasText: "Tambah Kandidat Baru" }),
+    ).toBeVisible();
+  };
 
-  await page.locator('input[type="text"]').type("test123@mail.com");
-  await page.locator('input[type="password"]').type("123456");
+  test("Check form validation", async ({ page }) => {
+    await goToCandidateAddPage(page);
 
-  await page.getByRole("button", { name: "Login" }).click();
+    await expect(page.getByRole("button", { name: "Tambah" })).toBeVisible();
 
-  await expect(page.getByRole("button", { name: "Login" })).toBeDisabled();
+    await page.getByRole("button", { name: "Tambah" }).click();
 
-  await page.waitForURL("/");
-  await expect(page).toHaveURL("/");
+    await expect(page.getByText("Diperlukan nama kandidat!")).toBeVisible();
+    await expect(page.getByText("Diperlukan gambar kandidat!")).toBeVisible();
+  });
 
-  await page.locator('[id="__next"]').getByText("Dashboard Admin").waitFor();
-  await expect(
-    page.locator('[id="__next"]').getByText("Dashboard Admin"),
-  ).toBeVisible();
+  test("Invalid file format, can only upload .jpg, .jpeg, .png and .webp", async ({
+    page,
+  }) => {
+    await goToCandidateAddPage(page);
 
-  await page.getByRole("link").filter({ hasText: "Kandidat" }).click();
+    await expect(page.getByRole("button", { name: "Tambah" })).toBeVisible();
 
-  await page.waitForURL("/kandidat");
+    await page.setInputFiles('input[type="file"]', "e2e/beforeLogin.test.ts");
 
-  await page.getByRole("paragraph").filter({ hasText: "Kandidat" }).waitFor();
+    await page.getByRole("button", { name: "Tambah" }).click();
 
-  await expect(
-    page.getByRole("paragraph").filter({ hasText: "Kandidat" }),
-  ).toBeVisible();
+    await expect(
+      page.getByText(
+        "Hanya format gambar .jpg, .jpeg, .png dan .webp yang diterima!",
+      ),
+    ).toBeVisible();
+  });
 
-  await expect(page).toHaveURL("/kandidat");
-});
+  test("Create new candidate", async ({ page }) => {
+    await prisma.$connect();
 
-test.afterAll(async () => {
-  await page.close();
-});
+    const candidateIsAvail = await prisma.candidate.findUnique({
+      where: { name: "Entonk" },
+    });
 
-test("Create new candidate", async () => {
-  await page
-    .getByRole("button", { name: "Tambah Kandidat Baru", disabled: false })
-    .waitFor();
-  await page
-    .getByRole("button", { name: "Tambah Kandidat Baru", disabled: false })
-    .click();
+    if (candidateIsAvail)
+      await prisma.candidate.delete({
+        where: { name: "Entonk" },
+      });
 
-  await page.waitForURL("/kandidat/tambah");
+    await prisma.$disconnect();
+
+    await goToCandidateAddPage(page);
+
+    await page.getByPlaceholder("Masukan Nama Kandidat").type("Entonk");
+    await page.setInputFiles(
+      'input[type="file"]',
+      "../../assets/samples/Kandidat Nama Orang/1_Entonk.png",
+    );
+
+    await page.getByRole("button", { name: "Tambah" }).click();
+
+    await expect(page.getByRole("button", { name: "Tambah" })).toBeDisabled();
+
+    await page
+      .getByRole("button", { name: "Tambah", disabled: false })
+      .waitFor();
+
+    await page.waitForURL("/kandidat");
+  });
 });
