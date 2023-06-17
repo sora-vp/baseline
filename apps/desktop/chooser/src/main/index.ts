@@ -36,6 +36,14 @@ const arduinoConnectionHandler = (
 };
 
 function createWindow(): void {
+  const gotTheLock = app.requestSingleInstanceLock();
+
+  if (!gotTheLock) {
+    app.quit();
+
+    return;
+  }
+
   // Create the browser window.
   const mainWindow = new BrowserWindow({
     width: 900,
