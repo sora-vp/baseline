@@ -85,5 +85,14 @@ test.describe("Add new candidate page testing", () => {
       .waitFor();
 
     await page.waitForURL("/kandidat");
+
+    await page.getByRole("button", { name: "Tambah Kandidat Baru" }).waitFor();
+
+    await expect(
+      page.getByRole("button", { name: "Tambah Kandidat Baru" }),
+    ).toBeVisible();
+
+    await page.getByText("Entonk").waitFor();
+    await expect(page.getByText("Entonk")).toBeVisible();
   });
 });
