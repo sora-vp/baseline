@@ -9,6 +9,7 @@ env:
 
 jobs:
   e2e:
+    name: End to End testing web interface only
     runs-on: ubuntu-latest
 
     steps:
@@ -36,15 +37,6 @@ jobs:
 
       - name: Seed database
         run: yarn e2e:db-push
-
-      - name: Test Prettier
-        run: yarn format:check
-
-      - name: Test Code Linting
-        run: yarn lint
-
-      - name: Test Typing
-        run: yarn type-check
 
       - name: Build web
         run: yarn turbo run build --filter=@sora/web
