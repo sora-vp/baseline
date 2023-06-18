@@ -34,7 +34,6 @@ export default defineConfig({
   projects: [
     {
       name: "setup",
-
       testMatch: /.*\.setup\.ts/,
     },
     {
@@ -60,6 +59,8 @@ export default defineConfig({
     },
     {
       name: "webkit",
+      grep: /.*spec.ts/,
+      grepInvert: /.*test.ts/,
       use: {
         ...devices["Desktop Safari"],
         storageState: "e2e/.auth/storageState.json",
