@@ -93,13 +93,19 @@ const router = createRouter<NextApiRequest, NextApiResponse>()
     form.parse(req, async (err, fields, files) => {
       const { kandidat, id } = fields as unknown as {
         kandidat: string;
-        id: number;
+        id: string;
       };
 
       if (!id || !kandidat)
         return res.status(400).json({
           error: true,
           message: "Diperlukan id dan nama kandidat!",
+        });
+
+      if (isNaN(parseInt(id)))
+        return res.status(400).json({
+          error: true,
+          message: "id tidak valid!",
         });
 
       const inVoteCondition = canVoteNow();
@@ -111,7 +117,9 @@ const router = createRouter<NextApiRequest, NextApiResponse>()
         });
 
       try {
-        const candidate = await prisma.candidate.findUnique({ where: { id } });
+        const candidate = await prisma.candidate.findUnique({
+          where: { id: parseInt(id) },
+        });
 
         if (!candidate)
           return res
@@ -139,7 +147,7 @@ const router = createRouter<NextApiRequest, NextApiResponse>()
         }
 
         await prisma.candidate.update({
-          where: { id },
+          where: { id: parseInt(id) },
           data: {
             name: kandidat,
             img: image ? newName : candidate.img,
