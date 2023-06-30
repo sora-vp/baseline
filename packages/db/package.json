@@ -14,11 +14,11 @@
     "with-env-test": "dotenv -e ../../.env.test --"
   },
   "dependencies": {
-    "@prisma/client": "^4.15.0"
+    "@prisma/client": "^4.16.2"
   },
   "devDependencies": {
     "dotenv-cli": "^7.2.1",
-    "prisma": "^4.15.0",
+    "prisma": "^4.16.2",
     "typescript": "^5.0.4"
   }
 }

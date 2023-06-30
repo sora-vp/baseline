@@ -19,7 +19,7 @@
     "typescript": "^5.0.4"
   },
   "dependencies": {
-    "next": "13.4.3",
+    "next": "13.4.7",
     "next-auth": "^4.22.1",
     "react-icons": "^4.8.0"
   }
