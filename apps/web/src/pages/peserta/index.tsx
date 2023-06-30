@@ -433,7 +433,7 @@ const Peserta = () => {
                         (participantQuery.data &&
                           participantQuery.data.participants.length < 1 && (
                             <Tr>
-                              <Td colSpan={5} style={{ textAlign: "center" }}>
+                              <Td colSpan={6} style={{ textAlign: "center" }}>
                                 Tidak ada data peserta, Silahkan tambah peserta
                                 baru dengan tombol di atas.
                               </Td>
