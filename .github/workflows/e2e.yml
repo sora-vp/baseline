@@ -48,12 +48,14 @@ jobs:
         run: yarn e2e
 
       - name: Archive test results
+        if: always()
         uses: actions/upload-artifact@v3
         with:
           name: Test Results
           path: apps/web/test-results
 
       - name: Archive playwright report
+        if: always()
         uses: actions/upload-artifact@v3
         with:
           name: Playwright Report
