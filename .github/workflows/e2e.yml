@@ -35,7 +35,7 @@ jobs:
         run: |
           until nc -z localhost 3306; do sleep 1; done
 
-      - name: Seed database
+      - name: Push prisma schema to MariaDB
         run: yarn e2e:db-push
 
       - name: Build web

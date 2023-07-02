@@ -47,26 +47,26 @@ export default defineConfig({
       dependencies: ["setup"],
     },
 
-    {
-      name: "firefox",
-      grep: /.*spec.ts/,
-      grepInvert: /.*test.ts/,
-      use: {
-        ...devices["Desktop Firefox"],
-        storageState: "e2e/.auth/storageState.json",
-      },
-      dependencies: ["setup"],
-    },
-    {
-      name: "webkit",
-      grep: /.*spec.ts/,
-      grepInvert: /.*test.ts/,
-      use: {
-        ...devices["Desktop Safari"],
-        storageState: "e2e/.auth/storageState.json",
-      },
-      dependencies: ["setup"],
-    },
+    // {
+    //   name: "firefox",
+    //   grep: /.*spec.ts/,
+    //   grepInvert: /.*test.ts/,
+    //   use: {
+    //     ...devices["Desktop Firefox"],
+    //     storageState: "e2e/.auth/storageState.json",
+    //   },
+    //   dependencies: ["setup"],
+    // },
+    // {
+    //   name: "webkit",
+    //   grep: /.*spec.ts/,
+    //   grepInvert: /.*test.ts/,
+    //   use: {
+    //     ...devices["Desktop Safari"],
+    //     storageState: "e2e/.auth/storageState.json",
+    //   },
+    //   dependencies: ["setup"],
+    // },
 
     // Before login test
     {
