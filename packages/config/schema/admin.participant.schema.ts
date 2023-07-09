@@ -4,12 +4,15 @@ import { validateId } from "@sora/id-generator";
 
 const baseNameSchema = z
   .string()
-  .min(1, { message: "Diperlukan nama peserta!" });
+  .min(1, { message: "Diperlukan nama peserta!" })
+  .regex(/^[a-zA-Z0-9.,\s]+$/, {
+    message: "Hanya diperbolehkan menulis alfabet, angka, koma, dan titik!",
+  });
 const baseSubpartSchema = z
   .string()
   .min(1, { message: "Diperlukan bagian darimana peserta ini!" })
-  .regex(/^[a-zA-Z\-_]+$/, {
-    message: "Bagian dari peserta tidak sesuai format!",
+  .regex(/^[a-zA-Z0-9-_]+$/, {
+    message: "Hanya diperbolehkan menulis alfabet, angka, dan garis bawah!",
   });
 
 export const TambahPesertaValidationSchema = z.object({

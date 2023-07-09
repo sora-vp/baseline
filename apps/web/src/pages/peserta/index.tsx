@@ -353,7 +353,7 @@ const Peserta = () => {
                     <Tbody>
                       {participantQuery.isLoading && (
                         <Tr>
-                          <Td colSpan={5} style={{ textAlign: "center" }}>
+                          <Td colSpan={6} style={{ textAlign: "center" }}>
                             <Spinner
                               size="xl"
                               speed="0.95s"
