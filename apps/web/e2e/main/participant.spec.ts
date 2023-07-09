@@ -198,3 +198,57 @@ test("Upload csv file", async ({ page }) => {
   await expect(page.getByText("M. Rifqi Muflih")).toBeVisible();
   await expect(page.getByText("Zain Arsi")).toBeVisible();
 });
+
+test.describe("PDF page test", () => {
+  const goToPDFPage = async (page: Page) => {
+    await goToParticipantPage(page);
+
+    await page.getByRole("button", { name: "Cetak PDF" }).click();
+
+    await expect(
+      page.getByRole("heading", { name: "Peserta Pemilihan" }),
+    ).toBeVisible();
+    await expect(page).toHaveURL("/peserta/pdf");
+  };
+
+  test("It shows corresponding participant by selected category", async ({
+    page,
+  }) => {
+    await goToPDFPage(page);
+
+    await page.getByRole("combobox").selectOption("XII-IPA-5");
+
+    await expect(page.getByText("M. Fiqri Haikal")).toBeVisible();
+    await expect(page.getByText("Zain Arsi")).toBeVisible();
+
+    await page.getByRole("combobox").selectOption("XII-BHS");
+
+    await expect(page.getByText("M. Rifqi Muflih")).toBeVisible();
+  });
+
+  test("Will include QR Code web if there's an URL", async ({ page }) => {
+    await goToPDFPage(page);
+
+    await page.getByRole("combobox").selectOption("XII-IPA-5");
+
+    await page
+      .getByPlaceholder("Web QR Code | Misal https://example.com")
+      .type("https://sora.rmecha.my.id");
+
+    await expect(page.getByText("Klik Disini").first()).toHaveAttribute(
+      "href",
+      /https:\/\/sora.rmecha.my.id\/qr\/*/,
+    );
+    await expect(page.getByText("Klik Disini").nth(1)).toHaveAttribute(
+      "href",
+      /https:\/\/sora.rmecha.my.id\/qr\/*/,
+    );
+
+    await page.getByRole("combobox").selectOption("XII-BHS");
+
+    await expect(page.getByText("Klik Disini").first()).toHaveAttribute(
+      "href",
+      /https:\/\/sora.rmecha.my.id\/qr\/*/,
+    );
+  });
+});
