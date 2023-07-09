@@ -163,3 +163,38 @@ test("Delete single participant", async ({ page }) => {
     ),
   ).toBeVisible();
 });
+
+test("Upload csv file", async ({ page }) => {
+  await goToParticipantPage(page);
+
+  await page.getByRole("button", { name: "Upload File CSV" }).click();
+
+  await page.getByText("Kembali").waitFor();
+
+  await expect(page.getByText("Kembali")).toBeVisible();
+  await expect(page).toHaveURL("/peserta/csv");
+
+  await page
+    .getByPlaceholder("Masukan File CSV")
+    .setInputFiles("e2e/fixtures/contoh-file-csv.csv");
+
+  await page.getByRole("button", { name: "Tambah" }).click();
+
+  await page.waitForURL("/peserta");
+
+  await expect(
+    page.getByRole("button", { name: "Tambah Peserta Baru" }),
+  ).toBeVisible();
+  await expect(
+    page.getByRole("button", { name: "Upload File CSV" }),
+  ).toBeVisible();
+  await expect(page.getByRole("button", { name: "Cetak PDF" })).toBeVisible();
+  await expect(
+    page.getByRole("button", { name: "Buat QR Dadakan" }),
+  ).toBeVisible();
+  await expect(page.getByRole("button", { name: "Export JSON" })).toBeVisible();
+
+  await expect(page.getByText("M. Fiqri Haikal")).toBeVisible();
+  await expect(page.getByText("M. Rifqi Muflih")).toBeVisible();
+  await expect(page.getByText("Zain Arsi")).toBeVisible();
+});
