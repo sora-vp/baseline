@@ -11,7 +11,6 @@ import {
   Input,
   useToast,
 } from "@chakra-ui/react";
-
 // eslint-disable-next-line @typescript-eslint/consistent-type-imports
 import { electronAPI } from "@electron-toolkit/preload";
 
@@ -26,10 +25,7 @@ export const Setting = ({ ipcRenderer }: Props) => {
     try {
       const serverURL = new URL(url);
 
-      await ipcRenderer.invoke(
-        "set-server-url",
-        serverURL.origin,
-      );
+      await ipcRenderer.invoke("set-server-url", serverURL.origin);
 
       toast({
         description: "Berhasil memperbarui pengaturan alamat server!",
@@ -58,9 +54,7 @@ export const Setting = ({ ipcRenderer }: Props) => {
 
   useEffect(() => {
     const composeAsync = async () => {
-      const storeValue = await ipcRenderer.invoke(
-        "get-server-url",
-      );
+      const storeValue = await ipcRenderer.invoke("get-server-url");
 
       setFormURL(storeValue);
     };

@@ -11,9 +11,10 @@ import { httpBatchLink } from "@trpc/client";
 import { RouterProvider, createHashRouter } from "react-router-dom";
 import superjson from "superjson";
 
+import { Setting } from "@sora/ui/Setting";
+
 import Main from "./routes/Main";
 import Vote from "./routes/Vote";
-import { Setting } from "@sora/ui/Setting";
 
 const router = createHashRouter([
   {

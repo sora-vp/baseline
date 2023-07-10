@@ -7,6 +7,7 @@ import {
   useState,
 } from "react";
 import { useToast } from "@chakra-ui/react";
+
 import { Setting } from "@sora/ui/Setting";
 
 interface IAppSetting {
