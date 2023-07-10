@@ -3,7 +3,8 @@ import { useParticipant } from "@renderer/context/ParticipantContext";
 import { trpc } from "@renderer/utils/trpc";
 import { Navigate } from "react-router-dom";
 
-import Loading from "../Loading";
+import { Loading } from "@sora/ui/Loading";
+
 import UniversalErrorHandler from "../UniversalErrorHandler";
 import NormalScanner from "./NormalScanner";
 

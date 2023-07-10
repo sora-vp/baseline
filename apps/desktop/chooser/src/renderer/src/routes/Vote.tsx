@@ -20,7 +20,6 @@ import {
   useDisclosure,
 } from "@chakra-ui/react";
 import { BerhasilMemilihDanCapJari } from "@renderer/components/AfterVote/BerhasilMemilihDanCapJari";
-import Loading from "@renderer/components/Loading";
 import UniversalError from "@renderer/components/UniversalErrorHandler";
 import { useAppSetting } from "@renderer/context/AppSetting";
 import {
@@ -31,6 +30,8 @@ import {
 import { useSetting } from "@renderer/context/SettingContext";
 import { trpc } from "@renderer/utils/trpc";
 import { useNavigate } from "react-router-dom";
+
+import { Loading } from "@sora/ui/Loading";
 
 const Minggat = ({ qrId, setQRCode }: IParticipantContext) => {
   const navigate = useNavigate();

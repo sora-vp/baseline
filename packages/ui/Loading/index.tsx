@@ -3,12 +3,12 @@ import { Box, Flex, HStack, Heading, Spinner, Text } from "@chakra-ui/react";
 
 import wiseWord from "@sora/petuah/petuah.json";
 
-const Loading = ({ headingText }: { headingText: string }) => {
+export const Loading = ({ headingText }: { headingText: string }) => {
   const masterOogway = useMemo(() => {
     const randomIndex = new Uint8Array(1);
     crypto.getRandomValues(randomIndex);
 
-    const index = randomIndex[0] % wiseWord.length;
+    const index = Math.floor(Math.random() % wiseWord.length);
 
     return wiseWord[index];
   }, []);
@@ -41,5 +41,3 @@ const Loading = ({ headingText }: { headingText: string }) => {
     </HStack>
   );
 };
-
-export default Loading;

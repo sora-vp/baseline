@@ -1,24 +1,24 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 
-import { ElementType, ReactNode, memo, useRef } from "react";
+import { memo, useRef, type ElementType, type ReactNode } from "react";
 import localFont from "next/font/local";
 import NextLink from "next/link";
 import {
   Box,
-  BoxProps,
   CloseButton,
   Drawer,
   DrawerContent,
   Flex,
-  FlexProps,
   Icon,
   IconButton,
   Link,
   Text,
   useColorModeValue,
   useDisclosure,
+  type BoxProps,
+  type FlexProps,
 } from "@chakra-ui/react";
-import { IconType } from "react-icons";
+import { type IconType } from "react-icons";
 import { FiMenu } from "react-icons/fi";
 
 import LogoutButton from "./LogoutButton";

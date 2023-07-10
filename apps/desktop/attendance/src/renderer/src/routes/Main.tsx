@@ -1,8 +1,9 @@
-import Loading from "@renderer/components/Loading";
 import CantAttend from "@renderer/components/PreScan/CantAttend";
 import ErrorOcurred from "@renderer/components/PreScan/ErrorOccured";
 import Scanner from "@renderer/components/Scanner";
 import { useSetting } from "@renderer/context/SettingContext";
+
+import { Loading } from "@sora/ui/Loading";
 
 const Main: React.FC = () => {
   const { isLoading, isError, canAttend } = useSetting();

@@ -1,7 +1,8 @@
 import { useCallback, useState } from "react";
 import { trpc } from "@renderer/utils/trpc";
 
-import Loading from "../Loading";
+import { Loading } from "@sora/ui/Loading";
+
 import NormalScanner from "./NormalScanner";
 import ScanningError from "./ScanningError";
 import SuccessScan from "./SuccessScan";
