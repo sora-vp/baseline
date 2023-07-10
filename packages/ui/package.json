@@ -5,6 +5,7 @@
   "types": "./index.tsx",
   "license": "GPL-3.0",
   "devDependencies": {
+    "@electron-toolkit/preload": "^1.0.3",
     "@types/eslint": "^8.37.0",
     "@types/react": "^18.2.6",
     "@types/react-dom": "^18.2.4",

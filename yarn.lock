@@ -3300,6 +3300,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@sora/ui@workspace:packages/ui"
   dependencies:
+    "@electron-toolkit/preload": ^1.0.3
     "@types/eslint": ^8.37.0
     "@types/react": ^18.2.6
     "@types/react-dom": ^18.2.4

@@ -11,7 +11,7 @@ import { RouterProvider, createHashRouter } from "react-router-dom";
 import superjson from "superjson";
 
 import Main from "./routes/Main";
-import Setting from "./routes/Setting";
+import { Setting } from "@sora/ui/Setting";
 
 const router = createHashRouter([
   {
@@ -20,7 +20,7 @@ const router = createHashRouter([
   },
   {
     path: "/setting",
-    element: <Setting />,
+    element: <Setting ipcRenderer={window.electron.ipcRenderer} />,
   },
 ]);
 

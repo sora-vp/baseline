@@ -12,7 +12,12 @@ import {
   useToast,
 } from "@chakra-ui/react";
 
-const Setting = () => {
+// eslint-disable-next-line @typescript-eslint/consistent-type-imports
+import { electronAPI } from "@electron-toolkit/preload";
+
+type Props = Pick<typeof electronAPI, "ipcRenderer">;
+
+export const Setting = ({ ipcRenderer }: Props) => {
   const toast = useToast();
 
   const [formURL, setFormURL] = useState("");
@@ -21,7 +26,7 @@ const Setting = () => {
     try {
       const serverURL = new URL(url);
 
-      await window.electron.ipcRenderer.invoke(
+      await ipcRenderer.invoke(
         "set-server-url",
         serverURL.origin,
       );
@@ -47,11 +52,13 @@ const Setting = () => {
         position: "top-right",
       });
     }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
     const composeAsync = async () => {
-      const storeValue = await window.electron.ipcRenderer.invoke(
+      const storeValue = await ipcRenderer.invoke(
         "get-server-url",
       );
 
@@ -59,6 +66,8 @@ const Setting = () => {
     };
 
     composeAsync();
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
@@ -114,5 +123,3 @@ const Setting = () => {
     </HStack>
   );
 };
-
-export default Setting;

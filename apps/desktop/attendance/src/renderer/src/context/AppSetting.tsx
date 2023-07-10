@@ -7,7 +7,7 @@ import {
   useState,
 } from "react";
 import { useToast } from "@chakra-ui/react";
-import Setting from "@renderer/routes/Setting";
+import { Setting } from "@sora/ui/Setting";
 
 interface IAppSetting {
   serverURL?: string;
@@ -83,7 +83,7 @@ export const useAppSetting = () => useContext(AppSettingContext) as IAppSetting;
 export const ensureHasAppSetting = (Element: React.FC) => () => {
   const { serverURL } = useAppSetting();
 
-  if (!serverURL) return <Setting />;
+  if (!serverURL) return <Setting ipcRenderer={window.electron.ipcRenderer} />;
 
   return <Element />;
 };
