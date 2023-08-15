@@ -131,9 +131,7 @@ export const participantRouter = createTRPCRouter({
   deleteParticipant: protectedProcedure
     .input(DeletePesertaValidationSchema)
     .mutation(async ({ input }) => {
-      const participantCanAttend = canAttendNow();
-
-      if (participantCanAttend)
+      if (!canAttendNow())
         throw new TRPCError({
           code: "UNAUTHORIZED",
           message:
@@ -211,7 +209,7 @@ export const participantRouter = createTRPCRouter({
       await prisma.$transaction(async (tx) => {
         const _participant = await tx.$queryRaw<
           Participant[]
-        >`SELECT * FROM participant WHERE qrId = ${input} FOR UPDATE`;
+        >`SELECT * FROM Participant WHERE qrId = ${input} FOR UPDATE`;
         const participant = _participant[0];
 
         if (!participant)

@@ -99,7 +99,7 @@ const consumeMessagesFromQueue = async () => {
           async (tx) => {
             const _participant = await tx.$queryRaw<
               Participant[]
-            >`SELECT * FROM participant WHERE qrId = ${inputData.data.qrId} FOR UPDATE`;
+            >`SELECT * FROM Participant WHERE qrId = ${inputData.data.qrId} FOR UPDATE`;
             const participant = _participant[0];
 
             if (!participant) {
@@ -149,7 +149,7 @@ const consumeMessagesFromQueue = async () => {
 
             const _candidate = await tx.$queryRaw<
               Participant[]
-            >`SELECT * FROM candidate WHERE id = ${inputData.data.id} FOR UPDATE`;
+            >`SELECT * FROM Candidate WHERE id = ${inputData.data.id} FOR UPDATE`;
             const candidate = _candidate[0];
 
             if (!candidate) {
