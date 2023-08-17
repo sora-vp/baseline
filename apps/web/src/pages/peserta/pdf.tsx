@@ -98,7 +98,6 @@ const PDFPage = () => {
           </Select>
           <Input
             placeholder="Web QR Code | Misal https://example.com"
-            value={mainWeb}
             onChange={(e) => setMainWeb(e.target.value)}
           />
           <Button

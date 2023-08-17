@@ -95,37 +95,83 @@ const columns = [
       );
     },
   }),
-  columnHelper.accessor("alreadyAttended", {
-    cell: (info) => (
-      <span
-        style={{
-          fontSize: "1.4rem",
-          display: "block",
-          width: "100%",
-          textAlign: "center",
-        }}
-      >
-        {info.getValue() ? "✅" : "❌"}
-      </span>
-    ),
-    header: "Sudah Absen",
-  }),
+  columnHelper.accessor(
+    (row) => ({
+      alreadyAttended: row.alreadyAttended,
+      attendedAt: row.attendedAt,
+    }),
+    {
+      cell: (info) =>
+        info.getValue().alreadyAttended ? (
+          <Tooltip
+            label={info.getValue().attendedAt?.toString() ?? "N/A"}
+            placement="top"
+          >
+            <span
+              style={{
+                fontSize: "1.4rem",
+                display: "block",
+                width: "100%",
+                textAlign: "center",
+              }}
+            >
+              ✅
+            </span>
+          </Tooltip>
+        ) : (
+          <span
+            style={{
+              fontSize: "1.4rem",
+              display: "block",
+              width: "100%",
+              textAlign: "center",
+            }}
+          >
+            ❌
+          </span>
+        ),
+      header: "Sudah Absen",
+    },
+  ),
 
-  columnHelper.accessor("alreadyChoosing", {
-    cell: (info) => (
-      <span
-        style={{
-          fontSize: "1.4rem",
-          display: "block",
-          width: "100%",
-          textAlign: "center",
-        }}
-      >
-        {info.getValue() ? "✅" : "❌"}
-      </span>
-    ),
-    header: "Sudah Memilih",
-  }),
+  columnHelper.accessor(
+    (row) => ({
+      alreadyChoosing: row.alreadyChoosing,
+      choosingAt: row.choosingAt,
+    }),
+    {
+      cell: (info) =>
+        info.getValue().alreadyChoosing ? (
+          <Tooltip
+            label={info.getValue().choosingAt?.toString() ?? "N/A"}
+            placement="top"
+          >
+            <span
+              style={{
+                fontSize: "1.4rem",
+                display: "block",
+                width: "100%",
+                textAlign: "center",
+              }}
+            >
+              ✅
+            </span>
+          </Tooltip>
+        ) : (
+          <span
+            style={{
+              fontSize: "1.4rem",
+              display: "block",
+              width: "100%",
+              textAlign: "center",
+            }}
+          >
+            ❌
+          </span>
+        ),
+      header: "Sudah Memilih",
+    },
+  ),
 ];
 
 const Peserta = () => {
