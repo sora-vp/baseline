@@ -131,7 +131,7 @@ export const participantRouter = createTRPCRouter({
   deleteParticipant: protectedProcedure
     .input(DeletePesertaValidationSchema)
     .mutation(async ({ input }) => {
-      if (!canAttendNow())
+      if (canAttendNow())
         throw new TRPCError({
           code: "UNAUTHORIZED",
           message:

@@ -100,15 +100,15 @@ const PDFPage = () => {
             placeholder="Web QR Code | Misal https://example.com"
             onChange={(e) => {
               if (e.target.value === "") {
-                setMainWeb("")
+                setMainWeb("");
                 return;
               }
 
               try {
-                const { origin } = new URL(e.target.value)
-                setMainWeb(origin)
+                const { origin } = new URL(e.target.value);
+                setMainWeb(origin);
               } catch (e) {
-                setMainWeb("")
+                setMainWeb("");
               }
             }}
           />
@@ -127,7 +127,7 @@ const PDFPage = () => {
                 return;
               }
 
-              window.print()
+              window.print();
             }}
           >
             Print PDF
