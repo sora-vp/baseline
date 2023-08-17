@@ -17,8 +17,8 @@
     "with-env-test": "dotenv -e ../../.env.test --"
   },
   "dependencies": {
-    "@chakra-ui/react": "^2.7.1",
-    "@emotion/react": "^11.11.0",
+    "@chakra-ui/react": "^2.8.0",
+    "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11.0",
     "@hookform/resolvers": "^3.1.0",
     "@sora/api": "^0.1.0",
@@ -37,7 +37,7 @@
     "cors": "^2.8.5",
     "csv-parse": "^5.4.0",
     "formidable": "^2.1.1",
-    "framer-motion": "^10.12.18",
+    "framer-motion": "^10.16.0",
     "lodash": "^4.17.21",
     "luxon": "^3.3.0",
     "mime-types": "^2.1.35",
