@@ -98,7 +98,19 @@ const PDFPage = () => {
           </Select>
           <Input
             placeholder="Web QR Code | Misal https://example.com"
-            onChange={(e) => setMainWeb(e.target.value)}
+            onChange={(e) => {
+              if (e.target.value === "") {
+                setMainWeb("")
+                return;
+              }
+
+              try {
+                const { origin } = new URL(e.target.value)
+                setMainWeb(origin)
+              } catch (e) {
+                setMainWeb("")
+              }
+            }}
           />
           <Button
             w="12em"
@@ -106,7 +118,17 @@ const PDFPage = () => {
               subpartsQuery.isLoading || subpartValue === "" || mainWeb === ""
             }
             colorScheme="orange"
-            onClick={() => window.print()}
+            onClick={() => {
+              if (colorMode === "dark") {
+                toggleColorMode();
+
+                setTimeout(() => window.print(), 1900);
+
+                return;
+              }
+
+              window.print()
+            }}
           >
             Print PDF
           </Button>
