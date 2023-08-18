@@ -30,11 +30,12 @@ Beberapa repositori yang dimaksud mencakup repositori dibawah ini.
 ## Fitur-fitur yang tersedia
 
 1. Dashboard admin yang memiliki sistem login untuk mengelola berjalannya pemilihan.
-2. Terdapat pengelola kandidat, peserta pemilihan, pengaturan kapan dan berhenti pemilihan, sudah bisa memilih atau absen, juga statistik pemilihan.
-3. Fitur upload csv untuk input data peserta yang valid, pembuat pdf, juga export json untuk [sora-qrcode-web](https://github.com/reacto11mecha/sora-qrcode-web).
-4. Peserta pemilihan harus menggunakan QR Code untuk menggunakan hak suara mereka, QR tersebut didapat dari panitia yang mengirimkan PDF yang berisikan list peserta.
-5. Peserta yang ingin memilih terlebih dahulu absen masuk, setelah itu dia bisa memilih.
-6. Aplikasi desktop untuk pemilih bisa menerima sinyal keyboard angka 1-5, Esc, dan Enter untuk memilih. Selain itu juga bisa menerima input dari custom keyboard buatan sendiri menggunakan [sora-button-module](https://github.com/reacto11mecha/sora-button-module).
+2. Dashboard admin juga support untuk menggunakan dark mode.
+3. Terdapat pengelola kandidat, peserta pemilihan, pengaturan kapan dan berhenti pemilihan, sudah bisa memilih atau absen, juga statistik pemilihan.
+4. Fitur upload csv untuk input data peserta yang valid, pembuat pdf, juga export json untuk [sora-qrcode-web](https://github.com/reacto11mecha/sora-qrcode-web).
+5. Peserta pemilihan harus menggunakan QR Code untuk menggunakan hak suara mereka, QR tersebut didapat dari panitia yang mengirimkan PDF yang berisikan list peserta.
+6. Peserta yang ingin memilih terlebih dahulu absen masuk, setelah itu dia bisa memilih.
+7. Aplikasi desktop untuk pemilih bisa menerima sinyal keyboard angka 1-5, Esc, dan Enter untuk memilih. Selain itu juga bisa menerima input dari custom keyboard buatan sendiri menggunakan [sora-button-module](https://github.com/reacto11mecha/sora-button-module).
 
 ## Konfigurasi Komputer Utama (Administrator)
 
@@ -204,7 +205,11 @@ Untuk setup pertama kali, akan muncul menu pengaturan untuk mengatur alamat serv
 
 Sebelum acara pemilihan berlangsung, harus ada yang di persiapkan sebelum pemilihan bisa dilaksanakan. Berikut ini hal-hal yang harus disiapkan.
 
-1. #### Tambahkan data partisipan yang sah untuk memilih
+1. #### Mendaftarkan admin dan login
+
+   TODO: penjelasan
+
+2. #### Tambahkan data partisipan yang sah untuk memilih
 
    Pada versi kedua ini butuh data partisipan yang sah supaya peserta dapat memilih kandidat yang mereka jagokan. Bisa tambahkan satu persatu atau upload file csv yang berisikan seluruh peserta pemilihan. Format file berupa csv yang bisa ditemukan di [`apps/web/e2e/fixtures/contoh-file-csv.csv`](apps/web/e2e/fixtures/contoh-file-csv.csv).
 
@@ -221,7 +226,7 @@ Sebelum acara pemilihan berlangsung, harus ada yang di persiapkan sebelum pemili
    - Bidang `Nama` hanya bisa diisi dengan huruf alfabet, angka, koma, dan titik saja.
    - Bidang `Bagian Dari` hanya bisa diisi dengan huruf alfabet, angka, dan garis bawah tanpa spasi.
 
-   Pergi ke halaman peserta, kurang lebih tampilan akan terlihat seperti ini.
+   Pergi ke [halaman peserta](http://localhost:3000/peserta), kurang lebih tampilan akan terlihat seperti ini.
 
    ![Tampilan halaman peserta](assets/tutorial/002-ke-halaman-peserta.jpg)
 
@@ -236,3 +241,41 @@ Sebelum acara pemilihan berlangsung, harus ada yang di persiapkan sebelum pemili
    Setelah selesai upload, akan dibuat QR ID secara otomatis sebagai hak pilih nantinya.
 
    ![Tampilan setelah selesai upload file csv](assets/tutorial/005-selesai-upload.jpg)
+
+3. #### Export JSON supaya hak pilih bisa di unduh
+
+   TODO: penjelasan
+
+4. #### Cetak PDF untuk seluruh kategori
+
+   TODO: penjelasan
+
+5. #### Backup database untuk jaga-jaga
+
+   TODO: penjelasan
+
+### Setup web QR Code
+
+Yang dimaksud dengan setup web QR Code adalah bagian web yang memungkinkan peserta pemilihan mengunduh semacam kartu hak pilih mereka. Tata caranya ada pada repositori [sora-qrcode-web](https://github.com/reacto11mecha/sora-qrcode-web), cek tata caranya di [README](https://github.com/reacto11mecha/sora-qrcode-web#readme) repositori tersebut.
+
+### Menjalankan keseluruhan instrumen
+
+TODO: penjelasan
+
+### Catatan Tambahan
+
+TODO: penjelasan
+
+### Ucapan Terimakasih
+
+Saya sebelumnya berterima kasih kepada tim [t3-oss](https://github.com/t3-oss) yang sudah membuat [`create-t3-app`](https://github.com/t3-oss/create-t3-app) dan [`create-t3-turbo`](`https://github.com/t3-oss/create-t3-turbo`), juga https://electron-vite.org karena project ini menggunakan template mereka yang sudah membantu saya dalam pembuatan project ini.
+
+Saya juga berterima kasih terhadap MPK (Majelis Permusyawaratan Kelas) SMA Negeri 12 Kota Bekasi yang mau dan percaya untuk menggunakan aplikasi ini. Banyak kritik dan saran dari pihak guru dan murid-murid yang akhirnya terciptalah versi kedua dari project ini.
+
+### Disclaimer
+
+Penegasan, **saya tidak bertanggung jawab atas hal-hal yang tidak anda inginkan, gunakan dengan bijak dan tepat!**
+
+### Lisensi
+
+Semua kode yang ada di repositori ini bernaung dibawah [GPLv3](LICENSE).
