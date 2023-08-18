@@ -186,7 +186,7 @@ ping 192.168.100.2
 
 Jika berhasil, kurang lebih akan terlihat seperti ini.
 
-![Gambaran jika berhasil ping](assets/tutorial/004-ping-host.png)
+![Gambaran jika berhasil ping](assets/tutorial/001-ping-host.png)
 
 ### Instalasi kedua aplikasi desktop (pemilih dan absensi)
 
@@ -204,6 +204,35 @@ Untuk setup pertama kali, akan muncul menu pengaturan untuk mengatur alamat serv
 
 Sebelum acara pemilihan berlangsung, harus ada yang di persiapkan sebelum pemilihan bisa dilaksanakan. Berikut ini hal-hal yang harus disiapkan.
 
-1. #### Upload data partisipan yang sah untuk memilih
+1. #### Tambahkan data partisipan yang sah untuk memilih
 
-   Pada versi kedua ini butuh data partisipan yang sah supaya peserta dapat memilih kandidat yang mereka jagokan. Format file berupa csv yang bisa ditemukan di sini.
+   Pada versi kedua ini butuh data partisipan yang sah supaya peserta dapat memilih kandidat yang mereka jagokan. Bisa tambahkan satu persatu atau upload file csv yang berisikan seluruh peserta pemilihan. Format file berupa csv yang bisa ditemukan di [`apps/web/e2e/fixtures/contoh-file-csv.csv`](apps/web/e2e/fixtures/contoh-file-csv.csv).
+
+   File tersebut kurang lebih memiliki tampilan seperti ini.
+
+   | Nama            | Bagian Dari |
+   | --------------- | ----------- |
+   | M. Fiqri Haikal | XII-IPA-5   |
+   | M. Rifqi Muflih | XII-BHS     |
+   | Zain Arsi       | XII-IPA-5   |
+
+   Catatan file csv:
+
+   - Bidang `Nama` hanya bisa diisi dengan huruf alfabet, angka, koma, dan titik saja.
+   - Bidang `Bagian Dari` hanya bisa diisi dengan huruf alfabet, angka, dan garis bawah tanpa spasi.
+
+   Pergi ke halaman peserta, kurang lebih tampilan akan terlihat seperti ini.
+
+   ![Tampilan halaman peserta](assets/tutorial/002-ke-halaman-peserta.jpg)
+
+   Untuk tambah peserta secara manual satu-persatu terlihat seperti ini.
+
+   ![Tampilan halaman tambah peserta](assets/tutorial/003-halaman-tambah-peserta.png)
+
+   Halaman upload csv, akan ditunjukan cara upload file csv.
+
+   ![Tampilan halaman upload file csv](assets/tutorial/004-contoh-upload-csv.png)
+
+   Setelah selesai upload, akan dibuat QR ID secara otomatis sebagai hak pilih nantinya.
+
+   ![Tampilan setelah selesai upload file csv](assets/tutorial/005-selesai-upload.jpg)
