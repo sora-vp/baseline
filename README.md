@@ -254,28 +254,24 @@ Sebelum acara pemilihan berlangsung, harus ada yang di persiapkan sebelum pemili
 
    TODO: penjelasan
 
-### Setup web QR Code
+## Setup dan host web QR Code
 
 Yang dimaksud dengan setup web QR Code adalah bagian web yang memungkinkan peserta pemilihan mengunduh semacam kartu hak pilih mereka. Tata caranya ada pada repositori [sora-qrcode-web](https://github.com/reacto11mecha/sora-qrcode-web), cek tata caranya di [README](https://github.com/reacto11mecha/sora-qrcode-web#readme) repositori tersebut.
 
-### Menjalankan keseluruhan instrumen
+## Catatan Tambahan
 
 TODO: penjelasan
 
-### Catatan Tambahan
-
-TODO: penjelasan
-
-### Ucapan Terimakasih
+## Ucapan Terimakasih
 
 Saya sebelumnya berterima kasih kepada tim [t3-oss](https://github.com/t3-oss) yang sudah membuat [`create-t3-app`](https://github.com/t3-oss/create-t3-app) dan [`create-t3-turbo`](`https://github.com/t3-oss/create-t3-turbo`), juga https://electron-vite.org karena project ini menggunakan template mereka yang sudah membantu saya dalam pembuatan project ini.
 
 Saya juga berterima kasih terhadap MPK (Majelis Permusyawaratan Kelas) SMA Negeri 12 Kota Bekasi yang mau dan percaya untuk menggunakan aplikasi ini. Banyak kritik dan saran dari pihak guru dan murid-murid yang akhirnya terciptalah versi kedua dari project ini.
 
-### Disclaimer
+## Disclaimer
 
 Penegasan, **saya tidak bertanggung jawab atas hal-hal yang tidak anda inginkan, gunakan dengan bijak dan tepat!**
 
-### Lisensi
+## Lisensi
 
 Semua kode yang ada di repositori ini bernaung dibawah [GPLv3](LICENSE).
