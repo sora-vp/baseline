@@ -268,7 +268,7 @@ TODO: penjelasan
 
 ## Ucapan Terimakasih
 
-Saya sebelumnya berterima kasih kepada tim [t3-oss](https://github.com/t3-oss) yang sudah membuat [`create-t3-app`](https://github.com/t3-oss/create-t3-app) dan [`create-t3-turbo`](`https://github.com/t3-oss/create-t3-turbo`), juga https://electron-vite.org karena project ini menggunakan template mereka yang sudah membantu saya dalam pembuatan project ini.
+Saya sebelumnya berterima kasih kepada tim [t3-oss](https://github.com/t3-oss) yang sudah membuat [`create-t3-app`](https://github.com/t3-oss/create-t3-app) dan [`create-t3-turbo`](https://github.com/t3-oss/create-t3-turbo), juga https://electron-vite.org karena project ini menggunakan template mereka yang sudah membantu saya dalam pembuatan project ini.
 
 Saya juga berterima kasih terhadap MPK (Majelis Permusyawaratan Kelas) SMA Negeri 12 Kota Bekasi yang mau dan percaya untuk menggunakan aplikasi ini. Banyak kritik dan saran dari pihak guru dan murid-murid yang akhirnya terciptalah versi kedua dari project ini.
 
