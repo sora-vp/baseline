@@ -258,6 +258,10 @@ Sebelum acara pemilihan berlangsung, harus ada yang di persiapkan sebelum pemili
 
 Yang dimaksud dengan setup web QR Code adalah bagian web yang memungkinkan peserta pemilihan mengunduh semacam kartu hak pilih mereka. Tata caranya ada pada repositori [sora-qrcode-web](https://github.com/reacto11mecha/sora-qrcode-web), cek tata caranya di [README](https://github.com/reacto11mecha/sora-qrcode-web#readme) repositori tersebut.
 
+## Penggunaan di hari pemilihan
+
+TODO: penjelasan
+
 ## Catatan Tambahan
 
 TODO: penjelasan
