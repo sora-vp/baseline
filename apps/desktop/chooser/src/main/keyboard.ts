@@ -34,6 +34,9 @@ export async function handleConnect(
   parser.on("data", async (keybind) => {
     if (window.isFocused()) {
       switch (keybind) {
+        case "SORA-KEYBIND-RELOAD":
+          window.webContents.reload();
+          break;
         case "SORA-KEYBIND-ESC":
           await keyboard.type(Key.Escape);
           break;
@@ -50,7 +53,7 @@ export async function handleConnect(
           await keyboard.type("4");
           break;
         case "SORA-KEYBIND-5":
-          await keyboard.type("4");
+          await keyboard.type("5");
           break;
         case "SORA-KEYBIND-ENTER":
           await keyboard.type(Key.Enter);
