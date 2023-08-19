@@ -206,8 +206,25 @@ Untuk setup pertama kali, akan muncul menu pengaturan untuk mengatur alamat serv
 Sebelum acara pemilihan berlangsung, harus ada yang di persiapkan sebelum pemilihan bisa dilaksanakan. Berikut ini hal-hal yang harus disiapkan.
 
 1. #### Mendaftarkan admin dan login
+    
+   Hal pertama yang harus dipersiapkan yaitu mendaftarkan admin terlebih dahulu sebelum melakukan banyak hal. Kunjungi halaman http://localhost:3000/register untuk mendaftarkan admin, contohnya seperti dibawah ini.
 
-   TODO: penjelasan
+   Keterangan form:
+
+   - `Email`: Harus berupa format email yang valid (tidak perlu email pribadi, asal tak apa tapi harus ingat)
+   - `Nama Lengkap`: Hanya diperbolehkan huruf alphabet
+   - `Kata Sandi`: Minimal memiliki panjang 6 karakter
+   - `Konfirmasi Kata Sandi`: Harus sama seperti `Kata Sandi`
+
+   ![Gambar halaman register administrator](assets/tutorial/002-halaman-daftar-admin.png)
+
+   Jika berhasil akan di arahkan langsung ke halaman login yang berada di http://localhost:3000/login, login dengan akun yang sudah di daftarkan.
+
+   ![Gambar halaman login administrator](assets/tutorial/003-ke-halaman-login.png)
+
+   Selesai login, akan diarahkan lagi ke halaman beranda administrator.
+
+   ![Gambar halaman beranda administrator](./assets/tutorial/004-halaman-beranda.png)
 
 2. #### Tambahkan data partisipan yang sah untuk memilih
 
@@ -228,19 +245,19 @@ Sebelum acara pemilihan berlangsung, harus ada yang di persiapkan sebelum pemili
 
    Pergi ke [halaman peserta](http://localhost:3000/peserta), kurang lebih tampilan akan terlihat seperti ini.
 
-   ![Tampilan halaman peserta](assets/tutorial/002-ke-halaman-peserta.jpg)
+   ![Tampilan halaman peserta](assets/tutorial/005-ke-halaman-peserta.jpg)
 
    Untuk tambah peserta secara manual satu-persatu terlihat seperti ini.
 
-   ![Tampilan halaman tambah peserta](assets/tutorial/003-halaman-tambah-peserta.png)
+   ![Tampilan halaman tambah peserta](assets/tutorial/006-halaman-tambah-peserta.png)
 
    Halaman upload csv, akan ditunjukan cara upload file csv.
 
-   ![Tampilan halaman upload file csv](assets/tutorial/004-contoh-upload-csv.png)
+   ![Tampilan halaman upload file csv](assets/tutorial/007-contoh-upload-csv.png)
 
    Setelah selesai upload, akan dibuat QR ID secara otomatis sebagai hak pilih nantinya.
 
-   ![Tampilan setelah selesai upload file csv](assets/tutorial/005-selesai-upload.jpg)
+   ![Tampilan setelah selesai upload file csv](assets/tutorial/008-selesai-upload.jpg)
 
 3. #### Export JSON supaya hak pilih bisa di unduh
 
