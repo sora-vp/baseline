@@ -269,9 +269,19 @@ Sebelum acara pemilihan berlangsung, harus ada yang di persiapkan sebelum pemili
 
    ![Prompt untuk menyimpan file](assets/tutorial/010-simpan-file.png)
 
-4. #### Cetak PDF untuk seluruh kategori
+4. #### Menyimpan PDF untuk seluruh kategori
 
-   TODO: penjelasan
+   Jika sudah menyimpan data JSON, maka tahap selanjutnya menyimpan PDF yang nanti akan dibagikan ke seluruh peserta pemilihan. Seluruh nama akan terlist sesuai kategori.
+
+   Pergi ke halaman http://localhost:3000/peserta/pdf dan pilih kategori yang ingin disimpan. Jangan lupa untuk mengisi origin URL dari halaman web QR Code yang akan dijelaskan selanjutnya.
+
+   ![Halaman print PDF](assets/tutorial/011-print-pdf.png)
+
+   Kemudian muncul prompt yang akan mengarahkan kemana file tersebut akan disimpan. Simpan kalau sudah yakin.
+
+   ![Prompt download untuk save file pdf](assets/tutorial/012-prompt-save-pdf.png)
+
+   Jangan lupa mengulang proses untuk seluruh kategori.
 
 5. ### Setup dan host web QR Code
 
@@ -279,7 +289,27 @@ Sebelum acara pemilihan berlangsung, harus ada yang di persiapkan sebelum pemili
 
 6. #### Backup database untuk jaga-jaga
 
-   TODO: penjelasan
+   Jika proses-proses di atas sudah selesai, alangkah baiknya untuk backup seluruh data yang nantinya akan berubah. Hal ini mempermudah proses testing ke production apabila ingin mencoba terlebih dahulu fitur-fitur yang ada.
+
+   Untuk menjalankan backup satu database.
+
+   ```sh
+   mysqldump -u <user> -p --databases sora > backup_db_sora_pemilihan.sql
+   ```
+
+   Untuk merestore data dari backup yang sudah dibuat.
+
+   Jika menggunakan Windows Powershell.
+
+   ```pwsh
+   Get-Content .\backup_db_sora_pemilihan.sql |  mysql -u <user> -p sora
+   ```
+
+   Jika menggunakan terminal (mac/linux based).
+
+   ```sh
+   mysql -u <user> -p sora < backup_db_sora_pemilihan.sql
+   ```
 
 ## Sosialisasi ke peserta
 

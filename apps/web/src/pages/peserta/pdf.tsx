@@ -57,9 +57,8 @@ const PDFPage = () => {
   return (
     <>
       <Head>
-        <title>{`Cetak PDF${
-          subpartValue !== "" ? `- ${subpartValue}` : ""
-        }`}</title>
+        <title>{`Cetak PDF${subpartValue !== "" ? ` - ${subpartValue}` : ""
+          }`}</title>
       </Head>
 
       <style jsx global>{`
