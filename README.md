@@ -206,7 +206,7 @@ Untuk setup pertama kali, akan muncul menu pengaturan untuk mengatur alamat serv
 Sebelum acara pemilihan berlangsung, harus ada yang di persiapkan sebelum pemilihan bisa dilaksanakan. Berikut ini hal-hal yang harus disiapkan.
 
 1. #### Mendaftarkan admin dan login
-    
+
    Hal pertama yang harus dipersiapkan yaitu mendaftarkan admin terlebih dahulu sebelum melakukan banyak hal. Kunjungi halaman http://localhost:3000/register untuk mendaftarkan admin, contohnya seperti dibawah ini.
 
    Keterangan form:
@@ -261,19 +261,29 @@ Sebelum acara pemilihan berlangsung, harus ada yang di persiapkan sebelum pemili
 
 3. #### Export JSON supaya hak pilih bisa di unduh
 
-   TODO: penjelasan
+   Export file json ini ada hubungannya dengan poin nomor 5 pada penjelasan dari setup web ini. Masih di halaman peserta, tekan Export JSON.
+
+   ![Pencet tombol export json](assets/tutorial/009-export-json.png)
+
+   Jika sudah dipencet, akan muncul prompt untuk menyimpan file, tekan simpan.
+
+   ![Prompt untuk menyimpan file](assets/tutorial/010-simpan-file.png)
 
 4. #### Cetak PDF untuk seluruh kategori
 
    TODO: penjelasan
 
-5. #### Backup database untuk jaga-jaga
+5. ### Setup dan host web QR Code
+
+   Yang dimaksud dengan setup web QR Code adalah bagian web yang memungkinkan peserta pemilihan mengunduh semacam kartu hak pilih mereka. Tata caranya ada pada repositori [sora-qrcode-web](https://github.com/reacto11mecha/sora-qrcode-web), cek tata caranya di [README](https://github.com/reacto11mecha/sora-qrcode-web#readme) repositori tersebut.
+
+6. #### Backup database untuk jaga-jaga
 
    TODO: penjelasan
 
-## Setup dan host web QR Code
+## Sosialisasi ke peserta
 
-Yang dimaksud dengan setup web QR Code adalah bagian web yang memungkinkan peserta pemilihan mengunduh semacam kartu hak pilih mereka. Tata caranya ada pada repositori [sora-qrcode-web](https://github.com/reacto11mecha/sora-qrcode-web), cek tata caranya di [README](https://github.com/reacto11mecha/sora-qrcode-web#readme) repositori tersebut.
+TODO: penjelasan
 
 ## Penggunaan di hari pemilihan
 
@@ -281,7 +291,81 @@ TODO: penjelasan
 
 ## Catatan Tambahan
 
-TODO: penjelasan
+Terlepas dari penjelasan yang sudah dijelaskan sebelumnya, saya akan memberikan rekomendasi tambahan terkait penggunaan aplikasi ini.
+
+### 1. **Pilihlah Panitia yang Benar-Benar Jujur!**
+
+Terlepas dari aplikasi apa yang dipakai, jika panitia yang dipilih tidak jujur maka dengan mudah mereka mencurangi sebuah sistem.
+
+Administrator yang sudah login memang tidak bisa memilih kandidat, tetapi mereka **bisa menambahkan peserta fiktif dan ikut memilih kandidat sesuai kepentingan pribadi**. Jadi jangan sampai hal ini bisa terjadi karena administrator yang berbuat kecurangan.
+
+Panitia pengawas komputer hanya boleh mengawasi jalannya pelaksanaan pemilihan dan melaporkan jika ditemukan adanya masalah. Popup pemilihan akan berwarna merah dan berisikan pesan error. Selain itu tidak boleh pengawas memilih kecuali pada saat giliran mereka untuk memilih.
+
+### 2. **Tidak Menjalankan Aplikasi Pada Layanan Hosting!**
+
+Pada dasarnya aplikasi ini bisa di upload ke layanan hosting dan dapat diakses di internet, tetapi sebaiknya tidak melakukan itu. Akan ada oknum yang tidak bertanggung jawab yang mendaftarkan akun administrator untuk kepentingan pribadi. Pemilih juga dapat memilih berkali-kali kandidat yang mereka dukung.
+
+### 3. **Menjalankan Aplikasi pada Jaringan Lokal (LAN)!**
+
+Menyambung poin sebelumnya, aplikasi ini dirancang untuk pemilihan langsung di lapangan dengan jaringan lokal, oleh karena itu diperlukan komputer administrator dan pemilih dalam jaringan yang terisolasi dari jaringan internet. Ditegaskan kembali bahwa penggunaan Switch lebih dianjurkan daripada penggunaan Router WiFi.
+
+## Local Development
+
+Langkah pertama, fork atau clone terlebih dahulu.
+
+```sh
+# HTTPS
+git clone https://github.com/reacto11mecha/sora.git
+
+# SSH
+git clone git@github.com:reacto11mecha/sora.git
+```
+
+Kedua, menginstall seluruh package yang dibutuhkan.
+
+```sh
+yarn install
+```
+
+Ketiga, menyalin file `env.example` menjadi `.env` dan isikan sesuai field yang telah dijelaskan sebelumnya di [Buat file](#buat-file).
+
+Setelah menginstall dependensi yang diperlukan, jalankan database MySQL bersamaan dengan RabbitMQ. Karena ada empat hal yang bisa di develop, maka script development ada empat. Berikut ini penjelasannya.
+
+- Develop sisi web
+
+  ```
+  yarn dev:web
+  ```
+
+- Develop vote processor (RabbitMQ Consumer)
+
+  ```
+  yarn dev:processor
+  ```
+
+- Aplikasi desktop untuk absen (attendance)
+
+  ```
+  yarn dev:attendance
+  ```
+
+- Aplikasi desktop untuk memilih (chooser)
+
+  ```
+  yarn dev:chooser
+  ```
+
+- Build aplikasi desktop untuk Windows
+
+  ```
+  yarn build-desktop:win
+  ```
+
+- Build aplikasi desktop untuk Linux Based
+
+  ```
+  yarn build-desktop:linux
+  ```
 
 ## Ucapan Terimakasih
 
