@@ -313,7 +313,17 @@ Sebelum acara pemilihan berlangsung, harus ada yang di persiapkan sebelum pemili
 
 ## Sosialisasi ke peserta
 
-TODO: penjelasan
+Sosialisasi adalah hal penting yang harus dilakukan sebelum hari pemilihan berlangsung. Sosialisasikan apa yang harus peserta pemilihan lakukan dan pahami juga harus memberikan ruang untuk pertanyaan jauh sebelum hari H. Sosialisasikan dengan bahasa yang mudah dipahami melalui media online maupun cetak.
+
+Berikut ini poin-poin yang harus di informasikan (bisa di tambahkan sesuai kondisi).
+
+1. Siapa saja yang maju sebagai kandidat
+2. Bagaimana cara mendapatkan hak pilih, yaitu mendownload QR Code sesuai namanya
+3. Tata cara pemilihan di hari pemilihan
+4. Cara kerja aplikasi pemilihan
+5. Jangan melakukan kecurangan (cnt: mendownload hak pilih yang bukan haknya).
+
+> Maksud dari nomor 4 adalah memberitahukan bagaimana aplikasi ini tetap dalam koridor asas LUBER JURDIL walaupun menggunakan QR Code.
 
 ## Penggunaan di hari pemilihan
 
