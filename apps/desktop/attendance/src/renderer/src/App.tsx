@@ -1,8 +1,4 @@
 import { useEffect, useState } from "react";
-import {
-  ensureHasAppSetting,
-  useAppSetting,
-} from "@renderer/context/AppSetting";
 import { SettingProvider } from "@renderer/context/SettingContext";
 import { trpc } from "@renderer/utils/trpc";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";

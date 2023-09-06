@@ -49,6 +49,7 @@
     "packages/id-generator",
     "packages/petuah",
     "packages/settings",
+    "packages/desktop-settings",
     "packages/ui"
   ]
 }

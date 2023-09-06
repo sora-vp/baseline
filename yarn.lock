@@ -3191,6 +3191,26 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@sora/desktop-settings@workspace:packages/desktop-settings":
+  version: 0.0.0-use.local
+  resolution: "@sora/desktop-settings@workspace:packages/desktop-settings"
+  dependencies:
+    "@types/eslint": ^8.37.0
+    "@types/react": ^18.2.6
+    "@types/react-dom": ^18.2.4
+    "@typescript-eslint/eslint-plugin": ^5.59.2
+    "@typescript-eslint/parser": ^5.59.2
+    eslint-config-next: ^13.4.2
+    eslint-config-prettier: ^8.8.0
+    eslint-config-turbo: ^1.9.8
+    eslint-plugin-react: 7.32.2
+    react: 18.2.0
+    react-dom: 18.2.0
+    typescript: ^5.0.4
+    zustand: ^4.4.1
+  languageName: unknown
+  linkType: soft
+
 "@sora/eslint-config@^0.1.0, @sora/eslint-config@workspace:packages/config/eslint":
   version: 0.0.0-use.local
   resolution: "@sora/eslint-config@workspace:packages/config/eslint"
@@ -12311,7 +12331,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"use-sync-external-store@npm:^1.2.0":
+"use-sync-external-store@npm:1.2.0, use-sync-external-store@npm:^1.2.0":
   version: 1.2.0
   resolution: "use-sync-external-store@npm:1.2.0"
   peerDependencies:
@@ -12792,5 +12812,25 @@ __metadata:
   version: 3.21.4
   resolution: "zod@npm:3.21.4"
   checksum: f185ba87342ff16f7a06686767c2b2a7af41110c7edf7c1974095d8db7a73792696bcb4a00853de0d2edeb34a5b2ea6a55871bc864227dace682a0a28de33e1f
+  languageName: node
+  linkType: hard
+
+"zustand@npm:^4.4.1":
+  version: 4.4.1
+  resolution: "zustand@npm:4.4.1"
+  dependencies:
+    use-sync-external-store: 1.2.0
+  peerDependencies:
+    "@types/react": ">=16.8"
+    immer: ">=9.0"
+    react: ">=16.8"
+  peerDependenciesMeta:
+    "@types/react":
+      optional: true
+    immer:
+      optional: true
+    react:
+      optional: true
+  checksum: 80acd0fbf633782996642802c8692bbb80ae5c80a8dff4c501b88250acd5ccd468fbc6398bdce198475a25e3839c91385b81da921274f33ffb5c2d08c3eab400
   languageName: node
   linkType: hard
