@@ -6,6 +6,7 @@ import { httpBatchLink } from "@trpc/client";
 import { RouterProvider, createHashRouter } from "react-router-dom";
 import superjson from "superjson";
 
+import { useStore } from "@sora/desktop-settings";
 import { Setting } from "@sora/ui/Setting";
 
 import Main from "./routes/Main";
@@ -22,7 +23,7 @@ const router = createHashRouter([
 ]);
 
 const App: React.FC = () => {
-  const { serverURL } = useAppSetting();
+  const serverURL = useStore((store) => store.trpcLink);
 
   const [queryClient] = useState(() => new QueryClient());
   const [trpcClient] = useState(() =>
@@ -59,4 +60,4 @@ const App: React.FC = () => {
   );
 };
 
-export default ensureHasAppSetting(App);
+export default App;

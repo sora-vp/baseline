@@ -6,15 +6,15 @@ type Props = Pick<typeof electronAPI, "ipcRenderer">;
 
 interface DesktopSettingsState {
   trpcLink: null | string;
-  updateLink: (link: string, electronAPI: Props) => void;
+  updateLink: (link: string, ipcRenderer: Props) => void;
 }
 
 export const useStore = create<DesktopSettingsState>()((set) => ({
   trpcLink: null,
-  updateLink: async (link, electron) => {
-    const serverURL = new URL(url);
+  updateLink: async (link, ipcRenderer) => {
+    const serverURL = new URL(link);
 
-    await electron.ipcRenderer.invoke("set-server-url", serverURL.origin);
+    await ipcRenderer.invoke("set-server-url", serverURL.origin);
 
     set(() => ({ trpcLink: link }));
   },

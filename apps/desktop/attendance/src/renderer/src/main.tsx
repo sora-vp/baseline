@@ -1,6 +1,6 @@
 import React from "react";
 import { ChakraProvider, extendTheme } from "@chakra-ui/react";
-import { AppSettingGuard } from "@renderer/comoponents/AppSettingGuard";
+import { AppSettingGuard } from "@renderer/components/AppSettingGuard";
 import ReactDOM from "react-dom/client";
 
 import "@fontsource/lato";

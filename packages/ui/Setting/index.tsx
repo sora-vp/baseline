@@ -14,18 +14,20 @@ import {
 // eslint-disable-next-line @typescript-eslint/consistent-type-imports
 import { electronAPI } from "@electron-toolkit/preload";
 
+import { useStore } from "@sora/desktop-settings";
+
 type Props = Pick<typeof electronAPI, "ipcRenderer">;
 
 export const Setting = ({ ipcRenderer }: Props) => {
   const toast = useToast();
 
+  const changeURL = useStore((store) => store.updateLink);
+
   const [formURL, setFormURL] = useState("");
 
   const setServerUrl = useCallback(async (url: string) => {
     try {
-      const serverURL = new URL(url);
-
-      await ipcRenderer.invoke("set-server-url", serverURL.origin);
+      await changeURL(url, ipcRenderer);
 
       toast({
         description: "Berhasil memperbarui pengaturan alamat server!",
