@@ -1,3 +1,4 @@
+import { useState } from "react";
 import Head from "next/head";
 import NextLink from "next/link";
 import Router from "next/router";
@@ -11,9 +12,22 @@ import {
   HStack,
   Input,
   Link,
+  ListItem,
+  // Modal
+  Modal,
+  ModalBody,
+  ModalCloseButton,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+  ModalOverlay,
   Text,
+  //List
+  UnorderedList,
   VStack,
+  // Hook
   useColorModeValue,
+  useDisclosure,
   useToast,
 } from "@chakra-ui/react";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -29,8 +43,13 @@ import {
 import { api } from "~/utils/api";
 import Sidebar from "~/components/Sidebar";
 
+type StateZodErr = Array<{ message: string; path: Array<number | string> }>;
+
 const HalamanTambah = () => {
   const toast = useToast();
+  const [errors, setErr] = useState<StateZodErr | null>(null);
+
+  const { isOpen, onOpen, onClose } = useDisclosure();
 
   const insertManyMutation = api.participant.insertManyParticipant.useMutation({
     onSuccess(result) {
@@ -76,14 +95,13 @@ const HalamanTambah = () => {
 
       const result = CSVDataValidator.safeParse(records);
 
-      if (!result.success)
-        return toast({
-          description: "Format file csv tidak valid!",
-          status: "error",
-          duration: 6000,
-          position: "top-right",
-          isClosable: true,
-        });
+      if (!result.success) {
+        const error = JSON.parse(result.error.message) as StateZodErr;
+
+        setErr(error);
+
+        return onOpen();
+      }
 
       insertManyMutation.mutate(result.data);
     });
@@ -151,6 +169,49 @@ const HalamanTambah = () => {
           </Box>
         </HStack>
       </VStack>
+      <Modal
+        isOpen={isOpen}
+        onClose={() => {
+          onClose();
+          setErr(null);
+        }}
+      >
+        <ModalOverlay
+          bg="none"
+          backdropFilter="auto"
+          backdropInvert="80%"
+          backdropBlur="2px"
+        />
+        <ModalContent>
+          <ModalHeader>Gagal Upload Peserta</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody>
+            <Text>
+              Gagal mengunggah data peserta pemilihan dikarenakan format yang
+              tidak sesuai dengan yang diharapkan.
+            </Text>
+
+            <Text mt="5" mb="5">
+              Berikut ini daftar yang tidak sesuai:
+            </Text>
+
+            <UnorderedList>
+              {errors?.map((error, idx) => (
+                <ListItem key={idx}>
+                  Kolom {error.path[1]} baris ke {(error.path[0] as number) + 1}
+                  . {error.message}
+                </ListItem>
+              ))}
+            </UnorderedList>
+          </ModalBody>
+
+          <ModalFooter>
+            <Button colorScheme="red" mr={3} onClick={onClose}>
+              Tutup
+            </Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
     </>
   );
 };

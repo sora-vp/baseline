@@ -38,6 +38,7 @@
     "csv-parse": "^5.5.0",
     "formidable": "^2.1.1",
     "framer-motion": "^10.16.0",
+    "json-as-xlsx": "^2.5.4",
     "lodash": "^4.17.21",
     "luxon": "^3.4.3",
     "mime-types": "^2.1.35",

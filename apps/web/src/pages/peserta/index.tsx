@@ -44,10 +44,12 @@ import {
   useReactTable,
   type PaginationState,
 } from "@tanstack/react-table";
+import xlsx from "json-as-xlsx";
 import { BiFirstPage, BiLastPage } from "react-icons/bi";
 import {
   BsFiletypeCsv,
   BsFiletypeJson,
+  BsFiletypeXlsx,
   BsFillFilePdfFill,
   BsQrCode,
 } from "react-icons/bs";
@@ -244,6 +246,30 @@ const Peserta = () => {
     },
   });
 
+  const exportXlsxQuery = api.participant.exportJsonAsXlsxData.useQuery(
+    undefined,
+    {
+      refetchOnMount: false,
+      refetchOnWindowFocus: false,
+      enabled: false,
+
+      onSuccess(data) {
+        const sheets = [...new Set(data.map(({ subpart }) => subpart))];
+
+        const xlsxData = sheets.map((sheet) => ({
+          sheet,
+          columns: [
+            { label: "Nama Peserta", value: "name" },
+            { label: "QR ID", value: "qrId" },
+          ],
+          content: data.filter((participant) => participant.subpart === sheet),
+        }));
+
+        xlsx(xlsxData, { fileName: "Data Peserta Pemilihan" });
+      },
+    },
+  );
+
   const participantDeleteMutation =
     api.participant.deleteParticipant.useMutation({
       onSuccess(result) {
@@ -375,6 +401,15 @@ const Peserta = () => {
                   leftIcon={<BsFiletypeJson color="white" />}
                 >
                   Export JSON
+                </Button>
+                <Button
+                  borderRadius="md"
+                  bg="green.500"
+                  color="white"
+                  onClick={() => exportXlsxQuery.refetch()}
+                  leftIcon={<BsFiletypeXlsx color="white" />}
+                >
+                  Export XLSX
                 </Button>
               </HStack>
               <HStack>

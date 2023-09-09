@@ -281,6 +281,22 @@ export const participantRouter = createTRPCRouter({
     return { data: JSON.stringify(remapped, null, 2) };
   }),
 
+  exportJsonAsXlsxData: protectedProcedure.query(async () => {
+    const participants = await prisma.participant.findMany();
+
+    if (!participants)
+      throw new TRPCError({
+        code: "NOT_FOUND",
+        message: "Tidak ada data peserta pemilihan!",
+      });
+
+    return participants.map(({ name, qrId, subpart }) => ({
+      name,
+      qrId,
+      subpart,
+    }));
+  }),
+
   getParticipantStatus: publicProcedure
     .input(ParticipantAttendValidationSchema)
     .query(async ({ input }) => {
