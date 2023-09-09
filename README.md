@@ -240,7 +240,7 @@ Sebelum acara pemilihan berlangsung, harus ada yang di persiapkan sebelum pemili
 
    Catatan file csv:
 
-   - Bidang `Nama` hanya bisa diisi dengan huruf alfabet, angka, koma, dan titik saja.
+   - Bidang `Nama` hanya bisa diisi dengan huruf alfabet, angka, koma, petik satu, dan titik saja.
    - Bidang `Bagian Dari` hanya bisa diisi dengan huruf alfabet, angka, dan garis bawah tanpa spasi.
 
    Pergi ke [halaman peserta](http://localhost:3000/peserta), kurang lebih tampilan akan terlihat seperti ini.
