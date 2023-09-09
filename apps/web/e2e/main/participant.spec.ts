@@ -67,7 +67,7 @@ test.describe("Test create single participant", () => {
 
     await expect(
       page.getByText(
-        "Hanya diperbolehkan menulis alfabet, angka, koma, dan titik!",
+        "Hanya diperbolehkan menulis alfabet, angka, koma, petik satu, dan titik!",
       ),
     ).toBeVisible();
     await expect(
