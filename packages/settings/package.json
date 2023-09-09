@@ -14,11 +14,11 @@
     "eslint-config-prettier": "^8.8.0",
     "eslint-config-turbo": "^1.9.8",
     "eslint-plugin-react": "7.32.2",
-    "luxon": "^3.3.0"
+    "luxon": "^3.4.3"
   },
   "devDependencies": {
-    "@types/luxon": "^3.3.0",
+    "@types/luxon": "^3.3.2",
     "eslint": "^8.40.0",
-    "typescript": "^5.0.4"
+    "typescript": "^5.2.2"
   }
 }

@@ -27,7 +27,7 @@
     "usb": "^2.9.0"
   },
   "devDependencies": {
-    "@chakra-ui/react": "^2.8.0",
+    "@chakra-ui/react": "^2.8.1",
     "@electron-toolkit/tsconfig": "^1.0.1",
     "@electron/notarize": "^1.2.3",
     "@emotion/react": "^11.11.1",
@@ -39,10 +39,10 @@
     "@sora/id-generator": "^0.1.0",
     "@sora/ui": "^0.1.0",
     "@tanstack/react-query": "^4.29.5",
-    "@trpc/client": "^10.33.0",
-    "@trpc/react-query": "^10.33.0",
-    "@trpc/server": "^10.33.0",
-    "@types/luxon": "^3.3.0",
+    "@trpc/client": "^10.38.1",
+    "@trpc/react-query": "^10.38.1",
+    "@trpc/server": "^10.38.1",
+    "@types/luxon": "^3.3.2",
     "@types/node": "^20.2.5",
     "@types/react": "^18.2.6",
     "@types/react-dom": "^18.2.4",
@@ -57,13 +57,13 @@
     "eslint-plugin-prettier": "^4.2.1",
     "eslint-plugin-react": "7.32.2",
     "framer-motion": "^10.16.0",
-    "luxon": "^3.3.0",
+    "luxon": "^3.4.3",
     "qr-scanner": "^1.4.2",
     "react": "18.2.0",
     "react-dom": "18.2.0",
-    "react-router-dom": "^6.9.0",
-    "superjson": "1.9.1",
-    "typescript": "^5.0.4",
+    "react-router-dom": "^6.15.0",
+    "superjson": "1.13.1",
+    "typescript": "^5.2.2",
     "vite": "^4.2.1"
   }
 }
