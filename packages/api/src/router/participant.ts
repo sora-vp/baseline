@@ -276,6 +276,7 @@ export const participantRouter = createTRPCRouter({
     const remapped = participants.map((participant) => ({
       name: participant.name,
       qrId: participant.qrId,
+      subpart: participant.subpart
     }));
 
     return { data: JSON.stringify(remapped, null, 2) };
