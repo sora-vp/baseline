@@ -15,7 +15,7 @@ const InvalidCandidate = () => (
       alignItems="center"
       justifyContent="center"
     >
-      <Heading p={".6em"} color="red.500">
+      <Heading p={".6em"} color="red.500" onClick={() => location.reload()}>
         Profil Pemilihan Tidak Valid
       </Heading>
 
