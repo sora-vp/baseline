@@ -1,6 +1,6 @@
 {
   "name": "sora-attendance-desktop",
-  "version": "2.2.0",
+  "version": "2.3.0",
   "description": "Aplikasi desktop untuk interface absensi sora",
   "main": "./out/main/index.js",
   "author": "Ezra Khairan Permana <ezrakhairan123@gmail.com>",
