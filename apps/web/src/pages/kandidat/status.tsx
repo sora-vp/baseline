@@ -1,7 +1,7 @@
 import Head from "next/head";
 import {
+  Badge,
   Box,
-  Container,
   Flex,
   HStack,
   Text,
@@ -39,41 +39,6 @@ const Status = () => {
           </Text>
         </HStack>
         <HStack spacing={15}>
-          {!candidateQuery.isLoading &&
-          !candidateQuery.isError &&
-          candidateQuery.data.length > 0 &&
-          counterQuery.data ? (
-            <Stack direction="row" mr="2" mt="3" mb="3">
-              <Badge fontSize="1.3em">
-                <Tooltip label="Jumlah suara masuk ke masing-masing kandidat terpilih">
-                  Akumulasi Kandidat:
-                </Tooltip>{" "}
-                {counterQuery.data.candidates} Orang
-              </Badge>
-              <Badge fontSize="1.3em">
-                <Tooltip label="Jumlah peserta pemilihan yang valid dalam memilih kandidat">
-                  Akumulasi Pemilih:
-                </Tooltip>{" "}
-                {counterQuery.data.participants} Orang
-              </Badge>
-              <Badge
-                fontSize="1.3em"
-                colorScheme={counterQuery.data.isMatch ? "green" : "red"}
-                variant="solid"
-              >
-                <Tooltip
-                  label={
-                    counterQuery.data.isMatch
-                      ? "Jumlah peserta yang berhasil memilih sesuai dengan jumlah keseluruhan kandidat"
-                      : "Jumlah peserta yang berhasil memilih tidak sesuai dengan jumlah keseluruhan kandidat"
-                  }
-                >
-                  {counterQuery.data.isMatch ? "COCOK!" : "TIDAK COCOK!"}
-                </Tooltip>
-              </Badge>
-            </Stack>
-          ) : null}
-
           <Box
             bg={useColorModeValue("white", "gray.800")}
             borderWidth="1px"
