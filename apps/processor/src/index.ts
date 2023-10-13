@@ -24,6 +24,9 @@ const consumeMessagesFromQueue = async () => {
 
     if (!env.AMQP_URL) throw new Error("Diperlukan AQMP URL!");
 
+    logger.info(`[MQ] MQ AMQP: ${env.AMQP_URL}`);
+    logger.info(`[TRPC] TRPC URL: ${env.TRPC_URL}`);
+
     logger.info("[MQ] Connecting to RabbitMQ instance");
 
     const connection = await amqp.connect(env.AMQP_URL);
@@ -220,5 +223,4 @@ const consumeMessagesFromQueue = async () => {
     logger.error(error);
   }
 };
-
 consumeMessagesFromQueue();
