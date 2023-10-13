@@ -24,16 +24,15 @@ const NormalScanner = ({
     const qrScanner = new QrScanner(
       videoRef.current,
       ({ data }) => {
-        // Bug from QR Scanner
-        if (!data || data === "") return;
+        if (data || data !== "") {
+          qrScanner.stop();
 
-        qrScanner.stop();
+          const isValidQr = validateId(data);
 
-        const isValidQr = validateId(data);
+          if (!isValidQr) return setInvalidQr(true);
 
-        if (!isValidQr) return setInvalidQr(true);
-
-        participantAttend.mutate(data);
+          participantAttend.mutate(data);
+        }
       },
       {
         highlightCodeOutline: true,

@@ -18,7 +18,13 @@ const ScanningError = ({ message }: { message: string }) => {
         justifyContent="center"
         flexDirection="column"
       >
-        <Heading as="h2" size="2xl" fontSize="4rem" color="white">
+        <Heading
+          as="h2"
+          size="2xl"
+          fontSize="4rem"
+          color="white"
+          onClick={() => location.reload()}
+        >
           Gagal Absen!
         </Heading>
         <Heading

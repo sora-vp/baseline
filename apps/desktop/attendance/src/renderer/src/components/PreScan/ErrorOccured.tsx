@@ -16,7 +16,7 @@ const ErrorOcurred: React.FC = () => {
         alignItems="center"
         justifyContent="center"
       >
-        <Heading p={".6em"} color="red.500">
+        <Heading p={".6em"} color="red.500" onClick={() => location.reload()}>
           Terjadi Kesalahan Internal
         </Heading>
 
