@@ -137,6 +137,12 @@ const Candidate = () => {
                     Tambah Kandidat Baru
                   </Button>
                 </NextLink>
+
+                <NextLink href="/kandidat/status" passHref>
+                  <Button borderRadius="md" bg="yellow.500" color="white">
+                    Cek Status Pemilihan
+                  </Button>
+                </NextLink>
               </HStack>
 
               <HStack>
