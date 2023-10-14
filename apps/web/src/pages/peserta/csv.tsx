@@ -43,7 +43,7 @@ import {
 import { api } from "~/utils/api";
 import Sidebar from "~/components/Sidebar";
 
-type StateZodErr = Array<{ message: string; path: Array<number | string> }>;
+type StateZodErr = { error: Array<{ message: string; path: Array<number | string> }>; dataOfError: Array<{ "Bagian Dari": string; Nama: string }> };
 
 const HalamanTambah = () => {
   const toast = useToast();
@@ -96,12 +96,18 @@ const HalamanTambah = () => {
       const result = CSVDataValidator.safeParse(records);
 
       if (!result.success) {
-        const error = JSON.parse(result.error.message) as StateZodErr;
+        const error = JSON.parse(result.error.message) as StateZodErr['error'];
 
-        setErr(error);
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
+        const dataOfError = error.map(d => records[d.path[0]])
+
+        setErr({ error, dataOfError: dataOfError as StateZodErr['dataOfError'] });
 
         return onOpen();
       }
+
+      console.log(result.data)
 
       insertManyMutation.mutate(result.data);
     });
@@ -196,9 +202,11 @@ const HalamanTambah = () => {
             </Text>
 
             <UnorderedList>
-              {errors?.map((error, idx) => (
+              {errors?.error.map((error, idx) => (
                 <ListItem key={idx}>
-                  Kolom {error.path[1]} baris ke {(error.path[0] as number) + 1}
+                  {/* eslint-disable-next-line @typescript-eslint/ban-ts-comment */}
+                  {/** @ts-ignore */}
+                  Kolom {error.path[1]} data {JSON.stringify(errors.dataOfError[idx][error.path[1]])}
                   . {error.message}
                 </ListItem>
               ))}

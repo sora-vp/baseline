@@ -5,7 +5,7 @@ import { validateId } from "@sora/id-generator";
 const baseNameSchema = z
   .string()
   .min(1, { message: "Diperlukan nama peserta!" })
-  .regex(/^[a-zA-Z0-9.,'\s]+$/, {
+  .regex(/^[a-zA-Z0-9.,'\s`-]+$/, {
     message:
       "Hanya diperbolehkan menulis alfabet, angka, koma, petik satu, dan titik!",
   });
