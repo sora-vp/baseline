@@ -103,7 +103,7 @@ export const participantRouter = createTRPCRouter({
 
       const checkThing = await Promise.all(
         okToInsert.map(({ name }) =>
-          prisma.participant.findUnique({ where: { name } }),
+          prisma.participant.findFirst({ where: { name } }),
         ),
       );
 
