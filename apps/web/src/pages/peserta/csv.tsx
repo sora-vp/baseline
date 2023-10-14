@@ -210,9 +210,9 @@ const HalamanTambah = () => {
             <UnorderedList>
               {errors?.error.map((error, idx) => (
                 <ListItem key={idx}>
+                  Kolom {error.path[1]} data{" "}
                   {/* eslint-disable-next-line @typescript-eslint/ban-ts-comment */}
                   {/** @ts-ignore */}
-                  Kolom {error.path[1]} data{" "}
                   {JSON.stringify(errors.dataOfError[idx][error.path[1]])}.{" "}
                   {error.message}
                 </ListItem>
