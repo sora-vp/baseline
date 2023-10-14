@@ -27,7 +27,7 @@ model Candidate {
 
 model Participant {
   id              Int       @id @default(autoincrement())
-  name            String    @unique @db.VarChar(255)
+  name            String    @db.VarChar(255)
   subpart         String    @db.VarChar(50)
   qrId            String    @unique @db.VarChar(30)
   alreadyAttended Boolean   @default(false)
