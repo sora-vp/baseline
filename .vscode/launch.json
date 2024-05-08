@@ -2,19 +2,11 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "Development mode web interface",
+      "name": "Next.js",
       "type": "node-terminal",
       "request": "launch",
-      "command": "yarn dev",
-      "cwd": "${workspaceFolder}/apps/web/",
-      "skipFiles": ["<node_internals>/**"]
-    },
-    {
-      "name": "E2E web interface w/ ui",
-      "type": "node-terminal",
-      "request": "launch",
-      "command": "yarn e2e:ui",
-      "cwd": "${workspaceFolder}/apps/web/",
+      "command": "pnpm dev",
+      "cwd": "${workspaceFolder}/apps/nextjs/",
       "skipFiles": ["<node_internals>/**"]
     }
   ]

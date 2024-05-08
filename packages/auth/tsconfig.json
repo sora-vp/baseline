@@ -1,4 +1,8 @@
 {
-  "extends": "../../tsconfig.json",
-  "include": ["src", "*.ts", "env.mjs"]
+  "extends": "@sora-vp/tsconfig/base.json",
+  "compilerOptions": {
+    "tsBuildInfoFile": "node_modules/.cache/tsbuildinfo.json"
+  },
+  "include": ["src", "*.ts"],
+  "exclude": ["node_modules"]
 }

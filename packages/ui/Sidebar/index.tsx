@@ -1,1 +1,0 @@
-export { SidebarWrapper } from "./Sidebar";

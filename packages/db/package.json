@@ -1,24 +1,42 @@
 {
-  "name": "@sora/db",
+  "name": "@sora-vp/db",
   "version": "0.1.0",
-  "main": "./index.ts",
-  "types": "./index.ts",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./src/index.ts"
+    }
+  },
   "license": "MIT",
   "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
     "clean": "rm -rf .turbo node_modules",
-    "db:generate": "yarn with-env prisma generate",
-    "db:push": "yarn with-env prisma db push --skip-generate",
-    "dev": "yarn with-env prisma studio --port 5556",
-    "e2e:db-push": "yarn with-env-test prisma db push --skip-generate",
-    "with-env": "dotenv -e ../../.env --",
-    "with-env-test": "dotenv -e ../../.env.test --"
+    "format": "prettier --check . --ignore-path ../../.gitignore",
+    "lint": "eslint",
+    "push": "yarn with-env drizzle-kit push:mysql --config src/config.ts",
+    "studio": "yarn with-env drizzle-kit studio --config src/config.ts",
+    "typecheck": "tsc --noEmit --emitDeclarationOnly false",
+    "with-env": "dotenv -e ../../.env --"
   },
   "dependencies": {
-    "@prisma/client": "^5.1.1"
+    "@planetscale/database": "^1.18.0",
+    "@t3-oss/env-core": "^0.10.1",
+    "drizzle-orm": "^0.30.10",
+    "zod": "^3.23.6"
   },
   "devDependencies": {
-    "dotenv-cli": "^7.2.1",
-    "prisma": "^5.1.1",
-    "typescript": "^5.2.2"
-  }
+    "@sora-vp/eslint-config": "*",
+    "@sora-vp/prettier-config": "*",
+    "@sora-vp/tsconfig": "*",
+    "dotenv-cli": "^7.4.1",
+    "drizzle-kit": "^0.20.18",
+    "eslint": "^9.2.0",
+    "mysql2": "^3.9.7",
+    "prettier": "^3.2.5",
+    "typescript": "^5.4.5"
+  },
+  "prettier": "@sora-vp/prettier-config"
 }
