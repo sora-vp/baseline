@@ -7,10 +7,11 @@
  * The pieces you will need to use are documented accordingly near the end
  */
 import type { Session } from "@sora-vp/auth";
-import { db } from "@sora-vp/db";
 import { initTRPC, TRPCError } from "@trpc/server";
 import superjson from "superjson";
 import { ZodError } from "zod";
+
+import { db } from "@sora-vp/db";
 
 /**
  * 1. CONTEXT

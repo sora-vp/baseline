@@ -3,6 +3,7 @@
  * for Tailwind Intellisense & Autocompletion in the source files
  */
 import type { Config } from "tailwindcss";
+
 import baseConfig from "@sora-vp/tailwind-config/web";
 
 export default {
