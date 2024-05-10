@@ -1,14 +1,22 @@
-import { Client } from "@planetscale/database";
-import { drizzle } from "drizzle-orm/planetscale-serverless";
+import { eq, sql } from "drizzle-orm";
+import { drizzle } from "drizzle-orm/mysql2";
+import mysql from "mysql2/promise";
 
 import { connectionStr } from "./config";
-import * as auth from "./schema/auth";
-import * as post from "./schema/post";
+import * as mainSchema from "./schema/main";
 
 export * from "drizzle-orm/sql";
 export { alias } from "drizzle-orm/mysql-core";
 
-export const schema = { ...auth, ...post };
+const poolConnection = mysql.createPool(connectionStr.toString());
+export const db = drizzle(poolConnection, {
+  schema: mainSchema,
+  mode: "default",
+});
 
-const psClient = new Client({ url: connectionStr.href });
-export const db = drizzle(psClient, { schema });
+// Prepared statement stuff
+export const preparedGetUserByEmail = db.query.users
+  .findFirst({
+    where: eq(mainSchema.users.email, sql.placeholder("email")),
+  })
+  .prepare();

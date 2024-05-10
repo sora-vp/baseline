@@ -1,8 +1,8 @@
 import type { DefaultSession, NextAuthConfig } from "next-auth";
-import { DrizzleAdapter } from "@auth/drizzle-adapter";
-import Discord from "next-auth/providers/discord";
+import bcrypt from "bcrypt";
+import CredentialsProvider from "next-auth/providers/credentials";
 
-import { db, schema } from "@sora-vp/db";
+import { preparedGetUserByEmail } from "@sora-vp/db";
 
 declare module "next-auth" {
   interface Session {
@@ -13,24 +13,39 @@ declare module "next-auth" {
 }
 
 export const authConfig = {
-  adapter: DrizzleAdapter(db, {
-    usersTable: schema.users,
-    accountsTable: schema.accounts,
-    sessionsTable: schema.sessions,
-    verificationTokensTable: schema.verificationTokens,
-  }),
-  providers: [Discord],
-  callbacks: {
-    session: (opts) => {
-      if (!("user" in opts)) throw "unreachable with session strategy";
-
-      return {
-        ...opts.session,
-        user: {
-          ...opts.session.user,
-          id: opts.user.id,
-        },
-      };
-    },
+  pages: {
+    signIn: "/login",
   },
+  providers: [
+    CredentialsProvider({
+      name: "credentials",
+      credentials: {
+        email: { label: "Email", type: "text" },
+        password: { label: "Password", type: "password" },
+      },
+      async authorize(credentials) {
+        if (!credentials.email || !credentials.password)
+          throw new Error("Dibutuhkan email dan password!");
+
+        const user = await preparedGetUserByEmail.execute({
+          email: credentials.email,
+        });
+
+        if (!user) throw new Error("Pengguna tidak ditemukan!");
+
+        const isValidPassword = await bcrypt.compare(
+          credentials.password as string,
+          user.password,
+        );
+
+        if (!isValidPassword) throw new Error("Kata sandi salah!");
+
+        return {
+          id: user.id,
+          name: user.name,
+          email: user.email,
+        };
+      },
+    }),
+  ],
 } satisfies NextAuthConfig;
