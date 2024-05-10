@@ -1593,13 +1593,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@planetscale/database@npm:^1.18.0":
-  version: 1.18.0
-  resolution: "@planetscale/database@npm:1.18.0"
-  checksum: 10c0/204970018b8ff125158ff26c2b35c5646b14385091cb6131ab45d34a72db15e4e09f70b891e55bc43bd371ca4e84db058b999bbc2a750bf8e16eecd67ef5ce87
-  languageName: node
-  linkType: hard
-
 "@radix-ui/primitive@npm:1.0.1":
   version: 1.0.1
   resolution: "@radix-ui/primitive@npm:1.0.1"
@@ -2430,7 +2423,6 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@sora-vp/db@workspace:packages/db"
   dependencies:
-    "@planetscale/database": "npm:^1.18.0"
     "@sora-vp/eslint-config": "npm:*"
     "@sora-vp/prettier-config": "npm:*"
     "@sora-vp/tsconfig": "npm:*"

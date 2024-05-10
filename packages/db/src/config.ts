@@ -17,11 +17,11 @@ const env = createEnv({
 export const connectionStr = new URL(`mysql://${env.DB_HOST}/${env.DB_NAME}`);
 connectionStr.username = env.DB_USERNAME;
 connectionStr.password = env.DB_PASSWORD;
-connectionStr.searchParams.set("ssl", '{"rejectUnauthorized":true}');
+// connectionStr.searchParams.set("ssl", '{"rejectUnauthorized":true}');
 
 export default {
   schema: "./src/schema",
   driver: "mysql2",
   dbCredentials: { uri: connectionStr.href },
-  tablesFilter: ["t3turbo_*"],
+  tablesFilter: ["sora_*"],
 } satisfies Config;
