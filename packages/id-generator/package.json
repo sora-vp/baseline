@@ -1,7 +1,8 @@
 {
-  "name": "@sora/id-generator",
+  "name": "@sora-vp/id-generator",
   "version": "0.1.0",
   "private": true,
+  "type": "module",
   "types": "index.ts",
   "main": "index.ts",
   "author": "Ezra Khairan Permana",
@@ -13,7 +14,7 @@
     "eslint-config-prettier": "^8.8.0",
     "eslint-config-turbo": "^1.13.3",
     "eslint-plugin-react": "^7.34.1",
-    "nanoid": "3.3.4"
+    "nanoid": "^5.0.7"
   },
   "devDependencies": {
     "@types/eslint": "^8.37.0",

@@ -1,0 +1,40 @@
+{
+  "name": "@sora-vp/processor",
+  "private": true,
+  "type": "module",
+  "main": "dist/index.mjs",
+  "scripts": {
+    "build": "tsup",
+    "clean": "rm -rf .turbo node_modules",
+    "dev": "yarn with-env tsx src/index.ts",
+    "lint": "eslint",
+    "format": "prettier --check . --ignore-path ../../.gitignore",
+    "typecheck": "tsc --noEmit",
+    "with-env": "dotenv -e ../../.env --"
+  },
+  "dependencies": {
+    "@sora-vp/db": "*",
+    "@sora-vp/id-generator": "*",
+    "@trpc/client": "11.0.0-rc.364",
+    "@trpc/server": "11.0.0-rc.364",
+    "amqplib": "^0.10.4",
+    "pino": "^9.0.0",
+    "pino-pretty": "^11.0.0",
+    "superjson": "2.2.1"
+  },
+  "devDependencies": {
+    "@sora-vp/eslint-config": "*",
+    "@sora-vp/prettier-config": "*",
+    "@sora-vp/tailwind-config": "*",
+    "@sora-vp/tsconfig": "*",
+    "@types/amqplib": "^0",
+    "@types/node": "^20.12.9",
+    "dotenv-cli": "^7.4.1",
+    "eslint": "^9.2.0",
+    "prettier": "^3.2.5",
+    "tsup": "^8.0.2",
+    "tsx": "^4.9.4",
+    "typescript": "^5.4.5"
+  },
+  "prettier": "@sora-vp/prettier-config"
+}
