@@ -9,6 +9,7 @@ export * from "drizzle-orm/sql";
 export { alias } from "drizzle-orm/mysql-core";
 
 const poolConnection = mysql.createPool(connectionStr.toString());
+
 export const db = drizzle(poolConnection, {
   schema: mainSchema,
   mode: "default",

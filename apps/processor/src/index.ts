@@ -1,1 +1,1 @@
-console.log("init processor")
+console.log("init processor");
