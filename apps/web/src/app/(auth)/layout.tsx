@@ -1,8 +1,10 @@
 import type { Metadata, Viewport } from "next";
 import localFont from "next/font/local";
+import { redirect } from "next/navigation";
 import { GeistMono } from "geist/font/mono";
 import { GeistSans } from "geist/font/sans";
 
+import { auth } from "@sora-vp/auth";
 import { cn } from "@sora-vp/ui";
 import {
   ResizableHandle,
@@ -31,10 +33,14 @@ export const viewport: Viewport = {
 };
 
 const sundaneseFont = localFont({
-  src: "./fonts/NotoSansSundanese-Regular.ttf",
+  src: "../fonts/NotoSansSundanese-Regular.ttf",
 });
 
-export default function RootLayout(props: { children: React.ReactNode }) {
+export default async function RootLayout(props: { children: React.ReactNode }) {
+  const isLoggedIn = await auth();
+
+  if (!isLoggedIn) redirect("/login");
+
   return (
     <html lang="en" suppressHydrationWarning>
       <body
@@ -51,7 +57,7 @@ export default function RootLayout(props: { children: React.ReactNode }) {
           >
             <ResizablePanel minSize={6} defaultSize={17} maxSize={20}>
               <div className="flex items-center justify-center p-6 text-4xl">
-                <span className={`${sundaneseFont.className}`}>ᮞᮧᮛ</span>
+                <span className={sundaneseFont.className}>ᮞᮧᮛ</span>
               </div>
             </ResizablePanel>
             <ResizableHandle />
