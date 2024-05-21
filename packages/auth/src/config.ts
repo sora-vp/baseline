@@ -1,8 +1,13 @@
 import type { DefaultSession, NextAuthConfig } from "next-auth";
+// import { AuthError } from "next-auth"
 import bcrypt from "bcrypt";
 import CredentialsProvider from "next-auth/providers/credentials";
 
 import { preparedGetUserByEmail } from "@sora-vp/db";
+
+// class UserNotFoundError extends AuthError {
+//   static type = "UserNotFoundError";
+// }
 
 declare module "next-auth" {
   interface Session {
@@ -44,6 +49,7 @@ export const authConfig = {
           id: user.id,
           name: user.name,
           email: user.email,
+          verifiedAt: user.verifiedAt,
         };
       },
     }),

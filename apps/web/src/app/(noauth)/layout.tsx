@@ -5,11 +5,8 @@ import { GeistSans } from "geist/font/sans";
 
 import { cn } from "@sora-vp/ui";
 import { ThemeProvider, ThemeToggle } from "@sora-vp/ui/theme";
-import { Toaster } from "@sora-vp/ui/toast";
 
 import "~/app/globals.css";
-
-import { env } from "~/env";
 
 export const metadata: Metadata = {
   title: "sora",

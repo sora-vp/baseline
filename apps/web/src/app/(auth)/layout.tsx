@@ -5,6 +5,7 @@ import { GeistMono } from "geist/font/mono";
 import { GeistSans } from "geist/font/sans";
 
 import { auth } from "@sora-vp/auth";
+import { preparedGetUserByEmail } from "@sora-vp/db";
 import { cn } from "@sora-vp/ui";
 import {
   ResizableHandle,
@@ -17,8 +18,6 @@ import { Toaster } from "@sora-vp/ui/toast";
 import { TRPCReactProvider } from "~/trpc/react";
 
 import "~/app/globals.css";
-
-import { env } from "~/env";
 
 export const metadata: Metadata = {
   title: "sora baseline | aplikasi pemilihan",
@@ -40,6 +39,41 @@ export default async function RootLayout(props: { children: React.ReactNode }) {
   const isLoggedIn = await auth();
 
   if (!isLoggedIn) redirect("/login");
+
+  const currentUser = await preparedGetUserByEmail.execute({
+    email: isLoggedIn.user.email,
+  });
+
+  if (!currentUser!.verifiedAt)
+    return (
+      <html lang="en" suppressHydrationWarning>
+        <body
+          className={cn(
+            "min-h-screen bg-background font-sans text-foreground antialiased",
+            GeistSans.variable,
+            GeistMono.variable,
+          )}
+        >
+          <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+            <div className="flex h-screen flex-col items-center justify-center p-2">
+              <h2 className="scroll-m-20 pb-2 text-center text-3xl font-semibold tracking-tight first:mt-0">
+                Anda Belum Terverifikasi
+              </h2>
+              <p className="text-center font-light leading-7 sm:w-[95%] md:w-[50%] [&:not(:first-child)]:mt-6">
+                Anda belum terverifikasi oleh administrator yang lain, mohon
+                konfirmasi ke panitia yang lain supaya anda bisa mengakses
+                dashboard admin. Jika sudah maka refresh halaman ini atau keluar
+                dan login kembali.
+              </p>
+            </div>
+
+            <div className="absolute bottom-4 right-4">
+              <ThemeToggle />
+            </div>
+          </ThemeProvider>
+        </body>
+      </html>
+    );
 
   return (
     <html lang="en" suppressHydrationWarning>
@@ -83,7 +117,7 @@ export default async function RootLayout(props: { children: React.ReactNode }) {
           <div className="absolute bottom-4 right-4">
             <ThemeToggle />
           </div>
-          <Toaster />
+          <Toaster richColors />
         </ThemeProvider>
       </body>
     </html>

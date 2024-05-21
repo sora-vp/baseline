@@ -16,9 +16,7 @@ export const users = mySqlTable(
     name: text("name").notNull(),
     email: varchar("email", { length: 255 }).notNull(),
     password: varchar("password", { length: 255 }).notNull(),
-    createdAt: timestamp("submittedAt", { mode: "date" })
-      .notNull()
-      .defaultNow(),
+    verifiedAt: timestamp("verified_at", { mode: "date" }),
   },
   (users) => ({
     emailIndex: uniqueIndex("email_unique_index").on(users.email),
