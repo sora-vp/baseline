@@ -1,6 +1,7 @@
 import {
   boolean,
   int,
+  mysqlEnum,
   text,
   timestamp,
   uniqueIndex,
@@ -17,6 +18,7 @@ export const users = mySqlTable(
     email: varchar("email", { length: 255 }).notNull(),
     password: varchar("password", { length: 255 }).notNull(),
     verifiedAt: timestamp("verified_at", { mode: "date" }),
+    role: mysqlEnum("role", ["admin", "comittee"]),
   },
   (users) => ({
     emailIndex: uniqueIndex("email_unique_index").on(users.email),

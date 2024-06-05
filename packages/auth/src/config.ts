@@ -1,18 +1,22 @@
 import type { DefaultSession, NextAuthConfig } from "next-auth";
-// import { AuthError } from "next-auth"
 import bcrypt from "bcrypt";
+import { CredentialsSignin } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 
 import { preparedGetUserByEmail } from "@sora-vp/db";
 
-// class UserNotFoundError extends AuthError {
-//   static type = "UserNotFoundError";
-// }
+class InvalidLoginError extends CredentialsSignin {
+  code = "Mohon masukan email dan kata sandi!";
+}
+class InvalidUserOrPassword extends CredentialsSignin {
+  code = "Email atau kata sandi salah!";
+}
 
 declare module "next-auth" {
   interface Session {
     user: {
-      id: string;
+      verifiedAt: Date | null;
+      role: "admin" | "comittee" | null;
     } & DefaultSession["user"];
   }
 }
@@ -25,33 +29,46 @@ export const authConfig = {
     CredentialsProvider({
       name: "credentials",
       credentials: {
-        email: { label: "Email", type: "text" },
-        password: { label: "Password", type: "password" },
+        email: { label: "Email" },
+        password: { label: "Password" },
       },
       async authorize(credentials) {
         if (!credentials.email || !credentials.password)
-          throw new Error("Dibutuhkan email dan password!");
+          throw new InvalidLoginError("Dibutuhkan email dan password!");
 
         const user = await preparedGetUserByEmail.execute({
           email: credentials.email,
         });
 
-        if (!user) throw new Error("Pengguna tidak ditemukan!");
+        if (!user) throw new InvalidUserOrPassword();
 
         const isValidPassword = await bcrypt.compare(
           credentials.password as string,
           user.password,
         );
 
-        if (!isValidPassword) throw new Error("Kata sandi salah!");
+        if (!isValidPassword) throw new InvalidUserOrPassword();
 
         return {
-          id: user.id,
           name: user.name,
           email: user.email,
-          verifiedAt: user.verifiedAt,
         };
       },
     }),
   ],
+  callbacks: {
+    jwt({ token }) {
+      return token;
+    },
+    async session({ session }) {
+      const user = await preparedGetUserByEmail.execute({
+        email: session.user.email,
+      });
+
+      session.user.role = user.role;
+      session.user.verifiedAt = user.verifiedAt;
+
+      return session;
+    },
+  },
 } satisfies NextAuthConfig;

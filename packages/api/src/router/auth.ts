@@ -31,12 +31,14 @@ export const authRouter = {
       const hash = bcrypt.hashSync(input.password, salt);
 
       const userTable = await countUserTable.execute();
-      const autoAdmin = userTable.at(0).count < 1;
+      const availUser = userTable.at(0);
+      const autoAdmin = availUser && availUser.count < 1;
 
       await ctx.db.insert(schema.users).values({
         ...input,
         password: hash,
         verifiedAt: autoAdmin ? new Date() : null,
+        role: autoAdmin ? "admin" : null,
       });
 
       return {

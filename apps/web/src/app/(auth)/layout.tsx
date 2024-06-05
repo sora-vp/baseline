@@ -5,7 +5,6 @@ import { GeistMono } from "geist/font/mono";
 import { GeistSans } from "geist/font/sans";
 
 import { auth } from "@sora-vp/auth";
-import { preparedGetUserByEmail } from "@sora-vp/db";
 import { cn } from "@sora-vp/ui";
 import {
   ResizableHandle,
@@ -18,6 +17,8 @@ import { Toaster } from "@sora-vp/ui/toast";
 import { TRPCReactProvider } from "~/trpc/react";
 
 import "~/app/globals.css";
+
+import { TopNavbar } from "~/app/_components/nav/top-navbar";
 
 export const metadata: Metadata = {
   title: "sora baseline | aplikasi pemilihan",
@@ -40,11 +41,7 @@ export default async function RootLayout(props: { children: React.ReactNode }) {
 
   if (!isLoggedIn) redirect("/login");
 
-  const currentUser = await preparedGetUserByEmail.execute({
-    email: isLoggedIn.user.email,
-  });
-
-  if (!currentUser!.verifiedAt)
+  if (!isLoggedIn.user.verifiedAt)
     return (
       <html lang="en" suppressHydrationWarning>
         <body
@@ -60,10 +57,10 @@ export default async function RootLayout(props: { children: React.ReactNode }) {
                 Anda Belum Terverifikasi
               </h2>
               <p className="text-center font-light leading-7 sm:w-[95%] md:w-[50%] [&:not(:first-child)]:mt-6">
-                Anda belum terverifikasi oleh administrator yang lain, mohon
-                konfirmasi ke panitia yang lain supaya anda bisa mengakses
-                dashboard admin. Jika sudah maka refresh halaman ini atau keluar
-                dan login kembali.
+                Anda belum terverifikasi oleh sistem, mohon konfirmasi ke
+                panitia yang lain supaya anda bisa mengakses dashboard admin.
+                Jika sudah maka refresh halaman ini atau keluar dan login
+                kembali.
               </p>
             </div>
 
@@ -100,11 +97,13 @@ export default async function RootLayout(props: { children: React.ReactNode }) {
                 <ResizablePanel
                   defaultSize={10}
                   collapsible={false}
-                  className="border border-0 border-b"
+                  className="border-0 border-b"
                 >
-                  <div className="flex h-full items-center justify-center p-6">
-                    <span className="font-semibold">Atas</span>
-                  </div>
+                  <TopNavbar
+                    name={isLoggedIn.user.name ?? ""}
+                    email={isLoggedIn.user.email ?? ""}
+                    nameFallback={isLoggedIn.user.name?.slice(0, 2) ?? ""}
+                  />
                 </ResizablePanel>
                 <ResizablePanel defaultSize={90} collapsible={false}>
                   <div className="p-3 pb-0">

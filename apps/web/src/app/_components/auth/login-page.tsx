@@ -106,7 +106,7 @@ export function LoginComponent() {
                     />
                   </FormControl>
                   <FormDescription>
-                    Masukan email yang sudah di daftarkan sebelumnya.
+                    Masukan kata sandi yang sudah di daftarkan sebelumnya.
                   </FormDescription>
                   <FormMessage />
                 </FormItem>
