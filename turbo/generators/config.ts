@@ -1,4 +1,5 @@
 import { execSync } from "node:child_process";
+import path from "node:path";
 import type { PlopTypes } from "@turbo/gen";
 
 interface PackageJson {
@@ -8,15 +9,17 @@ interface PackageJson {
   devDependencies: Record<string, string>;
 }
 
+const baseDir = path.join(__dirname, "../..");
+
 export default function generator(plop: PlopTypes.NodePlopAPI): void {
   plop.setGenerator("init", {
-    description: "Generate a new package for the Acme Monorepo",
+    description: "Generate a new package for the Sora Baseline Monorepo",
     prompts: [
       {
         type: "input",
         name: "name",
         message:
-          "What is the name of the package? (You can skip the `@acme/` prefix)",
+          "What is the name of the package? (You can skip the `@sora-vp/` prefix)",
       },
       {
         type: "input",
@@ -28,8 +31,8 @@ export default function generator(plop: PlopTypes.NodePlopAPI): void {
     actions: [
       (answers) => {
         if ("name" in answers && typeof answers.name === "string") {
-          if (answers.name.startsWith("@acme/")) {
-            answers.name = answers.name.replace("@acme/", "");
+          if (answers.name.startsWith("@sora-vp/")) {
+            answers.name = answers.name.replace("@sora-vp/", "");
           }
         }
         return "Config sanitized";
@@ -82,9 +85,12 @@ export default function generator(plop: PlopTypes.NodePlopAPI): void {
           // execSync("pnpm dlx sherif@latest --fix", {
           //   stdio: "inherit",
           // });
-          execSync("pnpm i", { stdio: "inherit" });
+          execSync("yarn", { stdio: "inherit", cwd: baseDir });
           execSync(
-            `pnpm prettier --write packages/${answers.name}/** --list-different`,
+            `yarn prettier --write packages/${answers.name}/** --list-different`,
+            {
+              cwd: baseDir,
+            },
           );
           return "Package scaffolded";
         }

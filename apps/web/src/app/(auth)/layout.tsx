@@ -106,7 +106,7 @@ export default async function RootLayout(props: { children: React.ReactNode }) {
                   />
                 </ResizablePanel>
                 <ResizablePanel defaultSize={90} collapsible={false}>
-                  <div className="p-3 pb-0">
+                  <div>
                     <TRPCReactProvider>{props.children}</TRPCReactProvider>
                   </div>
                 </ResizablePanel>

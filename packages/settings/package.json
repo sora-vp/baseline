@@ -1,5 +1,5 @@
 {
-  "name": "@sora-vp/{{ name }}",
+  "name": "@sora-vp/settings",
   "private": true,
   "version": "0.1.0",
   "type": "module",
