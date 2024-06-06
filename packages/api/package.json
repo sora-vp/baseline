@@ -21,6 +21,7 @@
   "dependencies": {
     "@sora-vp/auth": "*",
     "@sora-vp/db": "*",
+    "@sora-vp/settings": "*",
     "@sora-vp/validators": "*",
     "@trpc/server": "11.0.0-rc.364",
     "bcrypt": "^5.1.1",
