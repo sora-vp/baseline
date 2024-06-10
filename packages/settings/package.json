@@ -17,9 +17,9 @@
     "@sora-vp/eslint-config": "*",
     "@sora-vp/prettier-config": "*",
     "@sora-vp/tsconfig": "*",
-    "eslint": "^9.0.0",
+    "eslint": "^9.2.0",
     "prettier": "^3.2.5",
-    "typescript": "^5.4.3"
+    "typescript": "^5.4.5"
   },
   "prettier": "@sora-vp/prettier-config"
 }

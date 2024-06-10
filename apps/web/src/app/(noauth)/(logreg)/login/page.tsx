@@ -1,5 +1,1 @@
-import { LoginComponent } from "~/app/_components/auth/login-page";
-
-export default function LoginPage() {
-  return <LoginComponent />;
-}
+export { LoginComponent as default } from "~/app/_components/auth/login-page";

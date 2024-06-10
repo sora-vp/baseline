@@ -5,6 +5,9 @@ import CredentialsProvider from "next-auth/providers/credentials";
 
 import { preparedGetUserByEmail } from "@sora-vp/db";
 
+class UnexpectedLoginError extends CredentialsSignin {
+  code = "Terjadi kesalahan yang terduga, mohon coba lagi nanti.";
+}
 class InvalidLoginError extends CredentialsSignin {
   code = "Mohon masukan email dan kata sandi!";
 }
@@ -33,8 +36,9 @@ export const authConfig = {
         password: { label: "Password" },
       },
       async authorize(credentials) {
+        try {
         if (!credentials.email || !credentials.password)
-          throw new InvalidLoginError("Dibutuhkan email dan password!");
+          throw new InvalidLoginError();
 
         const user = await preparedGetUserByEmail.execute({
           email: credentials.email,
@@ -53,6 +57,10 @@ export const authConfig = {
           name: user.name,
           email: user.email,
         };
+        } catch (_) {
+          throw new InvalidUserOrPassword;
+          
+        }
       },
     }),
   ],
