@@ -80,4 +80,47 @@ export const adminRouter = {
           .where(eq(schema.users.id, input.id));
       }),
     ),
+
+  updateUserRole: adminProcedure
+    .input(
+      z.object({
+        id: z.number(),
+        role: z.enum(["admin", "comittee"]),
+      }),
+    )
+    .mutation(({ ctx, input }) =>
+      ctx.db.transaction(async (tx) => {
+        const specificUser = await tx.query.users.findFirst({
+          where: eq(schema.users.id, input.id),
+        });
+
+        if (!specificUser)
+          throw new TRPCError({
+            code: "NOT_FOUND",
+            message: "Pengguna yang dituju tidak ditemukan!",
+          });
+
+        if (ctx.session.user.email === specificUser.email)
+          throw new TRPCError({
+            code: "BAD_REQUEST",
+            message: "Mana bisa begitu? Update role sendiri?",
+          });
+
+        return await tx
+          .update(schema.users)
+          .set({
+            role: input.role,
+          })
+          .where(eq(schema.users.id, input.id));
+      }),
+    ),
+
+  getAllRegisteredUser: adminProcedure.query(({ ctx }) =>
+    ctx.db.query.users.findMany({
+      where: and(
+        sql`${schema.users.verifiedAt} IS NOT NULL`,
+        not(eq(schema.users.email, ctx.session.user.email)),
+      ),
+    }),
+  ),
 } satisfies TRPCRouterRecord;

@@ -14,7 +14,6 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from "@sora-vp/ui/dialog";
 import {
   Form,
@@ -31,49 +30,69 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@sora-vp/ui/select";
+import { toast } from "@sora-vp/ui/toast";
+
+import { api } from "~/trpc/react";
 
 const FormSchema = z.object({
-  role: z.enum(["comittee", "admin"], {
+  role: z.enum(["admin", "comittee"], {
     required_error: "Dimohon untuk memilih tingkatan pengguna",
   }),
 });
 
-export const AcceptUser = ({
+export const UpdateRole = ({
   isOpen,
+  currRole,
+  userId,
   toggleOpen,
-  isDisabled,
-  isLoading,
-  onSubmit,
 }: {
   isOpen: boolean;
+  currRole: "admin" | "comittee";
+  userId: number;
   toggleOpen: () => void;
-  isDisabled: boolean;
-  isLoading: boolean;
-  onSubmit: (data: z.infer<typeof FormSchema>) => void;
 }) => {
+  const utils = api.useUtils();
+  const updateRoleMutation = api.admin.updateUserRole.useMutation({
+    onSuccess() {
+      toast.success("Berhasil memperbarui pengguna!", {
+        description: "Status pengguna berhasil diperbarui.",
+      });
+      toggleOpen();
+    },
+    onError(error) {
+      toast.error("Operasi Gagal", {
+        description: `Terjadi kesalahan, Error: ${error.message}`,
+      });
+    },
+    async onSettled() {
+      await utils.admin.getAllRegisteredUser.invalidate();
+    },
+  });
+
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
+    defaultValues: {
+      role: currRole,
+    },
   });
+
+  const onSubmit = (data: z.infer<typeof FormSchema>) =>
+    updateRoleMutation.mutate({ id: userId, ...data });
 
   return (
     <Dialog
       open={isOpen}
       onOpenChange={() => {
-        if (!isLoading) toggleOpen();
+        if (!updateRoleMutation.isPending) toggleOpen();
       }}
     >
-      <DialogTrigger asChild>
-        <Button disabled={isDisabled}>Terima</Button>
-      </DialogTrigger>
-
       <DialogContent>
         <DialogHeader className="flex flex-col gap-2">
-          <DialogTitle>Apakah anda yakin?</DialogTitle>
+          <DialogTitle>Perbarui tingkatan pengguna</DialogTitle>
           <DialogDescription>
-            Anda akan mengizinkan pengguna untuk mengakses platform ini, mohon
-            berkomunikasi dengan orang yang bersangkutan. Jika benar maka pilih
-            tingkatan pengguna tersebut pada pilihan di bawah lalu{" "}
-            <b>Izinkan</b>.
+            Anda akan memperbarui tingkatan pengguna ini. Mohon pikirkan kembali
+            dan cek apakah dia adalah orang yang benar dan pantas di ubah
+            tingkatannya supaya tidak menimbulkan keributan.
           </DialogDescription>
           <DialogDescription className="text-start">
             <Form {...form}>
@@ -98,7 +117,7 @@ export const AcceptUser = ({
                         </FormControl>
                         <SelectContent>
                           <SelectItem value="comittee">
-                            Panitia Biasa
+                            Pengguna Biasa
                           </SelectItem>
                           <SelectItem value="admin">Administrator</SelectItem>
                         </SelectContent>
@@ -113,15 +132,25 @@ export const AcceptUser = ({
         </DialogHeader>
         <DialogFooter className="gap-2 sm:justify-start">
           <DialogClose asChild>
-            <Button type="button" variant="secondary" disabled={isDisabled}>
+            <Button
+              type="button"
+              variant="secondary"
+              disabled={updateRoleMutation.isPending}
+            >
               Batal
             </Button>
           </DialogClose>
-          <Button disabled={isDisabled} onClick={form.handleSubmit(onSubmit)}>
-            {isLoading ? (
+          <Button
+            disabled={
+              updateRoleMutation.isPending ||
+              currRole === form.getValues("role")
+            }
+            onClick={form.handleSubmit(onSubmit)}
+          >
+            {updateRoleMutation.isPending ? (
               <Loader2 className="mr-2 h-4 animate-spin md:w-4" />
             ) : null}
-            Izinkan
+            Perbarui
           </Button>
         </DialogFooter>
       </DialogContent>

@@ -7,6 +7,7 @@ import type {
   SortingState,
 } from "@tanstack/react-table";
 import { useCallback, useState } from "react";
+import { Space_Mono } from "next/font/google";
 import {
   flexRender,
   getCoreRowModel,
@@ -15,15 +16,25 @@ import {
   getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table";
+import { format } from "date-fns";
+import { id } from "date-fns/locale";
 import {
   ChevronLeftIcon,
   ChevronRightIcon,
   ChevronsLeft,
   ChevronsRight,
-  Loader2,
+  MoreHorizontal,
+  PencilLine,
 } from "lucide-react";
 
 import { Button } from "@sora-vp/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuTrigger,
+} from "@sora-vp/ui/dropdown-menu";
 import {
   Select,
   SelectContent,
@@ -40,123 +51,107 @@ import {
   TableHeader,
   TableRow,
 } from "@sora-vp/ui/table";
-import { toast } from "@sora-vp/ui/toast";
 
 import { api } from "~/trpc/react";
-import { AcceptUser } from "./accept-user";
+import { UpdateRole } from "./update-role";
 
-type PendingUserList = RouterOutputs["admin"]["getPendingUser"][number];
+type PendingUserList = RouterOutputs["admin"]["getAllRegisteredUser"][number];
+
+const MonoFont = Space_Mono({
+  weight: "400",
+  subsets: ["latin"],
+});
 
 export const columns: ColumnDef<PendingUserList>[] = [
   {
     accessorKey: "user",
     header: "Informasi Akun",
     cell: ({ row }) => (
-      <div className="flex flex-col">
-        <p>{row.original.name ? row.original.name : "N/A"}</p>
-        <small className="text-muted-foreground">
-          {row.original.email ? row.original.email : "N/A"}
-        </small>
+      <div className="flex flex-row items-center gap-4">
+        <div className="flex flex-col">
+          <p>{row.original.name ? row.original.name : "N/A"}</p>
+          <small className="text-muted-foreground">
+            {row.original.email ? row.original.email : "N/A"}
+          </small>
+        </div>
       </div>
     ),
   },
   {
-    id: "accept",
+    accessorKey: "role",
+    header: "Tingkatan Pengguna",
+    cell: ({ row }) => (
+      <p>
+        {row.getValue("role") === "admin" ? "Administrator" : "Panitia Biasa"}
+      </p>
+    ),
+  },
+  {
+    accessorKey: "verifiedAt",
+    header: "Waktu Pengguna Terverifikasi",
+    cell: ({ row }) => (
+      <pre className={MonoFont.className}>
+        {format(row.getValue("verifiedAt"), "dd MMMM yyyy, kk.mm", {
+          locale: id,
+        })}
+      </pre>
+    ),
+  },
+  {
+    id: "actions",
     enableHiding: false,
     cell: ({ row }) => {
-      // eslint-disable-next-line react-hooks/rules-of-hooks
-      const apiUtils = api.useUtils();
+      const user = row.original;
 
       // eslint-disable-next-line react-hooks/rules-of-hooks
-      const [isOpen, setOpen] = useState(false);
+      const [openUpdate, setOpenUpdate] = useState(false);
 
       // eslint-disable-next-line react-hooks/rules-of-hooks
-      const toggleOpen = useCallback(() => setOpen((prev) => !prev), []);
-
-      const acceptUserMutation = api.admin.acceptPendingUser.useMutation({
-        async onSuccess() {
-          toast.success("Berhasil menerima pengguna baru!", {
-            description: "Pengguna berhasil di approve.",
-          });
-
-          toggleOpen();
-
-          await apiUtils.admin.getAllRegisteredUser.invalidate();
-        },
-        onError(error) {
-          toast.error("Operasi Gagal", {
-            description: `Terjadi kesalahan, Error: ${error.message}`,
-          });
-        },
-        async onSettled() {
-          await apiUtils.admin.getPendingUser.invalidate();
-        },
-      });
-
-      // eslint-disable-next-line react-hooks/rules-of-hooks
-      const triggerAcceptCallback = useCallback(
-        (data: { role: "admin" | "comittee" }) =>
-          acceptUserMutation.mutate({ id: row.original.id, role: data.role }),
-        [acceptUserMutation, row.original.id],
-      );
-
-      const rejectUserMutation = api.admin.rejectPendingUser.useMutation({
-        onSuccess() {
-          toast.success("Berhasil menolak pengguna!", {
-            description: "Pengguna berhasil dihapus.",
-          });
-        },
-        onError(error) {
-          toast.error("Operasi Gagal", {
-            description: `Terjadi kesalahan, Error: ${error.message}`,
-          });
-        },
-        async onSettled() {
-          await apiUtils.admin.getPendingUser.invalidate();
-        },
-      });
+      const toggleOpen = useCallback(() => setOpenUpdate((prev) => !prev), []);
 
       return (
-        <div className="space-x-5">
-          <AcceptUser
-            onSubmit={triggerAcceptCallback}
-            isOpen={isOpen}
-            toggleOpen={toggleOpen}
-            isDisabled={
-              rejectUserMutation.isPending || acceptUserMutation.isPending
-            }
-            isLoading={acceptUserMutation.isPending}
-          />
+        <>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" className="h-8 w-8 p-0">
+                <span className="sr-only">Buka menu</span>
+                <MoreHorizontal className="h-4 w-4" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuLabel>Aksi</DropdownMenuLabel>
+              <DropdownMenuItem
+                className="cursor-pointer"
+                onClick={() => setOpenUpdate(true)}
+              >
+                <PencilLine className="mr-2 h-4 md:w-4" />
+                Perbarui Tingkatan
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
 
-          <Button
-            variant="destructive"
-            disabled={
-              acceptUserMutation.isPending || rejectUserMutation.isPending
-            }
-            onClick={() => {
-              rejectUserMutation.mutate({ id: row.original.id });
-            }}
-          >
-            {rejectUserMutation.isPending ? (
-              <Loader2 className="mr-2 h-4 animate-spin md:w-4" />
-            ) : null}
-            Tolak
-          </Button>
-        </div>
+          <UpdateRole
+            isOpen={openUpdate}
+            toggleOpen={toggleOpen}
+            currRole={user.role}
+            userId={user.id}
+          />
+        </>
       );
     },
   },
 ];
 
-export function PendingUser() {
-  const pendingUserQuery = api.admin.getPendingUser.useQuery(undefined);
+export function AllRegisteredUser() {
+  const allRegisteredUserQuery =
+    api.admin.getAllRegisteredUser.useQuery(undefined);
 
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [rowSelection, setRowSelection] = useState({});
 
   const table = useReactTable({
-    data: pendingUserQuery.data ?? [],
+    data: allRegisteredUserQuery.data ?? [],
     columns,
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,
@@ -174,7 +169,7 @@ export function PendingUser() {
   });
 
   return (
-    <div className="w-full pb-28">
+    <div className="w-full">
       <div className="rounded-md border">
         <Table>
           <TableHeader>
@@ -196,18 +191,19 @@ export function PendingUser() {
             ))}
           </TableHeader>
           <TableBody>
-            {pendingUserQuery.isError ? (
+            {allRegisteredUserQuery.isError ? (
               <TableRow>
                 <TableCell
                   colSpan={columns.length}
                   className="h-24 text-center"
                 >
-                  Error: {pendingUserQuery.error.message}
+                  Error: {allRegisteredUserQuery.error.message}
                 </TableCell>
               </TableRow>
             ) : null}
 
-            {pendingUserQuery.isLoading && !pendingUserQuery.isError ? (
+            {allRegisteredUserQuery.isLoading &&
+            !allRegisteredUserQuery.isError ? (
               <>
                 {Array.from({ length: 5 }).map((_, idx) => (
                   <TableRow key={idx}>
@@ -237,9 +233,9 @@ export function PendingUser() {
               ))
             ) : (
               <>
-                {!pendingUserQuery.isLoading && (
+                {!allRegisteredUserQuery.isLoading && (
                   <>
-                    {!pendingUserQuery.isError && (
+                    {!allRegisteredUserQuery.isError && (
                       <TableRow>
                         <TableCell
                           colSpan={columns.length}

@@ -1,3 +1,4 @@
+import { AllRegisteredUser } from "~/app/_components/admin/all-registered-user/index";
 import { PendingUser } from "~/app/_components/admin/pending-user/index";
 import { ToggleCanLogin } from "~/app/_components/admin/toggle-can-login";
 
@@ -17,6 +18,8 @@ export default function AdminPage() {
         <h4 className="scroll-m-20 text-xl font-semibold tracking-tight">
           Seluruh Pengguna
         </h4>
+
+        <AllRegisteredUser />
       </div>
 
       <div className="flex flex-col gap-3">
