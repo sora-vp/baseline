@@ -10,6 +10,7 @@ import {
   ResizablePanel,
   ResizablePanelGroup,
 } from "@sora-vp/ui/resizable";
+import { ThemeToggle } from "@sora-vp/ui/theme";
 import { TooltipProvider } from "@sora-vp/ui/tooltip";
 
 import type { Props as TopNavbarProps } from "./top-navbar";
@@ -94,6 +95,9 @@ export function ResizeableNav({
             links={role === "admin" ? adminNav : [participantNav]}
           />
         </TooltipProvider>
+        <div className={cn("flex justify-center", !isCollapsed && "mt-10")}>
+          <ThemeToggle />
+        </div>
       </ResizablePanel>
       <ResizableHandle />
       <ResizablePanel defaultSize={85}>

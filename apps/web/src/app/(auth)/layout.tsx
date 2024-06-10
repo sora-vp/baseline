@@ -5,7 +5,7 @@ import { GeistSans } from "geist/font/sans";
 
 import { auth } from "@sora-vp/auth";
 import { cn } from "@sora-vp/ui";
-import { ThemeProvider, ThemeToggle } from "@sora-vp/ui/theme";
+import { ThemeProvider } from "@sora-vp/ui/theme";
 import { Toaster } from "@sora-vp/ui/toast";
 
 import { TRPCReactProvider } from "~/trpc/react";
@@ -78,7 +78,7 @@ export default async function RootLayout(props: { children: React.ReactNode }) {
             nameFallback={isLoggedIn.user.name?.slice(0, 2) ?? ""}
             role={isLoggedIn.user.role}
           >
-            <div className="overflow-y-auto">
+            <div className="overflow-y-auto p-6">
               <TRPCReactProvider>{props.children}</TRPCReactProvider>
             </div>
           </ResizeableNav>

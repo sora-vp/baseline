@@ -4,7 +4,7 @@ import { ToggleCanLogin } from "~/app/_components/admin/toggle-can-login";
 
 export default function AdminPage() {
   return (
-    <div className="flex h-screen flex-col gap-7 p-6">
+    <div className="flex h-screen flex-col gap-7">
       <div className="space-y-1">
         <h2 className="text-2xl font-semibold tracking-tight">Beranda Admin</h2>
         <p className="text-muted-foreground">
