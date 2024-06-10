@@ -76,6 +76,7 @@ export default async function RootLayout(props: { children: React.ReactNode }) {
             name={isLoggedIn.user.name ?? ""}
             email={isLoggedIn.user.email ?? ""}
             nameFallback={isLoggedIn.user.name?.slice(0, 2) ?? ""}
+            role={isLoggedIn.user.role}
           >
             <div>
               <TRPCReactProvider>{props.children}</TRPCReactProvider>

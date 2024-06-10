@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import localFont from "next/font/local";
+import { Home, LineChart, Settings, User, Users } from "lucide-react";
 
 import { cn } from "@sora-vp/ui";
 import {
@@ -9,22 +10,56 @@ import {
   ResizablePanel,
   ResizablePanelGroup,
 } from "@sora-vp/ui/resizable";
+import { TooltipProvider } from "@sora-vp/ui/tooltip";
 
 import type { Props as TopNavbarProps } from "./top-navbar";
+import { NavItems } from "./nav-items";
 import { TopNavbar } from "./top-navbar";
 
 interface Props {
   children: React.ReacNode;
+  role: "admin" | "comittee";
 }
 
 const sundaneseFont = localFont({
   src: "../../fonts/NotoSansSundanese-Regular.ttf",
 });
 
+const participantNav = {
+  title: "Partisipan",
+  icon: Users,
+  href: "/admin/partisipan",
+};
+
+const adminNav = [
+  {
+    title: "Beranda",
+    icon: Home,
+    href: "/admin",
+  },
+  {
+    title: "Kandidat",
+    icon: User,
+    href: "/admin/kandidat",
+  },
+  participantNav,
+  {
+    title: "Statistik",
+    icon: LineChart,
+    href: "/admin/statistik",
+  },
+  {
+    title: "Pengaturan",
+    icon: Settings,
+    href: "/admin/pengaturan",
+  },
+];
+
 export function ResizeableNav({
   name,
   nameFallback,
   email,
+  role,
   children,
 }: Props & TopNavbarProps) {
   const [isCollapsed, setIsCollapsed] = useState(false);
@@ -44,7 +79,7 @@ export function ResizeableNav({
         }}
         onExpand={() => setIsCollapsed(false)}
         className={cn(
-          isCollapsed && "min-w-[45px] transition-all duration-300 ease-in-out",
+          isCollapsed && "min-w-[55px] transition-all duration-300 ease-in-out",
         )}
       >
         {!isCollapsed ? (
@@ -52,6 +87,13 @@ export function ResizeableNav({
             <span className={sundaneseFont.className}>ᮞᮧᮛ</span>
           </div>
         ) : null}
+
+        <TooltipProvider>
+          <NavItems
+            isCollapsed={isCollapsed}
+            links={role === "admin" ? adminNav : [participantNav]}
+          />
+        </TooltipProvider>
       </ResizablePanel>
       <ResizableHandle />
       <ResizablePanel defaultSize={85}>
