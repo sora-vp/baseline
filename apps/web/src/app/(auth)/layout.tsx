@@ -66,7 +66,7 @@ export default async function RootLayout(props: { children: React.ReactNode }) {
     <html lang="en" suppressHydrationWarning>
       <body
         className={cn(
-          "min-h-screen bg-background font-sans text-foreground antialiased",
+          "min-h-screen overflow-y-hidden bg-background font-sans text-foreground antialiased",
           GeistSans.variable,
           GeistMono.variable,
         )}
@@ -78,13 +78,10 @@ export default async function RootLayout(props: { children: React.ReactNode }) {
             nameFallback={isLoggedIn.user.name?.slice(0, 2) ?? ""}
             role={isLoggedIn.user.role}
           >
-            <div>
+            <div className="overflow-y-auto">
               <TRPCReactProvider>{props.children}</TRPCReactProvider>
             </div>
           </ResizeableNav>
-          <div className="absolute bottom-4 right-4">
-            <ThemeToggle />
-          </div>
           <Toaster richColors />
         </ThemeProvider>
       </body>

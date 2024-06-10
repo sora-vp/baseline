@@ -96,7 +96,10 @@ export const publicProcedure = t.procedure;
 export const protectedProcedure = t.procedure.use(({ ctx, next }) => {
   if (!ctx.session?.user) {
     throw new TRPCError({ code: "UNAUTHORIZED" });
+  } else if (!ctx.session.user.verifiedAt) {
+    throw new TRPCError({ code: "UNAUTHORIZED" });
   }
+
   return next({
     ctx: {
       // infers the `session` as non-nullable
@@ -104,3 +107,22 @@ export const protectedProcedure = t.procedure.use(({ ctx, next }) => {
     },
   });
 });
+
+const enforceUserIsAuthedAsAdmin = t.middleware(({ ctx, next }) => {
+  if (!ctx.session?.user) {
+    throw new TRPCError({ code: "UNAUTHORIZED" });
+  } else if (!ctx.session.user.verifiedAt) {
+    throw new TRPCError({ code: "UNAUTHORIZED" });
+  } else if (ctx.session.user.role !== "admin") {
+    throw new TRPCError({ code: "UNAUTHORIZED" });
+  }
+
+  return next({
+    ctx: {
+      // infers the `session` as non-nullable
+      session: { ...ctx.session, user: ctx.session.user },
+    },
+  });
+});
+
+export const adminProcedure = t.procedure.use(enforceUserIsAuthedAsAdmin);
