@@ -37,29 +37,28 @@ export const authConfig = {
       },
       async authorize(credentials) {
         try {
-        if (!credentials.email || !credentials.password)
-          throw new InvalidLoginError();
+          if (!credentials.email || !credentials.password)
+            throw new InvalidLoginError();
 
-        const user = await preparedGetUserByEmail.execute({
-          email: credentials.email,
-        });
+          const user = await preparedGetUserByEmail.execute({
+            email: credentials.email,
+          });
 
-        if (!user) throw new InvalidUserOrPassword();
+          if (!user) throw new InvalidUserOrPassword();
 
-        const isValidPassword = await bcrypt.compare(
-          credentials.password as string,
-          user.password,
-        );
+          const isValidPassword = await bcrypt.compare(
+            credentials.password as string,
+            user.password,
+          );
 
-        if (!isValidPassword) throw new InvalidUserOrPassword();
+          if (!isValidPassword) throw new InvalidUserOrPassword();
 
-        return {
-          name: user.name,
-          email: user.email,
-        };
+          return {
+            name: user.name,
+            email: user.email,
+          };
         } catch (_) {
-          throw new InvalidUserOrPassword;
-          
+          throw new InvalidUserOrPassword();
         }
       },
     }),

@@ -1,3 +1,5 @@
+import { ToggleCanLogin } from "~/app/_components/admin/toggle-can-login";
+
 export default function AdminPage() {
   return (
     <div className="flex flex-col gap-7 p-6">
@@ -7,6 +9,8 @@ export default function AdminPage() {
           Kelola semua pengguna dan perilaku pengguna pada halaman ini.
         </p>
       </div>
+
+      <ToggleCanLogin />
 
       <div className="flex flex-col gap-3">
         <h4 className="scroll-m-20 text-xl font-semibold tracking-tight">
