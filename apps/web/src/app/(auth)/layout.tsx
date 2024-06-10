@@ -1,16 +1,10 @@
 import type { Metadata, Viewport } from "next";
-import localFont from "next/font/local";
 import { redirect } from "next/navigation";
 import { GeistMono } from "geist/font/mono";
 import { GeistSans } from "geist/font/sans";
 
 import { auth } from "@sora-vp/auth";
 import { cn } from "@sora-vp/ui";
-import {
-  ResizableHandle,
-  ResizablePanel,
-  ResizablePanelGroup,
-} from "@sora-vp/ui/resizable";
 import { ThemeProvider, ThemeToggle } from "@sora-vp/ui/theme";
 import { Toaster } from "@sora-vp/ui/toast";
 
@@ -18,7 +12,7 @@ import { TRPCReactProvider } from "~/trpc/react";
 
 import "~/app/globals.css";
 
-import { TopNavbar } from "~/app/_components/nav/top-navbar";
+import { ResizeableNav } from "~/app/_components/nav/resizeable-nav";
 
 export const metadata: Metadata = {
   title: "sora baseline | aplikasi pemilihan",
@@ -31,10 +25,6 @@ export const viewport: Viewport = {
     { media: "(prefers-color-scheme: dark)", color: "black" },
   ],
 };
-
-const sundaneseFont = localFont({
-  src: "../fonts/NotoSansSundanese-Regular.ttf",
-});
 
 export default async function RootLayout(props: { children: React.ReactNode }) {
   const isLoggedIn = await auth();
@@ -82,37 +72,15 @@ export default async function RootLayout(props: { children: React.ReactNode }) {
         )}
       >
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-          <ResizablePanelGroup
-            direction="horizontal"
-            className="min-h-screen w-screen"
+          <ResizeableNav
+            name={isLoggedIn.user.name ?? ""}
+            email={isLoggedIn.user.email ?? ""}
+            nameFallback={isLoggedIn.user.name?.slice(0, 2) ?? ""}
           >
-            <ResizablePanel minSize={6} defaultSize={17} maxSize={20}>
-              <div className="flex items-center justify-center p-6 text-4xl">
-                <span className={sundaneseFont.className}>ᮞᮧᮛ</span>
-              </div>
-            </ResizablePanel>
-            <ResizableHandle />
-            <ResizablePanel defaultSize={85}>
-              <ResizablePanelGroup direction="vertical">
-                <ResizablePanel
-                  defaultSize={10}
-                  collapsible={false}
-                  className="border-0 border-b"
-                >
-                  <TopNavbar
-                    name={isLoggedIn.user.name ?? ""}
-                    email={isLoggedIn.user.email ?? ""}
-                    nameFallback={isLoggedIn.user.name?.slice(0, 2) ?? ""}
-                  />
-                </ResizablePanel>
-                <ResizablePanel defaultSize={90} collapsible={false}>
-                  <div>
-                    <TRPCReactProvider>{props.children}</TRPCReactProvider>
-                  </div>
-                </ResizablePanel>
-              </ResizablePanelGroup>
-            </ResizablePanel>
-          </ResizablePanelGroup>
+            <div>
+              <TRPCReactProvider>{props.children}</TRPCReactProvider>
+            </div>
+          </ResizeableNav>
           <div className="absolute bottom-4 right-4">
             <ThemeToggle />
           </div>

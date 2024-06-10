@@ -28,7 +28,7 @@ import {
 } from "@sora-vp/ui/dropdown-menu";
 import { toast } from "@sora-vp/ui/toast";
 
-interface Props {
+export interface Props {
   name: string;
   email: string;
   nameFallback: string;
@@ -42,58 +42,56 @@ export function TopNavbar({ name, email, nameFallback }: Props) {
 
   return (
     <>
-      <div className="flex h-full items-center justify-center p-6">
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button
-              variant="ghost"
-              className="relative ml-auto h-8 w-8 rounded-full"
-            >
-              <Avatar>
-                <AvatarFallback className="uppercase">
-                  {nameFallback}
-                </AvatarFallback>
-              </Avatar>
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent className="w-56" align="end" forceMount>
-            <DropdownMenuLabel className="font-normal">
-              <div className="flex flex-col space-y-1">
-                <p className="text-sm font-medium leading-none">{name}</p>
-                <p className="text-xs leading-none text-muted-foreground">
-                  {email}
-                </p>
-              </div>
-            </DropdownMenuLabel>
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Button
+            variant="ghost"
+            className="relative ml-auto h-8 w-8 rounded-full"
+          >
+            <Avatar>
+              <AvatarFallback className="uppercase">
+                {nameFallback}
+              </AvatarFallback>
+            </Avatar>
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent className="w-56" align="end" forceMount>
+          <DropdownMenuLabel className="font-normal">
+            <div className="flex flex-col space-y-1">
+              <p className="text-sm font-medium leading-none">{name}</p>
+              <p className="text-xs leading-none text-muted-foreground">
+                {email}
+              </p>
+            </div>
+          </DropdownMenuLabel>
 
-            <DropdownMenuSeparator />
+          <DropdownMenuSeparator />
 
-            <DropdownMenuGroup>
-              <DropdownMenuItem>
-                <Link
-                  href={"/admin/profile"}
-                  className="w-full hover:cursor-pointer"
-                >
-                  Profil Anda
-                </Link>
-              </DropdownMenuItem>
-              <DropdownMenuItem>
-                <Link href={"/about"} className="w-full hover:cursor-pointer">
-                  Tentang sora
-                </Link>
-              </DropdownMenuItem>
-            </DropdownMenuGroup>
-
-            <DropdownMenuSeparator />
-            <DropdownMenuItem
-              className="text-red-600 hover:cursor-pointer focus:text-red-700 dark:text-red-500 focus:dark:text-red-600"
-              onClick={() => setLogoutDialogOpen(true)}
-            >
-              Keluar
+          <DropdownMenuGroup>
+            <DropdownMenuItem>
+              <Link
+                href={"/admin/profile"}
+                className="w-full hover:cursor-pointer"
+              >
+                Profil Anda
+              </Link>
             </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-      </div>
+            <DropdownMenuItem>
+              <Link href={"/about"} className="w-full hover:cursor-pointer">
+                Tentang sora
+              </Link>
+            </DropdownMenuItem>
+          </DropdownMenuGroup>
+
+          <DropdownMenuSeparator />
+          <DropdownMenuItem
+            className="text-red-600 hover:cursor-pointer focus:text-red-700 dark:text-red-500 focus:dark:text-red-600"
+            onClick={() => setLogoutDialogOpen(true)}
+          >
+            Keluar
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
 
       <AlertDialog
         open={logoutDialogOpen}
