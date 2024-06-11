@@ -55,8 +55,8 @@ export function Behaviour() {
 
   useEffect(() => {
     if (settingsQuery.data && !changeBehaviour.isPending) {
-      form.setValue("canVote", settingsQuery.data.canVote);
-      form.setValue("canAttend", settingsQuery.data.canAttend);
+      form.setValue("canVote", settingsQuery.data.canVote ?? undefined);
+      form.setValue("canAttend", settingsQuery.data.canAttend ?? undefined);
     }
   }, [settingsQuery.data, changeBehaviour.isPending]);
 

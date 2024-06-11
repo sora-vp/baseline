@@ -29,13 +29,12 @@ export const settingsRouter = {
       return { success: true };
     }),
 
-  // changeVotingTime: adminProcedure
-  //   // .input(ServerPengaturanWaktuValidationSchema)
-  //   .input()
-  //   .mutation(({ input }) => {
-  //     settings.updateSettings.startTime(input.startTime);
-  //     settings.updateSettings.endTime(input.endTime);
-  //
-  //   return { success: true }
-  //   }),
+  changeVotingTime: adminProcedure
+    .input(settingsSchema.SharedDuration)
+    .mutation(({ input }) => {
+      settings.updateSettings.startTime(input.startTime);
+      settings.updateSettings.endTime(input.endTime);
+
+      return { success: true };
+    }),
 } satisfies TRPCRouterRecord;
