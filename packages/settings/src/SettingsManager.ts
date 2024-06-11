@@ -45,6 +45,7 @@ export class SettingsManager extends EventEmitter {
       startTime: startTime ?? null,
       endTime: endTime ?? null,
       canVote: canVote ?? false,
+      canAttend: canAttend ?? false,
       canLogin: canLogin ?? true,
     };
   }

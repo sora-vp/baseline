@@ -5,7 +5,7 @@ import { GeistSans } from "geist/font/sans";
 
 import { auth } from "@sora-vp/auth";
 import { cn } from "@sora-vp/ui";
-import { ThemeProvider } from "@sora-vp/ui/theme";
+import { ThemeProvider, ThemeToggle } from "@sora-vp/ui/theme";
 import { Toaster } from "@sora-vp/ui/toast";
 
 import { TRPCReactProvider } from "~/trpc/react";

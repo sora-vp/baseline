@@ -31,12 +31,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@sora-vp/ui/select";
+import { admin } from "@sora-vp/validators";
 
-const FormSchema = z.object({
-  role: z.enum(["comittee", "admin"], {
-    required_error: "Dimohon untuk memilih tingkatan pengguna",
-  }),
-});
+type FormSchema = z.infer<typeof admin.RoleFormSchema>;
 
 export const AcceptUser = ({
   isOpen,
@@ -49,10 +46,10 @@ export const AcceptUser = ({
   toggleOpen: () => void;
   isDisabled: boolean;
   isLoading: boolean;
-  onSubmit: (data: z.infer<typeof FormSchema>) => void;
+  onSubmit: (data: FormSchema) => void;
 }) => {
-  const form = useForm<z.infer<typeof FormSchema>>({
-    resolver: zodResolver(FormSchema),
+  const form = useForm<FormSchema>({
+    resolver: zodResolver(admin.RoleFormSchema),
   });
 
   return (

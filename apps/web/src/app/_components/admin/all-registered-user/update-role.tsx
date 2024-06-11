@@ -31,14 +31,11 @@ import {
   SelectValue,
 } from "@sora-vp/ui/select";
 import { toast } from "@sora-vp/ui/toast";
+import { admin } from "@sora-vp/validators";
 
 import { api } from "~/trpc/react";
 
-const FormSchema = z.object({
-  role: z.enum(["admin", "comittee"], {
-    required_error: "Dimohon untuk memilih tingkatan pengguna",
-  }),
-});
+type FormSchema = z.infer<typeof admin.RoleFormSchema>;
 
 export const UpdateRole = ({
   isOpen,
@@ -69,14 +66,14 @@ export const UpdateRole = ({
     },
   });
 
-  const form = useForm<z.infer<typeof FormSchema>>({
-    resolver: zodResolver(FormSchema),
+  const form = useForm<FormSchema>({
+    resolver: zodResolver(admin.RoleFormSchema),
     defaultValues: {
       role: currRole,
     },
   });
 
-  const onSubmit = (data: z.infer<typeof FormSchema>) =>
+  const onSubmit = (data: FormSchema) =>
     updateRoleMutation.mutate({ id: userId, ...data });
 
   return (

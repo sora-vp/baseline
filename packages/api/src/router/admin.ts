@@ -1,7 +1,7 @@
 import type { TRPCRouterRecord } from "@trpc/server";
-import { z } from "zod";
 
 import { and, eq, not, schema, sql } from "@sora-vp/db";
+import { admin } from "@sora-vp/validators";
 
 import { adminProcedure } from "../trpc";
 
@@ -17,7 +17,7 @@ export const adminRouter = {
   ),
 
   rejectPendingUser: adminProcedure
-    .input(z.object({ id: z.number() }))
+    .input(admin.ServerAcceptObjectIdNumber)
     .mutation(({ ctx, input }) =>
       ctx.db.transaction(async (tx) => {
         const specificUser = await tx.query.users.findFirst({
@@ -41,12 +41,7 @@ export const adminRouter = {
     ),
 
   acceptPendingUser: adminProcedure
-    .input(
-      z.object({
-        id: z.number(),
-        role: z.enum(["admin", "comittee"]),
-      }),
-    )
+    .input(admin.ServerAcceptIdAndRole)
     .mutation(({ ctx, input }) =>
       ctx.db.transaction(async (tx) => {
         const specificUser = await tx.query.users.findFirst({
@@ -82,12 +77,7 @@ export const adminRouter = {
     ),
 
   updateUserRole: adminProcedure
-    .input(
-      z.object({
-        id: z.number(),
-        role: z.enum(["admin", "comittee"]),
-      }),
-    )
+    .input(admin.ServerAcceptIdAndRole)
     .mutation(({ ctx, input }) =>
       ctx.db.transaction(async (tx) => {
         const specificUser = await tx.query.users.findFirst({

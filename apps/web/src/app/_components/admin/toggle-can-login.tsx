@@ -15,17 +15,16 @@ import {
 } from "@sora-vp/ui/form";
 import { Switch } from "@sora-vp/ui/switch";
 import { toast } from "@sora-vp/ui/toast";
+import { settings } from "@sora-vp/validators";
 
 import { api } from "~/trpc/react";
 
-const FormSchema = z.object({
-  canLogin: z.boolean(),
-});
+type FormSchema = z.infer<typeof settings.SharedCanLogin>;
 
 export const ToggleCanLogin = () => {
   const utils = api.useUtils();
-  const form = useForm<z.infer<typeof FormSchema>>({
-    resolver: zodResolver(FormSchema),
+  const form = useForm<FormSchema>({
+    resolver: zodResolver(settings.SharedCanLogin),
   });
 
   const canLoginQuery = api.settings.getCanLoginStatus.useQuery();
@@ -58,8 +57,7 @@ export const ToggleCanLogin = () => {
     },
   });
 
-  const onSubmit = (data: z.infer<typeof FormSchema>) =>
-    canLoginMutation.mutate(data);
+  const onSubmit = (data: FormSchema) => canLoginMutation.mutate(data);
 
   return (
     <Form {...form}>
