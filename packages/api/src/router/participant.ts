@@ -17,7 +17,7 @@ export const participantRouter = {
   ),
 
   createNewParticipant: protectedProcedure
-    .input(participant.SharedAddPariticipant)
+    .input(participant.SharedAddParticipant)
     .mutation(({ ctx, input }) =>
       ctx.db.transaction((tx) => tx.insert(schema.participants).values(input)),
     ),
@@ -61,6 +61,30 @@ export const participantRouter = {
         }
 
         return tx.insert(schema.participants).values(okToInsert);
+      }),
+    ),
+
+  updateParticipant: protectedProcedure
+    .input(participant.ServerUpdateParticipant)
+    .mutation(({ input, ctx }) =>
+      ctx.db.transaction(async (tx) => {
+        const participant = await tx.query.participants.findFirst({
+          where: eq(schema.participants.qrId, input.qrId),
+        });
+
+        if (!participant)
+          throw new TRPCError({
+            code: "NOT_FOUND",
+            message: "Peserta pemilihan tidak dapat ditemukan!",
+          });
+
+        return await tx
+          .update(schema.participants)
+          .set({
+            name: input.name,
+            subpart: input.subpart,
+          })
+          .where(eq(schema.participants.qrId, input.qrId));
       }),
     ),
 

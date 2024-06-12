@@ -6,7 +6,13 @@ import type {
   SortingState,
   VisibilityState,
 } from "@tanstack/react-table";
-import { createContext, useContext, useEffect, useState } from "react";
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
 import { Space_Mono } from "next/font/google";
 import {
   flexRender,
@@ -70,6 +76,7 @@ import {
 import { api } from "~/trpc/react";
 import { ExportJSON, ExportXLSX } from "./export";
 import { SingleNewParticipant, UploadNewParticipant } from "./new-participant";
+import { DeleteParticipant, EditParticipant } from "./participant-action";
 import { SuddenQr } from "./sudden-qr";
 
 const GlobalSystemAllowance = createContext(true);
@@ -204,13 +211,21 @@ const columns: ColumnDef<QuestionList>[] = [
       const participant = row.original;
 
       // eslint-disable-next-line react-hooks/rules-of-hooks
+      const [openEdit, setOpenEdit] = useState(false);
+
+      // eslint-disable-next-line react-hooks/rules-of-hooks
       const [openDelete, setOpenDelete] = useState(false);
 
       // eslint-disable-next-line react-hooks/rules-of-hooks
       const globallyAllowedToOpen = useContext(GlobalSystemAllowance);
 
-      // // eslint-disable-next-line react-hooks/rules-of-hooks
-      // const closeDialog = useCallback(() => setOpenDelete((prev) => !prev), []);
+      // eslint-disable-next-line react-hooks/rules-of-hooks
+      useEffect(() => {
+        if (!globallyAllowedToOpen) {
+          setOpenEdit(false);
+          setOpenDelete(false);
+        }
+      }, [globallyAllowedToOpen]);
 
       return (
         <>
@@ -230,7 +245,10 @@ const columns: ColumnDef<QuestionList>[] = [
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
               <DropdownMenuLabel>Aksi</DropdownMenuLabel>
-              <DropdownMenuItem className="cursor-pointer">
+              <DropdownMenuItem
+                className="cursor-pointer"
+                onClick={() => setOpenEdit(true)}
+              >
                 <PencilLine className="mr-2 h-4 md:w-4" />
                 Ubah Identitas
               </DropdownMenuItem>
@@ -244,6 +262,20 @@ const columns: ColumnDef<QuestionList>[] = [
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
+
+          <EditParticipant
+            dialogOpen={openEdit}
+            openSetter={setOpenEdit}
+            name={participant.name}
+            qrId={participant.qrId}
+            subpart={participant.subpart}
+          />
+          <DeleteParticipant
+            dialogOpen={openDelete}
+            openSetter={setOpenDelete}
+            name={participant.name}
+            qrId={participant.qrId}
+          />
         </>
       );
     },

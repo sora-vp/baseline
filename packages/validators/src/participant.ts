@@ -16,7 +16,7 @@ const baseSubpartSchema = z
     message: "Hanya diperbolehkan menulis alfabet, angka, dan garis bawah!",
   });
 
-const SharedAddPariticipant = z.object({
+const SharedAddParticipant = z.object({
   name: baseNameSchema,
   subpart: baseSubpartSchema,
 });
@@ -39,17 +39,17 @@ const DeleteParticipantSchema = z.object({ id: z.number() });
 
 const ParticipantAttendSchema = z.string().refine(validateId);
 
-const SharedUpdateParticipant = z.object({
+const ServerUpdateParticipant = z.object({
   name: baseNameSchema,
   subpart: baseSubpartSchema,
   qrId: ParticipantAttendSchema,
 });
 
 export const participant = {
-  SharedAddPariticipant,
+  SharedAddParticipant,
   SharedUploadManyParticipant,
   UploadParticipantSchema,
   DeleteParticipantSchema,
   ParticipantAttendSchema,
-  SharedUpdateParticipant,
+  ServerUpdateParticipant,
 } as const;

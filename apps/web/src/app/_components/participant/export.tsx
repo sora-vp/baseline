@@ -49,7 +49,7 @@ export function ExportXLSX() {
 
         toast.success("Berhasil mengunduh data excel!", {
           description:
-            "Silahkan simpan dan sebarkan untuk seluruh pemilih tetap yang sudah terdaftar!",
+            "Silahkan simpan dan sebarkan untuk seluruh pemilih tetap yang sudah terdaftar.",
         });
 
         const workbook = new ExcelJS.Workbook();

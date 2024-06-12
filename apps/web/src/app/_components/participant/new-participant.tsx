@@ -1,6 +1,6 @@
 "use client";
 
-import { memo, useCallback, useEffect, useRef, useState } from "react";
+import { memo, useCallback, useEffect, useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { parse as parseCSV } from "csv-parse";
 import { FileText, UserPlus } from "lucide-react";
@@ -33,7 +33,7 @@ import { participant } from "@sora-vp/validators";
 
 import { api } from "~/trpc/react";
 
-type SingleFormSchema = z.infer<typeof participant.SharedAddPariticipant>;
+type SingleFormSchema = z.infer<typeof participant.SharedAddParticipant>;
 type UploadFormSchema = { csv: FileList };
 
 export const ReusableDialog = memo(function MemoizedReusable({
@@ -48,12 +48,14 @@ export const ReusableDialog = memo(function MemoizedReusable({
   setOpen: () => void;
   title: string;
   description: string;
-  dialogTrigger: React.ReactNode;
+  dialogTrigger?: React.ReactNode;
   children: React.ReactNode;
 }) {
   return (
     <Dialog open={dialogOpen} onOpenChange={setOpen}>
-      <DialogTrigger asChild>{dialogTrigger}</DialogTrigger>
+      {dialogTrigger ? (
+        <DialogTrigger asChild>{dialogTrigger}</DialogTrigger>
+      ) : null}
       <DialogContent className="max-w-sm md:max-w-3xl">
         <DialogHeader>
           <DialogTitle className="text-xl font-semibold">{title}</DialogTitle>
@@ -72,7 +74,7 @@ export function SingleNewParticipant() {
   const apiUtils = api.useUtils();
 
   const form = useForm<SingleFormSchema>({
-    resolver: zodResolver(participant.SharedAddPariticipant),
+    resolver: zodResolver(participant.SharedAddParticipant),
     defaultValues: {
       name: "",
       subpart: "",
