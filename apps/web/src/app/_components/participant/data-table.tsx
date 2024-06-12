@@ -68,10 +68,11 @@ import {
 } from "@sora-vp/ui/tooltip";
 
 import { api } from "~/trpc/react";
+import { ExportJSON, ExportXLSX } from "./export";
 import { SingleNewParticipant, UploadNewParticipant } from "./new-participant";
 import { SuddenQr } from "./sudden-qr";
 
-export const GlobalSystemAllowance = createContext(true);
+const GlobalSystemAllowance = createContext(true);
 
 const MonoFont = Space_Mono({
   weight: "400",
@@ -303,14 +304,8 @@ export function DataTable() {
           <SingleNewParticipant />
           <UploadNewParticipant />
           <SuddenQr />
-          <Button>
-            Ekspor JSON
-            <FileJson className="ml-2 h-4 w-4 lg:ml-6" />
-          </Button>
-          <Button>
-            Ekspor XLSX
-            <FileSpreadsheet className="ml-2 h-4 w-4 lg:ml-6" />
-          </Button>
+          <ExportJSON />
+          <ExportXLSX />
         </div>
 
         <div className="flex w-full flex-col gap-2">

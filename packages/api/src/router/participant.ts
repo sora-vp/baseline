@@ -1,7 +1,12 @@
 import type { TRPCRouterRecord } from "@trpc/server";
 import { TRPCError } from "@trpc/server";
 
-import { eq, preparedGetAllParticipants, schema } from "@sora-vp/db";
+import {
+  eq,
+  preparedGetAllParticipants,
+  preparedGetExcelParticipants,
+  schema,
+} from "@sora-vp/db";
 import { participant } from "@sora-vp/validators";
 
 import { protectedProcedure } from "../trpc";
@@ -58,4 +63,46 @@ export const participantRouter = {
         return tx.insert(schema.participants).values(okToInsert);
       }),
     ),
+
+  exportJsonData: protectedProcedure.mutation(async () => {
+    const participants = await preparedGetExcelParticipants.execute();
+
+    if (!participants || participants.length < 0)
+      throw new TRPCError({
+        code: "NOT_FOUND",
+        message: "Tidak ada data peserta pemilihan!",
+      });
+
+    return { data: JSON.stringify(participants, null, 2) };
+  }),
+
+  exportXlsxForParticipantToRetrieve: protectedProcedure.mutation(async () => {
+    const participants = await preparedGetExcelParticipants.execute();
+
+    if (!participants || participants.length < 1)
+      throw new TRPCError({
+        code: "NOT_FOUND",
+        message: "Tidak ada data peserta pemilihan!",
+      });
+
+    const resorted = participants.sort((a, b) => {
+      if (a.subpart === b.subpart) return a.name.localeCompare(b.name);
+
+      return a.subpart.localeCompare(b.subpart);
+    });
+
+    const filteredSubparts = [...new Set(resorted.map((d) => d.subpart))].map(
+      (subpart) => ({
+        subpart,
+        participants: resorted
+          .filter((r) => r.subpart === subpart)
+          .map(({ subpart: _, ...rest }) => rest),
+      }),
+    );
+
+    return {
+      nonFiltered: resorted,
+      filteredSubparts,
+    };
+  }),
 } satisfies TRPCRouterRecord;

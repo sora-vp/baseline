@@ -30,5 +30,19 @@ export const countUserTable = db
   .prepare();
 
 export const preparedGetAllParticipants = db.query.participants
-  .findMany()
+  .findMany({
+    columns: {
+      id: false,
+    },
+  })
+  .prepare();
+
+export const preparedGetExcelParticipants = db.query.participants
+  .findMany({
+    columns: {
+      name: true,
+      qrId: true,
+      subpart: true,
+    },
+  })
   .prepare();

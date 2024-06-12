@@ -36,7 +36,7 @@ import { api } from "~/trpc/react";
 type SingleFormSchema = z.infer<typeof participant.SharedAddPariticipant>;
 type UploadFormSchema = { csv: FileList };
 
-const ReusableDialog = memo(function MemoizedReusable({
+export const ReusableDialog = memo(function MemoizedReusable({
   dialogOpen,
   setOpen,
   title,
