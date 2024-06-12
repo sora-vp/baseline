@@ -28,3 +28,7 @@ export const countUserTable = db
   .select({ count: sql`count(*)`.mapWith(Number) })
   .from(schema.users)
   .prepare();
+
+export const preparedGetAllParticipants = db.query.participants
+  .findMany()
+  .prepare();

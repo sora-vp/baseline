@@ -19,6 +19,7 @@
     "typecheck": "tsc --noEmit --emitDeclarationOnly false"
   },
   "dependencies": {
+    "@sora-vp/id-generator": "*",
     "zod": "^3.23.6"
   },
   "devDependencies": {

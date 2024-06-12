@@ -78,9 +78,7 @@ export default async function RootLayout(props: { children: React.ReactNode }) {
             nameFallback={isLoggedIn.user.name?.slice(0, 2) ?? ""}
             role={isLoggedIn.user.role}
           >
-            <div className="overflow-y-auto p-6">
-              <TRPCReactProvider>{props.children}</TRPCReactProvider>
-            </div>
+            <TRPCReactProvider>{props.children}</TRPCReactProvider>
           </ResizeableNav>
           <Toaster richColors />
         </ThemeProvider>

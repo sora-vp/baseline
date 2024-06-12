@@ -71,7 +71,7 @@ export function ResizeableNav({
       className="min-h-screen w-screen"
     >
       <ResizablePanel
-        defaultSize={17}
+        defaultSize={20}
         minSize={15}
         maxSize={20}
         collapsible={true}
@@ -100,31 +100,20 @@ export function ResizeableNav({
         </div>
       </ResizablePanel>
       <ResizableHandle />
-      <ResizablePanel defaultSize={85}>
-        <ResizablePanelGroup direction="vertical">
-          <ResizablePanel
-            defaultSize={10}
-            collapsible={false}
-            className="border-0 border-b"
-          >
-            <div className="flex h-full items-center justify-center p-6">
-              {isCollapsed ? (
-                <div className="text-3xl">
-                  <span className={sundaneseFont.className}>ᮞᮧᮛ</span>
-                </div>
-              ) : null}
+      <ResizablePanel defaultSize={80}>
+        <div className="h-16 border-b">
+          <div className="flex h-full items-center justify-center p-6">
+            {isCollapsed ? (
+              <div className="text-3xl">
+                <span className={sundaneseFont.className}>ᮞᮧᮛ</span>
+              </div>
+            ) : null}
 
-              <TopNavbar
-                name={name}
-                email={email}
-                nameFallback={nameFallback}
-              />
-            </div>
-          </ResizablePanel>
-          <ResizablePanel defaultSize={90} collapsible={false}>
-            {children}
-          </ResizablePanel>
-        </ResizablePanelGroup>
+            <TopNavbar name={name} email={email} nameFallback={nameFallback} />
+          </div>
+        </div>
+
+        <div className="overflow-y-auto p-6">{children}</div>
       </ResizablePanel>
     </ResizablePanelGroup>
   );

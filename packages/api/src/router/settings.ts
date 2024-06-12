@@ -3,10 +3,10 @@ import type { TRPCRouterRecord } from "@trpc/server";
 import settings from "@sora-vp/settings";
 import { settings as settingsSchema } from "@sora-vp/validators";
 
-import { adminProcedure, publicProcedure } from "../trpc";
+import { adminProcedure } from "../trpc";
 
 export const settingsRouter = {
-  getSettings: publicProcedure.query(() => settings.getSettings()),
+  getSettings: adminProcedure.query(() => settings.getSettings()),
 
   getCanLoginStatus: adminProcedure.query(() => {
     const { canLogin } = settings.getSettings();

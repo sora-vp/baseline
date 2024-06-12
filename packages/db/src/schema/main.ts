@@ -8,6 +8,8 @@ import {
   varchar,
 } from "drizzle-orm/mysql-core";
 
+import { nanoid } from "@sora-vp/id-generator";
+
 import { mySqlTable } from "./_table";
 
 export const users = mySqlTable(
@@ -38,7 +40,9 @@ export const participants = mySqlTable(
     id: int("id").autoincrement().primaryKey(),
     name: text("name").notNull(),
     subpart: varchar("sub_part", { length: 50 }).notNull(),
-    qrId: varchar("qr_id", { length: 30 }).notNull(),
+    qrId: varchar("qr_id", { length: 30 })
+      .$defaultFn(() => nanoid())
+      .notNull(),
 
     // CRITICAL FEATURE, for presence functionality
     alreadyAttended: boolean("already_attended").default(false).notNull(),

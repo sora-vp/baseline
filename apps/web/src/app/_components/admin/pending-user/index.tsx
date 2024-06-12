@@ -174,7 +174,7 @@ export function PendingUser() {
   });
 
   return (
-    <div className="w-full pb-40">
+    <div className="w-full pb-32">
       <div className="rounded-md border">
         <Table>
           <TableHeader>
