@@ -27,7 +27,6 @@ import {
   ChevronsRight,
   FileJson,
   FileSpreadsheet,
-  FileText,
   MoreHorizontal,
   PencilLine,
   Trash2,
@@ -69,10 +68,10 @@ import {
 } from "@sora-vp/ui/tooltip";
 
 import { api } from "~/trpc/react";
-import { NewParticipant } from "./new-participant";
+import { SingleNewParticipant, UploadNewParticipant } from "./new-participant";
 import { SuddenQr } from "./sudden-qr";
 
-const GlobalSystemAllowance = createContext(true);
+export const GlobalSystemAllowance = createContext(true);
 
 const MonoFont = Space_Mono({
   weight: "400",
@@ -301,11 +300,8 @@ export function DataTable() {
     <GlobalSystemAllowance.Provider value={allowedToOpenModifier}>
       <div className="flex h-screen flex-col gap-3">
         <div className="flex flex-col gap-2 lg:flex-row lg:justify-between lg:gap-0">
-          <NewParticipant />
-          <Button>
-            Unggah Partisipan (File CSV)
-            <FileText className="ml-2 h-4 w-4 lg:ml-6" />
-          </Button>
+          <SingleNewParticipant />
+          <UploadNewParticipant />
           <SuddenQr />
           <Button>
             Ekspor JSON

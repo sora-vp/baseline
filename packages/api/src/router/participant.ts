@@ -1,6 +1,7 @@
 import type { TRPCRouterRecord } from "@trpc/server";
+import { TRPCError } from "@trpc/server";
 
-import { preparedGetAllParticipants, schema } from "@sora-vp/db";
+import { eq, preparedGetAllParticipants, schema } from "@sora-vp/db";
 import { participant } from "@sora-vp/validators";
 
 import { protectedProcedure } from "../trpc";
@@ -14,5 +15,47 @@ export const participantRouter = {
     .input(participant.SharedAddPariticipant)
     .mutation(({ ctx, input }) =>
       ctx.db.transaction((tx) => tx.insert(schema.participants).values(input)),
+    ),
+
+  insertManyParticipant: protectedProcedure
+    .input(participant.SharedUploadManyParticipant)
+    .mutation(({ input, ctx }) =>
+      ctx.db.transaction(async (tx) => {
+        const okToInsert = input.map((data) => ({
+          name: data.Nama,
+          subpart: data["Bagian Dari"],
+        }));
+
+        const checkThing = await Promise.all(
+          okToInsert.map(({ name }) =>
+            tx.query.participants.findFirst({
+              where: eq(schema.participants.name, name),
+            }),
+          ),
+        );
+        const normalizedCheckThing = checkThing.filter((d) => !!d);
+
+        if (
+          normalizedCheckThing.length > 0 &&
+          normalizedCheckThing.every((data) => data !== null)
+        ) {
+          throw new TRPCError({
+            code: "BAD_REQUEST",
+            message: "Semua data yang ingin di upload sudah terdaftar!",
+          });
+        }
+
+        if (
+          normalizedCheckThing.length > 0 &&
+          normalizedCheckThing.some((data) => data !== null)
+        ) {
+          throw new TRPCError({
+            code: "BAD_REQUEST",
+            message: "Beberapa data yang ingin di upload sudah ada!",
+          });
+        }
+
+        return tx.insert(schema.participants).values(okToInsert);
+      }),
     ),
 } satisfies TRPCRouterRecord;

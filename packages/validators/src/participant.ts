@@ -21,7 +21,7 @@ const SharedAddPariticipant = z.object({
   subpart: baseSubpartSchema,
 });
 
-const ServerUploadManyParticipant = z.array(
+const SharedUploadManyParticipant = z.array(
   z.object({ Nama: baseNameSchema, "Bagian Dari": baseSubpartSchema }),
 );
 
@@ -35,8 +35,6 @@ const UploadParticipantSchema = z.object({
     ),
 });
 
-// export type TUploadFormValues = { csv: FileList };
-
 const DeleteParticipantSchema = z.object({ id: z.number() });
 
 const ParticipantAttendSchema = z.string().refine(validateId);
@@ -49,7 +47,7 @@ const SharedUpdateParticipant = z.object({
 
 export const participant = {
   SharedAddPariticipant,
-  ServerUploadManyParticipant,
+  SharedUploadManyParticipant,
   UploadParticipantSchema,
   DeleteParticipantSchema,
   ParticipantAttendSchema,
