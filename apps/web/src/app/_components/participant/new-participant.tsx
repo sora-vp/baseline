@@ -112,7 +112,7 @@ export function SingleNewParticipant() {
       dialogTrigger={
         <Button>
           Tambah Partisipan Baru
-          <UserPlus className="ml-2 h-4 w-4 lg:ml-6" />
+          <UserPlus className="ml-2 h-4 w-4 text-blue-500 dark:text-blue-600 lg:ml-6" />
         </Button>
       }
     >
@@ -258,7 +258,7 @@ export function UploadNewParticipant(params: type) {
       dialogTrigger={
         <Button>
           Unggah Partisipan (File CSV)
-          <FileText className="ml-2 h-4 w-4 lg:ml-6" />
+          <FileText className="ml-2 h-4 w-4 text-green-500 dark:text-green-600 lg:ml-6" />
         </Button>
       }
     >

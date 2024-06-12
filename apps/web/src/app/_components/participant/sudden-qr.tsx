@@ -84,7 +84,7 @@ export function SuddenQr() {
       <DialogTrigger asChild>
         <Button>
           Buat QR Dadakan
-          <QRIcon className="ml-2 h-4 w-4 lg:ml-6" />
+          <QRIcon className="ml-2 h-4 w-4 text-cyan-500 dark:text-cyan-600 lg:ml-6" />
         </Button>
       </DialogTrigger>
       <DialogContent className="max-w-sm md:max-w-3xl">

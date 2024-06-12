@@ -34,7 +34,7 @@ export function ExportJSON() {
   return (
     <Button onClick={() => exportJson.mutate()} disabled={exportJson.isPending}>
       Ekspor JSON
-      <FileJson className="ml-2 h-4 w-4 lg:ml-6" />
+      <FileJson className="ml-2 h-4 w-4 text-orange-500 dark:text-orange-600 lg:ml-6" />
     </Button>
   );
 }
@@ -206,7 +206,7 @@ export function ExportXLSX() {
       disabled={exportXlsx.isPending || additionalDisabled}
     >
       Ekspor XLSX
-      <FileSpreadsheet className="ml-2 h-4 w-4 lg:ml-6" />
+      <FileSpreadsheet className="ml-2 h-4 w-4 text-green-500 dark:text-green-600 lg:ml-6" />
     </Button>
   );
 }
