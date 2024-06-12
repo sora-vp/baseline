@@ -35,9 +35,9 @@ const UploadParticipantSchema = z.object({
     ),
 });
 
-const DeleteParticipantSchema = z.object({ id: z.number() });
-
 const ParticipantAttendSchema = z.string().refine(validateId);
+
+const ServerDeleteParticipant = z.object({ qrId: ParticipantAttendSchema });
 
 const ServerUpdateParticipant = z.object({
   name: baseNameSchema,
@@ -49,7 +49,7 @@ export const participant = {
   SharedAddParticipant,
   SharedUploadManyParticipant,
   UploadParticipantSchema,
-  DeleteParticipantSchema,
+  ServerDeleteParticipant,
   ParticipantAttendSchema,
   ServerUpdateParticipant,
 } as const;

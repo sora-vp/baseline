@@ -88,6 +88,45 @@ export const participantRouter = {
       }),
     ),
 
+  deleteParticipant: protectedProcedure
+    .input(participant.ServerDeleteParticipant)
+    .mutation(({ ctx, input }) =>
+      ctx.db.transaction(async (tx) => {
+        // if (canAttendNow())
+        //     throw new TRPCError({
+        //       code: "UNAUTHORIZED",
+        //       message:
+        //         "Tidak di izinkan untuk menghapus peserta karena masih dalam masa diperbolehkan absen!",
+        //     });
+
+        const participant = await tx.query.participants.findFirst({
+          where: eq(schema.participants.qrId, input.qrId),
+        });
+
+        if (!participant)
+          throw new TRPCError({
+            code: "NOT_FOUND",
+            message: "Peserta pemilihan tidak dapat ditemukan!",
+          });
+
+        if (participant.alreadyAttended)
+          throw new TRPCError({
+            code: "BAD_REQUEST",
+            message: "Peserta pemilihan sebelumnya sudah absen!",
+          });
+
+        if (participant.alreadyChoosing)
+          throw new TRPCError({
+            code: "BAD_REQUEST",
+            message: "Peserta pemilihan sebelumnya sudah memilih!",
+          });
+
+        return await tx
+          .delete(schema.participants)
+          .where(eq(schema.participants.qrId, input.qrId));
+      }),
+    ),
+
   exportJsonData: protectedProcedure.mutation(async () => {
     const participants = await preparedGetExcelParticipants.execute();
 

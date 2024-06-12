@@ -1,13 +1,13 @@
 "use client";
 
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { FileText, UserPlus } from "lucide-react";
 import { useForm, useWatch } from "react-hook-form";
 import { z } from "zod";
 
 import { Button } from "@sora-vp/ui/button";
-import { DialogClose } from "@sora-vp/ui/dialog";
+import { DialogClose, DialogDescription } from "@sora-vp/ui/dialog";
 import {
   Form,
   FormControl,
@@ -45,25 +45,27 @@ export function EditParticipant(props: IProps) {
     },
   });
 
-  const participantMutation = api.participant.updateParticipant.useMutation({
-    onSuccess() {
-      toast.success("Operasi pengubahan berhasil!", {
-        description: "Berhasil mengubah pemilih tetap.",
-      });
+  const participantEditMutation = api.participant.updateParticipant.useMutation(
+    {
+      onSuccess() {
+        toast.success("Operasi pengubahan berhasil!", {
+          description: "Berhasil mengubah pemilih tetap.",
+        });
 
-      props.openSetter(false);
-    },
+        props.openSetter(false);
+      },
 
-    onError(result) {
-      toast.error("Gagal mengubah peserta, coba lagi nanti.", {
-        description: result.message,
-      });
-    },
+      onError(result) {
+        toast.error("Gagal mengubah peserta, coba lagi nanti.", {
+          description: result.message,
+        });
+      },
 
-    async onSettled() {
-      await apiUtils.participant.getAllParticipants.invalidate();
+      async onSettled() {
+        await apiUtils.participant.getAllParticipants.invalidate();
+      },
     },
-  });
+  );
 
   const currentName = useWatch({ control: form.control, name: "name" });
   const currentSubpart = useWatch({ control: form.control, name: "subpart" });
@@ -75,7 +77,7 @@ export function EditParticipant(props: IProps) {
 
   return (
     <ReusableDialog
-      dialogOpen={props.dialogOpen || participantMutation.isPending}
+      dialogOpen={props.dialogOpen || participantEditMutation.isPending}
       setOpen={() => {
         if (!participant.isPending)
           props.openSetter((prev) => {
@@ -92,7 +94,7 @@ export function EditParticipant(props: IProps) {
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit((data) =>
-            participantMutation.mutate({ ...data, qrId: props.qrId }),
+            participantEditMutation.mutate({ ...data, qrId: props.qrId }),
           )}
           className="space-y-5"
         >
@@ -106,7 +108,7 @@ export function EditParticipant(props: IProps) {
                   <FormControl>
                     <Input
                       {...field}
-                      disabled={participantMutation.isPending}
+                      disabled={participantEditMutation.isPending}
                     />
                   </FormControl>
                   <FormDescription>
@@ -125,7 +127,7 @@ export function EditParticipant(props: IProps) {
                   <FormControl>
                     <Input
                       {...field}
-                      disabled={participantMutation.isPending}
+                      disabled={participantEditMutation.isPending}
                     />
                   </FormControl>
                   <FormDescription>
@@ -143,7 +145,7 @@ export function EditParticipant(props: IProps) {
                 className="md:ml-auto md:w-fit"
                 type="button"
                 variant="secondary"
-                disabled={participantMutation.isPending}
+                disabled={participantEditMutation.isPending}
               >
                 Batal
               </Button>
@@ -152,7 +154,7 @@ export function EditParticipant(props: IProps) {
             <Button
               type="submit"
               className="md:w-fit"
-              disabled={stillTheSameValue || participantMutation.isPending}
+              disabled={stillTheSameValue || participantEditMutation.isPending}
             >
               Edit
             </Button>
@@ -164,12 +166,86 @@ export function EditParticipant(props: IProps) {
 }
 
 export function DeleteParticipant(props: IProps) {
+  const apiUtils = api.useUtils();
+
+  const participantDeleteMutation =
+    api.participant.deleteParticipant.useMutation({
+      onSuccess() {
+        toast.success("Operasi penghapusan berhasil!", {
+          description: "Berhasil menghapus pemilih tetap.",
+        });
+
+        props.openSetter(false);
+      },
+
+      onError(result) {
+        toast.error("Gagal menghapus peserta, coba lagi nanti.", {
+          description: result.message,
+        });
+      },
+
+      async onSettled() {
+        await apiUtils.participant.getAllParticipants.invalidate();
+      },
+    });
+
+  const [confirmationText, setConfirmText] = useState("");
+
+  const reallySure = useMemo(
+    () => confirmationText === "saya ingin menghapus peserta ini",
+    [confirmationText],
+  );
+
   return (
     <ReusableDialog
-      dialogOpen={props.dialogOpen}
+      dialogOpen={props.dialogOpen || participantDeleteMutation.isPending}
       setOpen={() => props.openSetter((prev) => !prev)}
       title="Apakah anda yakin?"
       description={`Aksi yang anda lakukan dapat berakibat fatal. Jika anda melakukan hal ini, maka akan secara permanen menghapus data peserta bernama ${props.name}.`}
-    ></ReusableDialog>
+    >
+      <DialogDescription>
+        Sebelum menghapus, ketik <b>saya ingin menghapus peserta ini</b> pada
+        kolom dibawah:
+      </DialogDescription>
+      <form
+        onSubmit={(e) => {
+          e.preventDefault();
+
+          if (reallySure)
+            participantDeleteMutation.mutate({ qrId: props.qrId });
+        }}
+        className="mt-3 space-y-3"
+      >
+        <Input
+          type="text"
+          autoComplete="false"
+          autoCorrect="false"
+          disabled={participantDeleteMutation.isPending}
+          value={confirmationText}
+          onChange={(e) => setConfirmText(e.target.value)}
+        />
+
+        <div className="flex flex-col-reverse gap-2 md:flex-row">
+          <DialogClose asChild>
+            <Button
+              className="md:ml-auto md:w-fit"
+              type="button"
+              variant="secondary"
+              disabled={participantDeleteMutation.isPending}
+            >
+              Batal
+            </Button>
+          </DialogClose>
+
+          <Button
+            type="submit"
+            className="md:w-fit"
+            disabled={!reallySure || participantDeleteMutation.isPending}
+          >
+            Hapus
+          </Button>
+        </div>
+      </form>
+    </ReusableDialog>
   );
 }
