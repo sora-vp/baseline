@@ -45,8 +45,4 @@ export const authRouter = {
         success: true,
       };
     }),
-
-  getSecretMessage: protectedProcedure.query(() => {
-    return "you can see this secret message!";
-  }),
 } satisfies TRPCRouterRecord;

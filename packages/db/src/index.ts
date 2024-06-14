@@ -1,4 +1,4 @@
-import { eq, sql } from "drizzle-orm";
+import { and, count, eq, gt, sql } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/mysql2";
 import mysql from "mysql2/promise";
 
@@ -49,4 +49,24 @@ export const preparedGetExcelParticipants = db.query.participants
 
 export const preparedAdminGetCandidates = db.query.candidates
   .findMany()
+  .prepare();
+
+export const preparedGetCandidateCountsOnly = db.query.candidates
+  .findMany({
+    columns: {
+      counter: true,
+    },
+    where: gt(schema.candidates.counter, 0),
+  })
+  .prepare();
+
+export const preparedGetAttendedAndVoted = db
+  .select({ count: count() })
+  .from(schema.participants)
+  .where(
+    and(
+      eq(schema.participants.alreadyAttended, true),
+      eq(schema.participants.alreadyChoosing, true),
+    ),
+  )
   .prepare();
