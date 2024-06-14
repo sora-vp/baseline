@@ -2,14 +2,17 @@ import type { TRPCRouterRecord } from "@trpc/server";
 
 import {
   preparedGetAttendedAndVoted,
-  // eq,
-  // schema,
   preparedGetCandidateCountsOnly,
+  preparedGetGraphicalData,
 } from "@sora-vp/db";
 
 import { adminProcedure } from "../trpc";
 
 export const statisticRouter = {
+  graphicalDataQuery: adminProcedure.query(() =>
+    preparedGetGraphicalData.execute(),
+  ),
+
   essentialInfoQuery: adminProcedure.query(async () => {
     const candidates = await preparedGetCandidateCountsOnly.execute();
 
@@ -32,6 +35,12 @@ export const statisticRouter = {
       isMatch: participantsAccumulation === candidatesAccumulation,
       participants: participantsAccumulation,
       candidates: candidatesAccumulation,
+    };
+  }),
+
+  dataReportMutation: adminProcedure.mutation(async ({ ctx }) => {
+    return {
+      success: true,
     };
   }),
 } as TRPCRouterRecord;

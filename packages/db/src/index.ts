@@ -70,3 +70,12 @@ export const preparedGetAttendedAndVoted = db
     ),
   )
   .prepare();
+
+export const preparedGetGraphicalData = db.query.candidates
+  .findMany({
+    columns: {
+      name: true,
+      counter: true,
+    },
+  })
+  .prepare();
