@@ -21,6 +21,7 @@ import { Input } from "@sora-vp/ui/input";
 import { toast } from "@sora-vp/ui/toast";
 import { candidate } from "@sora-vp/validators";
 
+import type { FormSchema as EditFormSchema } from "./new-candidate";
 import { ReusableDialog } from "~/app/_components/participant/new-participant";
 import { api } from "~/trpc/react";
 import { toBase64 } from "./new-candidate";
@@ -32,13 +33,11 @@ interface IProps {
   id: string;
 }
 
-type EditFormSchema = z.infer<typeof candidate>;
-
 export function EditCandidate(props: IProps) {
   const apiUtils = api.useUtils();
 
   const form = useForm<EditFormSchema>({
-    // resolver: zodResolver(candidate),
+    resolver: zodResolver(candidate.UpdateCandidateSchema),
     defaultValues: {
       name: props.name,
     },
@@ -51,6 +50,7 @@ export function EditCandidate(props: IProps) {
       });
 
       props.openSetter(false);
+      form.reset();
     },
 
     onError(result) {
@@ -65,11 +65,33 @@ export function EditCandidate(props: IProps) {
   });
 
   const currentName = useWatch({ control: form.control, name: "name" });
+  const currentImage = useWatch({ control: form.control, name: "image" });
 
   const stillTheSameValue = useMemo(
-    () => currentName === props.name,
-    [currentName, props.name],
+    () => currentName === props.name && !currentImage,
+    [currentName, props.name, currentImage],
   );
+
+  async function onSubmit(values: EditFormSchema) {
+    if (values.image.length < 1) {
+      candidateEditMutation.mutate({
+        id: props.id,
+        name: values.name,
+      });
+
+      return;
+    }
+
+    const file = values.image.item(0)!;
+    const image = await toBase64(file);
+
+    candidateEditMutation.mutate({
+      id: props.id,
+      name: values.name,
+      image,
+      type: file.type,
+    });
+  }
 
   return (
     <ReusableDialog
@@ -88,12 +110,7 @@ export function EditCandidate(props: IProps) {
       description="Perbarui identitas kandidat yang mungkin salah dalam penulisan nama ataupun gambarnya."
     >
       <Form {...form}>
-        <form
-          onSubmit={form.handleSubmit((data) =>
-            participantEditMutation.mutate({ ...data, qrId: props.qrId }),
-          )}
-          className="space-y-5"
-        >
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
           <div className="mt-2 grid grid-rows-1 gap-5 text-start md:grid-cols-2">
             <FormField
               control={form.control}
@@ -131,7 +148,8 @@ export function EditCandidate(props: IProps) {
                     />
                   </FormControl>
                   <FormDescription>
-                    Gambar kandidat yang akan dilihat oleh pemilih.
+                    Gambar kandidat yang akan dilihat oleh pemilih. Biarkan
+                    kosong jika gambar sudah benar.
                   </FormDescription>
                   <FormMessage />
                 </FormItem>

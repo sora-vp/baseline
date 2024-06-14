@@ -24,10 +24,10 @@ import { ReusableDialog } from "~/app/_components/participant/new-participant";
 import { api } from "~/trpc/react";
 import { GlobalSystemAllowance } from "./data-table";
 
-type FormSchema = {
+export interface FormSchema {
   name: string;
   image: File;
-};
+}
 
 export const toBase64 = (file: File) =>
   new Promise((resolve, reject) => {

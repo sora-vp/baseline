@@ -36,7 +36,39 @@ const ServerAddNewCandidate = baseAddAndEditForm.merge(
   }),
 );
 
+const UpdateCandidateSchema = baseAddAndEditForm.merge(
+  z.object({
+    image: z
+      .any()
+      .refine(
+        (files) => (files.length === 0 ? true : files?.length === 1),
+        "Diperlukan gambar kandidat!",
+      )
+      .refine(
+        (files) => (files.length === 0 ? true : files?.[0]?.size <= TwoMegs),
+        `Ukuran maksimal gambar adalah 2MB!`,
+      )
+      .refine(
+        (files) =>
+          files.length === 0
+            ? true
+            : ACCEPTED_IMAGE_TYPES.includes(files?.[0]?.type),
+        "Hanya format gambar .jpg, .jpeg, .png dan .webp yang diterima!",
+      ),
+  }),
+);
+
+const ServerUpdateCandidate = baseAddAndEditForm.merge(
+  z.object({
+    id: z.number().min(1),
+    image: z.optional(z.string().refine(Base64.isValid)),
+    type: z.optional(z.string()),
+  }),
+);
+
 export const candidate = {
   AddNewCandidateSchema,
   ServerAddNewCandidate,
+  UpdateCandidateSchema,
+  ServerUpdateCandidate,
 } as const;
