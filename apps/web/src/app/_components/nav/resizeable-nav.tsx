@@ -20,6 +20,8 @@ import { TopNavbar } from "./top-navbar";
 interface Props {
   children: React.ReacNode;
   role: "admin" | "comittee";
+  defaultLayout: number[] | undefined;
+  defaultCollapsed?: boolean;
 }
 
 const sundaneseFont = localFont({
@@ -59,26 +61,41 @@ const adminNav = [
 export function ResizeableNav({
   name,
   nameFallback,
+  defaultLayout = [20, 80],
+  defaultCollapsed = false,
   email,
   role,
   children,
 }: Props & TopNavbarProps) {
-  const [isCollapsed, setIsCollapsed] = useState(false);
+  const [isCollapsed, setIsCollapsed] = useState(defaultCollapsed);
 
   return (
     <ResizablePanelGroup
       direction="horizontal"
       className="min-h-screen w-screen"
+      onLayout={(sizes: number[]) => {
+        document.cookie = `react-resizable-panels:layout=${JSON.stringify(
+          sizes,
+        )}`;
+      }}
     >
       <ResizablePanel
-        defaultSize={20}
+        defaultSize={defaultLayout[0]}
         minSize={15}
         maxSize={20}
         collapsible={true}
         onCollapse={() => {
           setIsCollapsed(true);
+          document.cookie = `react-resizable-panels:collapsed=${JSON.stringify(
+            true,
+          )}`;
         }}
-        onExpand={() => setIsCollapsed(false)}
+        onExpand={() => {
+          setIsCollapsed(false);
+          document.cookie = `react-resizable-panels:collapsed=${JSON.stringify(
+            false,
+          )}`;
+        }}
         className={cn(
           isCollapsed && "min-w-[55px] transition-all duration-300 ease-in-out",
         )}
@@ -100,7 +117,7 @@ export function ResizeableNav({
         </div>
       </ResizablePanel>
       <ResizableHandle />
-      <ResizablePanel defaultSize={80}>
+      <ResizablePanel defaultSize={defaultLayout[1]}>
         <div className="h-16 border-b">
           <div className="flex h-full items-center justify-center p-6">
             {isCollapsed ? (

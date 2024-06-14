@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from "next";
+import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { GeistMono } from "geist/font/mono";
 import { GeistSans } from "geist/font/sans";
@@ -28,6 +29,12 @@ export const viewport: Viewport = {
 
 export default async function RootLayout(props: { children: React.ReactNode }) {
   const isLoggedIn = await auth();
+
+  const layout = cookies().get("react-resizable-panels:layout");
+  const collapsed = cookies().get("react-resizable-panels:collapsed");
+
+  const defaultLayout = layout ? JSON.parse(layout.value) : undefined;
+  const defaultCollapsed = collapsed ? JSON.parse(collapsed.value) : undefined;
 
   if (!isLoggedIn) redirect("/login");
 
@@ -73,6 +80,8 @@ export default async function RootLayout(props: { children: React.ReactNode }) {
       >
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           <ResizeableNav
+            defaultLayout={defaultLayout}
+            defaultCollapsed={defaultCollapsed}
             name={isLoggedIn.user.name ?? ""}
             email={isLoggedIn.user.email ?? ""}
             nameFallback={isLoggedIn.user.name?.slice(0, 2) ?? ""}
