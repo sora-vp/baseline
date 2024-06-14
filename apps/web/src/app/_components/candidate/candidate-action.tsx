@@ -183,54 +183,61 @@ export function EditCandidate(props: IProps) {
   );
 }
 
-export function DeleteParticipant(props: IProps) {
+export function DeleteCandidate(props: IProps) {
   const apiUtils = api.useUtils();
-
-  const participantDeleteMutation =
-    api.participant.deleteParticipant.useMutation({
-      onSuccess() {
-        toast.success("Operasi penghapusan berhasil!", {
-          description: "Berhasil menghapus pemilih tetap.",
-        });
-
-        props.openSetter(false);
-      },
-
-      onError(result) {
-        toast.error("Gagal menghapus peserta, coba lagi nanti.", {
-          description: result.message,
-        });
-      },
-
-      async onSettled() {
-        await apiUtils.participant.getAllParticipants.invalidate();
-      },
-    });
 
   const [confirmationText, setConfirmText] = useState("");
 
+  const candidateDeleteMutation = api.candidate.deleteCandidate.useMutation({
+    onSuccess() {
+      toast.success("Operasi penghapusan berhasil!", {
+        description: "Berhasil menghapus kandidat.",
+      });
+
+      props.openSetter(false);
+      setConfirmText("");
+    },
+
+    onError(result) {
+      toast.error("Gagal menghapus kandidat, coba lagi nanti.", {
+        description: result.message,
+      });
+    },
+
+    async onSettled() {
+      await apiUtils.candidate.candidateQuery.invalidate();
+    },
+  });
+
   const reallySure = useMemo(
-    () => confirmationText === "saya ingin menghapus peserta ini",
+    () => confirmationText === "saya yakin dan ingin menghapus kandidat ini",
     [confirmationText],
   );
 
   return (
     <ReusableDialog
-      dialogOpen={props.dialogOpen || participantDeleteMutation.isPending}
-      setOpen={() => props.openSetter((prev) => !prev)}
+      dialogOpen={props.dialogOpen || candidateDeleteMutation.isPending}
+      setOpen={() =>
+        props.openSetter((prev) => {
+          const newValue = !prev;
+
+          if (!newValue) setConfirmText("");
+
+          return newValue;
+        })
+      }
       title="Apakah anda yakin?"
-      description={`Aksi yang anda lakukan dapat berakibat fatal. Jika anda melakukan hal ini, maka akan secara permanen menghapus data peserta bernama ${props.name}.`}
+      description={`Aksi yang anda lakukan dapat berakibat fatal. Jika anda melakukan hal ini, maka akan secara permanen menghapus data kandidat bernama ${props.name}.`}
     >
       <DialogDescription>
-        Sebelum menghapus, ketik <b>saya ingin menghapus peserta ini</b> pada
-        kolom dibawah:
+        Sebelum menghapus, ketik{" "}
+        <b>saya yakin dan ingin menghapus kandidat ini</b> pada kolom dibawah:
       </DialogDescription>
       <form
         onSubmit={(e) => {
           e.preventDefault();
 
-          if (reallySure)
-            participantDeleteMutation.mutate({ qrId: props.qrId });
+          if (reallySure) candidateDeleteMutation.mutate({ id: props.id });
         }}
         className="mt-3 space-y-3"
       >
@@ -238,7 +245,7 @@ export function DeleteParticipant(props: IProps) {
           type="text"
           autoComplete="false"
           autoCorrect="false"
-          disabled={participantDeleteMutation.isPending}
+          disabled={candidateDeleteMutation.isPending}
           value={confirmationText}
           onChange={(e) => setConfirmText(e.target.value)}
         />
@@ -249,7 +256,7 @@ export function DeleteParticipant(props: IProps) {
               className="md:ml-auto md:w-fit"
               type="button"
               variant="secondary"
-              disabled={participantDeleteMutation.isPending}
+              disabled={candidateDeleteMutation.isPending}
             >
               Batal
             </Button>
@@ -258,7 +265,7 @@ export function DeleteParticipant(props: IProps) {
           <Button
             type="submit"
             className="md:w-fit"
-            disabled={!reallySure || participantDeleteMutation.isPending}
+            disabled={!reallySure || candidateDeleteMutation.isPending}
           >
             Hapus
           </Button>

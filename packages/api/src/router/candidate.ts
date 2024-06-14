@@ -102,4 +102,41 @@ export const candidateRouter = {
           .where(eq(schema.candidates.id, input.id));
       }),
     ),
+
+  deleteCandidate: adminProcedure
+    .input(candidate.ServerDeleteCandidate)
+    .mutation(({ ctx, input }) =>
+      ctx.db.transaction(async (tx) => {
+        if (canVoteNow())
+          throw new TRPCError({
+            code: "UNAUTHORIZED",
+            message:
+              "Tidak bisa menghapus kandidat baru pada saat kondisi pemilihan!",
+          });
+
+        const candidate = await tx.query.candidates.findFirst({
+          where: eq(schema.candidates.id, input.id),
+        });
+
+        if (!candidate)
+          throw new TRPCError({
+            code: "NOT_FOUND",
+            message: "Kandidat yang ingin di ubah tidak ditemukan!",
+          });
+
+        if (candidate.counter > 0)
+          throw new TRPCError({
+            code: "BAD_REQUEST",
+            message:
+              "Tidak bisa menghapus kandidat karena sudah ada yang memilih!",
+          });
+
+        if (existsSync(path.join(NEXT_ROOT_PATH, candidate.image)))
+          await unlink(path.join(NEXT_ROOT_PATH, candidate.image));
+
+        return await tx
+          .delete(schema.candidates)
+          .where(eq(schema.candidates.id, input.id));
+      }),
+    ),
 } as TRPCRouterRecord;

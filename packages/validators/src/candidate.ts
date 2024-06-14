@@ -9,6 +9,7 @@ const ACCEPTED_IMAGE_TYPES = [
   "image/webp",
 ];
 
+const id = z.number().min(1);
 const baseAddAndEditForm = z.object({
   name: z.string().min(1, { message: "Diperlukan nama kandidat!" }),
 });
@@ -60,15 +61,18 @@ const UpdateCandidateSchema = baseAddAndEditForm.merge(
 
 const ServerUpdateCandidate = baseAddAndEditForm.merge(
   z.object({
-    id: z.number().min(1),
+    id,
     image: z.optional(z.string().refine(Base64.isValid)),
     type: z.optional(z.string()),
   }),
 );
+
+const ServerDeleteCandidate = z.object({ id });
 
 export const candidate = {
   AddNewCandidateSchema,
   ServerAddNewCandidate,
   UpdateCandidateSchema,
   ServerUpdateCandidate,
+  ServerDeleteCandidate,
 } as const;

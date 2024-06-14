@@ -43,7 +43,7 @@ import {
 import { toast } from "@sora-vp/ui/toast";
 
 import { api } from "~/trpc/react";
-import { EditCandidate } from "./candidate-action";
+import { DeleteCandidate, EditCandidate } from "./candidate-action";
 import { NewCandidate } from "./new-candidate";
 
 type CandidateList = RouterOutputs["candidate"]["candidateList"][number];
@@ -133,6 +133,12 @@ const columns: ColumnDef<CandidateList>[] = [
           <EditCandidate
             dialogOpen={openEdit}
             openSetter={setOpenEdit}
+            name={candidate.name}
+            id={candidate.id}
+          />
+          <DeleteCandidate
+            dialogOpen={openDelete}
+            openSetter={setOpenDelete}
             name={candidate.name}
             id={candidate.id}
           />
