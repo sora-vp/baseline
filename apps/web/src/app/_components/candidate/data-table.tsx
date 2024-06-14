@@ -43,6 +43,7 @@ import {
 import { toast } from "@sora-vp/ui/toast";
 
 import { api } from "~/trpc/react";
+import { EditCandidate } from "./candidate-action";
 import { NewCandidate } from "./new-candidate";
 
 type CandidateList = RouterOutputs["candidate"]["candidateList"][number];
@@ -57,7 +58,9 @@ const columns: ColumnDef<CandidateList>[] = [
   {
     accessorKey: "counter",
     header: "Jumlah Pemilih",
-    cell: ({ row }) => <span>{row.getValue("counter")} Orang</span>,
+    cell: ({ row }) => (
+      <span>{row.getValue("counter").toLocaleString("id-ID")} Orang</span>
+    ),
   },
   {
     accessorKey: "image",
@@ -99,11 +102,7 @@ const columns: ColumnDef<CandidateList>[] = [
               <Button
                 variant="ghost"
                 className="h-8 w-8 p-0"
-                disabled={
-                  !globallyAllowedToOpen
-                  // !globallyAllowedToOpen ||
-                  // (participant.alreadyAttended && participant.alreadyChoosing)
-                }
+                disabled={!globallyAllowedToOpen}
               >
                 <span className="sr-only">Open menu</span>
                 <MoreHorizontal className="h-4 w-4" />
@@ -120,14 +119,23 @@ const columns: ColumnDef<CandidateList>[] = [
               </DropdownMenuItem>
               <DropdownMenuItem
                 className="cursor-pointer text-rose-500 hover:text-rose-700 focus:text-rose-700"
-                onClick={() => setOpenDelete(true)}
-                // disabled={participant.alreadyAttended}
+                onClick={() => {
+                  if (candidate.counter < 1) setOpenDelete(true);
+                }}
+                disabled={candidate.counter > 0}
               >
                 <Trash2 className="mr-2 h-4 md:w-4" />
                 Hapus Kandidat
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
+
+          <EditCandidate
+            dialogOpen={openEdit}
+            openSetter={setOpenEdit}
+            name={candidate.name}
+            id={candidate.id}
+          />
         </>
       );
     },
@@ -135,7 +143,10 @@ const columns: ColumnDef<CandidateList>[] = [
 ];
 
 export function DataTable() {
-  const candidateQuery = api.candidate.candidateQuery.useQuery();
+  const candidateQuery = api.candidate.candidateQuery.useQuery(undefined, {
+    refetchInterval: 2500,
+    refetchIntervalInBackground: true,
+  });
 
   const settingsQuery = api.settings.getSettings.useQuery(undefined, {
     refetchInterval: 3500,

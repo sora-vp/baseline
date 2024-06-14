@@ -29,7 +29,7 @@ type FormSchema = {
   image: File;
 };
 
-const toBase64 = (file: File) =>
+export const toBase64 = (file: File) =>
   new Promise((resolve, reject) => {
     const reader = new FileReader();
     reader.readAsDataURL(file);
@@ -108,7 +108,7 @@ export function NewCandidate() {
       }
     >
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="mt-2 space-y-3">
+        <form onSubmit={form.handleSubmit(onSubmit)} className="mt-3 space-y-3">
           <FormField
             control={form.control}
             name="name"
