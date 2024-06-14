@@ -1,5 +1,6 @@
 "use client";
 
+import type { RouterOutputs } from "@sora-vp/api";
 import type {
   ColumnDef,
   ColumnFiltersState,
@@ -79,6 +80,9 @@ import { SingleNewParticipant, UploadNewParticipant } from "./new-participant";
 import { DeleteParticipant, EditParticipant } from "./participant-action";
 import { SuddenQr } from "./sudden-qr";
 
+type ParticipantList =
+  RouterOutputs["participant"]["getAllParticipants"][number];
+
 const GlobalSystemAllowance = createContext(true);
 
 const MonoFont = Space_Mono({
@@ -86,7 +90,7 @@ const MonoFont = Space_Mono({
   subsets: ["latin"],
 });
 
-const columns: ColumnDef<QuestionList>[] = [
+const columns: ColumnDef<ParticipantList>[] = [
   {
     id: "participantName",
     accessorKey: "name",
@@ -292,14 +296,13 @@ export function DataTable() {
   );
 
   const settingsQuery = api.settings.getSettings.useQuery(undefined, {
-    refetchInterval: 5500,
+    refetchInterval: 3500,
     refetchIntervalInBackground: true,
   });
 
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
-  const [rowSelection, setRowSelection] = useState({});
 
   const [allowedToOpenModifier, setAllowedOpen] = useState(true);
 
@@ -313,13 +316,11 @@ export function DataTable() {
     getSortedRowModel: getSortedRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
     onColumnVisibilityChange: setColumnVisibility,
-    onRowSelectionChange: setRowSelection,
     initialState: { pagination: { pageSize: 20 } },
     state: {
       sorting,
       columnFilters,
       columnVisibility,
-      rowSelection,
     },
   });
 

@@ -46,3 +46,7 @@ export const preparedGetExcelParticipants = db.query.participants
     },
   })
   .prepare();
+
+export const preparedAdminGetCandidates = db.query.candidates
+  .findMany()
+  .prepare();

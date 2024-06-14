@@ -53,3 +53,6 @@ dist/
 
 # turbo
 .turbo
+
+# web app
+apps/web/public/uploads

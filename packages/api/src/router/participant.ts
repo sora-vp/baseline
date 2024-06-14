@@ -7,6 +7,7 @@ import {
   preparedGetExcelParticipants,
   schema,
 } from "@sora-vp/db";
+import { canAttendNow } from "@sora-vp/settings";
 import { participant } from "@sora-vp/validators";
 
 import { protectedProcedure } from "../trpc";
@@ -92,12 +93,12 @@ export const participantRouter = {
     .input(participant.ServerDeleteParticipant)
     .mutation(({ ctx, input }) =>
       ctx.db.transaction(async (tx) => {
-        // if (canAttendNow())
-        //     throw new TRPCError({
-        //       code: "UNAUTHORIZED",
-        //       message:
-        //         "Tidak di izinkan untuk menghapus peserta karena masih dalam masa diperbolehkan absen!",
-        //     });
+        if (canAttendNow())
+          throw new TRPCError({
+            code: "UNAUTHORIZED",
+            message:
+              "Tidak di izinkan untuk menghapus peserta karena masih dalam masa diperbolehkan absen!",
+          });
 
         const participant = await tx.query.participants.findFirst({
           where: eq(schema.participants.qrId, input.qrId),

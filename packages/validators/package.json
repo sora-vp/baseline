@@ -20,6 +20,7 @@
   },
   "dependencies": {
     "@sora-vp/id-generator": "*",
+    "js-base64": "^3.7.7",
     "zod": "^3.23.6"
   },
   "devDependencies": {
