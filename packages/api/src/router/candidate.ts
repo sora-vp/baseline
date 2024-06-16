@@ -6,12 +6,7 @@ import type { TRPCRouterRecord } from "@trpc/server";
 import { TRPCError } from "@trpc/server";
 import mime from "mime-types";
 
-import {
-  eq,
-  preparedAdminGetCandidates,
-  //   preparedGetExcelParticipants,
-  schema,
-} from "@sora-vp/db";
+import { eq, preparedAdminGetCandidates, schema } from "@sora-vp/db";
 import { randomFileName } from "@sora-vp/id-generator";
 import { canVoteNow } from "@sora-vp/settings";
 import { candidate } from "@sora-vp/validators";
@@ -81,6 +76,7 @@ export const candidateRouter = {
             })
             .where(eq(schema.candidates.id, input.id));
 
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         const fileName = `${randomFileName()}.${mime.extension(input.type!)}`;
 
         if (!existsSync(NEXT_ROOT_PATH)) mkdirSync(NEXT_ROOT_PATH);
@@ -89,6 +85,7 @@ export const candidateRouter = {
         if (existsSync(path.join(NEXT_ROOT_PATH, candidate.image)))
           await unlink(path.join(NEXT_ROOT_PATH, candidate.image));
 
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         const imageContent = Buffer.from(input.image!, "base64");
 
         await writeFile(path.join(NEXT_ROOT_PATH, fileName), imageContent);

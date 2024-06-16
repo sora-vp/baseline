@@ -15,11 +15,10 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@sora-vp/ui/dialog";
-import { FormControl, FormItem, FormLabel } from "@sora-vp/ui/form";
 import { Input } from "@sora-vp/ui/input";
 
 type Timer = ReturnType<typeof setTimeout>;
-type SomeFunction = (...args: any[]) => void;
+type SomeFunction = (fn: never) => void;
 /**
  *
  * @param func The original, non debounced function (You can pass any number of args to it)
@@ -52,6 +51,7 @@ export function useDebounce<Func extends SomeFunction>(
 }
 
 export function SuddenQr() {
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   const canvasRef = useRef<HTMLCanvasElement>(null!);
 
   const [isOpen, setDialogOpen] = useState(false);
@@ -65,7 +65,7 @@ export function SuddenQr() {
       return;
     }
 
-    QRCode.toCanvas(canvasRef.current, qr, { width: 296 });
+    void QRCode.toCanvas(canvasRef.current, qr, { width: 296 });
   });
 
   return (

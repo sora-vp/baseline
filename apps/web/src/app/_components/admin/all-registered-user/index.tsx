@@ -133,6 +133,7 @@ export const columns: ColumnDef<PendingUserList>[] = [
           <UpdateRole
             isOpen={openUpdate}
             toggleOpen={toggleOpen}
+            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
             currRole={user.role!}
             userId={user.id}
           />
@@ -202,8 +203,7 @@ export function AllRegisteredUser() {
               </TableRow>
             ) : null}
 
-            {allRegisteredUserQuery.isLoading &&
-            !allRegisteredUserQuery.isError ? (
+            {allRegisteredUserQuery.isLoading ? (
               <>
                 {Array.from({ length: 5 }).map((_, idx) => (
                   <TableRow key={idx}>
@@ -215,7 +215,7 @@ export function AllRegisteredUser() {
               </>
             ) : null}
 
-            {table.getRowModel().rows?.length ? (
+            {table.getRowModel().rows.length ? (
               table.getRowModel().rows.map((row) => (
                 <TableRow
                   key={row.id}

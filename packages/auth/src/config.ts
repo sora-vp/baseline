@@ -8,6 +8,9 @@ import { preparedGetUserByEmail } from "@sora-vp/db";
 class UnexpectedLoginError extends CredentialsSignin {
   code = "Terjadi kesalahan yang terduga, mohon coba lagi nanti.";
 }
+class UserNotFound extends CredentialsSignin {
+  code = "Pengguna tidka ditemukan!";
+}
 class InvalidLoginError extends CredentialsSignin {
   code = "Mohon masukan email dan kata sandi!";
 }
@@ -44,7 +47,7 @@ export const authConfig = {
             email: credentials.email,
           });
 
-          if (!user) throw new InvalidUserOrPassword();
+          if (!user) throw new UserNotFound();
 
           const isValidPassword = await bcrypt.compare(
             credentials.password as string,
@@ -58,7 +61,7 @@ export const authConfig = {
             email: user.email,
           };
         } catch (_) {
-          throw new InvalidUserOrPassword();
+          throw new UnexpectedLoginError();
         }
       },
     }),
@@ -72,7 +75,10 @@ export const authConfig = {
         email: session.user.email,
       });
 
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       session.user.role = user!.role;
+
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       session.user.verifiedAt = user!.verifiedAt;
 
       return session;

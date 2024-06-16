@@ -33,7 +33,10 @@ export default async function RootLayout(props: { children: React.ReactNode }) {
   const layout = cookies().get("react-resizable-panels:layout");
   const collapsed = cookies().get("react-resizable-panels:collapsed");
 
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   const defaultLayout = layout ? JSON.parse(layout.value) : undefined;
+
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   const defaultCollapsed = collapsed ? JSON.parse(collapsed.value) : undefined;
 
   if (!isLoggedIn) redirect("/login");
@@ -80,11 +83,14 @@ export default async function RootLayout(props: { children: React.ReactNode }) {
       >
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           <ResizeableNav
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
             defaultLayout={defaultLayout}
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
             defaultCollapsed={defaultCollapsed}
             name={isLoggedIn.user.name ?? ""}
             email={isLoggedIn.user.email ?? ""}
             nameFallback={isLoggedIn.user.name?.slice(0, 2) ?? ""}
+            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
             role={isLoggedIn.user.role!}
           >
             <TRPCReactProvider>{props.children}</TRPCReactProvider>

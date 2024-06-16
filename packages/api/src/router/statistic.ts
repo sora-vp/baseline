@@ -16,7 +16,7 @@ export const statisticRouter = {
   essentialInfoQuery: adminProcedure.query(async () => {
     const candidates = await preparedGetCandidateCountsOnly.execute();
 
-    if (!candidates || candidates.length < 1)
+    if (candidates.length < 1)
       return {
         isMatch: null,
         participants: null,
@@ -24,6 +24,8 @@ export const statisticRouter = {
       };
 
     const participantCounter = await preparedGetAttendedAndVoted.execute();
+
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const extractCount = participantCounter.at(0)!;
     const participantsAccumulation = extractCount.count;
 
@@ -38,9 +40,9 @@ export const statisticRouter = {
     };
   }),
 
-  dataReportMutation: adminProcedure.mutation(async ({ ctx }) => {
-    return {
-      success: true,
-    };
-  }),
+  // dataReportMutation: adminProcedure.mutation(async ({ ctx }) => {
+  //   return {
+  //     success: true,
+  //   };
+  // }),
 } satisfies TRPCRouterRecord;
