@@ -1,11 +1,11 @@
 "use client";
 
-import { memo, useCallback, useEffect, useState } from "react";
+import type { z } from "zod";
+import { memo, useCallback, useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { parse as parseCSV } from "csv-parse";
 import { FileText, UserPlus } from "lucide-react";
 import { useForm } from "react-hook-form";
-import { z } from "zod";
 
 import { Button } from "@sora-vp/ui/button";
 import {
@@ -13,7 +13,6 @@ import {
   DialogClose,
   DialogContent,
   DialogDescription,
-  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
@@ -34,7 +33,9 @@ import { participant } from "@sora-vp/validators";
 import { api } from "~/trpc/react";
 
 type SingleFormSchema = z.infer<typeof participant.SharedAddParticipant>;
-type UploadFormSchema = { csv: FileList };
+interface UploadFormSchema {
+  csv: FileList;
+}
 
 export const ReusableDialog = memo(function MemoizedReusable({
   dialogOpen,
@@ -182,7 +183,7 @@ export function SingleNewParticipant() {
   );
 }
 
-export function UploadNewParticipant(params: type) {
+export function UploadNewParticipant() {
   const [isOpen, setDialogOpen] = useState(false);
   const [readLock, setReadLock] = useState(false);
 
@@ -193,7 +194,7 @@ export function UploadNewParticipant(params: type) {
   });
 
   const insertManyMutation = api.participant.insertManyParticipant.useMutation({
-    onSuccess(result) {
+    onSuccess() {
       toast.success("Berhasil mengunggah file csv!", {
         description: "Seluruh peserta yang terdaftar berhasil ditambahkan!",
       });
@@ -217,6 +218,7 @@ export function UploadNewParticipant(params: type) {
   async function onSubmit(values: UploadFormSchema) {
     setReadLock(true);
 
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const file = values.csv.item(0)!;
     const text = await file.text();
 

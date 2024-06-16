@@ -28,7 +28,7 @@ interface IProps {
   dialogOpen: boolean;
   openSetter: React.Dispatch<React.SetStateAction<boolean>>;
   name: string;
-  id: string;
+  id: number;
 }
 
 export function EditCandidate(props: IProps) {
@@ -80,6 +80,7 @@ export function EditCandidate(props: IProps) {
       return;
     }
 
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const file = values.image.item(0)!;
     const image = await toBase64(file);
 
@@ -170,6 +171,7 @@ export function EditCandidate(props: IProps) {
             <Button
               type="submit"
               className="md:w-fit"
+              // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
               disabled={stillTheSameValue || candidateEditMutation.isPending}
             >
               Edit

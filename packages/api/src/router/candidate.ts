@@ -139,4 +139,4 @@ export const candidateRouter = {
           .where(eq(schema.candidates.id, input.id));
       }),
     ),
-} as TRPCRouterRecord;
+} satisfies TRPCRouterRecord;

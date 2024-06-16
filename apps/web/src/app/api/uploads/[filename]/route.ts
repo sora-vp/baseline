@@ -19,5 +19,7 @@ export function GET(
   const image = fs.readFileSync(filePath);
   const contentType = mime.lookup(filePath);
 
-  return new Response(image, { headers: { "content-type": contentType } });
+  return new Response(image, {
+    headers: { "Content-Type": contentType as string },
+  });
 }

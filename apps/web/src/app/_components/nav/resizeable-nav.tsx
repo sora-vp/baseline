@@ -18,7 +18,7 @@ import { NavItems } from "./nav-items";
 import { TopNavbar } from "./top-navbar";
 
 interface Props {
-  children: React.ReacNode;
+  children: React.ReactNode;
   role: "admin" | "comittee";
   defaultLayout: number[] | undefined;
   defaultCollapsed?: boolean;

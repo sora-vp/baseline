@@ -7,13 +7,7 @@ import type {
   SortingState,
   VisibilityState,
 } from "@tanstack/react-table";
-import {
-  createContext,
-  useCallback,
-  useContext,
-  useEffect,
-  useState,
-} from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 import { Space_Mono } from "next/font/google";
 import {
   flexRender,
@@ -32,8 +26,6 @@ import {
   ChevronRightIcon,
   ChevronsLeft,
   ChevronsRight,
-  FileJson,
-  FileSpreadsheet,
   MoreHorizontal,
   PencilLine,
   Trash2,
@@ -46,7 +38,6 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuLabel,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@sora-vp/ui/dropdown-menu";
 import { Input } from "@sora-vp/ui/input";
@@ -116,8 +107,8 @@ const columns: ColumnDef<ParticipantList>[] = [
     cell: ({ row }) => (
       <Tooltip>
         <TooltipTrigger
-          onClick={() => {
-            navigator.clipboard.writeText(row.getValue("qrId"));
+          onClick={async () => {
+            await navigator.clipboard.writeText(row.getValue("qrId"));
             toast.success("Berhasil menyalin QR ID!");
           }}
         >
@@ -142,7 +133,7 @@ const columns: ColumnDef<ParticipantList>[] = [
           </TooltipTrigger>
           <TooltipContent>
             <p>
-              {row.getValue("alreadyAttended")
+              {row.original.attendedAt
                 ? format(
                     row.original.attendedAt,
                     "EEEE, dd MMMM yyy, kk.mm.ss",
@@ -170,7 +161,7 @@ const columns: ColumnDef<ParticipantList>[] = [
           </TooltipTrigger>
           <TooltipContent>
             <p>
-              {row.getValue("alreadyChoosing")
+              {row.original.choosingAt
                 ? format(
                     row.original.choosingAt,
                     "EEEE, dd MMMM yyy, kk.mm.ss",
@@ -194,8 +185,11 @@ const columns: ColumnDef<ParticipantList>[] = [
           <span>
             {formatDuration(
               intervalToDuration({
-                start: row.original.attendedAt,
-                end: row.original.choosingAt,
+                // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                start: row.original.attendedAt!,
+
+                // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                end: row.original.choosingAt!,
               }),
               { locale: id },
             )}
@@ -271,14 +265,16 @@ const columns: ColumnDef<ParticipantList>[] = [
             dialogOpen={openEdit}
             openSetter={setOpenEdit}
             name={participant.name}
-            qrId={participant.qrId}
+            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+            qrId={participant.qrId!}
             subpart={participant.subpart}
           />
           <DeleteParticipant
             dialogOpen={openDelete}
             openSetter={setOpenDelete}
             name={participant.name}
-            qrId={participant.qrId}
+            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+            qrId={participant.qrId!}
           />
         </>
       );
@@ -346,9 +342,7 @@ export function DataTable() {
             <Input
               placeholder="Cari berdasarkan nama peserta..."
               value={
-                (table
-                  .getColumn("participantName")
-                  ?.getFilterValue() as string) ?? ""
+                table.getColumn("participantName")?.getFilterValue() as string
               }
               onChange={(event) =>
                 table
@@ -417,7 +411,7 @@ export function DataTable() {
                   </TableRow>
                 ) : null}
 
-                {participantQuery.isLoading && !participantQuery.isError ? (
+                {participantQuery.isLoading ? (
                   <>
                     {Array.from({ length: 10 }).map((_, idx) => (
                       <TableRow key={idx}>
@@ -430,7 +424,7 @@ export function DataTable() {
                 ) : null}
 
                 <TooltipProvider>
-                  {table.getRowModel().rows?.length ? (
+                  {table.getRowModel().rows.length ? (
                     table.getRowModel().rows.map((row) => (
                       <TableRow
                         key={row.id}

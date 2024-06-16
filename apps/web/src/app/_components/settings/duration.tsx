@@ -1,10 +1,10 @@
 "use client";
 
+import type { z } from "zod";
 import { useEffect } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { format, startOfDay } from "date-fns";
 import { useForm } from "react-hook-form";
-import { z } from "zod";
 
 import { Button } from "@sora-vp/ui/button";
 import {
@@ -53,9 +53,13 @@ export function Duration() {
 
   useEffect(() => {
     if (settingsQuery.data && !changeDuration.isPending) {
-      form.setValue("startTime", settingsQuery.data.startTime);
-      form.setValue("endTime", settingsQuery.data.endTime);
+      if (settingsQuery.data.startTime)
+        form.setValue("startTime", settingsQuery.data.startTime);
+      if (settingsQuery.data.endTime)
+        form.setValue("endTime", settingsQuery.data.endTime);
     }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [settingsQuery.data, changeDuration.isPending]);
 
   return (
@@ -79,6 +83,7 @@ export function Duration() {
                     type="datetime-local"
                     min={format(startOfDay(new Date()), "yyyy-MM-dd'T'HH:mm")}
                     value={
+                      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
                       field.value
                         ? format(field.value, "yyyy-MM-dd'T'HH:mm")
                         : ""
@@ -113,14 +118,16 @@ export function Duration() {
                   <Input
                     type="datetime-local"
                     min={
-                      form.getValues("startedAt")
+                      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+                      form.getValues("startTime")
                         ? format(
-                            form.getValues("startedAt"),
+                            form.getValues("startTime"),
                             "yyyy-MM-dd'T'HH:mm",
                           )
                         : ""
                     }
                     value={
+                      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
                       field.value
                         ? format(field.value, "yyyy-MM-dd'T'HH:mm")
                         : ""

@@ -1,19 +1,8 @@
 "use client";
 
 import type { RouterOutputs } from "@sora-vp/api";
-import type {
-  ColumnDef,
-  ColumnFiltersState,
-  SortingState,
-  VisibilityState,
-} from "@tanstack/react-table";
-import {
-  createContext,
-  useCallback,
-  useContext,
-  useEffect,
-  useState,
-} from "react";
+import type { ColumnDef, VisibilityState } from "@tanstack/react-table";
+import { createContext, useContext, useEffect, useState } from "react";
 import {
   flexRender,
   getCoreRowModel,
@@ -28,7 +17,6 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuLabel,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@sora-vp/ui/dropdown-menu";
 import { Skeleton } from "@sora-vp/ui/skeleton";
@@ -40,13 +28,12 @@ import {
   TableHeader,
   TableRow,
 } from "@sora-vp/ui/table";
-import { toast } from "@sora-vp/ui/toast";
 
 import { api } from "~/trpc/react";
 import { DeleteCandidate, EditCandidate } from "./candidate-action";
 import { NewCandidate } from "./new-candidate";
 
-type CandidateList = RouterOutputs["candidate"]["candidateList"][number];
+type CandidateList = RouterOutputs["candidate"]["candidateQuery"][number];
 
 export const GlobalSystemAllowance = createContext(true);
 
@@ -59,17 +46,20 @@ const columns: ColumnDef<CandidateList>[] = [
     accessorKey: "counter",
     header: "Jumlah Pemilih",
     cell: ({ row }) => (
-      <span>{row.getValue("counter").toLocaleString("id-ID")} Orang</span>
+      <span>{row.original.counter.toLocaleString("id-ID")} Orang</span>
     ),
   },
   {
     accessorKey: "image",
     header: "Gambar Kandidat",
     cell: ({ row }) => (
-      <img
-        className="w-60 rounded border"
-        src={`/api/uploads/${row.getValue("image")}`}
-      />
+      <>
+        {/*  eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          className="w-60 rounded border"
+          src={`/api/uploads/${row.original.image}`}
+        />
+      </>
     ),
   },
   {
@@ -245,7 +235,7 @@ export function DataTable() {
                 </TableRow>
               ) : null}
 
-              {candidateQuery.isLoading && !candidateQuery.isError ? (
+              {candidateQuery.isLoading ? (
                 <>
                   {Array.from({ length: 10 }).map((_, idx) => (
                     <TableRow key={idx}>
@@ -257,7 +247,7 @@ export function DataTable() {
                 </>
               ) : null}
 
-              {table.getRowModel().rows?.length ? (
+              {table.getRowModel().rows.length > 0 ? (
                 table.getRowModel().rows.map((row) => (
                   <TableRow
                     key={row.id}

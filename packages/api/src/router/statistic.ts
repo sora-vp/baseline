@@ -43,4 +43,4 @@ export const statisticRouter = {
       success: true,
     };
   }),
-} as TRPCRouterRecord;
+} satisfies TRPCRouterRecord;
