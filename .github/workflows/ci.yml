@@ -25,7 +25,7 @@ jobs:
         run: cp .env.example .env
 
       - name: Lint
-        run: yarn lint && yarn lint:ws
+        run: yarn pre-build && yarn lint && yarn lint:ws
 
   format:
     runs-on: ubuntu-latest
@@ -47,4 +47,4 @@ jobs:
         uses: ./.github/actions/yarn-nm-install
 
       - name: Typecheck
-        run: yarn typecheck
+        run: yarn pre-build && yarn typecheck
