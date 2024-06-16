@@ -5,6 +5,7 @@ interface AppSettings {
   endTime: Date | null;
   canVote: boolean | null;
   canAttend: boolean | null;
+  canLogin: boolean | null;
 }
 
 interface ReturnedValues {
@@ -12,6 +13,7 @@ interface ReturnedValues {
   endTime: Date | null;
   canVote: boolean;
   canAttend: boolean;
+  canLogin: boolean;
 }
 
 type UpdateEventMap = {
@@ -37,12 +39,14 @@ export class SettingsManager extends EventEmitter {
 
     const canVote = this.settingsMap.get("canVote") as BoolOrUndef;
     const canAttend = this.settingsMap.get("canAttend") as BoolOrUndef;
+    const canLogin = this.settingsMap.get("canLogin") as BoolOrUndef;
 
     return {
       startTime: startTime ?? null,
       endTime: endTime ?? null,
       canVote: canVote ?? false,
       canAttend: canAttend ?? false,
+      canLogin: canLogin ?? true,
     };
   }
 
@@ -60,6 +64,7 @@ export class SettingsManager extends EventEmitter {
     canVote: (votable: boolean) => this.updateBuilder("canVote", votable),
     canAttend: (attendable: boolean) =>
       this.updateBuilder("canAttend", attendable),
+    canLogin: (status: boolean) => this.updateBuilder("canLogin", status),
   } as const;
 
   on<K extends keyof UpdateEventMap>(

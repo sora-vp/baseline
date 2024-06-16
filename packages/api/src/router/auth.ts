@@ -1,40 +1,27 @@
+import type { TRPCRouterRecord } from "@trpc/server";
 import { TRPCError } from "@trpc/server";
 import bcrypt from "bcrypt";
 
-import { prisma } from "@sora/db";
-import {
-  ChangeNameSchemaValidator,
-  ServerChangePasswordSchemaValidator,
-  ServerRegisterSchemaValidator,
-} from "@sora/schema-config/auth.schema";
+import { countUserTable, preparedGetUserByEmail, schema } from "@sora-vp/db";
+import { auth as authValidator } from "@sora-vp/validators";
 
-import { createTRPCRouter, protectedProcedure, publicProcedure } from "../trpc";
+import { protectedProcedure, publicProcedure } from "../trpc";
 
-export const authRouter = createTRPCRouter({
-  me: protectedProcedure.query(async ({ ctx }) => {
-    const user = await prisma.user.findUnique({
-      where: { email: ctx.session.user?.email as string },
-    });
-    if (!user)
-      throw new TRPCError({
-        code: "NOT_FOUND",
-        message: "Pengguna tidak dapat ditemukan!",
-      });
-    return {
-      name: user.name,
-      email: user.email,
-      createdAt: user.createdAt,
-    };
-  }),
-
+export const authRouter = {
   register: publicProcedure
-    .input(ServerRegisterSchemaValidator)
-    .mutation(async ({ input }) => {
-      const isAlreadyExist = await prisma.user.findUnique({
-        where: { email: input.email },
+    .input(authValidator.ServerRegisterSchema)
+    .mutation(async ({ ctx, input }) => {
+      if (ctx.session)
+        throw new TRPCError({
+          code: "UNAUTHORIZED",
+          message: "Tidak bisa membuat pengguna baru karena anda sudah login!",
+        });
+
+      const isUserExist = await preparedGetUserByEmail.execute({
+        email: input.email,
       });
 
-      if (isAlreadyExist)
+      if (isUserExist)
         throw new TRPCError({
           code: "BAD_REQUEST",
           message: "Pengguna dengan email yang sama sudah terdaftar!",
@@ -43,96 +30,19 @@ export const authRouter = createTRPCRouter({
       const salt = bcrypt.genSaltSync(10);
       const hash = bcrypt.hashSync(input.password, salt);
 
-      await prisma.user.create({
-        data: {
-          email: input.email,
-          name: input.name,
-          password: hash,
-        },
+      const userTable = await countUserTable.execute();
+      const availUser = userTable.at(0);
+      const autoAdmin = availUser && availUser.count < 1;
+
+      await ctx.db.insert(schema.users).values({
+        ...input,
+        password: hash,
+        verifiedAt: autoAdmin ? new Date() : null,
+        role: autoAdmin ? "admin" : null,
       });
 
       return {
         success: true,
       };
     }),
-
-  changePassword: protectedProcedure
-    .input(ServerChangePasswordSchemaValidator)
-    .mutation(async ({ ctx, input }) => {
-      const user = await prisma.user.findUnique({
-        where: {
-          email: ctx.session.user?.email as string,
-        },
-      });
-
-      if (!user)
-        throw new TRPCError({
-          code: "NOT_FOUND",
-          message: "Pengguna tidak dapat ditemukan!",
-        });
-
-      const isCurrentPasswordValid = await bcrypt.compare(
-        input.lama,
-        user.password,
-      );
-
-      if (!isCurrentPasswordValid)
-        throw new TRPCError({
-          code: "BAD_REQUEST",
-          message: "Kata sandi yang dimasukkan tidak sesuai!",
-        });
-
-      const salt = bcrypt.genSaltSync(10);
-      const hash = bcrypt.hashSync(input.baru, salt);
-
-      await prisma.user.update({
-        where: {
-          id: user.id,
-        },
-        data: {
-          password: hash,
-        },
-      });
-
-      return {
-        message: "Berhasil mengubah kata sandi!",
-      };
-    }),
-
-  changeName: protectedProcedure
-    .input(ChangeNameSchemaValidator)
-    .mutation(async ({ ctx, input }) => {
-      const user = await prisma.user.findUnique({
-        where: {
-          email: ctx.session.user?.email as string,
-        },
-      });
-
-      if (!user)
-        throw new TRPCError({
-          code: "NOT_FOUND",
-          message: "Pengguna tidak dapat ditemukan!",
-        });
-
-      const currentNameSameAsNewName = user.name === input.name;
-
-      if (currentNameSameAsNewName)
-        throw new TRPCError({
-          code: "BAD_REQUEST",
-          message: "Nama yang baru tidak boleh sama dengan yang lama!",
-        });
-
-      await prisma.user.update({
-        where: {
-          id: user.id,
-        },
-        data: {
-          name: input.name,
-        },
-      });
-
-      return {
-        message: "Berhasil mengubah nama pengguna!",
-      };
-    }),
-});
+} satisfies TRPCRouterRecord;

@@ -1,31 +1,50 @@
-name: Lint, TS, Prettier Check
-on: [pull_request, push]
+name: CI
 
-env:
-  SKIP_ENV_VALIDATION: true
+on:
+  pull_request:
+    branches: ["*"]
+  push:
+    branches: ["main"]
+  merge_group:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
 
 jobs:
-  ci:
+  lint:
     runs-on: ubuntu-latest
-    name: Mengecek apakah file aman dari segi typing dan linting, juga prettier
-
     steps:
-      - name: Checkout
-        uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
-      - name: Install Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: 18
-
-      - name: Install all dependencies
+      - name: Monorepo install
         uses: ./.github/actions/yarn-nm-install
 
-      - name: Test Prettier
-        run: yarn format:check
+      - name: Copy env
+        shell: bash
+        run: cp .env.example .env
 
-      - name: Test Code Linting
-        run: yarn lint
+      - name: Lint
+        run: yarn lint && pnpm lint:ws
 
-      - name: Test Typing
-        run: yarn type-check
+  format:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Monorepo install
+        uses: ./.github/actions/yarn-nm-install
+
+      - name: Format
+        run: yarn format
+
+  typecheck:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Monorepo install
+        uses: ./.github/actions/yarn-nm-install
+
+      - name: Typecheck
+        run: turbo typecheck

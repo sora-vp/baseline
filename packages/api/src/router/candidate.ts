@@ -1,199 +1,142 @@
+import { Buffer } from "buffer";
+import { existsSync, mkdirSync } from "fs";
+import { unlink, writeFile } from "fs/promises";
+import path from "path";
+import type { TRPCRouterRecord } from "@trpc/server";
 import { TRPCError } from "@trpc/server";
-import amqp from "amqplib";
+import mime from "mime-types";
 
-import { prisma } from "@sora/db";
 import {
-  adminDeleteCandidateValidationSchema,
-  adminGetSpecificCandidateValidationSchema,
-  upvoteValidationSchema,
-} from "@sora/schema-config/admin.candidate.schema";
-import { canVoteNow } from "@sora/settings";
+  eq,
+  preparedAdminGetCandidates,
+  //   preparedGetExcelParticipants,
+  schema,
+} from "@sora-vp/db";
+import { randomFileName } from "@sora-vp/id-generator";
+import { canVoteNow } from "@sora-vp/settings";
+import { candidate } from "@sora-vp/validators";
 
-import { env } from "../../env.mjs";
-import { createTRPCRouter, protectedProcedure, publicProcedure } from "../trpc";
+import { adminProcedure } from "../trpc";
 
-const QUEUE_NAME = "vote_queue";
+// Don't worry, it automatically goes to the web app public directory
+const NEXT_ROOT_PATH = path.join(path.resolve(), "public/uploads");
 
-export const candidateRouter = createTRPCRouter({
-  candidateList: publicProcedure.query(() =>
-    prisma.candidate.findMany({
-      select: {
-        id: true,
-        name: true,
-        img: true,
-      },
-    }),
+export const candidateRouter = {
+  candidateQuery: adminProcedure.query(() =>
+    preparedAdminGetCandidates.execute(),
   ),
 
-  statisticList: protectedProcedure.query(() =>
-    prisma.candidate.findMany({ select: { name: true, counter: true } }),
-  ),
+  createNewCandidate: adminProcedure
+    .input(candidate.ServerAddNewCandidate)
+    .mutation(({ ctx, input }) =>
+      ctx.db.transaction(async (tx) => {
+        if (canVoteNow())
+          throw new TRPCError({
+            code: "UNAUTHORIZED",
+            message:
+              "Tidak bisa menambahkan kandidat baru pada saat kondisi pemilihan!",
+          });
 
-  adminCandidateList: protectedProcedure.query(() =>
-    prisma.candidate.findMany(),
-  ),
+        const fileName = `${randomFileName()}.${mime.extension(input.type)}`;
 
-  getCandidateAndParticipantCount: protectedProcedure.query(async () => {
-    const candidates = await prisma.candidate.findMany({
-      select: {
-        counter: true,
-      },
-      where: {
-        counter: {
-          gt: 0,
-        },
-      },
-    });
+        if (!existsSync(NEXT_ROOT_PATH)) mkdirSync(NEXT_ROOT_PATH);
 
-    const alreadyAttendedAndChoosing = await prisma.participant.count({
-      where: {
-        alreadyAttended: true,
-        alreadyChoosing: true,
-      },
-    });
+        const imageContent = Buffer.from(input.image, "base64");
 
-    if (!candidates || candidates.length < 1)
-      throw new TRPCError({
-        code: "NOT_FOUND",
-        message: "Belum ada kandidat yang terdaftar",
-      });
+        await writeFile(path.join(NEXT_ROOT_PATH, fileName), imageContent);
 
-    const candidatesAccumulation = candidates
-      .map(({ counter }) => counter)
-      .reduce((curr, acc) => curr + acc);
+        return await tx.insert(schema.candidates).values({
+          name: input.name,
+          image: fileName,
+        });
+      }),
+    ),
 
-    return {
-      isMatch: candidatesAccumulation === alreadyAttendedAndChoosing,
-      participants: alreadyAttendedAndChoosing,
-      candidates: candidatesAccumulation,
-    };
-  }),
+  updateCandidate: adminProcedure
+    .input(candidate.ServerUpdateCandidate)
+    .mutation(({ ctx, input }) =>
+      ctx.db.transaction(async (tx) => {
+        if (canVoteNow())
+          throw new TRPCError({
+            code: "UNAUTHORIZED",
+            message:
+              "Tidak bisa mengubah kandidat baru pada saat kondisi pemilihan!",
+          });
 
-  getSpecificCandidate: protectedProcedure
-    .input(adminGetSpecificCandidateValidationSchema)
-    .query(async ({ input }) => {
-      const kandidat = await prisma.candidate.findUnique({
-        where: { id: input.id },
-      });
-
-      if (!kandidat)
-        throw new TRPCError({
-          code: "NOT_FOUND",
-          message: "Kandidat tidak dapat ditemukan!",
+        const candidate = await tx.query.candidates.findFirst({
+          where: eq(schema.candidates.id, input.id),
         });
 
-      // For the easiest reset for frontend
-      return {
-        kandidat: kandidat.name,
-      };
-    }),
+        if (!candidate)
+          throw new TRPCError({
+            code: "NOT_FOUND",
+            message: "Kandidat yang ingin di ubah tidak ditemukan!",
+          });
 
-  adminDeleteCandidate: protectedProcedure
-    .input(adminDeleteCandidateValidationSchema)
-    .mutation(async ({ input }) => {
-      const inVotingCondition = canVoteNow();
+        if (!input.image && !input.type)
+          return await tx
+            .update(schema.candidates)
+            .set({
+              name: input.name,
+            })
+            .where(eq(schema.candidates.id, input.id));
 
-      if (inVotingCondition)
-        throw new TRPCError({
-          code: "BAD_REQUEST",
-          message: "Tidak bisa menghapus kandidat dalam kondisi pemilihan!",
+        const fileName = `${randomFileName()}.${mime.extension(input.type)}`;
+
+        if (!existsSync(NEXT_ROOT_PATH)) mkdirSync(NEXT_ROOT_PATH);
+
+        // remove previous image if exist
+        if (existsSync(path.join(NEXT_ROOT_PATH, candidate.image)))
+          await unlink(path.join(NEXT_ROOT_PATH, candidate.image));
+
+        const imageContent = Buffer.from(input.image, "base64");
+
+        await writeFile(path.join(NEXT_ROOT_PATH, fileName), imageContent);
+
+        return await tx
+          .update(schema.candidates)
+          .set({
+            name: input.name,
+            image: fileName,
+          })
+          .where(eq(schema.candidates.id, input.id));
+      }),
+    ),
+
+  deleteCandidate: adminProcedure
+    .input(candidate.ServerDeleteCandidate)
+    .mutation(({ ctx, input }) =>
+      ctx.db.transaction(async (tx) => {
+        if (canVoteNow())
+          throw new TRPCError({
+            code: "UNAUTHORIZED",
+            message:
+              "Tidak bisa menghapus kandidat baru pada saat kondisi pemilihan!",
+          });
+
+        const candidate = await tx.query.candidates.findFirst({
+          where: eq(schema.candidates.id, input.id),
         });
 
-      const candidate = await prisma.candidate.findUnique({
-        where: { id: input.id },
-      });
+        if (!candidate)
+          throw new TRPCError({
+            code: "NOT_FOUND",
+            message: "Kandidat yang ingin di ubah tidak ditemukan!",
+          });
 
-      if (!candidate)
-        throw new TRPCError({
-          code: "NOT_FOUND",
-          message: "Kandidat tidak dapat ditemukan!",
-        });
+        if (candidate.counter > 0)
+          throw new TRPCError({
+            code: "BAD_REQUEST",
+            message:
+              "Tidak bisa menghapus kandidat karena sudah ada yang memilih!",
+          });
 
-      if (candidate.counter > 0)
-        throw new TRPCError({
-          code: "BAD_REQUEST",
-          message:
-            "Tidak bisa menghapus kandidat dikarenakan sudah ada yang memilihnya!",
-        });
+        if (existsSync(path.join(NEXT_ROOT_PATH, candidate.image)))
+          await unlink(path.join(NEXT_ROOT_PATH, candidate.image));
 
-      await prisma.candidate.delete({ where: { id: input.id } });
-
-      return { message: "Berhasil menghapus kandidat!" };
-    }),
-
-  upvote: publicProcedure
-    .input(upvoteValidationSchema)
-    .mutation(async ({ input }) => {
-      try {
-        const connection = await amqp.connect(env.AMQP_URL);
-
-        try {
-          const messageFromQueue: { success: boolean; message?: string } =
-            await new Promise(async (resolve, reject) => {
-              const channel = await connection.createChannel();
-
-              const { queue } = await channel.assertQueue(QUEUE_NAME, {
-                durable: true,
-              });
-
-              const payload = JSON.stringify(input);
-
-              const response = await channel.assertQueue("");
-              const correlationId = response.queue;
-
-              const timeout = setTimeout(async () => {
-                await channel.deleteQueue(QUEUE_NAME);
-                await channel.close();
-
-                reject(
-                  new Error("Timeout: No response received from consumer."),
-                );
-              }, 30_000);
-
-              await channel.consume(
-                correlationId,
-                (msg) => {
-                  if (!msg) {
-                    reject(
-                      "Publisher has been cancelled or channel has been closed.",
-                    );
-                    return;
-                  }
-
-                  if (msg.properties.correlationId === correlationId) {
-                    clearTimeout(timeout);
-
-                    resolve(JSON.parse(msg.content.toString()));
-                    channel.ack(msg);
-                  }
-                },
-                { noAck: true },
-              );
-
-              channel.sendToQueue(queue, Buffer.from(payload), {
-                correlationId,
-                replyTo: correlationId,
-              });
-            });
-
-          if (!messageFromQueue.success)
-            throw new TRPCError({
-              code: "BAD_REQUEST",
-              message: messageFromQueue.message as string,
-            });
-
-          return { message: "Berhasil memilih kandidat!" };
-        } finally {
-          void connection.close();
-        }
-      } catch (e) {
-        console.error(e);
-
-        throw new TRPCError({
-          code: "INTERNAL_SERVER_ERROR",
-          message:
-            "Gagal memproses pemilihan, mohon hubungi panitia dan coba lagi nanti.",
-        });
-      }
-    }),
-});
+        return await tx
+          .delete(schema.candidates)
+          .where(eq(schema.candidates.id, input.id));
+      }),
+    ),
+} as TRPCRouterRecord;

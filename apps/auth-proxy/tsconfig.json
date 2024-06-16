@@ -1,0 +1,4 @@
+{
+  "extends": "@sora-vp/tsconfig/base.json",
+  "include": ["routes"]
+}

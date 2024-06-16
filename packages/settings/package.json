@@ -1,24 +1,25 @@
 {
-  "name": "@sora/settings",
-  "version": "0.1.0",
+  "name": "@sora-vp/settings",
   "private": true,
-  "types": "src/index.ts",
-  "main": "src/index.ts",
-  "author": "Ezra Khairan Permana",
-  "license": "GPL-3.0",
-  "dependencies": {
-    "@types/eslint": "^8.37.0",
-    "@typescript-eslint/eslint-plugin": "^5.59.2",
-    "@typescript-eslint/parser": "^5.59.2",
-    "eslint-config-next": "^13.4.2",
-    "eslint-config-prettier": "^8.8.0",
-    "eslint-config-turbo": "^1.9.8",
-    "eslint-plugin-react": "7.32.2",
-    "luxon": "^3.4.3"
+  "version": "0.1.0",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "license": "MIT",
+  "scripts": {
+    "clean": "rm -rf .turbo node_modules",
+    "format": "prettier --check . --ignore-path ../../.gitignore",
+    "lint": "eslint",
+    "typecheck": "tsc --noEmit"
   },
   "devDependencies": {
-    "@types/luxon": "^3.3.2",
-    "eslint": "^8.40.0",
-    "typescript": "^5.2.2"
-  }
+    "@sora-vp/eslint-config": "*",
+    "@sora-vp/prettier-config": "*",
+    "@sora-vp/tsconfig": "*",
+    "eslint": "^9.2.0",
+    "prettier": "^3.2.5",
+    "typescript": "^5.4.5"
+  },
+  "prettier": "@sora-vp/prettier-config"
 }

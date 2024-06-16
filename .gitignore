@@ -1,5 +1,8 @@
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
+# yarn
+.yarn/
+
 # dependencies
 node_modules
 .pnp
@@ -8,14 +11,24 @@ node_modules
 # testing
 coverage
 
-# database
-**/prisma/db.sqlite
-**/prisma/db.sqlite-journal
-
 # next.js
 .next/
 out/
 next-env.d.ts
+
+# nitro
+.nitro/
+.output/
+
+# expo
+.expo/
+expo-env.d.ts
+apps/expo/.gitignore
+apps/expo/ios
+apps/expo/android
+
+# production
+build
 
 # misc
 .DS_Store
@@ -30,27 +43,16 @@ yarn-error.log*
 # local env files
 .env
 .env*.local
-.env.test
 
 # vercel
 .vercel
 
 # typescript
 *.tsbuildinfo
+dist/
 
 # turbo
 .turbo
 
-.pnp.*
-.yarn/*
-!.yarn/patches
-!.yarn/plugins
-!.yarn/releases
-!.yarn/sdks
-!.yarn/versions
-
-**/public/uploads
-**/*.log
-**/dist
-
-playwright/.auth
+# web app
+apps/web/public/uploads

@@ -1,30 +1,40 @@
-// import settings, { type DataModel } from "~/utils/settings";
-import {
-  PengaturanPerilakuValidationSchema,
-  ServerPengaturanWaktuValidationSchema,
-} from "@sora/schema-config/admin.settings.schema";
-import settings from "@sora/settings";
+import type { TRPCRouterRecord } from "@trpc/server";
 
-import { createTRPCRouter, protectedProcedure, publicProcedure } from "../trpc";
+import settings from "@sora-vp/settings";
+import { settings as settingsSchema } from "@sora-vp/validators";
 
-export const settingsRouter = createTRPCRouter({
-  getSettings: publicProcedure.query(() => settings.getSettings()),
+import { adminProcedure } from "../trpc";
 
-  changeVotingBehaviour: protectedProcedure
-    .input(PengaturanPerilakuValidationSchema)
+export const settingsRouter = {
+  getSettings: adminProcedure.query(() => settings.getSettings()),
+
+  getCanLoginStatus: adminProcedure.query(() => {
+    const { canLogin } = settings.getSettings();
+
+    return { canLogin };
+  }),
+
+  updateCanLogin: adminProcedure
+    .input(settingsSchema.SharedCanLogin)
+    .mutation(async ({ input }) =>
+      settings.updateSettings.canLogin(input.canLogin),
+    ),
+
+  changeVotingBehaviour: adminProcedure
+    .input(settingsSchema.SharedBehaviour)
     .mutation(({ input }) => {
       settings.updateSettings.canVote(input.canVote);
       settings.updateSettings.canAttend(input.canAttend);
 
-      return { message: "Pengaturan perilaku pemilihan berhasil diperbarui!" };
+      return { success: true };
     }),
 
-  changeVotingTime: protectedProcedure
-    .input(ServerPengaturanWaktuValidationSchema)
+  changeVotingTime: adminProcedure
+    .input(settingsSchema.SharedDuration)
     .mutation(({ input }) => {
       settings.updateSettings.startTime(input.startTime);
       settings.updateSettings.endTime(input.endTime);
 
-      return { message: "Pengaturan waktu pemilihan berhasil diperbarui!" };
+      return { success: true };
     }),
-});
+} satisfies TRPCRouterRecord;
