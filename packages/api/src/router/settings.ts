@@ -16,9 +16,7 @@ export const settingsRouter = {
 
   updateCanLogin: adminProcedure
     .input(settingsSchema.SharedCanLogin)
-    .mutation(async ({ input }) =>
-      settings.updateSettings.canLogin(input.canLogin),
-    ),
+    .mutation(({ input }) => settings.updateSettings.canLogin(input.canLogin)),
 
   changeVotingBehaviour: adminProcedure
     .input(settingsSchema.SharedBehaviour)
