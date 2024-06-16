@@ -133,7 +133,7 @@ export const columns: ColumnDef<PendingUserList>[] = [
           <UpdateRole
             isOpen={openUpdate}
             toggleOpen={toggleOpen}
-            currRole={user.role}
+            currRole={user.role!}
             userId={user.id}
           />
         </>

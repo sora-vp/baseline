@@ -85,7 +85,7 @@ export default async function RootLayout(props: { children: React.ReactNode }) {
             name={isLoggedIn.user.name ?? ""}
             email={isLoggedIn.user.email ?? ""}
             nameFallback={isLoggedIn.user.name?.slice(0, 2) ?? ""}
-            role={isLoggedIn.user.role}
+            role={isLoggedIn.user.role!}
           >
             <TRPCReactProvider>{props.children}</TRPCReactProvider>
           </ResizeableNav>
