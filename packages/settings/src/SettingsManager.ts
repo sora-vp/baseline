@@ -16,9 +16,9 @@ interface ReturnedValues {
   canLogin: boolean;
 }
 
-type UpdateEventMap = {
+interface UpdateEventMap {
   update: ReturnedValues;
-};
+}
 
 type ExtractValues<T> = T extends unknown ? T[keyof T] : never;
 

@@ -12,6 +12,8 @@ export const adminRouter = {
     ctx.db.query.users.findMany({
       where: and(
         sql`${schema.users.verifiedAt} IS NULL`,
+
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         not(eq(schema.users.email, ctx.session.user.email!)),
       ),
     }),
@@ -110,6 +112,8 @@ export const adminRouter = {
     ctx.db.query.users.findMany({
       where: and(
         sql`${schema.users.verifiedAt} IS NOT NULL`,
+
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         not(eq(schema.users.email, ctx.session.user.email!)),
       ),
     }),

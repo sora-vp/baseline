@@ -1,10 +1,9 @@
 "use client";
 
+import type { z } from "zod";
 import { useMemo, useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { FileText, UserPlus } from "lucide-react";
 import { useForm, useWatch } from "react-hook-form";
-import { z } from "zod";
 
 import { Button } from "@sora-vp/ui/button";
 import { DialogClose, DialogDescription } from "@sora-vp/ui/dialog";
@@ -41,6 +40,7 @@ export function EditParticipant(props: IProps) {
     resolver: zodResolver(participant.SharedAddParticipant),
     defaultValues: {
       name: props.name,
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       subpart: props.subpart!,
     },
   });
@@ -79,7 +79,7 @@ export function EditParticipant(props: IProps) {
     <ReusableDialog
       dialogOpen={props.dialogOpen || participantEditMutation.isPending}
       setOpen={() => {
-        if (!participant.isPending)
+        if (!participantEditMutation.isPending)
           props.openSetter((prev) => {
             const newValue = !prev;
 

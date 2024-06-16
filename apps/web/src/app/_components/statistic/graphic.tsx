@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo } from "react";
-import { FileBarChart } from "lucide-react";
+// import { FileBarChart } from "lucide-react";
 import { useTheme } from "next-themes";
 import {
   Bar,
@@ -29,7 +29,7 @@ export function Graphic() {
   );
 
   const percentageData = useMemo(() => {
-    if (!graphicalDataQuery.data || graphicalDataQuery.data?.length < 1)
+    if (!graphicalDataQuery.data || graphicalDataQuery.data.length < 1)
       return null;
 
     const allCounter = graphicalDataQuery.data.map((d) => d.counter);
@@ -52,7 +52,7 @@ export function Graphic() {
         <Skeleton className="h-[350px] w-full" />
       ) : (
         <>
-          {graphicalDataQuery.data.length < 1 ? (
+          {graphicalDataQuery.data && graphicalDataQuery.data.length < 1 ? (
             <div className="flex h-[350px] items-center justify-center">
               <h1 className="scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl">
                 N/A

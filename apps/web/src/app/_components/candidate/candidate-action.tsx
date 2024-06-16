@@ -2,9 +2,7 @@
 
 import { useMemo, useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { FileText, UserPlus } from "lucide-react";
 import { useForm, useWatch } from "react-hook-form";
-import { z } from "zod";
 
 import { Button } from "@sora-vp/ui/button";
 import { DialogClose, DialogDescription } from "@sora-vp/ui/dialog";
@@ -30,7 +28,7 @@ interface IProps {
   dialogOpen: boolean;
   openSetter: React.Dispatch<React.SetStateAction<boolean>>;
   name: string;
-  id: string;
+  id: number;
 }
 
 export function EditCandidate(props: IProps) {
@@ -82,6 +80,7 @@ export function EditCandidate(props: IProps) {
       return;
     }
 
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const file = values.image.item(0)!;
     const image = await toBase64(file);
 
@@ -172,6 +171,7 @@ export function EditCandidate(props: IProps) {
             <Button
               type="submit"
               className="md:w-fit"
+              // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
               disabled={stillTheSameValue || candidateEditMutation.isPending}
             >
               Edit

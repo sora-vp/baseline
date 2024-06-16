@@ -1,9 +1,9 @@
 "use client";
 
+import type { z } from "zod";
 import { useEffect } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { z } from "zod";
 
 import {
   Form,
@@ -33,6 +33,8 @@ export const ToggleCanLogin = () => {
     if (canLoginQuery.data) {
       form.setValue("canLogin", canLoginQuery.data.canLogin);
     }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [form.setValue, canLoginQuery.data]);
 
   const canLoginMutation = api.settings.updateCanLogin.useMutation({

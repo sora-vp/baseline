@@ -1,14 +1,7 @@
 "use client";
 
 import { cn } from "@sora-vp/ui";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@sora-vp/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@sora-vp/ui/card";
 import { Skeleton } from "@sora-vp/ui/skeleton";
 
 import { api } from "~/trpc/react";
@@ -29,16 +22,16 @@ export default function Essential() {
         </>
       ) : (
         <>
-          <CandidateAccumulation count={essentialQuery.data.candidates} />
-          <ParticipantAccumulation count={essentialQuery.data.participants} />
-          <IsDataMatch isMatch={essentialQuery.data.isMatch} />
+          <CandidateAccumulation count={essentialQuery.data?.candidates} />
+          <ParticipantAccumulation count={essentialQuery.data?.participants} />
+          <IsDataMatch isMatch={essentialQuery.data?.isMatch} />
         </>
       )}
     </>
   );
 }
 
-function CandidateAccumulation(props: { count: number | null }) {
+function CandidateAccumulation(props: { count?: number | null }) {
   return (
     <Card>
       <CardHeader>
@@ -66,7 +59,7 @@ function CandidateAccumulation(props: { count: number | null }) {
   );
 }
 
-function ParticipantAccumulation(props: { count: number | null }) {
+function ParticipantAccumulation(props: { count?: number | null }) {
   return (
     <Card>
       <CardHeader>
@@ -94,7 +87,7 @@ function ParticipantAccumulation(props: { count: number | null }) {
   );
 }
 
-function IsDataMatch(props: { isMatch: boolean | null }) {
+function IsDataMatch(props: { isMatch?: boolean | null }) {
   return (
     <Card>
       <CardHeader>

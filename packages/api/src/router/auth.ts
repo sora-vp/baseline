@@ -5,7 +5,7 @@ import bcrypt from "bcrypt";
 import { countUserTable, preparedGetUserByEmail, schema } from "@sora-vp/db";
 import { auth as authValidator } from "@sora-vp/validators";
 
-import { protectedProcedure, publicProcedure } from "../trpc";
+import { publicProcedure } from "../trpc";
 
 export const authRouter = {
   register: publicProcedure

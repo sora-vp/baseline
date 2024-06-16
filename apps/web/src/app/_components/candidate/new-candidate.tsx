@@ -26,16 +26,20 @@ import { GlobalSystemAllowance } from "./data-table";
 
 export interface FormSchema {
   name: string;
-  image: File;
+  image: FileList;
 }
 
-export const toBase64 = (file: File) =>
+export const toBase64 = (file: File): Promise<string> =>
   new Promise((resolve, reject) => {
     const reader = new FileReader();
     reader.readAsDataURL(file);
     reader.onload = () => {
-      const splitted = reader.result!.split(",");
-      resolve(splitted.at(1) as string);
+      const outputResult = reader.result as string;
+
+      const splitted = outputResult.split(",");
+
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      resolve(splitted.at(1)!);
     };
     reader.onerror = reject;
   });
@@ -80,6 +84,7 @@ export function NewCandidate() {
   }, [candidateMutation.isPending]);
 
   async function onSubmit(values: FormSchema) {
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const file = values.image.item(0)!;
     const image = await toBase64(file);
 

@@ -139,11 +139,11 @@ export function ExportXLSX() {
             };
           }
 
-          worksheet.alignment = {
+          firstRow.alignment = {
             vertical: "middle",
             horizontal: "center",
           };
-          worksheet.font = {
+          firstRow.font = {
             bold: true,
           };
 

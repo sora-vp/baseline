@@ -1,9 +1,9 @@
 "use client";
 
+import type { z } from "zod";
 import { useEffect } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { z } from "zod";
 
 import { Button } from "@sora-vp/ui/button";
 import {
@@ -13,7 +13,6 @@ import {
   FormField,
   FormItem,
   FormLabel,
-  FormMessage,
 } from "@sora-vp/ui/form";
 import { Switch } from "@sora-vp/ui/switch";
 import { toast } from "@sora-vp/ui/toast";
@@ -55,9 +54,11 @@ export function Behaviour() {
 
   useEffect(() => {
     if (settingsQuery.data && !changeBehaviour.isPending) {
-      form.setValue("canVote", settingsQuery.data.canVote ?? undefined);
-      form.setValue("canAttend", settingsQuery.data.canAttend ?? undefined);
+      form.setValue("canVote", settingsQuery.data.canVote);
+      form.setValue("canAttend", settingsQuery.data.canAttend);
     }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [settingsQuery.data, changeBehaviour.isPending]);
 
   return (

@@ -43,6 +43,7 @@ export const participantRouter = {
 
         if (
           normalizedCheckThing.length > 0 &&
+          // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
           normalizedCheckThing.every((data) => data !== null)
         ) {
           throw new TRPCError({
@@ -53,6 +54,7 @@ export const participantRouter = {
 
         if (
           normalizedCheckThing.length > 0 &&
+          // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
           normalizedCheckThing.some((data) => data !== null)
         ) {
           throw new TRPCError({
@@ -131,7 +133,7 @@ export const participantRouter = {
   exportJsonData: protectedProcedure.mutation(async () => {
     const participants = await preparedGetExcelParticipants.execute();
 
-    if (!participants || participants.length < 0)
+    if (participants.length < 0)
       throw new TRPCError({
         code: "NOT_FOUND",
         message: "Tidak ada data peserta pemilihan!",
@@ -143,7 +145,7 @@ export const participantRouter = {
   exportXlsxForParticipantToRetrieve: protectedProcedure.mutation(async () => {
     const participants = await preparedGetExcelParticipants.execute();
 
-    if (!participants || participants.length < 1)
+    if (participants.length < 1)
       throw new TRPCError({
         code: "NOT_FOUND",
         message: "Tidak ada data peserta pemilihan!",

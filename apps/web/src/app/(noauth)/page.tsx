@@ -1,7 +1,6 @@
 import localFont from "next/font/local";
 
 import { cn } from "@sora-vp/ui";
-import { Button } from "@sora-vp/ui/button";
 
 const sundaneseFont = localFont({
   src: "../fonts/NotoSansSundanese-Regular.ttf",
