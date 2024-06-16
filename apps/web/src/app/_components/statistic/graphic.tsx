@@ -12,7 +12,7 @@ import {
   YAxis,
 } from "recharts";
 
-import { Button } from "@sora-vp/ui/button";
+// import { Button } from "@sora-vp/ui/button";
 import { Skeleton } from "@sora-vp/ui/skeleton";
 
 import { api } from "~/trpc/react";
@@ -95,10 +95,10 @@ export function Graphic() {
               <div className="flex flex-col items-center justify-center gap-5 lg:w-1/6">
                 <div className="space-y-2">
                   <h4 className="scroll-m-20 text-xl font-semibold tracking-tight">
-                    Presentase Pemilihan
+                    Persentase Pemilihan
                   </h4>
 
-                  <p className="flex flex-row gap-3 text-center leading-7 lg:text-start [&:not(:first-child)]:mt-6">
+                  <p className="text-center leading-7 lg:text-start [&:not(:first-child)]:mt-6">
                     {!percentageData ? (
                       "N/A."
                     ) : percentageData.length < 1 ? (
@@ -123,15 +123,16 @@ export function Graphic() {
                             )}
                           </>
                         ))}
+                        {" ."}
                       </>
                     )}
                   </p>
                 </div>
 
-                <Button variant="secondary">
+                {/* <Button variant="secondary">
                   Unduh Data Laporan
                   <FileBarChart className="ml-3 h-4 w-4" />
-                </Button>
+                </Button> */}
               </div>
             </div>
           )}
