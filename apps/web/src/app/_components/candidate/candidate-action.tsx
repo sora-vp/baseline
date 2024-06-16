@@ -2,9 +2,7 @@
 
 import { useMemo, useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { FileText, UserPlus } from "lucide-react";
 import { useForm, useWatch } from "react-hook-form";
-import { z } from "zod";
 
 import { Button } from "@sora-vp/ui/button";
 import { DialogClose, DialogDescription } from "@sora-vp/ui/dialog";
