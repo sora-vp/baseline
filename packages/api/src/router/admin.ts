@@ -12,7 +12,7 @@ export const adminRouter = {
     ctx.db.query.users.findMany({
       where: and(
         sql`${schema.users.verifiedAt} IS NULL`,
-        not(eq(schema.users.email, ctx.session.user.email)),
+        not(eq(schema.users.email, ctx.session.user.email!)),
       ),
     }),
   ),
@@ -61,7 +61,7 @@ export const adminRouter = {
             message: "R u lost ur mind?",
           });
 
-        if (specificUser.emailVerified)
+        if (specificUser.verifiedAt)
           throw new TRPCError({
             code: "BAD_REQUEST",
             message: "Pengguna sudah di approve!",
@@ -110,7 +110,7 @@ export const adminRouter = {
     ctx.db.query.users.findMany({
       where: and(
         sql`${schema.users.verifiedAt} IS NOT NULL`,
-        not(eq(schema.users.email, ctx.session.user.email)),
+        not(eq(schema.users.email, ctx.session.user.email!)),
       ),
     }),
   ),

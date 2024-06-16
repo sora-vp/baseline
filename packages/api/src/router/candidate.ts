@@ -81,7 +81,7 @@ export const candidateRouter = {
             })
             .where(eq(schema.candidates.id, input.id));
 
-        const fileName = `${randomFileName()}.${mime.extension(input.type)}`;
+        const fileName = `${randomFileName()}.${mime.extension(input.type!)}`;
 
         if (!existsSync(NEXT_ROOT_PATH)) mkdirSync(NEXT_ROOT_PATH);
 
@@ -89,7 +89,7 @@ export const candidateRouter = {
         if (existsSync(path.join(NEXT_ROOT_PATH, candidate.image)))
           await unlink(path.join(NEXT_ROOT_PATH, candidate.image));
 
-        const imageContent = Buffer.from(input.image, "base64");
+        const imageContent = Buffer.from(input.image!, "base64");
 
         await writeFile(path.join(NEXT_ROOT_PATH, fileName), imageContent);
 
