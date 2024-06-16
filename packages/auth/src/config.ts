@@ -72,8 +72,8 @@ export const authConfig = {
         email: session.user.email,
       });
 
-      session.user.role = user.role;
-      session.user.verifiedAt = user.verifiedAt;
+      session.user.role = user!.role;
+      session.user.verifiedAt = user!.verifiedAt;
 
       return session;
     },
