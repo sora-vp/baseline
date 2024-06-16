@@ -21,9 +21,7 @@ const SharedDuration = z
         message:
           issue.code === "invalid_type"
             ? startTimeError
-            : issue.code === "required_error"
-              ? startTimeError
-              : defaultError,
+            : defaultError,
       }),
     }),
     endTime: z.date({
@@ -31,9 +29,7 @@ const SharedDuration = z
         message:
           issue.code === "invalid_type"
             ? endTimeError
-            : issue.code === "required_error"
-              ? endTimeError
-              : defaultError,
+            : defaultError,
       }),
     }),
   })
