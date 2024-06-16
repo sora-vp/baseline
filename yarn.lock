@@ -2752,12 +2752,6 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@sora-vp/github@workspace:tooling/github":
-  version: 0.0.0-use.local
-  resolution: "@sora-vp/github@workspace:tooling/github"
-  languageName: unknown
-  linkType: soft
-
 "@sora-vp/id-generator@npm:*, @sora-vp/id-generator@workspace:packages/id-generator":
   version: 0.0.0-use.local
   resolution: "@sora-vp/id-generator@workspace:packages/id-generator"
