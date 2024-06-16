@@ -7,6 +7,7 @@ const getTimePermission = () => {
   const currentTime = new Date().getTime();
 
   const currentTimeIsBiggerThanStart =
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     currentSettings.startTime && currentSettings.startTime
       ? currentTime >= currentSettings.startTime.getTime()
       : false;

@@ -18,12 +18,15 @@ const AddNewCandidateSchema = baseAddAndEditForm.merge(
   z.object({
     image: z
       .any()
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
       .refine((files) => files?.length == 1, "Diperlukan gambar kandidat!")
       .refine(
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
         (files) => files?.[0]?.size <= TwoMegs,
         `Ukuran maksimal gambar adalah 2MB!`,
       )
       .refine(
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access
         (files) => ACCEPTED_IMAGE_TYPES.includes(files?.[0]?.type),
         "Hanya format gambar .jpg, .jpeg, .png dan .webp yang diterima!",
       ),
@@ -42,18 +45,22 @@ const UpdateCandidateSchema = baseAddAndEditForm.merge(
     image: z
       .any()
       .refine(
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
         (files) => (files.length === 0 ? true : files?.length === 1),
         "Diperlukan gambar kandidat!",
       )
       .refine(
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
         (files) => (files.length === 0 ? true : files?.[0]?.size <= TwoMegs),
         `Ukuran maksimal gambar adalah 2MB!`,
       )
       .refine(
         (files) =>
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
           files.length === 0
             ? true
-            : ACCEPTED_IMAGE_TYPES.includes(files?.[0]?.type),
+            : // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-argument
+              ACCEPTED_IMAGE_TYPES.includes(files?.[0]?.type),
         "Hanya format gambar .jpg, .jpeg, .png dan .webp yang diterima!",
       ),
   }),

@@ -28,8 +28,10 @@ const SharedUploadManyParticipant = z.array(
 const UploadParticipantSchema = z.object({
   csv: z
     .any()
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
     .refine((files) => files?.length == 1, "Diperlukan file csv!")
     .refine(
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
       (files) => files?.[0]?.type === "text/csv",
       "Hanya format file csv yang diterima!",
     ),
