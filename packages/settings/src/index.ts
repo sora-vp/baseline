@@ -7,14 +7,14 @@ const getTimePermission = () => {
   const currentTime = new Date().getTime();
 
   const currentTimeIsBiggerThanStart =
-    currentSettings.startTime &&
-      currentSettings.startTime ? 
-    currentTime >= currentSettings.startTime.getTime() : false;
+    currentSettings.startTime && currentSettings.startTime
+      ? currentTime >= currentSettings.startTime.getTime()
+      : false;
 
   const currentTimeIsSmallerThanEnd =
-    currentSettings.startTime &&
-      currentSettings.endTime ?
-    currentTime <= currentSettings.endTime.getTime() : false;
+    currentSettings.startTime && currentSettings.endTime
+      ? currentTime <= currentSettings.endTime.getTime()
+      : false;
 
   return {
     isPermittedByTime:

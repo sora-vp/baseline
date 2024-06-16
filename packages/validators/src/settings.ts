@@ -18,18 +18,12 @@ const SharedDuration = z
   .object({
     startTime: z.date({
       errorMap: (issue, { defaultError }) => ({
-        message:
-          issue.code === "invalid_type"
-            ? startTimeError
-            : defaultError,
+        message: issue.code === "invalid_type" ? startTimeError : defaultError,
       }),
     }),
     endTime: z.date({
       errorMap: (issue, { defaultError }) => ({
-        message:
-          issue.code === "invalid_type"
-            ? endTimeError
-            : defaultError,
+        message: issue.code === "invalid_type" ? endTimeError : defaultError,
       }),
     }),
   })

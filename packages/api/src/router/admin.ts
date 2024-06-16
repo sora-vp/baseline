@@ -1,4 +1,5 @@
 import type { TRPCRouterRecord } from "@trpc/server";
+import { TRPCError } from "@trpc/server";
 
 import { and, eq, not, schema, sql } from "@sora-vp/db";
 import { admin } from "@sora-vp/validators";
