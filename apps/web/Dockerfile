@@ -7,7 +7,6 @@ RUN <<EOF
   apt-get update -y
   apt-get install libc6 libc++1 bash -y
   corepack enable
-  yarn set version latest
 EOF
 
 FROM base AS with-turbo
@@ -17,7 +16,7 @@ FROM with-turbo AS pruned-repo
 WORKDIR /app
 
 COPY . .
-RUN turbo prune @sora-vp/admin @sora-vp/db @sora-vp/db-migrate --docker
+RUN turbo prune @sora-vp/web @sora-vp/db @sora-vp/db-migrate --docker
 
 FROM with-turbo as builder
 WORKDIR /app
@@ -34,7 +33,7 @@ COPY turbo.json turbo.json
 
 ## This would be useful for browser environment variables that are actually baked at build time and you aren't passing them in otherwise.
 # COPY .env.production .env.production  
-RUN CI=true SKIP_ENV_VALIDATION=true turbo run build --filter=@sora-vp/admin... --filter=@sora-vp/db-migrate...
+RUN CI=true SKIP_ENV_VALIDATION=true turbo run build --filter=@sora-vp/web... --filter=@sora-vp/db-migrate...
 
 WORKDIR /app/packages/db-migrate
 RUN <<EOF
