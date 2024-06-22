@@ -42,9 +42,7 @@
       "compositePrimaryKeys": {
         "sora_candidate_id": {
           "name": "sora_candidate_id",
-          "columns": [
-            "id"
-          ]
+          "columns": ["id"]
         }
       },
       "uniqueConstraints": {}
@@ -114,9 +112,7 @@
       "indexes": {
         "qr_id_unique_index": {
           "name": "qr_id_unique_index",
-          "columns": [
-            "qr_id"
-          ],
+          "columns": ["qr_id"],
           "isUnique": true
         }
       },
@@ -124,9 +120,7 @@
       "compositePrimaryKeys": {
         "sora_participant_id": {
           "name": "sora_participant_id",
-          "columns": [
-            "id"
-          ]
+          "columns": ["id"]
         }
       },
       "uniqueConstraints": {}
@@ -180,9 +174,7 @@
       "indexes": {
         "email_unique_index": {
           "name": "email_unique_index",
-          "columns": [
-            "email"
-          ],
+          "columns": ["email"],
           "isUnique": true
         }
       },
@@ -190,9 +182,7 @@
       "compositePrimaryKeys": {
         "sora_user_id": {
           "name": "sora_user_id",
-          "columns": [
-            "id"
-          ]
+          "columns": ["id"]
         }
       },
       "uniqueConstraints": {}

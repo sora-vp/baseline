@@ -25,7 +25,7 @@ WORKDIR /app
 COPY .gitignore .gitignore
 COPY --from=pruned-repo /app/out/json/ .
 COPY --from=pruned-repo /app/out/yarn.lock ./yarn.lock
-RUN yarn install --frozen-lockfile
+RUN yarn install --immutable
 
 # Build the project and its dependencies
 COPY --from=pruned-repo /app/out/full/ .
@@ -33,7 +33,7 @@ COPY turbo.json turbo.json
 
 ## This would be useful for browser environment variables that are actually baked at build time and you aren't passing them in otherwise.
 # COPY .env.production .env.production  
-RUN CI=true SKIP_ENV_VALIDATION=true turbo run build --filter=!@sora-vp/api --filter=@sora-vp/web... --filter=@sora-vp/db-migrate...
+RUN CI=true SKIP_ENV_VALIDATION=true turbo run build --filter=@sora-vp/db... --filter=@sora-vp/validators... --filter=@sora-vp/web... --filter=@sora-vp/db-migrate...
 
 WORKDIR /app/packages/db-migrate
 RUN <<EOF
