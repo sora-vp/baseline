@@ -2879,7 +2879,6 @@ __metadata:
   resolution: "@sora-vp/db-migrate@workspace:packages/db-migrate"
   dependencies:
     "@sora-vp/eslint-config": "npm:*"
-    "@sora-vp/id-generator": "npm:*"
     "@sora-vp/prettier-config": "npm:*"
     "@sora-vp/tsconfig": "npm:*"
     "@t3-oss/env-core": "npm:^0.10.1"

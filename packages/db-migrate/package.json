@@ -21,7 +21,6 @@
     "with-env": "dotenv -e ../../.env --"
   },
   "dependencies": {
-    "@sora-vp/id-generator": "*",
     "@t3-oss/env-core": "^0.10.1",
     "drizzle-orm": "^0.30.10",
     "mysql2": "^3.9.8",

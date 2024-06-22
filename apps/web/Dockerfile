@@ -44,7 +44,7 @@ RUN <<EOF
   ls
   yarn set version stable
   yarn init -2
-  yarn i ./out.tgz
+  yarn add ./out.tgz
   ls
 EOF
 
