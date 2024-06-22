@@ -41,8 +41,11 @@ RUN <<EOF
   yarn set version stable
   yarn pack -o /db-migrate
   cd /db-migrate
+  ls
   yarn set version stable
+  yarn init -2
   yarn i ./*.tgz
+  ls
 EOF
 
 # This is the fly.io release_command that performs a migration
