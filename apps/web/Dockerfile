@@ -58,7 +58,7 @@ COPY <<EOF /db-migrate/db-migrate-release-command.sh
   #!/bin/bash
   set -e
   cd /db-migrate
-  CI=true yarn exec db-migrate
+  CI=true npm exec db-migrate
 EOF
 
 FROM base AS runner
@@ -76,6 +76,7 @@ WORKDIR /app
 
 EXPOSE 3000
 ENV PORT=3000
+ENV AUTH_TRUST_HOST=true
 
 ENV NODE_ENV=production
 
@@ -89,4 +90,5 @@ COPY --from=builder --chown=nextjs:nodejs /app/apps/web/.next/static ./apps/web/
 COPY --from=builder --chown=nextjs:nodejs /app/apps/web/public ./apps/web/public
 
 COPY --from=pruned-repo /app/start-web.sh .
+
 CMD ["/bin/sh", "/app/start-web.sh"]
