@@ -17,7 +17,7 @@ FROM with-turbo AS pruned-repo
 WORKDIR /app
 
 COPY . .
-RUN turbo prune --filter=@sora-vp/admin --filter=@sora-vp/db --filter=@sora-vp/db-migrate --docker
+RUN turbo prune @sora-vp/admin @sora-vp/db @sora-vp/db-migrate --docker
 
 FROM with-turbo as builder
 WORKDIR /app
