@@ -35,6 +35,12 @@ COPY turbo.json turbo.json
 # COPY .env.production .env.production  
 RUN CI=true SKIP_ENV_VALIDATION=true DB_HOST="something" DB_NAME="something" DB_USERNAME="something" DB_PASSWORD="something" turbo run build --filter=@sora-vp/web... --filter=@sora-vp/db-migrate...
 
+# Debugging purpose
+RUN <<EOF
+  apk add --no-cache tree
+  tree /app
+EOF
+
 WORKDIR /app/packages/db-migrate
 RUN <<EOF
   mkdir -p /db-migrate
@@ -69,9 +75,9 @@ COPY --from=builder --chown=nextjs:nodejs /db-migrate /db-migrate
 WORKDIR /app
 
 EXPOSE 3000
-ENV PORT 3000
+ENV PORT=3000
 
-ENV NODE_ENV production
+ENV NODE_ENV=production
 
 COPY --from=builder --chown=nextjs:nodejs /app/apps/web/next.config.mjs .
 COPY --from=builder --chown=nextjs:nodejs /app/apps/web/package.json .
