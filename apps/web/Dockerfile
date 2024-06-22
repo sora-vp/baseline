@@ -37,7 +37,7 @@ RUN CI=true SKIP_ENV_VALIDATION=true DB_HOST="something" DB_NAME="something" DB_
 
 # Debugging purpose
 RUN <<EOF
-  apk add --no-cache tree
+  apt-get install tree
   tree /app
 EOF
 
