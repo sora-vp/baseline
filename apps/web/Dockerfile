@@ -41,11 +41,10 @@ RUN <<EOF
   yarn set version stable
   yarn pack -o /db-migrate/out.tgz
   cd /db-migrate
-  ls
   yarn set version stable
   yarn init -2
+  echo "nodeLinker: node-modules" > .yarnrc.yml
   yarn add ./out.tgz
-  ls
 EOF
 
 # This is the fly.io release_command that performs a migration
