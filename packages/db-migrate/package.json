@@ -1,24 +1,22 @@
 {
-  "name": "@sora-vp/db",
+  "name": "@sora-vp/db-migrate",
   "version": "0.1.0",
   "private": true,
   "type": "module",
-  "exports": {
-    ".": {
-      "types": "./dist/index.d.ts",
-      "default": "./src/index.ts"
-    }
-  },
-  "license": "MIT",
+  "files": [
+    "dist",
+    "migrations/**"
+  ],
+  "bin": "./dist/index.js",
   "scripts": {
-    "build": "tsc",
+    "build": "tsup src/index.ts --format esm",
+    "migrate": "yarn with-env tsx migrate/index.mts",
+    "studio": "yarn with-env drizzle-kit studio --config src/config.ts",
     "dev": "tsc --watch",
     "clean": "rm -rf .turbo node_modules",
     "format": "prettier --check . --ignore-path ../../.gitignore",
     "lint": "eslint",
     "push": "yarn with-env drizzle-kit push:mysql --config src/config.ts",
-    "studio": "yarn with-env drizzle-kit studio --config src/config.ts",
-    "generate": "yarn with-env drizzle-kit generate:mysql --config src/config.ts",
     "typecheck": "tsc --noEmit --emitDeclarationOnly false",
     "with-env": "dotenv -e ../../.env --"
   },

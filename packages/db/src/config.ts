@@ -22,6 +22,7 @@ connectionStr.password = env.DB_PASSWORD;
 export default {
   schema: "./src/schema",
   driver: "mysql2",
+  out: "../db-migrate/migrations",
   dbCredentials: { uri: connectionStr.href },
   tablesFilter: ["sora_*"],
 } satisfies Config;

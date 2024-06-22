@@ -11,6 +11,7 @@
     "clean:workspaces": "turbo clean",
     "db:push": "yarn workspace @sora-vp/db push",
     "db:studio": "yarn workspace @sora-vp/db studio",
+    "db:generate": "yarn workspace @sora-vp/db generate",
     "dev": "turbo dev --parallel",
     "dev:web": "turbo run dev --filter @sora-vp/web",
     "dev:processor": "turbo run dev --filter @sora-vp/processor",
