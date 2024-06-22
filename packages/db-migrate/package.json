@@ -35,6 +35,7 @@
     "drizzle-kit": "^0.20.18",
     "eslint": "^9.2.0",
     "prettier": "^3.2.5",
+    "tsup": "^8.1.0",
     "typescript": "^5.4.5"
   },
   "prettier": "@sora-vp/prettier-config"
