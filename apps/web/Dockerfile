@@ -39,7 +39,7 @@ WORKDIR /app/packages/db-migrate
 RUN <<EOF
   mkdir -p /db-migrate
   yarn set version stable
-  yarn pack --pack-destination /db-migrate
+  yarn pack -o /db-migrate
   cd /db-migrate
   yarn i ./*.tgz
 EOF
