@@ -8,7 +8,9 @@
     "AUTH_DISCORD_ID",
     "AUTH_DISCORD_SECRET",
     "AUTH_REDIRECT_PROXY_URL",
-    "AUTH_SECRET"
+    "AUTH_SECRET",
+    "CI",
+    "SKIP_ENV_VALIDATION"
   ],
   "tasks": {
     "topo": {
