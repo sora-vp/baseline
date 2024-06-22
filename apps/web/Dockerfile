@@ -36,10 +36,10 @@ COPY turbo.json turbo.json
 RUN CI=true SKIP_ENV_VALIDATION=true DB_HOST="something" DB_NAME="something" DB_USERNAME="something" DB_PASSWORD="something" turbo run build --filter=@sora-vp/web... --filter=@sora-vp/db-migrate...
 
 # Debugging purpose
-RUN <<EOF
-  apt-get install tree
-  tree /app
-EOF
+# RUN <<EOF
+#   apt-get install tree
+#   tree /app
+# EOF
 
 WORKDIR /app/packages/db-migrate
 RUN <<EOF
