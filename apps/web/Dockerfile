@@ -47,9 +47,9 @@ RUN <<EOF
   yarn set version stable
   yarn pack -o /db-migrate/out.tgz
   cd /db-migrate
-  yarn set version stable
-  yarn init -2
+  echo '{ "name": "db-migrate", "type": "module" }' > package.json
   echo "nodeLinker: node-modules" > .yarnrc.yml
+  yarn set version stable
   yarn add ./out.tgz
 EOF
 
@@ -58,7 +58,7 @@ COPY <<EOF /db-migrate/db-migrate-release-command.sh
   #!/bin/bash
   set -e
   cd /db-migrate
-  CI=true npm exec db-migrate
+  CI=true yarn db-migrate
 EOF
 
 FROM base AS runner
