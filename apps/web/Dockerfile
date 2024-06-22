@@ -41,6 +41,7 @@ RUN <<EOF
   yarn set version stable
   yarn pack -o /db-migrate
   cd /db-migrate
+  yarn set version stable
   yarn i ./*.tgz
 EOF
 
