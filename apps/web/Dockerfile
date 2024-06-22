@@ -7,7 +7,6 @@ RUN <<EOF
   apt-get update -y
   apt-get install libc6 libc++1 bash -y
   corepack enable
-  yarn version set 4.2.2
 EOF
 
 FROM base AS with-turbo
@@ -39,6 +38,7 @@ RUN CI=true SKIP_ENV_VALIDATION=true DB_HOST="something" DB_NAME="something" DB_
 WORKDIR /app/packages/db-migrate
 RUN <<EOF
   mkdir -p /db-migrate
+  yarn version set 4.2.2
   yarn pack --pack-destination /db-migrate
   cd /db-migrate
   yarn i ./*.tgz
