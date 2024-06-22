@@ -6,8 +6,13 @@ const sourceDir = new URL("../migrations", import.meta.url);
 console.log("launched...");
 
 (async () => {
-  const connectionString = process.env.DATABASE_URL!;
-  const sql = await mysql.createConnection(connectionString);
+  const connectionStr = new URL(
+    `mysql://${process.env.DB_HOST}/${process.env.DB_NAME}`,
+  );
+  connectionStr.username = process.env.DB_USERNAME;
+  connectionStr.password = process.env.DB_PASSWORD;
+
+  const sql = await mysql.createConnection(connectionStr.href);
   const db = drizzle(sql);
 
   console.log("migrating database...");

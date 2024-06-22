@@ -58,7 +58,7 @@ COPY <<EOF /db-migrate/db-migrate-release-command.sh
   #!/bin/bash
   set -e
   cd /db-migrate
-  CI=true yarn db-migrate
+  node node_modules/@sora-vp/db-migrate/dist/index.js 
 EOF
 
 FROM base AS runner
