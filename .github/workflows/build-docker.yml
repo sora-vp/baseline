@@ -2,8 +2,8 @@ name: Docker Image Build CI
 
 on:
   push:
-#     branches:
-#       - main
+    branches:
+      - main
 
 jobs:
   web:
