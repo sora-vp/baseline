@@ -5612,12 +5612,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"desktop@workspace:apps/desktop":
-  version: 0.0.0-use.local
-  resolution: "desktop@workspace:apps/desktop"
-  languageName: unknown
-  linkType: soft
-
 "destr@npm:^2.0.3":
   version: 2.0.3
   resolution: "destr@npm:2.0.3"
