@@ -9,8 +9,8 @@ console.log("launched...");
   const connectionStr = new URL(
     `mysql://${process.env.DB_HOST}/${process.env.DB_NAME}`,
   );
-  connectionStr.username = process.env.DB_USERNAME;
-  connectionStr.password = process.env.DB_PASSWORD;
+  connectionStr.username = process.env.DB_USERNAME as string;
+  connectionStr.password = process.env.DB_PASSWORD as string;
 
   const sql = await mysql.createConnection(connectionStr.href);
   const db = drizzle(sql);
