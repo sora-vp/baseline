@@ -91,4 +91,7 @@ COPY --from=builder --chown=nextjs:nodejs /app/apps/web/public ./apps/web/public
 
 COPY --from=pruned-repo /app/start-web.sh .
 
+RUN mkdir -p /app/apps/web/public/uploads/
+RUN chown -R ${USER}:${USER} /app/apps/web/public/uploads/
+
 CMD ["/bin/sh", "/app/start-web.sh"]
