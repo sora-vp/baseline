@@ -56,3 +56,6 @@ dist/
 
 # web app
 apps/web/public/uploads
+
+# docker
+./db
