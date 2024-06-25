@@ -1,10 +1,19 @@
 import { join } from "path";
+import type { MenuItemConstructorOptions } from "electron";
 import { electronApp, is, optimizer } from "@electron-toolkit/utils";
-import { app, BrowserWindow, ipcMain, shell } from "electron";
+import { app, BrowserWindow, ipcMain, Menu, shell } from "electron";
 
 import icon from "../../resources/icon.png?asset";
 
 function createWindow(): void {
+  const gotTheLock = app.requestSingleInstanceLock();
+
+  if (!gotTheLock) {
+    app.quit();
+
+    return;
+  }
+
   // Create the browser window.
   const mainWindow = new BrowserWindow({
     width: 900,
@@ -13,10 +22,39 @@ function createWindow(): void {
     autoHideMenuBar: true,
     ...(process.platform === "linux" ? { icon } : {}),
     webPreferences: {
-      preload: join(__dirname, "../preload/index.js"),
+      preload: join(__dirname, "../preload/index.mjs"),
       sandbox: false,
     },
   });
+
+  const template: MenuItemConstructorOptions[] = [
+    {
+      label: "View",
+      submenu: [
+        { role: "zoomIn", accelerator: "Alt+=" },
+        { role: "zoomOut", accelerator: "Alt+-" },
+        { role: "resetZoom", accelerator: "Alt+r" },
+        { type: "separator" },
+        { role: "reload" },
+        { role: "forceReload" },
+        { role: "toggleDevTools" },
+        { type: "separator" },
+        { role: "togglefullscreen" },
+      ],
+    },
+    {
+      label: "App",
+      submenu: [
+        {
+          label: "Settings",
+          click: () => mainWindow.webContents.send("open-setting"),
+        },
+      ],
+    },
+  ];
+
+  const menu = Menu.buildFromTemplate(template);
+  Menu.setApplicationMenu(menu);
 
   mainWindow.on("ready-to-show", () => {
     mainWindow.show();
@@ -41,7 +79,7 @@ function createWindow(): void {
 // Some APIs can only be used after this event occurs.
 app.whenReady().then(() => {
   // Set app user model id for windows
-  electronApp.setAppUserModelId("com.electron");
+  electronApp.setAppUserModelId("rmecha.my.id.sora-attendance");
 
   // Default open or close DevTools by F12 in development
   // and ignore CommandOrControl + R in production.
@@ -49,9 +87,6 @@ app.whenReady().then(() => {
   app.on("browser-window-created", (_, window) => {
     optimizer.watchWindowShortcuts(window);
   });
-
-  // IPC test
-  ipcMain.on("ping", () => console.log("pong"));
 
   createWindow();
 
@@ -73,3 +108,6 @@ app.on("window-all-closed", () => {
 
 // In this file you can include the rest of your app"s specific main process
 // code. You can also put them in separate files and require them here.
+
+// ipcMain.handle("get-server-url", () => store.get("serverURL"));
+// ipcMain.handle("set-server-url", (_, url) => store.set("serverURL", url));
