@@ -1,6 +1,6 @@
 import { Button } from "@sora-vp/ui/button";
 
-function App(): JSX.Element {
+function App() {
   return (
     <>
       <p className="text-5xl font-bold">Test</p>
