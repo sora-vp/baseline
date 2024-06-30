@@ -22,7 +22,7 @@ export const ServerSettingProvider = ({
 }) => {
   const [errorMessage, setErrorMessage] = useState("");
 
-  const settingsQuery = api.client.settings.useQuery(undefined, {
+  const settingsQuery = api.clientConsumer.settings.useQuery(undefined, {
     refetchInterval: 2500,
     refetchIntervalInBackground: true,
   });

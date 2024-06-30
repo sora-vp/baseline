@@ -1,8 +1,8 @@
 import type { TRPCRouterRecord } from "@trpc/server";
 import { TRPCError } from "@trpc/server";
 
-import settings from "@sora-vp/settings";
 import { and, eq, not, schema, sql } from "@sora-vp/db";
+import settings from "@sora-vp/settings";
 import { participant } from "@sora-vp/validators";
 
 import { publicProcedure } from "../trpc";
@@ -23,7 +23,6 @@ export const clientRouter = {
         `);
 
         console.log(participant);
- 
       }),
     ),
 } satisfies TRPCRouterRecord;

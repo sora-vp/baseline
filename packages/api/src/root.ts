@@ -14,7 +14,7 @@ export const appRouter = createTRPCRouter({
   statistic: statisticRouter,
   settings: settingsRouter,
   participant: participantRouter,
-  client: clientRouter,
+  clientConsumer: clientRouter,
 });
 
 // export type definition of API
