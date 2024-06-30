@@ -34,7 +34,9 @@
   "prettier": "@sora-vp/prettier-config",
   "packageManager": "yarn@4.2.2",
   "workspaces": [
-    "apps/*",
+    "apps/clients/*",
+    "apps/processor",
+    "apps/web",
     "packages/*",
     "tooling/*"
   ]
