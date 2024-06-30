@@ -20,12 +20,12 @@
     "eslint-plugin-jsx-a11y": "^6.8.0",
     "eslint-plugin-react": "^7.34.1",
     "eslint-plugin-react-hooks": "beta",
-    "typescript-eslint": "^7.8.0"
+    "typescript-eslint": "^7.14.1"
   },
   "devDependencies": {
     "@sora-vp/prettier-config": "*",
     "@sora-vp/tsconfig": "*",
-    "eslint": "^9.2.0",
+    "eslint": "^9.6.0",
     "prettier": "^3.2.5",
     "typescript": "^5.4.5"
   },
