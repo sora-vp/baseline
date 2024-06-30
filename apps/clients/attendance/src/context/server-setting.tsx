@@ -7,8 +7,6 @@ import { toast } from "@sora-vp/ui/toast";
 
 interface ISettingContext {
   canAttend: boolean;
-  isLoading: boolean;
-  isError: boolean;
 }
 
 export const ServerSettingContext = createContext<ISettingContext>(
@@ -80,12 +78,15 @@ export const ServerSettingProvider = ({
           </Button>
         </div>
         <div className="absolute bottom-4 left-4">
-          <span className="font-sundanese text-2xl">ᮞᮧᮛ</span>
+          <span
+            className="font-sundanese select-none text-2xl"
+            onDoubleClick={() => location.reload()}
+          >
+            ᮞᮧᮛ
+          </span>
         </div>
         <div className="absolute bottom-4 right-4">
-          <small className="font-sundanese font-mono text-xs">
-            v{APP_VERSION}
-          </small>
+          <small className="font-sundanese font-mono">v{APP_VERSION}</small>
         </div>
       </>
     );
@@ -94,20 +95,21 @@ export const ServerSettingProvider = ({
     return (
       <>
         <div className="flex h-screen w-screen flex-col items-center justify-center gap-5">
-          <h1 className="font-sundanese scroll-m-20 text-7xl font-medium tracking-tight lg:text-8xl">
+          <h1
+            className="font-sundanese select-none scroll-m-20 text-7xl font-medium tracking-tight lg:text-8xl"
+            onDoubleClick={() => location.reload()}
+          >
             ᮞᮧᮛ
           </h1>
 
           <Loader
             size={58}
-            absoluteStrokeWidth={35}
+            absoluteStrokeWidth
             className="animate-pulse animate-spin"
           />
         </div>
         <div className="absolute bottom-4 right-4">
-          <small className="font-sundanese font-mono text-xs">
-            v{APP_VERSION}
-          </small>
+          <small className="font-sundanese font-mono">v{APP_VERSION}</small>
         </div>
       </>
     );
@@ -116,12 +118,15 @@ export const ServerSettingProvider = ({
     <ServerSettingContext.Provider value={propsValue}>
       {children}
       <div className="absolute bottom-4 left-4">
-        <span className="font-sundanese text-2xl">ᮞᮧᮛ</span>
+        <span
+          className="font-sundanese cursor-pointer select-none text-2xl"
+          onDoubleClick={() => location.reload()}
+        >
+          ᮞᮧᮛ
+        </span>
       </div>
       <div className="absolute bottom-4 right-4">
-        <small className="font-sundanese font-mono text-xs">
-          v{APP_VERSION}
-        </small>
+        <small className="font-sundanese font-mono">v{APP_VERSION}</small>
       </div>
     </ServerSettingContext.Provider>
   );

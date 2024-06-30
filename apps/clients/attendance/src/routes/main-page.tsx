@@ -1,3 +1,4 @@
+import { ScannerComponent } from "@/components/scanner";
 import { useServerSetting } from "@/context/server-setting";
 
 export default function MainPage() {
@@ -12,5 +13,5 @@ export default function MainPage() {
       </div>
     );
 
-  return <></>;
+  return <ScannerComponent />;
 }
