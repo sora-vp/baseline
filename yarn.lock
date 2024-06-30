@@ -2447,9 +2447,11 @@ __metadata:
     eslint-plugin-react-hooks: "npm:^4.6.2"
     eslint-plugin-react-refresh: "npm:^0.4.7"
     jotai: "npm:^2.8.4"
+    lucide-react: "npm:^0.399.0"
     non.geist: "npm:^1.0.3"
     postcss: "npm:^8.4.39"
     prettier: "npm:^3.2.5"
+    qr-scanner: "npm:^1.4.2"
     react: "npm:^18.3.1"
     react-dom: "npm:^18.3.1"
     react-router-dom: "npm:^6.24.0"
@@ -3217,6 +3219,13 @@ __metadata:
   version: 14.18.63
   resolution: "@types/node@npm:14.18.63"
   checksum: 10c0/626a371419a6a0e11ca460b22bb4894abe5d75c303739588bc96267e380aa8b90ba5a87bc552400584f0ac2a84b5c458dadcbcf0dfd2396ebeb765f7a7f95893
+  languageName: node
+  linkType: hard
+
+"@types/offscreencanvas@npm:^2019.6.4":
+  version: 2019.7.3
+  resolution: "@types/offscreencanvas@npm:2019.7.3"
+  checksum: 10c0/6d1dfae721d321cd2b5435f347a0e53b09f33b2f9e9333396480f592823bc323847b8169f7d251d2285cb93dbc1ba2e30741ac5cf4b1c003d660fd4c24526963
   languageName: node
   linkType: hard
 
@@ -8087,6 +8096,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"lucide-react@npm:^0.399.0":
+  version: 0.399.0
+  resolution: "lucide-react@npm:0.399.0"
+  peerDependencies:
+    react: ^16.5.1 || ^17.0.0 || ^18.0.0 || ^19.0.0
+  checksum: 10c0/49b97b65b8f225d4e93b18e66e5b2c8ce67a6cd7a90c589c6492b26063cec565a3d8b18b934fb35de01d9a15e1f52b2f8767b306b0a580d75a3c18d306e362be
+  languageName: node
+  linkType: hard
+
 "make-dir@npm:^3.1.0":
   version: 3.1.0
   resolution: "make-dir@npm:3.1.0"
@@ -9445,6 +9463,15 @@ __metadata:
   version: 2.3.1
   resolution: "punycode@npm:2.3.1"
   checksum: 10c0/14f76a8206bc3464f794fb2e3d3cc665ae416c01893ad7a02b23766eb07159144ee612ad67af5e84fa4479ccfe67678c4feb126b0485651b302babf66f04f9e9
+  languageName: node
+  linkType: hard
+
+"qr-scanner@npm:^1.4.2":
+  version: 1.4.2
+  resolution: "qr-scanner@npm:1.4.2"
+  dependencies:
+    "@types/offscreencanvas": "npm:^2019.6.4"
+  checksum: 10c0/32ac53d6f5c9045e1464d6b110eb19d3f8865f72276d26f00f6cc1e1d239ce34c799824a3082c775236cf887cf4354b2c292c89a08fd25378ab2c68472346970
   languageName: node
   linkType: hard
 

@@ -1,23 +1,16 @@
 import { useState } from "react";
+import { ServerSettingProvider } from "@/context/server-setting";
+import MainPage from "@/routes/main-page";
 import { api } from "@/utils/api";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { httpBatchLink } from "@trpc/client";
-import {
-  createBrowserRouter,
-  Link,
-  Route,
-  RouterProvider,
-} from "react-router-dom";
+import { createBrowserRouter, Link, RouterProvider } from "react-router-dom";
+import superjson from "superjson";
 
 const router = createBrowserRouter([
   {
     path: "/",
-    element: (
-      <div>
-        <h1>Hello World</h1>
-        <Link to="about">About Us</Link>
-      </div>
-    ),
+    element: <MainPage />,
   },
   {
     path: "about",
@@ -38,6 +31,7 @@ export default function App() {
       links: [
         httpBatchLink({
           url: getBaseUrl(),
+          transformer: superjson,
         }),
       ],
     }),
@@ -46,7 +40,9 @@ export default function App() {
   return (
     <api.Provider client={trpcClient} queryClient={queryClient}>
       <QueryClientProvider client={queryClient}>
-        <RouterProvider router={router} />
+        <ServerSettingProvider>
+          <RouterProvider router={router} />
+        </ServerSettingProvider>
       </QueryClientProvider>
     </api.Provider>
   );
