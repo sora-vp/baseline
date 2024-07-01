@@ -1,4 +1,5 @@
 import { useEffect, useRef } from "react";
+import { motion } from "framer-motion";
 import QrScanner from "qr-scanner";
 
 import { validateId } from "@sora-vp/id-generator";
@@ -49,10 +50,23 @@ export function MainScanner({
 
   return (
     <div className="flex h-screen w-screen flex-col items-center justify-center gap-5">
-      <h2 className="scroll-m-20 text-3xl font-semibold tracking-tight">
+      <motion.h2
+        initial={{ opacity: 0, y: 25 }}
+        animate={{ opacity: 1, y: 0 }}
+        exit={{ opacity: 0, x: 200 }}
+        transition={{
+          duration: 0.3,
+        }}
+        className="scroll-m-20 text-3xl font-semibold tracking-tight"
+      >
         Mohon arahkan QR ke kotak kuning
-      </h2>
-      <video
+      </motion.h2>
+      <motion.video
+        exit={{ opacity: 0, x: 200 }}
+        transition={{
+          duration: 0.3,
+          delay: 0.2,
+        }}
         className="min-h-[30rem] w-[42rem] rounded-xl border bg-stone-200"
         ref={videoRef}
       />

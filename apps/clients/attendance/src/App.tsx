@@ -7,6 +7,8 @@ import { httpBatchLink } from "@trpc/client";
 import { createBrowserRouter, Link, RouterProvider } from "react-router-dom";
 import superjson from "superjson";
 
+import { env } from "./env";
+
 const router = createBrowserRouter([
   {
     path: "/",
@@ -19,7 +21,10 @@ const router = createBrowserRouter([
 ]);
 
 const getBaseUrl = () => {
-  if (import.meta.env.DEV) return "http://localhost:3000/api/trpc";
+  if (!env.VITE_IS_DOCKER && env.VITE_TRPC_URL) return env.VITE_TRPC_URL;
+
+  if (import.meta.env.DEV && !env.VITE_IS_DOCKER && !env.VITE_TRPC_URL)
+    return "http://localhost:3000/api/trpc";
 
   return "/api/trpc";
 };

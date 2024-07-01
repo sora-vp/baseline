@@ -58,33 +58,75 @@ export const ServerSettingProvider = ({
       <>
         <div className="flex h-screen w-screen flex-col items-center justify-center gap-5 p-6">
           <div className="w-[80%] text-center">
-            <h1 className="scroll-m-20 font-mono text-4xl font-extrabold tracking-tight text-red-600 lg:text-5xl">
+            <motion.h1
+              initial={{ opacity: 0, y: -25 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -25 }}
+              transition={{
+                duration: 0.3,
+              }}
+              className="scroll-m-20 font-mono text-4xl font-extrabold tracking-tight text-red-600 lg:text-5xl"
+            >
               Terjadi Sebuah Kesalahan
-            </h1>
-            <p className="text-center text-xl leading-7 [&:not(:first-child)]:mt-6">
+            </motion.h1>
+            <motion.p
+              initial={{ opacity: 0, y: -25 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -25 }}
+              transition={{
+                duration: 0.3,
+                delay: 0.2,
+              }}
+              className="text-center text-xl leading-7 [&:not(:first-child)]:mt-6"
+            >
               Tidak dapat mengambil data pengaturan ke server. Pastikan koneksi
               perangkat ini sudah terhubung dengan jaringan lokal. Hubungi
               pengendali server utama dan beritakan masalah ini.
-            </p>
+            </motion.p>
           </div>
 
-          <div className="flex flex-col items-center">
+          <motion.div
+            initial={{ opacity: 0, y: -25 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -25 }}
+            transition={{
+              duration: 0.3,
+              delay: 0.4,
+            }}
+            className="flex flex-col items-center"
+          >
             <p>Pesan Error:</p>
             <pre className="w-full border p-2 font-mono">{errorMessage}</pre>
-          </div>
+          </motion.div>
 
           <Button onDoubleClick={() => location.reload()}>
-            <RotateCcw className="mr-2 h-4 w-4" />
+            <motion.div
+              initial={{ rotate: -95 }}
+              animate={{ rotate: 0 }}
+              transition={{
+                type: "spring",
+                delay: 0.7,
+              }}
+              className="mr-2"
+            >
+              <RotateCcw className="h-4 w-4" />
+            </motion.div>
             Muat Ulang
           </Button>
         </div>
         <div className="absolute bottom-4 left-4">
-          <span
+          <motion.span
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{
+              duration: 0.8,
+            }}
             className="font-sundanese select-none text-2xl"
             onDoubleClick={() => location.reload()}
           >
             ᮞᮧᮛ
-          </span>
+          </motion.span>
         </div>
         <div className="absolute bottom-4 right-4">
           <small className="font-sundanese font-mono">v{APP_VERSION}</small>
@@ -96,8 +138,8 @@ export const ServerSettingProvider = ({
     return (
       <>
         <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
+          initial={{ opacity: 0, y: 50 }}
+          animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0 }}
           className="flex h-screen w-screen flex-col items-center justify-center gap-5"
         >
