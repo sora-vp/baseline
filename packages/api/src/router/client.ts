@@ -1,7 +1,7 @@
 import type { TRPCRouterRecord } from "@trpc/server";
 import { TRPCError } from "@trpc/server";
 
-import { and, eq, not, schema, sql } from "@sora-vp/db";
+import { eq, schema, sql } from "@sora-vp/db";
 import settings, { canAttendNow } from "@sora-vp/settings";
 import { participant } from "@sora-vp/validators";
 
@@ -28,8 +28,14 @@ export const clientRouter = {
           SELECT * FROM ${schema.participants} WHERE ${schema.participants.qrId} = ${input} FOR UPDATE
         `);
 
-        const participantContainer = participantRawQuery.at(0)!;
-        const participant = participantContainer.at(0)!;
+        const participantContainer = participantRawQuery.at(0) as unknown as {
+          name: string;
+          already_attended: boolean;
+          qr_id: string;
+          sub_part: string;
+        }[];
+
+        const participant = participantContainer.at(0);
 
         if (!participant)
           throw new TRPCError({

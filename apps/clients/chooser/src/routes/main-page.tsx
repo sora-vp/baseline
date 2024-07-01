@@ -3,9 +3,9 @@ import { useServerSetting } from "@/context/server-setting";
 import { motion } from "framer-motion";
 
 export default function MainPage() {
-  const { canAttend } = useServerSetting();
+  const { canVote } = useServerSetting();
 
-  if (!canAttend)
+  if (!canVote)
     return (
       <div className="flex h-screen w-screen flex-col items-center justify-center gap-5 p-6">
         <motion.h1
@@ -17,7 +17,7 @@ export default function MainPage() {
           }}
           className="scroll-m-20 border-b font-mono text-4xl font-extrabold tracking-tight text-red-600 drop-shadow-2xl lg:text-5xl"
         >
-          Belum Bisa Absen!
+          Belum Bisa Memilih!
         </motion.h1>
       </div>
     );

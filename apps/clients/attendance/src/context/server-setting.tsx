@@ -149,11 +149,7 @@ export const ServerSettingProvider = ({
             ᮞᮧᮛ
           </h1>
 
-          <Loader
-            size={58}
-            absoluteStrokeWidth
-            className="animate-pulse animate-spin"
-          />
+          <Loader size={58} absoluteStrokeWidth className="animate-spin" />
         </motion.div>
         <div className="absolute bottom-4 right-4">
           <small className="font-sundanese font-mono">v{APP_VERSION}</small>

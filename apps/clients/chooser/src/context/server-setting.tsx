@@ -6,7 +6,7 @@ import { Loader, RotateCcw } from "lucide-react";
 import { Button } from "@sora-vp/ui/button";
 
 interface ISettingContext {
-  canAttend: boolean;
+  canVote: boolean;
 }
 
 export const ServerSettingContext = createContext<ISettingContext>(
@@ -32,7 +32,7 @@ export const ServerSettingProvider = ({
   const propsValue = useMemo(() => {
     if (!settingsQuery.data)
       return {
-        canAttend: false,
+        canVote: false,
       };
 
     const result = settingsQuery.data;
@@ -42,13 +42,13 @@ export const ServerSettingProvider = ({
 
     const currentTime = new Date().getTime();
 
-    const canAttend =
+    const canVote =
       (waktuMulai as number) <= currentTime &&
       (waktuSelesai as number) >= currentTime &&
-      result.canAttend;
+      result.canVote;
 
     return {
-      canAttend,
+      canVote,
     };
   }, [settingsQuery.data]);
 
@@ -149,11 +149,7 @@ export const ServerSettingProvider = ({
             ᮞᮧᮛ
           </h1>
 
-          <Loader
-            size={58}
-            absoluteStrokeWidth
-            className="animate-pulse animate-spin"
-          />
+          <Loader size={58} absoluteStrokeWidth className="animate-spin" />
         </motion.div>
         <div className="absolute bottom-4 right-4">
           <small className="font-sundanese font-mono">v{APP_VERSION}</small>
