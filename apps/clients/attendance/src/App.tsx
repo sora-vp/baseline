@@ -4,7 +4,7 @@ import MainPage from "@/routes/main-page";
 import { api } from "@/utils/api";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { httpBatchLink } from "@trpc/client";
-import { createBrowserRouter, Link, RouterProvider } from "react-router-dom";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import superjson from "superjson";
 
 import { env } from "./env";

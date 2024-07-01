@@ -12,7 +12,6 @@ export function MainScanner({
   setInvalidQr: (invalid: boolean) => void;
   mutateData: (qrId: string) => void;
 }) {
-  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   const videoRef = useRef<HTMLVideoElement>(null!);
 
   useEffect(() => {

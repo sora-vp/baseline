@@ -5,6 +5,7 @@ import { defineConfig } from "vite";
 export default defineConfig({
   plugins: [react()],
   define: {
+    // eslint-disable-next-line no-restricted-properties
     APP_VERSION: JSON.stringify(process.env.npm_package_version),
   },
   resolve: {

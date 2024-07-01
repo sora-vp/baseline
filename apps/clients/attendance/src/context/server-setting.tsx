@@ -4,7 +4,6 @@ import { motion } from "framer-motion";
 import { Loader, RotateCcw } from "lucide-react";
 
 import { Button } from "@sora-vp/ui/button";
-import { toast } from "@sora-vp/ui/toast";
 
 interface ISettingContext {
   canAttend: boolean;
