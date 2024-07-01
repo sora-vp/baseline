@@ -1,5 +1,6 @@
 import { createContext, useContext, useEffect, useMemo, useState } from "react";
 import { api } from "@/utils/api";
+import { motion } from "framer-motion";
 import { Loader, RotateCcw } from "lucide-react";
 
 import { Button } from "@sora-vp/ui/button";
@@ -94,7 +95,12 @@ export const ServerSettingProvider = ({
   if (settingsQuery.isLoading)
     return (
       <>
-        <div className="flex h-screen w-screen flex-col items-center justify-center gap-5">
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          className="flex h-screen w-screen flex-col items-center justify-center gap-5"
+        >
           <h1
             className="font-sundanese select-none scroll-m-20 text-7xl font-medium tracking-tight lg:text-8xl"
             onDoubleClick={() => location.reload()}
@@ -107,7 +113,7 @@ export const ServerSettingProvider = ({
             absoluteStrokeWidth
             className="animate-pulse animate-spin"
           />
-        </div>
+        </motion.div>
         <div className="absolute bottom-4 right-4">
           <small className="font-sundanese font-mono">v{APP_VERSION}</small>
         </div>
@@ -118,12 +124,15 @@ export const ServerSettingProvider = ({
     <ServerSettingContext.Provider value={propsValue}>
       {children}
       <div className="absolute bottom-4 left-4">
-        <span
+        <motion.span
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
           className="font-sundanese cursor-pointer select-none text-2xl"
           onDoubleClick={() => location.reload()}
         >
           ᮞᮧᮛ
-        </span>
+        </motion.span>
       </div>
       <div className="absolute bottom-4 right-4">
         <small className="font-sundanese font-mono">v{APP_VERSION}</small>

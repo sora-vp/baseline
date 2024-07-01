@@ -8,8 +8,15 @@ import "non.geist/mono";
 import "@fontsource-variable/noto-sans-sundanese";
 import "./index.css";
 
+import { AnimatePresence } from "framer-motion";
+
+import { Toaster } from "@sora-vp/ui/toast";
+
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
-    <App />
+    <AnimatePresence mode="wait">
+      <App />
+    </AnimatePresence>
+    <Toaster richColors />
   </React.StrictMode>,
 );
