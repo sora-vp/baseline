@@ -18,7 +18,6 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-  AlertDialogTrigger,
 } from "@sora-vp/ui/alert-dialog";
 import { Button } from "@sora-vp/ui/button";
 import {
@@ -210,7 +209,7 @@ function VotePage() {
           </div>
         ) : (
           <>
-            {candidateList.data?.length < 2 ? (
+            {candidateList.data && candidateList.data?.length < 2 ? (
               <div className="flex h-full -translate-y-16 flex-col items-center justify-center">
                 <motion.h1
                   initial={{ opacity: 0, y: -25 }}

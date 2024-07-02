@@ -11,8 +11,11 @@ import { motion } from "framer-motion";
 import { Navigate } from "react-router-dom";
 
 export interface IParticipantContext {
+  name: string | null;
+  subpart: string | null;
   qrId: string | null;
   setQRCode: (qr: string | null) => void;
+  setVotedSuccessfully: (success: boolean) => void;
 }
 
 export const ParticipantContext = createContext<IParticipantContext>(

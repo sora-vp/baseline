@@ -1,11 +1,7 @@
 import { useCallback, useState } from "react";
 import { useParticipant } from "@/context/participant-context";
 import { api } from "@/utils/api";
-import { motion } from "framer-motion";
 import { Navigate } from "react-router-dom";
-
-import { Button } from "@sora-vp/ui/button";
-import { Separator } from "@sora-vp/ui/separator";
 
 import { UniversalError } from "../universal-error";
 import { UniversalLoading } from "../universal-loading";
