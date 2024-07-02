@@ -1,6 +1,6 @@
 import type { AppRouter } from "@sora-vp/api";
+import type { inferRouterOutputs } from "@trpc/server";
 import { createTRPCProxyClient, httpLink } from "@trpc/client";
-import { type inferRouterOutputs } from "@trpc/server";
 import superjson from "superjson";
 
 import { env } from "./env";

@@ -132,7 +132,6 @@ export const ParticipantProvider = ({
 export const useParticipant = () =>
   useContext(ParticipantContext) as IParticipantContext;
 
-// eslint-disable-next-line react/display-name
 export const ensureQRIDExist = (Element: React.FC) => () => {
   const { qrId } = useParticipant();
 

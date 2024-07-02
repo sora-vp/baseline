@@ -19,7 +19,6 @@ export function ScannerComponent() {
   const participantAttended =
     api.clientConsumer.checkParticipantAttended.useMutation({
       onSuccess() {
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         setQRCode(participantAttended.variables!);
       },
     });

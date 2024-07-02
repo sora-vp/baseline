@@ -9,8 +9,10 @@ export const canVoteNow = (settings: TSettings) => {
   const currentTime = new Date().getTime();
 
   const canVote =
-    (waktuMulai as number) <= currentTime &&
-    (waktuSelesai as number) >= currentTime &&
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    waktuMulai! <= currentTime &&
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    waktuSelesai! >= currentTime &&
     settings.canVote;
 
   return canVote;

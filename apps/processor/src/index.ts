@@ -1,3 +1,6 @@
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+/* eslint-disable @typescript-eslint/no-misused-promises  */
 import amqp from "amqplib";
 import { z } from "zod";
 
@@ -16,18 +19,12 @@ const inputValidator = z.object({
 
 const consumeMessagesFromQueue = async () => {
   try {
-    logger.info("[DB] Connecting to Database...");
-
-    await db;
-
-    logger.info("[DB] Connected!");
-
-    logger.debug(`[MQ] MQ AMQP: ${env.PROCESSOR_AMQP_URL}`);
+    logger.debug(`[MQ] MQ AMQP: ${env.AMQP_URL}`);
     logger.debug(`[TRPC] TRPC URL: ${env.PROCESSOR_API_URL}`);
 
     logger.info("[MQ] Connecting to RabbitMQ instance");
 
-    const connection = await amqp.connect(env.PROCESSOR_AMQP_URL);
+    const connection = await amqp.connect(env.AMQP_URL);
     const channel = await connection.createChannel();
 
     const exchange = "vote";
@@ -40,7 +37,7 @@ const consumeMessagesFromQueue = async () => {
 
     logger.info("[MQ] Connected! Waiting for queue...");
 
-    channel.consume(queue, async (msg) => {
+    await channel.consume(queue, async (msg) => {
       if (!msg) {
         logger.warn("Consumer has been cancelled or channel has been closed.");
         return;
@@ -103,8 +100,8 @@ const consumeMessagesFromQueue = async () => {
 
           const participantContainer = participantRawQuery.at(0) as unknown as {
             name: string;
-            already_attended: boolean;
-            already_choosing: boolean;
+            already_attended: number;
+            already_choosing: number;
             qr_id: string;
             sub_part: string;
           }[];
@@ -170,7 +167,7 @@ const consumeMessagesFromQueue = async () => {
 
           const candidate = candidateContainer.at(0);
 
-          if (candidate!.candidate_must_one !== 1) {
+          if (candidate?.candidate_must_one !== 1) {
             channel.sendToQueue(
               msg.properties.replyTo,
               Buffer.from(
@@ -229,4 +226,4 @@ const consumeMessagesFromQueue = async () => {
   }
 };
 
-consumeMessagesFromQueue();
+void consumeMessagesFromQueue();

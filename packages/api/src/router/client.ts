@@ -169,7 +169,7 @@ export const clientRouter = {
           if (!messageFromQueue.success)
             throw new TRPCError({
               code: "BAD_REQUEST",
-              message: messageFromQueue.message as string,
+              message: messageFromQueue.message!,
             });
 
           return { message: "Berhasil memilih kandidat!" };
