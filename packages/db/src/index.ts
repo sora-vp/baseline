@@ -79,3 +79,35 @@ export const preparedGetGraphicalData = db.query.candidates
     },
   })
   .prepare();
+
+export const preparedGetParticipantAttended = db.query.participants
+  .findFirst({
+    where: eq(schema.participants.qrId, sql.placeholder("qrId")),
+
+    columns: {
+      alreadyAttended: true,
+      alreadyChoosing: true,
+    },
+  })
+  .prepare();
+
+export const preparedGetParticipantStatus = db.query.participants
+  .findFirst({
+    where: eq(schema.participants.qrId, sql.placeholder("qrId")),
+
+    columns: {
+      name: true,
+      subpart: true,
+      alreadyAttended: true,
+      alreadyChoosing: true,
+    },
+  })
+  .prepare();
+
+export const preparedGetCandidates = db.query.candidates
+  .findMany({
+    columns: {
+      counter: false,
+    },
+  })
+  .prepare();

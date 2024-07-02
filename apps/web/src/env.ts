@@ -21,6 +21,7 @@ export const env = createEnv({
     DB_NAME: z.string(),
     DB_PASSWORD: z.string(),
     DB_USERNAME: z.string(),
+    AMQP_URL: z.string().url(),
   },
 
   /**

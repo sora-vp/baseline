@@ -9,6 +9,8 @@
     "DB_USERNAME",
     "DB_PASSWORD",
     "AUTH_SECRET",
+    "AMQP_URL",
+    "PROCESSOR_API_URL",
     "CI",
     "SKIP_ENV_VALIDATION"
   ],
