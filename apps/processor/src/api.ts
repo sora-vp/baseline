@@ -6,10 +6,10 @@ import superjson from "superjson";
 import { env } from "./env";
 
 export const trpc = createTRPCProxyClient<AppRouter>({
-  transformer: superjson,
   links: [
     httpLink({
-      url: env.TRPC_URL,
+      url: env.PROCESSOR_API_URL,
+      transformer: superjson,
     }),
   ],
 });

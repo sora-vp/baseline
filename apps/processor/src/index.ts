@@ -27,7 +27,7 @@ const consumeMessagesFromQueue = async () => {
 
     logger.info("[MQ] Connecting to RabbitMQ instance");
 
-    const connection = await amqp.connect(env.AMQP_URL);
+    const connection = await amqp.connect(env.PROCESSOR_AMQP_URL);
     const channel = await connection.createChannel();
 
     const exchange = "vote";
