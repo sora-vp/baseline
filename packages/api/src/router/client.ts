@@ -115,10 +115,12 @@ export const clientRouter = {
       try {
         // Sudah di cek oleh env.ts pada runtime next js,
         // tinggal ambil value dari process.env saja
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         const connection = await amqp.connect(process.env.AMQP_URL!);
 
         try {
           const messageFromQueue: { success: boolean; message?: string } =
+            // eslint-disable-next-line @typescript-eslint/no-misused-promises, no-async-promise-executor
             await new Promise(async (resolve, reject) => {
               const channel = await connection.createChannel();
 
@@ -131,6 +133,7 @@ export const clientRouter = {
               const response = await channel.assertQueue("");
               const correlationId = response.queue;
 
+              // eslint-disable-next-line @typescript-eslint/no-misused-promises
               const timeout = setTimeout(async () => {
                 await channel.deleteQueue(QUEUE_NAME);
                 await channel.close();
@@ -153,6 +156,7 @@ export const clientRouter = {
                   if (msg.properties.correlationId === correlationId) {
                     clearTimeout(timeout);
 
+                    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
                     resolve(JSON.parse(msg.content.toString()));
                     channel.ack(msg);
                   }
@@ -169,6 +173,7 @@ export const clientRouter = {
           if (!messageFromQueue.success)
             throw new TRPCError({
               code: "BAD_REQUEST",
+              // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
               message: messageFromQueue.message!,
             });
 
