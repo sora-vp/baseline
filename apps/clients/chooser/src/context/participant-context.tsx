@@ -25,16 +25,21 @@ export const ParticipantProvider = ({
   children: React.ReactNode;
 }) => {
   const [qrId, setQrId] = useState<string | null>(null);
+  const [votedSuccessfully, setVoted] = useState(false);
 
   const participantQuery = api.clientConsumer.getParticipantStatus.useQuery(
     qrId as string,
     {
       refetchInterval: 2500,
-      enabled: !!qrId,
+      enabled: !!qrId && !votedSuccessfully,
     },
   );
 
   const setQRCode = useCallback((qr: string | null) => setQrId(qr), []);
+  const setVotedSuccessfully = useCallback(
+    (success: boolean) => setVoted(success),
+    [],
+  );
 
   const propsValue = useMemo(() => {
     if (!qrId)
@@ -43,6 +48,7 @@ export const ParticipantProvider = ({
         subpart: null,
         qrId,
         setQRCode,
+        setVotedSuccessfully,
       };
 
     return {
@@ -50,6 +56,7 @@ export const ParticipantProvider = ({
       subpart: participantQuery.data?.subpart ?? null,
       qrId,
       setQRCode,
+      setVotedSuccessfully,
     };
   }, [qrId, participantQuery.data]);
 

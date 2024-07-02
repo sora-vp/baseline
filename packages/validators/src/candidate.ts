@@ -1,6 +1,8 @@
 import { Base64 } from "js-base64";
 import { z } from "zod";
 
+import { validateId } from "@sora-vp/id-generator";
+
 const TwoMegs = 2_000_000;
 const ACCEPTED_IMAGE_TYPES = [
   "image/jpeg",
@@ -76,10 +78,17 @@ const ServerUpdateCandidate = baseAddAndEditForm.merge(
 
 const ServerDeleteCandidate = z.object({ id });
 
+const ServerUpvoteCandidate = ServerDeleteCandidate.merge(
+  z.object({
+    qrId: z.string().refine(validateId),
+  }),
+);
+
 export const candidate = {
   AddNewCandidateSchema,
   ServerAddNewCandidate,
   UpdateCandidateSchema,
   ServerUpdateCandidate,
   ServerDeleteCandidate,
+  ServerUpvoteCandidate,
 } as const;

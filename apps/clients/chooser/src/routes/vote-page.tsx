@@ -90,7 +90,7 @@ const CurrentParticipantInfo = (props: { isSuccess?: boolean }) => {
 };
 
 function VotePage() {
-  const { qrId, setQRCode } = useParticipant();
+  const { qrId, setQRCode, setVotedSuccessfully } = useParticipant();
 
   const successTimeout = useAtomValue(successTimeoutAtom);
 
@@ -103,7 +103,13 @@ function VotePage() {
   const candidateList = api.clientConsumer.getCandidates.useQuery();
   const upvoteCandidate = api.clientConsumer.upvote.useMutation({
     onSuccess() {
-      setTimeout(() => setQRCode(null), successTimeout);
+      setVotedSuccessfully(true);
+
+      setTimeout(() => {
+        setQRCode(null);
+
+        setVotedSuccessfully(false);
+      }, successTimeout);
     },
     onError() {
       setAlertOpen(false);

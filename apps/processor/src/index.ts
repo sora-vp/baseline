@@ -1,7 +1,7 @@
 import amqp from "amqplib";
 import { z } from "zod";
 
-import { db, schema } from "@sora-vp/db";
+import { db, eq, schema, sql } from "@sora-vp/db";
 import { validateId } from "@sora-vp/id-generator";
 
 import { api } from "./api";
@@ -96,115 +96,122 @@ const consumeMessagesFromQueue = async () => {
           return;
         }
 
-        // await prisma.$transaction(
-        //   async (tx) => {
-        //     const _participant = await tx.$queryRaw<
-        //       Participant[]
-        //     >`SELECT * FROM Participant WHERE qrId = ${inputData.data.qrId} FOR UPDATE`;
-        //     const participant = _participant[0];
-        //
-        //     if (!participant) {
-        //       channel.sendToQueue(
-        //         msg.properties.replyTo,
-        //         Buffer.from(JSON.stringify({ error: "Gak ada" })),
-        //         { correlationId: msg.properties.correlationId },
-        //       );
-        //
-        //       channel.ack(msg);
-        //       logger.trace(
-        //         `[MQ] Participant isn't exist. QR ID: ${inputData.data.qrId}`,
-        //       );
-        //
-        //       return;
-        //     }
-        //
-        //     if (participant.alreadyChoosing) {
-        //       channel.sendToQueue(
-        //         msg.properties.replyTo,
-        //         Buffer.from(JSON.stringify({ error: "Kamu sudah memilih!" })),
-        //         { correlationId: msg.properties.correlationId },
-        //       );
-        //
-        //       channel.ack(msg);
-        //       logger.trace(
-        //         `[MQ] Participant already chosen someone. QR ID: ${inputData.data.qrId}`,
-        //       );
-        //
-        //       return;
-        //     }
-        //
-        //     if (!participant.alreadyAttended) {
-        //       channel.sendToQueue(
-        //         msg.properties.replyTo,
-        //         Buffer.from(JSON.stringify({ error: "Kamu belum absen!" })),
-        //         { correlationId: msg.properties.correlationId },
-        //       );
-        //
-        //       channel.ack(msg);
-        //       logger.trace(
-        //         `[MQ] Participant isn't attended yet. QR ID: ${inputData.data.qrId}`,
-        //       );
-        //
-        //       return;
-        //     }
-        //
-        //     const _candidate = await tx.$queryRaw<
-        //       Participant[]
-        //     >`SELECT * FROM Candidate WHERE id = ${inputData.data.id} FOR UPDATE`;
-        //     const candidate = _candidate[0];
-        //
-        //     if (!candidate) {
-        //       channel.sendToQueue(
-        //         msg.properties.replyTo,
-        //         Buffer.from(
-        //           JSON.stringify({ error: "Kandidat yang dipilih tidak ada!" }),
-        //         ),
-        //         { correlationId: msg.properties.correlationId },
-        //       );
-        //
-        //       channel.ack(msg);
-        //       logger.trace(
-        //         `[MQ] Candidate isn't exist. QR ID: ${inputData.data.qrId}`,
-        //       );
-        //
-        //       return;
-        //     }
-        //
-        //     await tx.candidate.update({
-        //       where: { id: inputData.data.id },
-        //       data: {
-        //         counter: {
-        //           increment: 1,
-        //         },
-        //       },
-        //     });
-        //
-        //     await tx.participant.update({
-        //       where: { qrId: inputData.data.qrId },
-        //       data: {
-        //         alreadyChoosing: true,
-        //         choosingAt: new Date(),
-        //       },
-        //     });
-        //
-        //     logger.info(`[MQ] Upvote! QR ID: ${inputData.data.qrId}`);
-        //
-        //     channel.sendToQueue(
-        //       msg.properties.replyTo,
-        //       Buffer.from(JSON.stringify({ success: true })),
-        //       { correlationId: msg.properties.correlationId },
-        //     );
-        //
-        //     channel.ack(msg);
-        //
-        //     return;
-        //   },
-        //   {
-        //     maxWait: 5000,
-        //     timeout: 10000,
-        //     isolationLevel: Prisma.TransactionIsolationLevel.Serializable,
-        //   },
-        // );
+        await db.transaction(async (tx) => {
+          const participantRawQuery = await tx.execute(
+            sql`SELECT * FROM ${schema.participants} WHERE ${schema.participants.qrId} = ${inputData.data.qrId} FOR UPDATE`,
+          );
+
+          const participantContainer = participantRawQuery.at(0) as unknown as {
+            name: string;
+            already_attended: boolean;
+            already_choosing: boolean;
+            qr_id: string;
+            sub_part: string;
+          }[];
+
+          const participant = participantContainer.at(0);
+
+          if (!participant) {
+            channel.sendToQueue(
+              msg.properties.replyTo,
+              Buffer.from(
+                JSON.stringify({
+                  error: "Anda tidak terdaftar sebagai peserta!",
+                }),
+              ),
+              { correlationId: msg.properties.correlationId },
+            );
+
+            channel.ack(msg);
+            logger.trace(
+              `[MQ] Participant isn't exist. QR ID: ${inputData.data.qrId}`,
+            );
+
+            return;
+          }
+
+          if (participant.already_choosing === 1) {
+            channel.sendToQueue(
+              msg.properties.replyTo,
+              Buffer.from(JSON.stringify({ error: "Anda sudah memilih!" })),
+              { correlationId: msg.properties.correlationId },
+            );
+
+            channel.ack(msg);
+            logger.trace(
+              `[MQ] Participant already chosen someone. QR ID: ${inputData.data.qrId}`,
+            );
+
+            return;
+          }
+
+          if (participant.already_attended !== 1) {
+            channel.sendToQueue(
+              msg.properties.replyTo,
+              Buffer.from(JSON.stringify({ error: "Anda belum absen!" })),
+              { correlationId: msg.properties.correlationId },
+            );
+
+            channel.ack(msg);
+            logger.trace(
+              `[MQ] Participant isn't attended yet. QR ID: ${inputData.data.qrId}`,
+            );
+
+            return;
+          }
+
+          const candidateRawQuery = await tx.execute(
+            sql`SELECT count(*) AS candidate_must_one FROM ${schema.candidates} WHERE ${schema.candidates.id} = ${inputData.data.id} FOR UPDATE`,
+          );
+
+          const candidateContainer = candidateRawQuery.at(0) as unknown as {
+            candidate_must_one: number;
+          }[];
+
+          const candidate = candidateContainer.at(0);
+
+          if (candidate!.candidate_must_one !== 1) {
+            channel.sendToQueue(
+              msg.properties.replyTo,
+              Buffer.from(
+                JSON.stringify({ error: "Kandidat yang dipilih tidak ada!" }),
+              ),
+              { correlationId: msg.properties.correlationId },
+            );
+
+            channel.ack(msg);
+            logger.trace(
+              `[MQ] Candidate isn't exist. QR ID: ${inputData.data.qrId}`,
+            );
+
+            return;
+          }
+
+          await tx
+            .update(schema.candidates)
+            .set({
+              counter: sql`${schema.candidates.counter} + 1`,
+            })
+            .where(eq(schema.candidates.id, inputData.data.id));
+
+          await tx
+            .update(schema.participants)
+            .set({
+              alreadyChoosing: true,
+              choosingAt: new Date(),
+            })
+            .where(eq(schema.participants.qrId, inputData.data.qrId));
+        });
+
+        logger.info(`[MQ] Upvote! QR ID: ${inputData.data.qrId}`);
+
+        channel.sendToQueue(
+          msg.properties.replyTo,
+          Buffer.from(JSON.stringify({ success: true })),
+          { correlationId: msg.properties.correlationId },
+        );
+
+        channel.ack(msg);
       } catch (error) {
         logger.error(error);
 

@@ -1,5 +1,6 @@
 import type { TRPCRouterRecord } from "@trpc/server";
 import { TRPCError } from "@trpc/server";
+import amqp from "amqplib";
 
 import {
   eq,
@@ -10,9 +11,11 @@ import {
   sql,
 } from "@sora-vp/db";
 import settings, { canAttendNow } from "@sora-vp/settings";
-import { participant } from "@sora-vp/validators";
+import { candidate, participant } from "@sora-vp/validators";
 
 import { publicProcedure } from "../trpc";
+
+const QUEUE_NAME = "vote_queue";
 
 export const clientRouter = {
   settings: publicProcedure.query(() => {
@@ -105,4 +108,82 @@ export const clientRouter = {
     ),
 
   getCandidates: publicProcedure.query(() => preparedGetCandidates.execute()),
+
+  upvote: publicProcedure
+    .input(candidate.ServerUpvoteCandidate)
+    .mutation(async ({ input }) => {
+      try {
+        // Sudah di cek oleh env.ts pada runtime next js,
+        // tinggal ambil value dari process.env saja
+        const connection = await amqp.connect(process.env.AMQP_URL!);
+
+        try {
+          const messageFromQueue: { success: boolean; message?: string } =
+            await new Promise(async (resolve, reject) => {
+              const channel = await connection.createChannel();
+
+              const { queue } = await channel.assertQueue(QUEUE_NAME, {
+                durable: true,
+              });
+
+              const payload = JSON.stringify(input);
+
+              const response = await channel.assertQueue("");
+              const correlationId = response.queue;
+
+              const timeout = setTimeout(async () => {
+                await channel.deleteQueue(QUEUE_NAME);
+                await channel.close();
+
+                reject(
+                  new Error("Timeout: No response received from consumer."),
+                );
+              }, 30_000);
+
+              await channel.consume(
+                correlationId,
+                (msg) => {
+                  if (!msg) {
+                    reject(
+                      "Publisher has been cancelled or channel has been closed.",
+                    );
+                    return;
+                  }
+
+                  if (msg.properties.correlationId === correlationId) {
+                    clearTimeout(timeout);
+
+                    resolve(JSON.parse(msg.content.toString()));
+                    channel.ack(msg);
+                  }
+                },
+                { noAck: true },
+              );
+
+              channel.sendToQueue(queue, Buffer.from(payload), {
+                correlationId,
+                replyTo: correlationId,
+              });
+            });
+
+          if (!messageFromQueue.success)
+            throw new TRPCError({
+              code: "BAD_REQUEST",
+              message: messageFromQueue.message as string,
+            });
+
+          return { message: "Berhasil memilih kandidat!" };
+        } finally {
+          void connection.close();
+        }
+      } catch (e) {
+        console.error(e);
+
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message:
+            "Gagal memproses pemilihan, mohon hubungi panitia dan coba lagi nanti.",
+        });
+      }
+    }),
 } satisfies TRPCRouterRecord;

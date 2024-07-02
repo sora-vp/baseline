@@ -6,7 +6,7 @@ export const env = createEnv({
   client: {},
 
   server: {
-    PROCESSOR_AMQP_URL: z.string().url(),
+    AMQP_URL: z.string().url(),
     PROCESSOR_API_URL: z.string().url(),
   },
 

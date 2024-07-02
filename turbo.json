@@ -9,7 +9,7 @@
     "DB_USERNAME",
     "DB_PASSWORD",
     "AUTH_SECRET",
-    "PROCESSOR_AMQP_URL",
+    "AMQP_URL",
     "PROCESSOR_API_URL",
     "CI",
     "SKIP_ENV_VALIDATION"
