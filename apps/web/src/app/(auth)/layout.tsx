@@ -64,7 +64,7 @@ export default async function RootLayout(props: { children: React.ReactNode }) {
               </p>
             </div>
 
-            <div className="absolute bottom-4 right-4">
+            <div className="absolute bottom-1 right-1">
               <ThemeToggle />
             </div>
           </ThemeProvider>

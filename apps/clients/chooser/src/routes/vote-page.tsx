@@ -244,7 +244,7 @@ function VotePage() {
                 )}
               >
                 {candidateList.data?.map((candidate, idx) => (
-                  <Card className="w-60" key={candidate.id}>
+                  <Card className="w-60 outline outline-1" key={candidate.id}>
                     <CardHeader className="min-h-60 border-b p-0">
                       <img
                         className="rounded-l-xl rounded-r-xl"
@@ -261,7 +261,7 @@ function VotePage() {
                     </CardContent>
                     <CardFooter className="p-0 px-4 pb-4">
                       <Button
-                        className="w-full bg-green-600 text-lg hover:bg-green-700 hover:text-green-50/90"
+                        className="w-full"
                         onClick={() => {
                           setID(candidate.id);
                           setAlertOpen(true);
@@ -297,14 +297,14 @@ function VotePage() {
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel
-              className="w-1/2 bg-red-600 p-4 text-lg text-red-50/95 hover:bg-red-700 hover:text-red-50/90"
+              className="border-red-600 p-4 text-lg text-red-600 hover:border-red-800 hover:text-red-800"
               disabled={upvoteCandidate.isPending}
               onClick={() => setID(null)}
             >
               Batal
             </AlertDialogCancel>
             <AlertDialogAction
-              className="w-1/2 bg-green-600 p-4 text-lg hover:bg-green-700 hover:text-green-50/90"
+              className="bg-[#3C7AB7] p-4 text-lg hover:bg-[#3C7AB7] hover:text-green-50/90 hover:opacity-75"
               disabled={upvoteCandidate.isPending}
               onClick={chooseCandidate}
             >

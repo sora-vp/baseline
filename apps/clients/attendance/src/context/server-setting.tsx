@@ -127,7 +127,7 @@ export const ServerSettingProvider = ({
             ᮞᮧᮛ
           </motion.span>
         </div>
-        <div className="absolute bottom-4 right-4">
+        <div className="absolute bottom-1 right-1">
           <small className="font-sundanese font-mono">v{APP_VERSION}</small>
         </div>
       </>
@@ -151,7 +151,7 @@ export const ServerSettingProvider = ({
 
           <Loader size={58} absoluteStrokeWidth className="animate-spin" />
         </motion.div>
-        <div className="absolute bottom-4 right-4">
+        <div className="absolute bottom-1 right-1">
           <small className="font-sundanese font-mono">v{APP_VERSION}</small>
         </div>
       </>
@@ -171,7 +171,7 @@ export const ServerSettingProvider = ({
           ᮞᮧᮛ
         </motion.span>
       </div>
-      <div className="absolute bottom-4 right-4">
+      <div className="absolute bottom-1 right-1">
         <small className="font-sundanese font-mono">v{APP_VERSION}</small>
       </div>
     </ServerSettingContext.Provider>
