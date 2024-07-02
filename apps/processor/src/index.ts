@@ -47,7 +47,7 @@ const consumeMessagesFromQueue = async () => {
       }
 
       try {
-        const settings = await trpc.clientConsumer.settings.query();
+        const settings = await api.clientConsumer.settings.query();
         const inVotingCondition = canVoteNow(settings);
 
         const inputData = await inputValidator.safeParseAsync(

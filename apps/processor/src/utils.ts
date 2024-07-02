@@ -11,7 +11,7 @@ export const canVoteNow = (settings: TSettings) => {
   const canVote =
     (waktuMulai as number) <= currentTime &&
     (waktuSelesai as number) >= currentTime &&
-    result.canVote;
+    settings.canVote;
 
   return canVote;
 };
