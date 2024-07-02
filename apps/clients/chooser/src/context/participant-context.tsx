@@ -5,7 +5,9 @@ import {
   useMemo,
   useState,
 } from "react";
+import { UniversalError } from "@/components/universal-error";
 import { api } from "@/utils/api";
+import { motion } from "framer-motion";
 import { Navigate } from "react-router-dom";
 
 export interface IParticipantContext {
@@ -39,23 +41,79 @@ export const ParticipantProvider = ({
       return {
         name: null,
         subpart: null,
-        isFetched: null,
-        alreadyAttended: null,
-        alreadyChoosing: null,
         qrId,
         setQRCode,
       };
 
     return {
-      name: participantQuery.data?.name,
-      subpart: participantQuery.data?.subpart,
-      isFetched: participantQuery.isFetched,
-      alreadyAttended: participantQuery.data?.alreadyAttended,
-      alreadyChoosing: participantQuery.data?.alreadyChoosing,
+      name: participantQuery.data?.name ?? null,
+      subpart: participantQuery.data?.subpart ?? null,
       qrId,
       setQRCode,
     };
-  }, [qrId]);
+  }, [qrId, participantQuery.data]);
+
+  if (
+    !!qrId &&
+    participantQuery.isFetched &&
+    !participantQuery.data?.alreadyAttended
+  )
+    return (
+      <>
+        <UniversalError
+          title="Gagal Memilih!"
+          description="Anda belum absen!"
+        />
+        <div className="absolute bottom-4 left-4">
+          <motion.span
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{
+              duration: 0.8,
+            }}
+            className="font-sundanese select-none text-2xl"
+            onDoubleClick={() => location.reload()}
+          >
+            ᮞᮧᮛ
+          </motion.span>
+        </div>
+        <div className="absolute bottom-4 right-4">
+          <small className="font-sundanese font-mono">v{APP_VERSION}</small>
+        </div>
+      </>
+    );
+
+  if (
+    !!qrId &&
+    participantQuery.isFetched &&
+    participantQuery.data?.alreadyChoosing
+  )
+    return (
+      <>
+        <UniversalError
+          title="Gagal Memilih!"
+          description="Anda sudah memilih!"
+        />
+        <div className="absolute bottom-4 left-4">
+          <motion.span
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{
+              duration: 0.8,
+            }}
+            className="font-sundanese select-none text-2xl"
+            onDoubleClick={() => location.reload()}
+          >
+            ᮞᮧᮛ
+          </motion.span>
+        </div>
+        <div className="absolute bottom-4 right-4">
+          <small className="font-sundanese font-mono">v{APP_VERSION}</small>
+        </div>
+      </>
+    );
 
   return (
     <ParticipantContext.Provider value={propsValue}>

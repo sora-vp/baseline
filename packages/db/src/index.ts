@@ -103,3 +103,11 @@ export const preparedGetParticipantStatus = db.query.participants
     },
   })
   .prepare();
+
+export const preparedGetCandidates = db.query.candidates
+  .findMany({
+    columns: {
+      counter: false,
+    },
+  })
+  .prepare();

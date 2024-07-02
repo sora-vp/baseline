@@ -3,6 +3,7 @@ import { TRPCError } from "@trpc/server";
 
 import {
   eq,
+  preparedGetCandidates,
   preparedGetParticipantAttended,
   preparedGetParticipantStatus,
   schema,
@@ -102,4 +103,6 @@ export const clientRouter = {
     .query(({ input }) =>
       preparedGetParticipantStatus.execute({ qrId: input }),
     ),
+
+  getCandidates: publicProcedure.query(() => preparedGetCandidates.execute()),
 } satisfies TRPCRouterRecord;

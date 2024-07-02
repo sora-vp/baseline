@@ -11,6 +11,7 @@ export const env = createEnv({
   client: {
     VITE_IS_DOCKER: z.optional(z.coerce.boolean()),
     VITE_TRPC_URL: z.optional(z.string().url()),
+    VITE_IMAGE_RETRIEVER: z.optional(z.string().url()),
   },
 
   /**
