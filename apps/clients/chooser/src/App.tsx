@@ -1,6 +1,8 @@
 import { useState } from "react";
+import { ParticipantProvider } from "@/context/participant-context";
 import { ServerSettingProvider } from "@/context/server-setting";
 import MainPage from "@/routes/main-page";
+import VotePage from "@/routes/vote-page";
 import { api } from "@/utils/api";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { httpBatchLink } from "@trpc/client";
@@ -15,8 +17,8 @@ const router = createBrowserRouter([
     element: <MainPage />,
   },
   {
-    path: "about",
-    element: <div>About</div>,
+    path: "vote",
+    element: <VotePage />,
   },
 ]);
 
@@ -45,9 +47,11 @@ export default function App() {
   return (
     <api.Provider client={trpcClient} queryClient={queryClient}>
       <QueryClientProvider client={queryClient}>
-        <ServerSettingProvider>
-          <RouterProvider router={router} />
-        </ServerSettingProvider>
+        <ParticipantProvider>
+          <ServerSettingProvider>
+            <RouterProvider router={router} />
+          </ServerSettingProvider>
+        </ParticipantProvider>
       </QueryClientProvider>
     </api.Provider>
   );

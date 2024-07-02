@@ -1,7 +1,13 @@
 import type { TRPCRouterRecord } from "@trpc/server";
 import { TRPCError } from "@trpc/server";
 
-import { eq, schema, sql } from "@sora-vp/db";
+import {
+  eq,
+  preparedGetParticipantAttended,
+  preparedGetParticipantStatus,
+  schema,
+  sql,
+} from "@sora-vp/db";
 import settings, { canAttendNow } from "@sora-vp/settings";
 import { participant } from "@sora-vp/validators";
 
@@ -46,7 +52,7 @@ export const clientRouter = {
         if (participant.already_attended)
           throw new TRPCError({
             code: "BAD_REQUEST",
-            message: "Kamu sudah absen!",
+            message: "Anda sudah absen!",
           });
 
         await tx
@@ -63,5 +69,37 @@ export const clientRouter = {
           subpart: participant.sub_part,
         };
       }),
+    ),
+
+  checkParticipantAttended: publicProcedure
+    .input(participant.ParticipantAttendSchema)
+    .mutation(async ({ input }) => {
+      const participant = await preparedGetParticipantAttended.execute({
+        qrId: input,
+      });
+
+      if (!participant)
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Peserta pemilihan tidak dapat ditemukan!",
+        });
+
+      if (participant.alreadyChoosing)
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "Anda sudah memilih kandidat!",
+        });
+
+      if (!participant.alreadyAttended)
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "Anda belum absen!",
+        });
+    }),
+
+  getParticipantStatus: publicProcedure
+    .input(participant.ParticipantAttendSchema)
+    .query(({ input }) =>
+      preparedGetParticipantStatus.execute({ qrId: input }),
     ),
 } satisfies TRPCRouterRecord;

@@ -2672,12 +2672,14 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@sora-vp/processor@workspace:apps/processor"
   dependencies:
+    "@sora-vp/api": "npm:*"
     "@sora-vp/db": "npm:*"
     "@sora-vp/eslint-config": "npm:*"
     "@sora-vp/id-generator": "npm:*"
     "@sora-vp/prettier-config": "npm:*"
     "@sora-vp/tailwind-config": "npm:*"
     "@sora-vp/tsconfig": "npm:*"
+    "@t3-oss/env-core": "npm:^0.10.1"
     "@trpc/client": "npm:11.0.0-rc.364"
     "@trpc/server": "npm:11.0.0-rc.364"
     "@types/amqplib": "npm:^0"
@@ -2692,6 +2694,7 @@ __metadata:
     tsup: "npm:^8.1.0"
     tsx: "npm:^4.9.4"
     typescript: "npm:^5.4.5"
+    zod: "npm:^3.23.8"
   languageName: unknown
   linkType: soft
 
