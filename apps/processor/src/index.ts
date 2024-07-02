@@ -22,8 +22,8 @@ const consumeMessagesFromQueue = async () => {
 
     logger.info("[DB] Connected!");
 
-    logger.debug(`[MQ] MQ AMQP: ${env.AMQP_URL}`);
-    logger.debug(`[TRPC] TRPC URL: ${env.TRPC_URL}`);
+    logger.debug(`[MQ] MQ AMQP: ${env.PROCESSOR_AMQP_URL}`);
+    logger.debug(`[TRPC] TRPC URL: ${env.PROCESSOR_API_URL}`);
 
     logger.info("[MQ] Connecting to RabbitMQ instance");
 

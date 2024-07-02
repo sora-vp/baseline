@@ -5,7 +5,7 @@ import superjson from "superjson";
 
 import { env } from "./env";
 
-export const trpc = createTRPCProxyClient<AppRouter>({
+export const api = createTRPCProxyClient<AppRouter>({
   links: [
     httpLink({
       url: env.PROCESSOR_API_URL,
