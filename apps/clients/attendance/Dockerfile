@@ -34,10 +34,10 @@ COPY turbo.json turbo.json
 RUN turbo run build --filter=@sora-vp/client-attendance...
 
 # Debugging purpose
-# RUN <<EOF
-#   apt-get install tree
-#   tree /app
-# EOF
+RUN <<EOF
+  apt-get install tree
+  tree /app
+EOF
 
 FROM base AS runner
 # Don't run production as root
