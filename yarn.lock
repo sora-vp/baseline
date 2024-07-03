@@ -2822,12 +2822,6 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@sora/petuah@workspace:packages/petuah":
-  version: 0.0.0-use.local
-  resolution: "@sora/petuah@workspace:packages/petuah"
-  languageName: unknown
-  linkType: soft
-
 "@swc/core-darwin-arm64@npm:1.6.6":
   version: 1.6.6
   resolution: "@swc/core-darwin-arm64@npm:1.6.6"
