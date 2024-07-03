@@ -2,7 +2,10 @@
   "name": "@sora-vp/processor",
   "private": true,
   "type": "module",
-  "main": "dist/index.mjs",
+  "main": "dist/index.js",
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "build": "tsup",
     "clean": "rm -rf .turbo node_modules",
