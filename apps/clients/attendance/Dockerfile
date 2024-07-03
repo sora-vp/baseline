@@ -45,14 +45,18 @@ RUN <<EOF
   tree /app
 EOF
 
-FROM base AS runner
-# Don't run production as root
-RUN <<EOF 
-  addgroup --system --gid 1001 nodejs
-  adduser --system --uid 1001 attendance
-EOF
+FROM nginx
 
-USER attendance
+COPY --from=builder /app/apps/clients/attendance/dist /usr/share/nginx/html
+
+# FROM base AS runner
+# # Don't run production as root
+# RUN <<EOF 
+#   addgroup --system --gid 1001 nodejs
+#   adduser --system --uid 1001 attendance
+# EOF
+
+# USER attendance
 
 # COPY --from=builder --chown=nextjs:nodejs /db-migrate /db-migrate
 
