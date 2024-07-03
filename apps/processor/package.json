@@ -13,7 +13,6 @@
     "with-env": "dotenv -e ../../.env --"
   },
   "dependencies": {
-    "@sora-vp/api": "*",
     "@sora-vp/db": "*",
     "@sora-vp/id-generator": "*",
     "@t3-oss/env-core": "^0.10.1",
@@ -28,6 +27,7 @@
     "zod": "^3.23.8"
   },
   "devDependencies": {
+    "@sora-vp/api": "*",
     "@sora-vp/eslint-config": "*",
     "@sora-vp/prettier-config": "*",
     "@sora-vp/tailwind-config": "*",
