@@ -6,6 +6,10 @@ export const env = createEnv({
   client: {},
 
   server: {
+    DB_HOST: z.string(),
+    DB_NAME: z.string(),
+    DB_PASSWORD: z.string(),
+    DB_USERNAME: z.string(),
     AMQP_URL: z.string().url(),
     PROCESSOR_API_URL: z.string().url(),
   },

@@ -2,12 +2,13 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 /* eslint-disable @typescript-eslint/no-misused-promises  */
 import amqp from "amqplib";
+import { eq, sql } from "drizzle-orm";
 import { z } from "zod";
 
-import { db, eq, schema, sql } from "@sora-vp/db";
 import { validateId } from "@sora-vp/id-generator";
 
 import { api } from "./api";
+import { db, schema } from "./db";
 import { env } from "./env";
 import { logger } from "./logger";
 import { canVoteNow } from "./utils";
