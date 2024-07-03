@@ -16,6 +16,12 @@ WORKDIR /app
 COPY . .
 RUN turbo prune @sora-vp/client-attendance --docker
 
+# Debugging purpose
+RUN <<EOF
+  apt-get install tree
+  tree /app
+EOF
+
 FROM with-turbo as builder
 WORKDIR /app
 
