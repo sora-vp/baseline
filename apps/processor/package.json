@@ -20,6 +20,8 @@
     "@trpc/client": "11.0.0-rc.364",
     "@trpc/server": "11.0.0-rc.364",
     "amqplib": "^0.10.4",
+    "drizzle-orm": "^0.30.10",
+    "mysql2": "^3.9.8",
     "pino": "^9.0.0",
     "pino-pretty": "^11.0.0",
     "superjson": "2.2.1",
