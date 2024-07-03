@@ -54,7 +54,7 @@ jobs:
           context: .
           file: "./apps/processor/Dockerfile"
           push: true
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/sora-baseline-web:${{ github.ref_name }}
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/sora-baseline-processor:${{ github.ref_name }}
 
   client-attendance:
     if: github.repository == 'sora-vp/baseline'
