@@ -46,10 +46,10 @@ RUN <<EOF
 EOF
 
 # Debugging purpose
-RUN <<EOF
-  apt-get install tree
-  tree /vote-processor
-EOF
+# RUN <<EOF
+#   apt-get install tree
+#   tree /vote-processor
+# EOF
 
 FROM base AS runner
 # Don't run production as root
@@ -62,26 +62,6 @@ USER processor
 
 COPY --from=builder --chown=processor:nodejs /vote-processor /vote-processor
 
-# WORKDIR /app
-
-# EXPOSE 3000
-# ENV PORT=3000
-# ENV AUTH_TRUST_HOST=true
-
-# ENV NODE_ENV=production
-
-# COPY --from=builder --chown=nextjs:nodejs /app/apps/web/next.config.js .
-# COPY --from=builder --chown=nextjs:nodejs /app/apps/web/package.json .
-
-# # Automatically leverage output traces to reduce image size
-# # https://nextjs.org/docs/advanced-features/output-file-tracing
-# COPY --from=builder --chown=nextjs:nodejs /app/apps/web/.next/standalone ./
-# COPY --from=builder --chown=nextjs:nodejs /app/apps/web/.next/static ./apps/web/.next/static
-# COPY --from=builder --chown=nextjs:nodejs /app/apps/web/public ./apps/web/public
-
-# COPY --from=pruned-repo /app/start-web.sh .
-
-# RUN mkdir -p /app/apps/web/public/uploads/
-# RUN chown -R ${USER}:${USER} /app/apps/web/public/uploads/
+WORKDIR /vote-processor
 
 CMD ["node", "node_modules/@sora-vp/processor/dist/index.js"]
