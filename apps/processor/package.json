@@ -2,7 +2,10 @@
   "name": "@sora-vp/processor",
   "private": true,
   "type": "module",
-  "main": "dist/index.mjs",
+  "main": "dist/index.js",
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "build": "tsup",
     "clean": "rm -rf .turbo node_modules",
@@ -13,9 +16,6 @@
     "with-env": "dotenv -e ../../.env --"
   },
   "dependencies": {
-    "@sora-vp/api": "*",
-    "@sora-vp/db": "*",
-    "@sora-vp/id-generator": "*",
     "@t3-oss/env-core": "^0.10.1",
     "@trpc/client": "11.0.0-rc.364",
     "@trpc/server": "11.0.0-rc.364",
@@ -28,6 +28,9 @@
     "zod": "^3.23.8"
   },
   "devDependencies": {
+    "@sora-vp/api": "*",
+    "@sora-vp/db": "*",
+    "@sora-vp/id-generator": "*",
     "@sora-vp/eslint-config": "*",
     "@sora-vp/prettier-config": "*",
     "@sora-vp/tailwind-config": "*",
