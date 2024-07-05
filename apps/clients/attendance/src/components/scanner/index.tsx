@@ -37,11 +37,7 @@ export function ScannerComponent() {
         exit={{ opacity: 0, x: "-250px" }}
         className="flex h-screen w-screen flex-col items-center justify-center"
       >
-        <Loader
-          size={78}
-          strokeWidth={1.5}
-          className="animate-pulse animate-spin"
-        />
+        <Loader size={78} strokeWidth={1.5} className="animate-spin" />
 
         <div>
           <h3 className="mt-8 scroll-m-20 text-3xl font-semibold tracking-tight">

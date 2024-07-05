@@ -14,9 +14,9 @@ import { Toaster } from "@sora-vp/ui/toast";
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
+    <Toaster richColors />
     <AnimatePresence mode="wait">
       <App />
     </AnimatePresence>
-    <Toaster richColors />
   </React.StrictMode>,
 );

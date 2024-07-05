@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ServerSettingProvider } from "@/context/server-setting";
 import MainPage from "@/routes/main-page";
 import { api } from "@/utils/api";
@@ -7,16 +7,26 @@ import { httpBatchLink } from "@trpc/client";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import superjson from "superjson";
 
+import { ClientNotFound } from "@sora-vp/ui/client-not-found";
+
 import { env } from "./env";
 
 const router = createBrowserRouter([
+  {
+    path: "*",
+    element: <ClientNotFound />,
+  },
   {
     path: "/",
     element: <MainPage />,
   },
   {
-    path: "about",
-    element: <div>About</div>,
+    path: "settings",
+    lazy: async () => {
+      const { SettingsPage } = await import("@/components/settings-page");
+
+      return { Component: SettingsPage };
+    },
   },
 ]);
 
@@ -41,6 +51,22 @@ export default function App() {
       ],
     }),
   );
+
+  useEffect(() => {
+    const onKeyUp = (e: KeyboardEvent) => {
+      if (e.ctrlKey && e.key === ",") {
+        e.preventDefault();
+
+        router.navigate("/settings");
+      }
+    };
+
+    window.addEventListener("keyup", onKeyUp);
+
+    return () => {
+      window.removeEventListener("keyup", onKeyUp);
+    };
+  }, []);
 
   return (
     <api.Provider client={trpcClient} queryClient={queryClient}>
