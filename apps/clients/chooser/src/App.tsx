@@ -26,6 +26,14 @@ const router = createBrowserRouter([
     path: "vote",
     element: <VotePage />,
   },
+  {
+    path: "settings",
+    lazy: async () => {
+      const { SettingsPage } = await import("@/components/settings-page");
+
+      return { Component: SettingsPage };
+    },
+  },
 ]);
 
 const getBaseUrl = () => {
