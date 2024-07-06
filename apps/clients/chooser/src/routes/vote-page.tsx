@@ -124,14 +124,97 @@ function VotePage() {
     [currentID, candidateList.data],
   );
 
+  const cannotPushKey = useMemo(
+    () =>
+      !qrId ||
+      upvoteCandidate.isSuccess ||
+      upvoteCandidate.isError ||
+      upvoteCandidate.isPending,
+    [qrId, upvoteCandidate],
+  );
+
   const chooseCandidate = useCallback(() => {
-    if (qrId && currentID) {
-      upvoteCandidate.mutate({
-        id: currentID,
-        qrId,
-      });
+    if (!cannotPushKey) {
+      if (qrId && currentID && alertOpen) {
+        upvoteCandidate.mutate({
+          id: currentID,
+          qrId,
+        });
+      }
     }
-  }, [currentID, qrId]);
+  }, [currentID, qrId, alertOpen, cannotPushKey]);
+
+  useEffect(() => {
+    const triggerOpen = (candidateIndex: number) => {
+      if (
+        !cannotPushKey &&
+        candidateList.data &&
+        candidateList.data.length > 0
+      ) {
+        const pressedCandidate = candidateList.data.at(candidateIndex);
+
+        if (pressedCandidate) {
+          setID(pressedCandidate.id);
+          setAlertOpen(true);
+        }
+      }
+    };
+
+    const handleKeydown = (e: KeyboardEvent) => {
+      switch (e.key) {
+        case "Escape": {
+          if (!upvoteCandidate.isPending) {
+            setID(null);
+            setAlertOpen(false);
+          }
+
+          break;
+        }
+
+        case "1": {
+          if (!alertOpen) triggerOpen(0);
+
+          break;
+        }
+
+        case "2": {
+          if (!alertOpen) triggerOpen(1);
+
+          break;
+        }
+
+        case "3": {
+          if (!alertOpen) triggerOpen(2);
+
+          break;
+        }
+
+        case "4": {
+          if (!alertOpen) triggerOpen(3);
+
+          break;
+        }
+
+        case "5": {
+          if (!alertOpen) triggerOpen(4);
+
+          break;
+        }
+
+        case "Enter": {
+          chooseCandidate();
+
+          break;
+        }
+      }
+    };
+
+    window.addEventListener("keyup", handleKeydown);
+
+    return () => {
+      window.removeEventListener("keyup", handleKeydown);
+    };
+  }, [candidateList.data, alertOpen, cannotPushKey, chooseCandidate]);
 
   useEffect(() => {
     if (candidateList.error) setErrorMessage(candidateList.error.message);
@@ -237,15 +320,10 @@ function VotePage() {
                 </motion.p>
               </div>
             ) : (
-              <div
-                className={cn(
-                  "grid gap-3",
-                  `grid-cols-${candidateList.data?.length ?? 5}`,
-                )}
-              >
+              <div className="flex flex-row gap-3">
                 {candidateList.data?.map((candidate, idx) => (
                   <Card className="w-60 outline outline-1" key={candidate.id}>
-                    <CardHeader className="min-h-60 border-b p-0">
+                    <CardHeader className="min-h-32 border-b p-0">
                       <img
                         className="rounded-l-xl rounded-r-xl"
                         src={`${env.VITE_IMAGE_RETRIEVER ?? "/uploads"}/${candidate.image}`}
@@ -284,6 +362,7 @@ function VotePage() {
       >
         <AlertDialogContent
           onOpenAutoFocus={(e) => e.preventDefault()}
+          onCloseAutoFocus={(e) => e.preventDefault()}
           className="max-w-4xl gap-7"
         >
           <AlertDialogHeader>
