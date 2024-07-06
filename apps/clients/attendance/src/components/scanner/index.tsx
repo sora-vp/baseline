@@ -52,7 +52,7 @@ export function ScannerComponent() {
 
   if (participantAttend.isSuccess)
     return (
-      <div className="flex h-screen w-screen flex-col items-center justify-center gap-3 bg-green-600 p-6">
+      <div className="flex h-screen w-screen flex-col items-center justify-center gap-6 bg-green-600 p-6">
         <div className="w-[80%] text-center">
           <motion.h1
             initial={{ opacity: 0, y: -25 }}
@@ -78,7 +78,6 @@ export function ScannerComponent() {
             Silahkan menuju ke komputer pemilihan dan gunakan hak suara anda.
           </motion.p>
         </div>
-        <Separator className="w-[60%]" />
         <motion.div
           initial={{ opacity: 0, y: -25 }}
           animate={{ opacity: 1, y: 0 }}
@@ -87,7 +86,7 @@ export function ScannerComponent() {
             duration: 0.3,
             delay: 0.4,
           }}
-          className="flex gap-3"
+          className="flex gap-3 rounded-lg border border-green-400 bg-green-400 p-4"
         >
           <div className="select-none">
             <pre className="mb-[-10px] font-mono">
@@ -100,10 +99,14 @@ export function ScannerComponent() {
               {participantAttend.data.qrId.slice(10, 15)}
             </pre>
           </div>
-          <Separator orientation="vertical" />
-          <div>
-            <p className="text-lg">{participantAttend.data.name}</p>
-            <span className="font-mono">{participantAttend.data.subpart}</span>
+          <Separator orientation="vertical" className="bg-teal-600" />
+          <div className="flex flex-col justify-center gap-2">
+            <p className="text-2xl font-semibold leading-none">
+              {participantAttend.data.name}
+            </p>
+            <span className="font-mono text-lg font-medium leading-none">
+              {participantAttend.data.subpart}
+            </span>
           </div>
         </motion.div>
       </div>
