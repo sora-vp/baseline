@@ -1,4 +1,8 @@
-import { successTimeoutAtom } from "@/utils/atom";
+import {
+  defaultWSPortAtom,
+  enableWSConnectionAtom,
+  successTimeoutAtom,
+} from "@/utils/atom";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useAtom } from "jotai";
 import { ArrowLeft } from "lucide-react";
@@ -17,22 +21,32 @@ import {
   FormMessage,
 } from "@sora-vp/ui/form";
 import { Input } from "@sora-vp/ui/input";
+import { Switch } from "@sora-vp/ui/switch";
 import { toast } from "@sora-vp/ui/toast";
 
 const formSchema = z.object({
   timeout: z.coerce.number().min(500, {
     message: "Durasi minimal adalah 500 milidetik (setengah detik).",
   }),
+  wsEnabled: z.boolean(),
+  wsPort: z.coerce.number().min(1000, {
+    message: "Minimal berjalan di port 100.",
+  }),
 });
 
 export function SettingsPage() {
   const [timeoutDuration, setDuration] = useAtom(successTimeoutAtom);
+  const [wsEnabled, setWsEnabled] = useAtom(enableWSConnectionAtom);
+  const [wsPort, setWsPort] = useAtom(defaultWSPortAtom);
+
   const navigate = useNavigate();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       timeout: timeoutDuration,
+      wsEnabled,
+      wsPort,
     },
   });
 
@@ -44,23 +58,28 @@ export function SettingsPage() {
             Halaman Pengaturan
           </h2>
           <p className="text-justify leading-7">
-            Pada halaman ini, anda dapat mengatur sebarapa lama durasi tampilnya
-            warna hijau ketika sukses melakukan pemilihan kandidat. Nilai durasi
-            bawaan yaitu 12000 milidetik (12 detik).
+            Pada halaman ini, anda dapat mengatur durasi waktu tunggu berhasil
+            dan juga pengaturan modul tombol. Secara bawaan, waktu tunggu
+            berhasil itu selama 12.000 milidetik (12 detik).
           </p>
         </div>
 
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit((data) => {
+              console.log(data);
+
               setDuration(data.timeout);
-              toast.success("Berhasil mengubah durasi waktu tampil", {
-                description: `Berhasil di ubah menjadi ${data.timeout / 1000} detik`,
+              setWsEnabled(data.wsEnabled);
+              setWsPort(data.wsPort);
+
+              toast.success("Berhasil memperbarui pengaturan!", {
+                description: "Pengaturan berhasil diubah.",
               });
 
               setTimeout(() => navigate("/"), 500);
             })}
-            className="space-y-8"
+            className="space-y-5"
           >
             <FormField
               control={form.control}
@@ -85,6 +104,58 @@ export function SettingsPage() {
                 </FormItem>
               )}
             />
+
+            <FormField
+              control={form.control}
+              name="wsEnabled"
+              render={({ field }) => (
+                <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
+                  <div className="space-y-0.5">
+                    <FormLabel className="text-base">
+                      Menggunakan Modul Tombol
+                    </FormLabel>
+                    <FormDescription>
+                      Jika anda menggunakan modul tombol, maka anda harus
+                      mengaktifkan opsi ini,{" "}
+                      <a
+                        href="https://github.com/sora-vp/button-module/"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="underline"
+                      >
+                        pelajari lebih lanjut
+                      </a>
+                      .
+                    </FormDescription>
+                  </div>
+                  <FormControl>
+                    <Switch
+                      checked={field.value}
+                      onCheckedChange={field.onChange}
+                    />
+                  </FormControl>
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="wsPort"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Nomor Port Modul Tombol</FormLabel>
+                  <FormControl>
+                    <Input type="number" placeholder="5000" {...field} />
+                  </FormControl>
+                  <FormDescription>
+                    Di nomor port berapa server modul tombol berjalan, nomor
+                    bawaan berada di port 3000.
+                  </FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
             <div className="flex gap-5">
               <NavLink to="/" className="w-1/2">
                 {() => (
