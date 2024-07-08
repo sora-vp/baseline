@@ -11,6 +11,7 @@ import superjson from "superjson";
 
 import { ClientNotFound } from "@sora-vp/ui/client-not-found";
 
+import { KeyboardWebsocketProvider } from "./context/keyboard-websocket";
 import { env } from "./env";
 
 const router = createBrowserRouter([
@@ -29,7 +30,7 @@ const router = createBrowserRouter([
   {
     path: "settings",
     lazy: async () => {
-      const { SettingsPage } = await import("@/components/settings-page");
+      const { SettingsPage } = await import("@/routes/setting-page");
 
       return { Component: SettingsPage };
     },
@@ -77,11 +78,13 @@ export default function App() {
   return (
     <api.Provider client={trpcClient} queryClient={queryClient}>
       <QueryClientProvider client={queryClient}>
-        <ParticipantProvider>
-          <ServerSettingProvider>
-            <RouterProvider router={router} />
-          </ServerSettingProvider>
-        </ParticipantProvider>
+        <KeyboardWebsocketProvider>
+          <ParticipantProvider>
+            <ServerSettingProvider>
+              <RouterProvider router={router} />
+            </ServerSettingProvider>
+          </ParticipantProvider>
+        </KeyboardWebsocketProvider>
       </QueryClientProvider>
     </api.Provider>
   );

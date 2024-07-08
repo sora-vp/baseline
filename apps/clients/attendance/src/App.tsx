@@ -23,7 +23,7 @@ const router = createBrowserRouter([
   {
     path: "settings",
     lazy: async () => {
-      const { SettingsPage } = await import("@/components/settings-page");
+      const { SettingsPage } = await import("@/routes/setting-page");
 
       return { Component: SettingsPage };
     },

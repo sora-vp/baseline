@@ -30,8 +30,8 @@
   "devDependencies": {
     "@sora-vp/api": "*",
     "@sora-vp/db": "*",
-    "@sora-vp/id-generator": "*",
     "@sora-vp/eslint-config": "*",
+    "@sora-vp/id-generator": "*",
     "@sora-vp/prettier-config": "*",
     "@sora-vp/tailwind-config": "*",
     "@sora-vp/tsconfig": "*",

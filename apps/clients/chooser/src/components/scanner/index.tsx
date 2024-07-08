@@ -1,4 +1,5 @@
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
+import { useKeyboardWebsocket } from "@/context/keyboard-websocket";
 import { useParticipant } from "@/context/participant-context";
 import { api } from "@/utils/api";
 import { Navigate } from "react-router-dom";
@@ -9,6 +10,7 @@ import { MainScanner } from "./main-scanner";
 
 export function ScannerComponent() {
   const { qrId, setQRCode } = useParticipant();
+  const { wsEnabled, lastMessage } = useKeyboardWebsocket();
 
   const [isQrInvalid, setInvalidQr] = useState(false);
 
@@ -18,6 +20,23 @@ export function ScannerComponent() {
         setQRCode(participantAttended.variables!);
       },
     });
+
+  useEffect(() => {
+    if (wsEnabled && lastMessage) {
+      // Precheck before consuming command
+      if (lastMessage.data.startsWith("SORA-KEYBIND-")) {
+        const actualCommand = lastMessage.data.replace("SORA-KEYBIND-", "");
+
+        switch (actualCommand) {
+          case "RELOAD": {
+            if (isQrInvalid || participantAttended.isError) location.reload();
+
+            break;
+          }
+        }
+      }
+    }
+  }, [isQrInvalid, participantAttended.isError, wsEnabled, lastMessage]);
 
   const setIsQrValid = useCallback(
     (invalid: boolean) => setInvalidQr(invalid),
