@@ -4,8 +4,8 @@ import { api } from "@/utils/api";
 import { motion } from "framer-motion";
 import { Loader } from "lucide-react";
 
-import { useParticipant } from "./participant-context";
 import { useKeyboardWebsocket } from "./keyboard-websocket";
+import { useParticipant } from "./participant-context";
 
 interface ISettingContext {
   canVote: boolean;

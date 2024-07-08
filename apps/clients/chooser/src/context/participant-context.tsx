@@ -2,14 +2,15 @@ import {
   createContext,
   useCallback,
   useContext,
+  useEffect,
   useMemo,
   useState,
-  useEffect
 } from "react";
 import { UniversalError } from "@/components/universal-error";
 import { api } from "@/utils/api";
 import { motion } from "framer-motion";
 import { Navigate } from "react-router-dom";
+
 import { useKeyboardWebsocket } from "./keyboard-websocket";
 
 export interface IParticipantContext {
@@ -56,17 +57,26 @@ export const ParticipantProvider = ({
 
         switch (actualCommand) {
           case "RELOAD": {
-            if (!!qrId &&
-              participantQuery.isFetched && (
-                !participantQuery.data?.alreadyAttended || participantQuery.data?.alreadyChoosing
-              )) location.reload();
+            if (
+              !!qrId &&
+              participantQuery.isFetched &&
+              (!participantQuery.data?.alreadyAttended ||
+                participantQuery.data?.alreadyChoosing)
+            )
+              location.reload();
 
             break;
           }
         }
       }
     }
-  }, [qrId, participantQuery.isFetched, participantQuery.data, wsEnabled, lastMessage]);
+  }, [
+    qrId,
+    participantQuery.isFetched,
+    participantQuery.data,
+    wsEnabled,
+    lastMessage,
+  ]);
 
   const propsValue = useMemo(() => {
     if (!qrId)
