@@ -67,8 +67,6 @@ export function SettingsPage() {
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit((data) => {
-              console.log(data);
-
               setDuration(data.timeout);
               setWsEnabled(data.wsEnabled);
               setWsPort(data.wsPort);
