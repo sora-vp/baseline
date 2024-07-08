@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import { Loader } from "lucide-react";
 
 import { useParticipant } from "./participant-context";
+import { useKeyboardWebsocket } from "./keyboard-websocket";
 
 interface ISettingContext {
   canVote: boolean;
@@ -19,6 +20,7 @@ export const ServerSettingProvider = ({
 }: {
   children: React.ReactNode;
 }) => {
+  const { wsEnabled, lastMessage } = useKeyboardWebsocket();
   const { qrId, setQRCode } = useParticipant();
 
   const [errorMessage, setErrorMessage] = useState("");
@@ -27,6 +29,23 @@ export const ServerSettingProvider = ({
     refetchInterval: 2500,
     refetchIntervalInBackground: true,
   });
+
+  useEffect(() => {
+    if (wsEnabled && lastMessage) {
+      // Precheck before consuming command
+      if (lastMessage.data.startsWith("SORA-KEYBIND-")) {
+        const actualCommand = lastMessage.data.replace("SORA-KEYBIND-", "");
+
+        switch (actualCommand) {
+          case "RELOAD": {
+            if (settingsQuery.errorUpdateCount > 0) location.reload();
+
+            break;
+          }
+        }
+      }
+    }
+  }, [settingsQuery.errorUpdateCount, wsEnabled, lastMessage]);
 
   useEffect(() => {
     if (settingsQuery.error) setErrorMessage(settingsQuery.error.message);
