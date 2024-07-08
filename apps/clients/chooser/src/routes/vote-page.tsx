@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { UniversalError } from "@/components/universal-error";
+import { useKeyboardWebsocket } from "@/context/keyboard-websocket";
 import { ensureQRIDExist, useParticipant } from "@/context/participant-context";
 import { env } from "@/env";
 import { api } from "@/utils/api";
@@ -90,6 +91,7 @@ const CurrentParticipantInfo = (props: { isSuccess?: boolean }) => {
 
 function VotePage() {
   const { qrId, setQRCode, setVotedSuccessfully } = useParticipant();
+  const { wsEnabled, lastMessage } = useKeyboardWebsocket();
 
   const successTimeout = useAtomValue(successTimeoutAtom);
 
@@ -144,8 +146,8 @@ function VotePage() {
     }
   }, [currentID, qrId, alertOpen, cannotPushKey]);
 
-  useEffect(() => {
-    const triggerOpen = (candidateIndex: number) => {
+  const triggerOpen = useCallback(
+    (candidateIndex: number) => {
       if (
         !cannotPushKey &&
         candidateList.data &&
@@ -158,8 +160,11 @@ function VotePage() {
           setAlertOpen(true);
         }
       }
-    };
+    },
+    [cannotPushKey, candidateList.data],
+  );
 
+  useEffect(() => {
     const handleKeydown = (e: KeyboardEvent) => {
       switch (e.key) {
         case "Escape": {
@@ -214,7 +219,78 @@ function VotePage() {
     return () => {
       window.removeEventListener("keyup", handleKeydown);
     };
-  }, [candidateList.data, alertOpen, cannotPushKey, chooseCandidate]);
+  }, [upvoteCandidate.isPending, alertOpen, triggerOpen, chooseCandidate]);
+
+  useEffect(() => {
+    if (wsEnabled && lastMessage) {
+      // Precheck before consuming command
+      if (lastMessage.data.startsWith("SORA-KEYBIND-")) {
+        const actualCommand = lastMessage.data.replace("SORA-KEYBIND-", "");
+
+        switch (actualCommand) {
+          case "ESC": {
+            if (!upvoteCandidate.isPending) {
+              setID(null);
+              setAlertOpen(false);
+            }
+
+            break;
+          }
+
+          case "RELOAD": {
+            if (upvoteCandidate.isError || candidateList.errorUpdateCount > 0)
+              location.reload();
+
+            break;
+          }
+
+          case "1": {
+            if (!alertOpen) triggerOpen(0);
+
+            break;
+          }
+
+          case "2": {
+            if (!alertOpen) triggerOpen(1);
+
+            break;
+          }
+
+          case "3": {
+            if (!alertOpen) triggerOpen(2);
+
+            break;
+          }
+
+          case "4": {
+            if (!alertOpen) triggerOpen(3);
+
+            break;
+          }
+
+          case "5": {
+            if (!alertOpen) triggerOpen(4);
+
+            break;
+          }
+
+          case "ENTER": {
+            chooseCandidate();
+
+            break;
+          }
+        }
+      }
+    }
+  }, [
+    upvoteCandidate.isPending,
+    candidateList.errorUpdateCount,
+    alertOpen,
+    triggerOpen,
+    chooseCandidate,
+    wsEnabled,
+    lastMessage,
+  ]);
 
   useEffect(() => {
     if (candidateList.error) setErrorMessage(candidateList.error.message);

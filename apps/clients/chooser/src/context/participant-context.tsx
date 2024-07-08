@@ -2,6 +2,7 @@ import {
   createContext,
   useCallback,
   useContext,
+  useEffect,
   useMemo,
   useState,
 } from "react";
@@ -9,6 +10,8 @@ import { UniversalError } from "@/components/universal-error";
 import { api } from "@/utils/api";
 import { motion } from "framer-motion";
 import { Navigate } from "react-router-dom";
+
+import { useKeyboardWebsocket } from "./keyboard-websocket";
 
 export interface IParticipantContext {
   name: string | null;
@@ -27,6 +30,8 @@ export const ParticipantProvider = ({
 }: {
   children: React.ReactNode;
 }) => {
+  const { wsEnabled, lastMessage } = useKeyboardWebsocket();
+
   const [qrId, setQrId] = useState<string | null>(null);
   const [votedSuccessfully, setVoted] = useState(false);
 
@@ -43,6 +48,35 @@ export const ParticipantProvider = ({
     (success: boolean) => setVoted(success),
     [],
   );
+
+  useEffect(() => {
+    if (wsEnabled && lastMessage) {
+      // Precheck before consuming command
+      if (lastMessage.data.startsWith("SORA-KEYBIND-")) {
+        const actualCommand = lastMessage.data.replace("SORA-KEYBIND-", "");
+
+        switch (actualCommand) {
+          case "RELOAD": {
+            if (
+              !!qrId &&
+              participantQuery.isFetched &&
+              (!participantQuery.data?.alreadyAttended ||
+                participantQuery.data?.alreadyChoosing)
+            )
+              location.reload();
+
+            break;
+          }
+        }
+      }
+    }
+  }, [
+    qrId,
+    participantQuery.isFetched,
+    participantQuery.data,
+    wsEnabled,
+    lastMessage,
+  ]);
 
   const propsValue = useMemo(() => {
     if (!qrId)

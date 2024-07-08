@@ -2555,6 +2555,7 @@ __metadata:
     react: "npm:^18.3.1"
     react-dom: "npm:^18.3.1"
     react-router-dom: "npm:^6.24.0"
+    react-use-websocket: "npm:^4.8.1"
     superjson: "npm:2.2.1"
     tailwindcss: "npm:^3.4.4"
     typescript: "npm:^5.4.5"
@@ -9615,6 +9616,16 @@ __metadata:
     react: ">=16.6.0"
     react-dom: ">=16.6.0"
   checksum: 10c0/2ba754ba748faefa15f87c96dfa700d5525054a0141de8c75763aae6734af0740e77e11261a1e8f4ffc08fd9ab78510122e05c21c2d79066c38bb6861a886c82
+  languageName: node
+  linkType: hard
+
+"react-use-websocket@npm:^4.8.1":
+  version: 4.8.1
+  resolution: "react-use-websocket@npm:4.8.1"
+  peerDependencies:
+    react: ">= 18.0.0"
+    react-dom: ">= 18.0.0"
+  checksum: 10c0/9106947334badc06d8af635328f1420068098130eac8f6da90e7d13cf37037cf1cf0bd528103ca3689a38097a70e10d3b577f143078254e9dd3b9aa429395116
   languageName: node
   linkType: hard
 
