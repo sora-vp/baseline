@@ -10,13 +10,15 @@ import { MainScanner } from "./main-scanner";
 
 export function ScannerComponent() {
   const { qrId, setQRCode } = useParticipant();
-  const { wsEnabled, lastMessage } = useKeyboardWebsocket();
+  const { wsEnabled, lastMessage, setLastMessage } = useKeyboardWebsocket();
 
   const [isQrInvalid, setInvalidQr] = useState(false);
 
   const participantAttended =
     api.clientConsumer.checkParticipantAttended.useMutation({
       onSuccess() {
+        setLastMessage(null);
+
         setQRCode(participantAttended.variables!);
       },
     });
@@ -24,8 +26,8 @@ export function ScannerComponent() {
   useEffect(() => {
     if (wsEnabled && lastMessage) {
       // Precheck before consuming command
-      if (lastMessage.data.startsWith("SORA-KEYBIND-")) {
-        const actualCommand = lastMessage.data.replace("SORA-KEYBIND-", "");
+      if (lastMessage.startsWith("SORA-KEYBIND-")) {
+        const actualCommand = lastMessage.replace("SORA-KEYBIND-", "");
 
         switch (actualCommand) {
           case "RELOAD": {

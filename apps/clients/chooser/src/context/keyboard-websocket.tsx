@@ -1,4 +1,11 @@
-import { createContext, useContext, useEffect, useMemo } from "react";
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
 import { defaultWSPortAtom, enableWSConnectionAtom } from "@/utils/atom";
 import { useAtomValue } from "jotai";
 import useWebSocket, { ReadyState } from "react-use-websocket";
@@ -7,7 +14,8 @@ import { toast } from "@sora-vp/ui/toast";
 
 export interface IKeyboardWebsocket {
   wsEnabled: boolean;
-  lastMessage: MessageEvent<string> | null;
+  lastMessage: string | null;
+  setLastMessage: (msg: string | null) => void;
 }
 
 export const KeyboardWebsocketContext = createContext<IKeyboardWebsocket>(
@@ -19,10 +27,13 @@ export const KeyboardWebsocketProvider = ({
 }: {
   children: React.ReactNode;
 }) => {
+  const [lastMessage, setLastMessageState] =
+    useState<IKeyboardWebsocket["lastMessage"]>(null);
+
   const wsPortNumber = useAtomValue(defaultWSPortAtom);
   const wsEnabled = useAtomValue(enableWSConnectionAtom);
 
-  const { lastMessage, readyState } = useWebSocket<string>(
+  const { lastMessage: libLastMessage, readyState } = useWebSocket<string>(
     wsEnabled ? `ws://127.0.0.1:${wsPortNumber}/ws` : null,
     {
       share: true,
@@ -36,13 +47,23 @@ export const KeyboardWebsocketProvider = ({
     },
   );
 
+  const setLastMessage = useCallback(
+    (msg: IKeyboardWebsocket["lastMessage"]) => setLastMessageState(msg),
+    [],
+  );
+
   const contextValue = useMemo(
     () => ({
       wsEnabled,
       lastMessage,
+      setLastMessage,
     }),
     [wsEnabled, lastMessage],
   );
+
+  useEffect(() => {
+    if (libLastMessage) setLastMessageState(libLastMessage.data);
+  }, [libLastMessage]);
 
   useEffect(() => {
     if (wsEnabled) {

@@ -52,8 +52,8 @@ export const ParticipantProvider = ({
   useEffect(() => {
     if (wsEnabled && lastMessage) {
       // Precheck before consuming command
-      if (lastMessage.data.startsWith("SORA-KEYBIND-")) {
-        const actualCommand = lastMessage.data.replace("SORA-KEYBIND-", "");
+      if (lastMessage.startsWith("SORA-KEYBIND-")) {
+        const actualCommand = lastMessage.replace("SORA-KEYBIND-", "");
 
         switch (actualCommand) {
           case "RELOAD": {

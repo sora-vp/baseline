@@ -91,7 +91,7 @@ const CurrentParticipantInfo = (props: { isSuccess?: boolean }) => {
 
 function VotePage() {
   const { qrId, setQRCode, setVotedSuccessfully } = useParticipant();
-  const { wsEnabled, lastMessage } = useKeyboardWebsocket();
+  const { wsEnabled, lastMessage, setLastMessage } = useKeyboardWebsocket();
 
   const successTimeout = useAtomValue(successTimeoutAtom);
 
@@ -116,6 +116,9 @@ function VotePage() {
       setAlertOpen(false);
       setID(null);
     },
+    onSettled() {
+      setLastMessage(null);
+    },
   });
 
   const candidateName = useMemo(
@@ -138,6 +141,8 @@ function VotePage() {
   const chooseCandidate = useCallback(() => {
     if (!cannotPushKey) {
       if (qrId && currentID && alertOpen) {
+        setLastMessage(null);
+
         upvoteCandidate.mutate({
           id: currentID,
           qrId,
@@ -224,8 +229,8 @@ function VotePage() {
   useEffect(() => {
     if (wsEnabled && lastMessage) {
       // Precheck before consuming command
-      if (lastMessage.data.startsWith("SORA-KEYBIND-")) {
-        const actualCommand = lastMessage.data.replace("SORA-KEYBIND-", "");
+      if (lastMessage.startsWith("SORA-KEYBIND-")) {
+        const actualCommand = lastMessage.replace("SORA-KEYBIND-", "");
 
         switch (actualCommand) {
           case "ESC": {
@@ -434,7 +439,10 @@ function VotePage() {
 
       <AlertDialog
         open={alertOpen || (upvoteCandidate.isPending && !!qrId)}
-        onOpenChange={() => setAlertOpen((prev) => !prev)}
+        onOpenChange={() => {
+          setAlertOpen((prev) => !prev);
+          setLastMessage(null);
+        }}
       >
         <AlertDialogContent
           onOpenAutoFocus={(e) => e.preventDefault()}
