@@ -7,7 +7,7 @@ import type {
   SortingState,
   VisibilityState,
 } from "@tanstack/react-table";
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useContext, useEffect, useMemo, useState } from "react";
 import { Space_Mono } from "next/font/google";
 import {
   flexRender,
@@ -291,6 +291,11 @@ export function DataTable() {
     },
   );
 
+  const tableData = useMemo(
+    () => participantQuery.data ?? [],
+    [participantQuery.data],
+  );
+
   const settingsQuery = api.settings.getSettings.useQuery(undefined, {
     refetchInterval: 3500,
     refetchIntervalInBackground: true,
@@ -303,7 +308,7 @@ export function DataTable() {
   const [allowedToOpenModifier, setAllowedOpen] = useState(true);
 
   const table = useReactTable({
-    data: participantQuery.data ?? [],
+    data: tableData,
     columns,
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,
@@ -312,6 +317,8 @@ export function DataTable() {
     getSortedRowModel: getSortedRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
     onColumnVisibilityChange: setColumnVisibility,
+    autoResetPageIndex: false,
+    autoResetExpanded: false,
     initialState: { pagination: { pageSize: 20 } },
     state: {
       sorting,
