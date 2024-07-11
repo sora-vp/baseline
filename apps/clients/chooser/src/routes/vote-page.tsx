@@ -176,6 +176,7 @@ function VotePage() {
           if (!upvoteCandidate.isPending) {
             setID(null);
             setAlertOpen(false);
+            setLastMessage(null);
           }
 
           break;
@@ -237,6 +238,7 @@ function VotePage() {
             if (!upvoteCandidate.isPending) {
               setID(null);
               setAlertOpen(false);
+              setLastMessage(null);
             }
 
             break;
