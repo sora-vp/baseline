@@ -64,4 +64,16 @@ COPY --from=builder --chown=processor:nodejs /vote-processor /vote-processor
 
 WORKDIR /vote-processor
 
-CMD ["node", "node_modules/@sora-vp/processor/dist/index.js"]
+COPY <<EOF /vote-processor/index.js
+import path from "path";
+import { fileURLToPath } from "url";
+
+import { consumeMessagesFromQueue } from "@sora-vp/processor";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+void consumeMessagesFromQueue(__dirname);
+EOF
+
+CMD ["node", "index.js"]

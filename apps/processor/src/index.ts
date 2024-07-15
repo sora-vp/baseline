@@ -10,7 +10,7 @@ import { validateId } from "@sora-vp/id-generator";
 import { api } from "./api";
 import { db, schema } from "./db";
 import { env } from "./env";
-import { logger } from "./logger";
+import { initLogger } from "./logger";
 import { canVoteNow } from "./utils";
 
 const inputValidator = z.object({
@@ -18,7 +18,9 @@ const inputValidator = z.object({
   qrId: z.string().refine(validateId),
 });
 
-const consumeMessagesFromQueue = async () => {
+export const consumeMessagesFromQueue = async (loggerDirectory: string) => {
+  const logger = initLogger(loggerDirectory);
+
   try {
     logger.debug(`[MQ] MQ AMQP: ${env.AMQP_URL}`);
     logger.debug(`[TRPC] TRPC URL: ${env.PROCESSOR_API_URL}`);
@@ -226,5 +228,3 @@ const consumeMessagesFromQueue = async () => {
     logger.error(error);
   }
 };
-
-void consumeMessagesFromQueue();

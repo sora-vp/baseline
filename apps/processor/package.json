@@ -9,7 +9,7 @@
   "scripts": {
     "build": "tsup",
     "clean": "rm -rf .turbo node_modules",
-    "dev": "yarn with-env tsx watch src/index.ts",
+    "dev": "yarn with-env tsx watch ./index.ts",
     "lint": "eslint",
     "format": "prettier --check . --ignore-path ../../.gitignore",
     "typecheck": "tsc --noEmit",
