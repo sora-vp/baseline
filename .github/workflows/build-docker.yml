@@ -8,7 +8,7 @@ on:
     #   - main
 
 jobs:
-  check-changes:
+  changes:
     runs-on: ubuntu-latest
     permissions:
       pull-requests: read
@@ -25,18 +25,14 @@ jobs:
         id: filter
         with:
           filters: |
-            web:
-              - 'apps/web/package.json'
-            processor:
-              - 'apps/processor/package.json'
-            attendance:
-              - 'apps/client/attendance/package.json'
-            chooser:
-              - 'apps/client/chooser/package.json'
+            web: 'apps/web/package.json'
+            processor: 'apps/processor/package.json'
+            attendance: 'apps/client/attendance/package.json'
+            chooser: 'apps/client/chooser/package.json'
 
   web:
-    needs: check-changes
-    if: github.repository == 'sora-vp/baseline' && steps.filter.outputs.web == 'true'
+    needs: changes
+    if: github.repository == 'sora-vp/baseline' && needs.changes.outputs.web == 'true'
     runs-on: ubuntu-latest
 
     steps:
@@ -60,8 +56,8 @@ jobs:
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/sora-baseline-web:${{ github.ref_name }}
 
   processor:
-    needs: check-changes
-    if: github.repository == 'sora-vp/baseline' && steps.filter.outputs.processor == 'true'
+    needs: changes
+    if: github.repository == 'sora-vp/baseline' && needs.changes.outputs.processor == 'true'
     runs-on: ubuntu-latest
 
     steps:
@@ -85,8 +81,8 @@ jobs:
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/sora-baseline-processor:${{ github.ref_name }}
 
   client-attendance:
-    needs: check-changes
-    if: github.repository == 'sora-vp/baseline' && steps.filter.outputs.attendance == 'true'
+    needs: changes
+    if: github.repository == 'sora-vp/baseline' && needs.changes.outputs.attendance == 'true'
     runs-on: ubuntu-latest
 
     steps:
@@ -110,8 +106,8 @@ jobs:
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/sora-baseline-client-attendance:${{ github.ref_name }}
 
   client-chooser:
-    needs: check-changes
-    if: github.repository == 'sora-vp/baseline' && steps.filter.outputs.chooser == 'true'
+    needs: changes
+    if: github.repository == 'sora-vp/baseline' && needs.changes.outputs.chooser == 'true'
     runs-on: ubuntu-latest
 
     steps:
