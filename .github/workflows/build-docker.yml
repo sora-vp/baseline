@@ -29,13 +29,6 @@ jobs:
             attendance: 'apps/client/attendance/package.json'
             chooser: 'apps/client/chooser/package.json'
 
-      - uses: actions/checkout@v4
-        with:
-          repository: sora-vp/baseline-docker
-
-      - name: debug
-        run: ls
-
   web:
     needs: changes
     if: github.repository == 'sora-vp/baseline' && needs.changes.outputs.web == 'true'
@@ -60,10 +53,6 @@ jobs:
           file: "./apps/web/Dockerfile"
           push: true
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/sora-baseline-web:${{ github.ref_name }}
-
-      - uses: actions/checkout@v4
-        with:
-          repository: sora-vp/baseline-docker
 
   processor:
     needs: changes
@@ -90,10 +79,6 @@ jobs:
           push: true
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/sora-baseline-processor:${{ github.ref_name }}
 
-      - uses: actions/checkout@v4
-        with:
-          repository: sora-vp/baseline-docker
-
   client-attendance:
     needs: changes
     if: github.repository == 'sora-vp/baseline' && needs.changes.outputs.attendance == 'true'
@@ -118,10 +103,6 @@ jobs:
           file: "./apps/clients/attendance/Dockerfile"
           push: true
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/sora-baseline-client-attendance:${{ github.ref_name }}
-
-      - uses: actions/checkout@v4
-        with:
-          repository: sora-vp/baseline-docker
 
   client-chooser:
     needs: changes
@@ -148,6 +129,11 @@ jobs:
           push: true
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/sora-baseline-client-chooser:${{ github.ref_name }}
 
+  update-docker-compose-repo:
+    needs: [web, processor, client-attendance, client-chooser]
+    runs-on: ubuntu-latest
+
+    steps:
       - uses: actions/checkout@v4
         with:
           repository: sora-vp/baseline-docker
