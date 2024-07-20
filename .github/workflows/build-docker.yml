@@ -8,7 +8,7 @@ on:
     #   - main
 
 jobs:
-  changes:
+  check-changes:
     runs-on: ubuntu-latest
     permissions:
       pull-requests: read
@@ -35,9 +35,8 @@ jobs:
               - 'apps/client/chooser/package.json'
 
   web:
-    needs: changes
-    if: github.repository == 'sora-vp/baseline'
-
+    needs: check-changes
+    if: github.repository == 'sora-vp/baseline' && steps.filter.outputs.web == 'true'
     runs-on: ubuntu-latest
 
     steps:
@@ -61,9 +60,8 @@ jobs:
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/sora-baseline-web:${{ github.ref_name }}
 
   processor:
-    needs: changes
-    if: github.repository == 'sora-vp/baseline'
-
+    needs: check-changes
+    if: github.repository == 'sora-vp/baseline' && steps.filter.outputs.processor == 'true'
     runs-on: ubuntu-latest
 
     steps:
@@ -87,9 +85,8 @@ jobs:
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/sora-baseline-processor:${{ github.ref_name }}
 
   client-attendance:
-    needs: changes
-    if: github.repository == 'sora-vp/baseline'
-
+    needs: check-changes
+    if: github.repository == 'sora-vp/baseline' && steps.filter.outputs.attendance == 'true'
     runs-on: ubuntu-latest
 
     steps:
@@ -113,9 +110,8 @@ jobs:
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/sora-baseline-client-attendance:${{ github.ref_name }}
 
   client-chooser:
-    needs: changes
-    if: github.repository == 'sora-vp/baseline'
-
+    needs: check-changes
+    if: github.repository == 'sora-vp/baseline' && steps.filter.outputs.chooser == 'true'
     runs-on: ubuntu-latest
 
     steps:
