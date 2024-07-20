@@ -131,8 +131,12 @@ jobs:
 
   update-docker-compose-repo:
     needs: [web, processor, client-attendance, client-chooser]
+    if: |
+      always()
+      && contains(needs.*.result, 'success')
+      && !contains(needs.*.result, 'failure')
+      && (needs.changes.outputs.web == 'true' || needs.changes.outputs.processor == 'true' || needs.changes.outputs.attendance == 'true' || needs.changes.outputs.chooser == 'true')
     runs-on: ubuntu-latest
-
     steps:
       - uses: actions/checkout@v4
         with:
