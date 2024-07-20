@@ -28,9 +28,9 @@ jobs:
             processor:
               - 'apps/processor/package.json'
             attendance:
-              - 'apps/client/attendance/package.json
+              - 'apps/client/attendance/package.json'
             chooser:
-              - 'apps/client/chooser/package.json
+              - 'apps/client/chooser/package.json'
 
   web:
     needs: changes
