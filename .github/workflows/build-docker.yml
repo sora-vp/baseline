@@ -2,11 +2,38 @@ name: Docker Image Build CI
 
 on:
   push:
-    branches:
-      - main
+    # tags:
+    #   - "v*"
+    # branches:
+    #   - main
 
 jobs:
+  changes:
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: read
+    outputs:
+      web: ${{ steps.filter.outputs.web }}
+      processor: ${{ steps.filter.outputs.processor }}
+      attendance: ${{ steps.filter.outputs.attendance }}
+      chooser: ${{ steps.filter.outputs.chooser }}
+    steps:
+      # For pull requests it's not necessary to checkout the code
+      - uses: dorny/paths-filter@v3
+        id: filter
+        with:
+          filters: |
+            web:
+              - 'apps/web/package.json'
+            processor:
+              - 'apps/processor/package.json'
+            attendance:
+              - 'apps/client/attendance/package.json
+            chooser:
+              - 'apps/client/chooser/package.json
+
   web:
+    needs: changes
     if: github.repository == 'sora-vp/baseline'
 
     runs-on: ubuntu-latest
@@ -32,6 +59,7 @@ jobs:
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/sora-baseline-web:${{ github.ref_name }}
 
   processor:
+    needs: changes
     if: github.repository == 'sora-vp/baseline'
 
     runs-on: ubuntu-latest
@@ -57,6 +85,7 @@ jobs:
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/sora-baseline-processor:${{ github.ref_name }}
 
   client-attendance:
+    needs: changes
     if: github.repository == 'sora-vp/baseline'
 
     runs-on: ubuntu-latest
@@ -82,6 +111,7 @@ jobs:
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/sora-baseline-client-attendance:${{ github.ref_name }}
 
   client-chooser:
+    needs: changes
     if: github.repository == 'sora-vp/baseline'
 
     runs-on: ubuntu-latest
