@@ -76,4 +76,6 @@ const __dirname = path.dirname(__filename);
 void consumeMessagesFromQueue(__dirname);
 EOF
 
+RUN echo "" > processor.log && chown ${USER}:${USER} processor.log
+
 CMD ["node", "index.js"]
