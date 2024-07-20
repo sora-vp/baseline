@@ -65,6 +65,8 @@ COPY --from=builder --chown=processor:nodejs /vote-processor /vote-processor
 WORKDIR /vote-processor
 
 COPY <<EOF /vote-processor/index.js
+"use strict";
+
 import path from "path";
 import { fileURLToPath } from "url";
 
@@ -73,9 +75,12 @@ import { consumeMessagesFromQueue } from "@sora-vp/processor";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-void consumeMessagesFromQueue(__dirname);
+const logsDirectory = path.join(__dirname, "logs");
+
+void consumeMessagesFromQueue(logsDirectory);
 EOF
 
-RUN echo "" > processor.log && chown ${USER}:${USER} processor.log
+RUN mkdir -p /vote-processor/logs
+RUN chown -R ${USER}:${USER} /vote-processor/logs
 
 CMD ["node", "index.js"]
