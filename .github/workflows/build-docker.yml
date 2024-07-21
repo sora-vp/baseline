@@ -148,10 +148,10 @@ jobs:
           ATTENDANCE_UPDATE: ${{ needs.client-attendance.result }} 
           CHOOSER_UPDATE: ${{ needs.client-chooser.result }} 
         run: |
-          [ $WEB_UPDATE == "success" ] && sed -i 's/rmecha\/sora-baseline-web:[^ ]*/rmecha\/sora-baseline-web:${{ github.ref_name }}/' docker-compose.yml
-          [ $PROCESSOR_UPDATE == "success" ] && sed -i 's/rmecha\/sora-baseline-processor:[^ ]*/rmecha\/sora-baseline-processor:${{ github.ref_name }}/' docker-compose.yml
-          [ $ATTENDANCE_UPDATE == "success" ] && sed -i 's/rmecha\/sora-baseline-client-attendance:[^ ]*/rmecha\/sora-baseline-client-attendance:${{ github.ref_name }}/' docker-compose.yml
-          [ $CHOOSER_UPDATE == "success" ] && sed -i 's/rmecha\/sora-baseline-client-chooser:[^ ]*/rmecha\/sora-baseline-client-chooser:${{ github.ref_name }}/' docker-compose.yml
+          [ $WEB_UPDATE == "success" ] && sed -i 's/rmecha\/sora-baseline-web:[^ ]*/rmecha\/sora-baseline-web:${{ github.ref_name }}/' docker-compose.yml;
+          [ $PROCESSOR_UPDATE == "success" ] && sed -i 's/rmecha\/sora-baseline-processor:[^ ]*/rmecha\/sora-baseline-processor:${{ github.ref_name }}/' docker-compose.yml;
+          [ $ATTENDANCE_UPDATE == "success" ] && sed -i 's/rmecha\/sora-baseline-client-attendance:[^ ]*/rmecha\/sora-baseline-client-attendance:${{ github.ref_name }}/' docker-compose.yml;
+          [ $CHOOSER_UPDATE == "success" ] && sed -i 's/rmecha\/sora-baseline-client-chooser:[^ ]*/rmecha\/sora-baseline-client-chooser:${{ github.ref_name }}/' docker-compose.yml;
       
       - name: Inspect output
         run: cat docker-compose.yml && git diff
