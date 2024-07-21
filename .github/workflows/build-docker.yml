@@ -178,7 +178,7 @@ jobs:
         env:
           REF_NAME: ${{ github.ref_name }}
           GITHUB_SHA: ${{ github.sha }}
-        run: git commit -am "bot-update: update ${REF_NAME}" -m "Cek commit -> https://github.com/sora-vp/baseline/commit/$GITHUB_SHA"
+        run: git commit -am "bot-update: update $REF_NAME" -m "Cek commit -> https://github.com/sora-vp/baseline/commit/$GITHUB_SHA"
 
       - name: Debug
         run: git log
