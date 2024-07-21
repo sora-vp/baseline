@@ -175,7 +175,7 @@ jobs:
           fi
 
       - name: Commit changes
-        run: git commit -am 'bot-update: update "$REF_NAME" https://github.com/sora-vp/baseline/commit/${{ github.sha }}'
+        run: git commit -am 'bot-update: update $REF_NAME | https://github.com/sora-vp/baseline/commit/'"${{ github.sha }}"'/'
 
       - name: Debug
         run: git log
