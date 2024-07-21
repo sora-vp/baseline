@@ -147,11 +147,25 @@ jobs:
           PROCESSOR_UPDATE: ${{ needs.processor.result }} 
           ATTENDANCE_UPDATE: ${{ needs.client-attendance.result }} 
           CHOOSER_UPDATE: ${{ needs.client-chooser.result }} 
+          REF_NAME: ${{ github.ref_name }}
         run: |
-          [ $WEB_UPDATE == "success" ] && sed -i 's/rmecha\/sora-baseline-web:[^ ]*/rmecha\/sora-baseline-web:${{ github.ref_name }}/' docker-compose.yml;
-          [ $PROCESSOR_UPDATE == "success" ] && sed -i 's/rmecha\/sora-baseline-processor:[^ ]*/rmecha\/sora-baseline-processor:${{ github.ref_name }}/' docker-compose.yml;
-          [ $ATTENDANCE_UPDATE == "success" ] && sed -i 's/rmecha\/sora-baseline-client-attendance:[^ ]*/rmecha\/sora-baseline-client-attendance:${{ github.ref_name }}/' docker-compose.yml;
-          [ $CHOOSER_UPDATE == "success" ] && sed -i 's/rmecha\/sora-baseline-client-chooser:[^ ]*/rmecha\/sora-baseline-client-chooser:${{ github.ref_name }}/' docker-compose.yml;
-      
+          echo "WEB_UPDATE: $WEB_UPDATE"
+          echo "PROCESSOR_UPDATE: $PROCESSOR_UPDATE"
+          echo "ATTENDANCE_UPDATE: $ATTENDANCE_UPDATE"
+          echo "CHOOSER_UPDATE: $CHOOSER_UPDATE"
+
+          if [ "$WEB_UPDATE" == "success" ]; then
+            sed -i 's/rmecha\/sora-baseline-web:[^ ]*/rmecha\/sora-baseline-web:$REF_NAME/' docker-compose.yml
+          fi
+          if [ "$PROCESSOR_UPDATE" == "success" ]; then
+            sed -i 's/rmecha\/sora-baseline-processor:[^ ]*/rmecha\/sora-baseline-processor:$REF_NAME/' docker-compose.yml
+          fi
+          if [ "$ATTENDANCE_UPDATE" == "success" ]; then
+            sed -i 's/rmecha\/sora-baseline-client-attendance:[^ ]*/rmecha\/sora-baseline-client-attendance:$REF_NAME/' docker-compose.yml
+          fi
+          if [ "$CHOOSER_UPDATE" == "success" ]; then
+            sed -i 's/rmecha\/sora-baseline-client-chooser:[^ ]*/rmecha\/sora-baseline-client-chooser:$REF_NAME/' docker-compose.yml
+          fi 
+
       - name: Inspect output
         run: cat docker-compose.yml && git diff
