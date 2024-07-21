@@ -23,6 +23,7 @@ jobs:
       - uses: dorny/paths-filter@v3
         id: filter
         with:
+          base: HEAD
           filters: |
             web: 'apps/web/package.json'
             processor: 'apps/processor/package.json'
@@ -155,16 +156,16 @@ jobs:
           echo "CHOOSER_UPDATE: $CHOOSER_UPDATE"
 
           if [ "$WEB_UPDATE" == "success" ]; then
-            sed -i 's/rmecha\/sora-baseline-web:[^ ]*/rmecha\/sora-baseline-web:$REF_NAME/' docker-compose.yml
+            sed -i 's/rmecha\/sora-baseline-web:[^ ]*/rmecha\/sora-baseline-web:'"$REF_NAME"'/' docker-compose.yml
           fi
           if [ "$PROCESSOR_UPDATE" == "success" ]; then
-            sed -i 's/rmecha\/sora-baseline-processor:[^ ]*/rmecha\/sora-baseline-processor:$REF_NAME/' docker-compose.yml
+            sed -i 's/rmecha\/sora-baseline-processor:[^ ]*/rmecha\/sora-baseline-processor:'"$REF_NAME"'/' docker-compose.yml
           fi
           if [ "$ATTENDANCE_UPDATE" == "success" ]; then
-            sed -i 's/rmecha\/sora-baseline-client-attendance:[^ ]*/rmecha\/sora-baseline-client-attendance:$REF_NAME/' docker-compose.yml
+            sed -i 's/rmecha\/sora-baseline-client-attendance:[^ ]*/rmecha\/sora-baseline-client-attendance:'"$REF_NAME"'/' docker-compose.yml
           fi
           if [ "$CHOOSER_UPDATE" == "success" ]; then
-            sed -i 's/rmecha\/sora-baseline-client-chooser:[^ ]*/rmecha\/sora-baseline-client-chooser:$REF_NAME/' docker-compose.yml
+            sed -i 's/rmecha\/sora-baseline-client-chooser:[^ ]*/rmecha\/sora-baseline-client-chooser:'"$REF_NAME"'/' docker-compose.yml
           fi 
 
       - name: Inspect output
