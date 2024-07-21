@@ -138,17 +138,16 @@ jobs:
       && (needs.changes.outputs.web == 'true' || needs.changes.outputs.processor == 'true' || needs.changes.outputs.attendance == 'true' || needs.changes.outputs.chooser == 'true')
     runs-on: ubuntu-latest
     steps:
-      - env:
-          WEB_UPDATE: ${{ needs.changes.outputs.web }}  
-          PROCESSOR_UPDATE: ${{ needs.changes.outputs.processor }} 
-          ATTENDANCE_UPDATE: ${{ needs.changes.outputs.attendance }} 
-          CHOOSER_UPDATE: ${{ needs.changes.outputs.chooser }} 
-
       - uses: actions/checkout@v4
         with:
           repository: sora-vp/baseline-docker
 
       - name: Rename version
+        env:
+          WEB_UPDATE: ${{ needs.changes.outputs.web }}  
+          PROCESSOR_UPDATE: ${{ needs.changes.outputs.processor }} 
+          ATTENDANCE_UPDATE: ${{ needs.changes.outputs.attendance }} 
+          CHOOSER_UPDATE: ${{ needs.changes.outputs.chooser }} 
         run: |
           [ $WEB_UPDATE == true ] && sed -i 's/rmecha\/sora-baseline-web:[^ ]*/rmecha\/sora-baseline-web:${{ github.ref_name }}/' docker-compose.yml
           [ $PROCESSOR_UPDATE == true ] && sed -i 's/rmecha\/sora-baseline-processor:[^ ]*/rmecha\/sora-baseline-processor:${{ github.ref_name }}/' docker-compose.yml
