@@ -2,17 +2,41 @@ name: Docker Image Build CI
 
 on:
   push:
+    tags:
+      - "v[0-9]+.[0-9]+.[0-9]+"
     branches:
       - main
 
 jobs:
-  web:
-    if: github.repository == 'sora-vp/baseline'
+  changes:
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: read
+    outputs:
+      web: ${{ steps.filter.outputs.web }}
+      processor: ${{ steps.filter.outputs.processor }}
+      attendance: ${{ steps.filter.outputs.attendance }}
+      chooser: ${{ steps.filter.outputs.chooser }}
+    steps:
+      - uses: actions/checkout@v4
 
+      - uses: dorny/paths-filter@v3
+        id: filter
+        with:
+          base: HEAD
+          filters: |
+            web: 'apps/web/package.json'
+            processor: 'apps/processor/package.json'
+            attendance: 'apps/clients/attendance/package.json'
+            chooser: 'apps/clients/chooser/package.json'
+
+  web:
+    needs: changes
+    if: github.repository == 'sora-vp/baseline' && needs.changes.outputs.web == 'true'
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
@@ -32,12 +56,12 @@ jobs:
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/sora-baseline-web:${{ github.ref_name }}
 
   processor:
-    if: github.repository == 'sora-vp/baseline'
-
+    needs: changes
+    if: github.repository == 'sora-vp/baseline' && needs.changes.outputs.processor == 'true'
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
@@ -57,12 +81,12 @@ jobs:
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/sora-baseline-processor:${{ github.ref_name }}
 
   client-attendance:
-    if: github.repository == 'sora-vp/baseline'
-
+    needs: changes
+    if: github.repository == 'sora-vp/baseline' && needs.changes.outputs.attendance == 'true'
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
@@ -82,12 +106,12 @@ jobs:
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/sora-baseline-client-attendance:${{ github.ref_name }}
 
   client-chooser:
-    if: github.repository == 'sora-vp/baseline'
-
+    needs: changes
+    if: github.repository == 'sora-vp/baseline' && needs.changes.outputs.chooser == 'true'
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
@@ -105,3 +129,57 @@ jobs:
           file: "./apps/clients/chooser/Dockerfile"
           push: true
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/sora-baseline-client-chooser:${{ github.ref_name }}
+
+  update-docker-compose-repo:
+    needs: [web, processor, client-attendance, client-chooser]
+    if: |
+      always()
+      && (contains(needs.web.result, 'success') || contains(needs.processor.result, 'success') || contains(needs.client-attendance.result, 'success') || contains(needs.client-chooser.result, 'success'))
+      && !contains(needs.*.result, 'failure')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.BASIC_DOCKER_CONFIG_REPO_PAT }}
+          repository: sora-vp/baseline-docker
+
+      - name: setup git config
+        run: |
+          git config --global user.name "github-actions"
+          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+      - name: Rename version
+        env:
+          WEB_UPDATE: ${{ needs.web.result }}  
+          PROCESSOR_UPDATE: ${{ needs.processor.result }} 
+          ATTENDANCE_UPDATE: ${{ needs.client-attendance.result }} 
+          CHOOSER_UPDATE: ${{ needs.client-chooser.result }} 
+          REF_NAME: ${{ github.ref_name }}
+        run: |
+          echo "WEB_UPDATE: $WEB_UPDATE"
+          echo "PROCESSOR_UPDATE: $PROCESSOR_UPDATE"
+          echo "ATTENDANCE_UPDATE: $ATTENDANCE_UPDATE"
+          echo "CHOOSER_UPDATE: $CHOOSER_UPDATE"
+
+          if [ "$WEB_UPDATE" == "success" ]; then
+            sed -i 's/rmecha\/sora-baseline-web:[^ ]*/rmecha\/sora-baseline-web:'"$REF_NAME"'/' docker-compose.yml
+          fi
+          if [ "$PROCESSOR_UPDATE" == "success" ]; then
+            sed -i 's/rmecha\/sora-baseline-processor:[^ ]*/rmecha\/sora-baseline-processor:'"$REF_NAME"'/' docker-compose.yml
+          fi
+          if [ "$ATTENDANCE_UPDATE" == "success" ]; then
+            sed -i 's/rmecha\/sora-baseline-client-attendance:[^ ]*/rmecha\/sora-baseline-client-attendance:'"$REF_NAME"'/' docker-compose.yml
+          fi
+          if [ "$CHOOSER_UPDATE" == "success" ]; then
+            sed -i 's/rmecha\/sora-baseline-client-chooser:[^ ]*/rmecha\/sora-baseline-client-chooser:'"$REF_NAME"'/' docker-compose.yml
+          fi
+
+      - name: Commit changes
+        env:
+          REF_NAME: ${{ github.ref_name }}
+          GITHUB_SHA: ${{ github.sha }}
+        run: |
+          git commit -am "bot-update: update $REF_NAME" -m "Cek commit -> https://github.com/sora-vp/baseline/commit/$GITHUB_SHA"
+
+      - name: Push 🚀 
+        run: git push origin main 
