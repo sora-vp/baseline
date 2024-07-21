@@ -141,3 +141,13 @@ jobs:
       - uses: actions/checkout@v4
         with:
           repository: sora-vp/baseline-docker
+
+      - name: Rename version
+        run: |
+          [ ${{ needs.changes.outputs.web }} == true ] && sed -i 's/rmecha\/sora-baseline-web:[^ ]*/rmecha\/sora-baseline-web:${{ github.ref_name }}/' docker-compose.yml
+          [ ${{ needs.changes.outputs.processor }} == true ] && sed -i 's/rmecha\/sora-baseline-processor:[^ ]*/rmecha\/sora-baseline-processor:${{ github.ref_name }}/' docker-compose.yml
+          [ ${{ needs.changes.outputs.attendance }} == true ] && sed -i 's/rmecha\/sora-baseline-client-attendance:[^ ]*/rmecha\/sora-baseline-client-attendance:${{ github.ref_name }}/' docker-compose.yml
+          [ ${{ needs.changes.outputs.chooser }} == true ] && sed -i 's/rmecha\/sora-baseline-client-chooser:[^ ]*/rmecha\/sora-baseline-client-chooser:${{ github.ref_name }}/' docker-compose.yml
+      
+      - name: Inspect output
+        run: cat docker-compose.yml
