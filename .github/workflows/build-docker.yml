@@ -144,9 +144,8 @@ jobs:
 
       - name: setup git config
         run: |
-          git config user.name "GitHub Actions Bot"
-          git config user.email "<>"
-
+          git config --global user.name "github-actions"
+          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
       - name: Rename version
         env:
@@ -181,17 +180,5 @@ jobs:
         run: |
           git commit -am "bot-update: update $REF_NAME" -m "Cek commit -> https://github.com/sora-vp/baseline/commit/$GITHUB_SHA"
 
-      - name: Debug
-        run: git log
-
-      # - name: Push changes to basic docker compose config repository
-      #   uses: cpina/github-action-push-to-another-repository@main
-      #   env:
-      #     API_TOKEN_GITHUB: ${{ secrets.BASIC_DOCKER_CONFIG_REPO_PAT }}
-      #
-      #   with:
-      #     destination-github-username: sora-vp
-      #     destination-repository-name: baseline-docker
-      #     create-target-branch-if-needed: true
-      #     user-email: ${{ secrets.MAINTAINER_EMAIL }}
-      #     target-branch: ${{ steps.extract_branch.outputs.branch }} 
+      - name: Push 🚀 
+        run: git push origin main 
