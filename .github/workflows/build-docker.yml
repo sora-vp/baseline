@@ -2,10 +2,10 @@ name: Docker Image Build CI
 
 on:
   push:
-  #   tags:
-  #     - "v[0-9]+.[0-9]+.[0-9]+"
-  #   branches:
-  #     - main
+    tags:
+      - "v[0-9]+.[0-9]+.[0-9]+"
+    branches:
+      - main
 
 jobs:
   changes:
@@ -23,6 +23,7 @@ jobs:
       - uses: dorny/paths-filter@v3
         id: filter
         with:
+          base: HEAD
           filters: |
             web: 'apps/web/package.json'
             processor: 'apps/processor/package.json'
