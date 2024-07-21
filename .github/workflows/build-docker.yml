@@ -26,8 +26,8 @@ jobs:
           filters: |
             web: 'apps/web/package.json'
             processor: 'apps/processor/package.json'
-            attendance: 'apps/client/attendance/package.json'
-            chooser: 'apps/client/chooser/package.json'
+            attendance: 'apps/clients/attendance/package.json'
+            chooser: 'apps/clients/chooser/package.json'
 
   web:
     needs: changes
@@ -138,16 +138,22 @@ jobs:
       && (needs.changes.outputs.web == 'true' || needs.changes.outputs.processor == 'true' || needs.changes.outputs.attendance == 'true' || needs.changes.outputs.chooser == 'true')
     runs-on: ubuntu-latest
     steps:
+      - env:
+          WEB_UPDATE: ${{ needs.changes.outputs.web }}  
+          PROCESSOR_UPDATE: ${{ needs.changes.outputs.processor }} 
+          ATTENDANCE_UPDATE: ${{ needs.changes.outputs.attendance }} 
+          CHOOSER_UPDATE: ${{ needs.changes.outputs.chooser }} 
+
       - uses: actions/checkout@v4
         with:
           repository: sora-vp/baseline-docker
 
       - name: Rename version
         run: |
-          [ ${{ needs.changes.outputs.web }} == true ] && sed -i 's/rmecha\/sora-baseline-web:[^ ]*/rmecha\/sora-baseline-web:${{ github.ref_name }}/' docker-compose.yml
-          [ ${{ needs.changes.outputs.processor }} == true ] && sed -i 's/rmecha\/sora-baseline-processor:[^ ]*/rmecha\/sora-baseline-processor:${{ github.ref_name }}/' docker-compose.yml
-          [ ${{ needs.changes.outputs.attendance }} == true ] && sed -i 's/rmecha\/sora-baseline-client-attendance:[^ ]*/rmecha\/sora-baseline-client-attendance:${{ github.ref_name }}/' docker-compose.yml
-          [ ${{ needs.changes.outputs.chooser }} == true ] && sed -i 's/rmecha\/sora-baseline-client-chooser:[^ ]*/rmecha\/sora-baseline-client-chooser:${{ github.ref_name }}/' docker-compose.yml
+          [ $WEB_UPDATE == true ] && sed -i 's/rmecha\/sora-baseline-web:[^ ]*/rmecha\/sora-baseline-web:${{ github.ref_name }}/' docker-compose.yml
+          [ $PROCESSOR_UPDATE == true ] && sed -i 's/rmecha\/sora-baseline-processor:[^ ]*/rmecha\/sora-baseline-processor:${{ github.ref_name }}/' docker-compose.yml
+          [ $ATTENDANCE_UPDATE == true ] && sed -i 's/rmecha\/sora-baseline-client-attendance:[^ ]*/rmecha\/sora-baseline-client-attendance:${{ github.ref_name }}/' docker-compose.yml
+          [ $CHOOSER_UPDATE == true ] && sed -i 's/rmecha\/sora-baseline-client-chooser:[^ ]*/rmecha\/sora-baseline-client-chooser:${{ github.ref_name }}/' docker-compose.yml
       
       - name: Inspect output
         run: cat docker-compose.yml
