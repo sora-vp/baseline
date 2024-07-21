@@ -139,12 +139,14 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
+          token: ${{ secrets.BASIC_DOCKER_CONFIG_REPO_PAT }}
           repository: sora-vp/baseline-docker
 
-      - name: Extract branch name
-        shell: bash
-        run: echo "branch=${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}" >> $GITHUB_OUTPUT
-        id: extract_branch
+      - name: setup git config
+        run: |
+          git config user.name "GitHub Actions Bot"
+          git config user.email "<>"
+
 
       - name: Rename version
         env:
@@ -170,19 +172,22 @@ jobs:
           fi
           if [ "$CHOOSER_UPDATE" == "success" ]; then
             sed -i 's/rmecha\/sora-baseline-client-chooser:[^ ]*/rmecha\/sora-baseline-client-chooser:'"$REF_NAME"'/' docker-compose.yml
-          fi 
+          fi
 
-      - name: Inspect output
-        run: cat docker-compose.yml && git diff
+      - name: Commit changes
+        run: git commit -am 'bot-update: update "$REF_NAME" https://github.com/sora-vp/baseline/commit/${{ github.sha }}'
 
-      - name: Push changes to basic docker compose config repository
-        uses: cpina/github-action-push-to-another-repository@main
-        env:
-          API_TOKEN_GITHUB: ${{ secrets.BASIC_DOCKER_CONFIG_REPO_PAT }}
+      - name: Debug
+        run: git log
 
-        with:
-          destination-github-username: sora-vp
-          destination-repository-name: baseline-docker
-          create-target-branch-if-needed: true
-          user-email: ${{ secrets.MAINTAINER_EMAIL }}
-          target-branch: ${{ steps.extract_branch.outputs.branch }} 
+      # - name: Push changes to basic docker compose config repository
+      #   uses: cpina/github-action-push-to-another-repository@main
+      #   env:
+      #     API_TOKEN_GITHUB: ${{ secrets.BASIC_DOCKER_CONFIG_REPO_PAT }}
+      #
+      #   with:
+      #     destination-github-username: sora-vp
+      #     destination-repository-name: baseline-docker
+      #     create-target-branch-if-needed: true
+      #     user-email: ${{ secrets.MAINTAINER_EMAIL }}
+      #     target-branch: ${{ steps.extract_branch.outputs.branch }} 
