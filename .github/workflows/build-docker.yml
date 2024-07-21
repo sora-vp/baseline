@@ -4,8 +4,6 @@ on:
   push:
     tags:
       - "v[0-9]+.[0-9]+.[0-9]+"
-    branches:
-      - main
 
 jobs:
   changes:
@@ -149,10 +147,10 @@ jobs:
 
       - name: Rename version
         env:
-          WEB_UPDATE: ${{ needs.web.result }}  
-          PROCESSOR_UPDATE: ${{ needs.processor.result }} 
-          ATTENDANCE_UPDATE: ${{ needs.client-attendance.result }} 
-          CHOOSER_UPDATE: ${{ needs.client-chooser.result }} 
+          WEB_UPDATE: ${{ needs.web.result }}
+          PROCESSOR_UPDATE: ${{ needs.processor.result }}
+          ATTENDANCE_UPDATE: ${{ needs.client-attendance.result }}
+          CHOOSER_UPDATE: ${{ needs.client-chooser.result }}
           REF_NAME: ${{ github.ref_name }}
         run: |
           echo "WEB_UPDATE: $WEB_UPDATE"
@@ -180,5 +178,5 @@ jobs:
         run: |
           git commit -am "bot-update: update $REF_NAME" -m "Cek commit -> https://github.com/sora-vp/baseline/commit/$GITHUB_SHA"
 
-      - name: Push 🚀 
-        run: git push origin main 
+      - name: Push 🚀
+        run: git push origin main
