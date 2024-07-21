@@ -146,7 +146,7 @@ jobs:
           WEB_UPDATE: ${{ needs.web.result }}  
           PROCESSOR_UPDATE: ${{ needs.processor.result }} 
           ATTENDANCE_UPDATE: ${{ needs.attendance.result }} 
-          CHOOSER_UPDATE: ${{ needs..chooser.result }} 
+          CHOOSER_UPDATE: ${{ needs.chooser.result }} 
         run: |
           [ $WEB_UPDATE == "success" ] && sed -i 's/rmecha\/sora-baseline-web:[^ ]*/rmecha\/sora-baseline-web:${{ github.ref_name }}/' docker-compose.yml
           [ $PROCESSOR_UPDATE == "success" ] && sed -i 's/rmecha\/sora-baseline-processor:[^ ]*/rmecha\/sora-baseline-processor:${{ github.ref_name }}/' docker-compose.yml
