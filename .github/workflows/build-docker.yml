@@ -141,6 +141,11 @@ jobs:
         with:
           repository: sora-vp/baseline-docker
 
+      - name: Extract branch name
+        shell: bash
+        run: echo "branch=${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}" >> $GITHUB_OUTPUT
+        id: extract_branch
+
       - name: Rename version
         env:
           WEB_UPDATE: ${{ needs.web.result }}  
@@ -169,3 +174,15 @@ jobs:
 
       - name: Inspect output
         run: cat docker-compose.yml && git diff
+
+      - name: Push changes to basic docker compose config repository
+        uses: cpina/github-action-push-to-another-repository@main
+        env:
+          API_TOKEN_GITHUB: ${{ secrets.BASIC_DOCKER_CONFIG_REPO_PAT }}
+
+        with:
+          destination-github-username: sora-vp
+          destination-repository-name: baseline-docker
+          create-target-branch-if-needed: true
+          user-email: ${{ secrets.MAINTAINER_EMAIL }}
+          target-branch: ${{ steps.extract_branch.outputs.branch }} 
