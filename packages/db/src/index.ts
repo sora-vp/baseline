@@ -111,3 +111,11 @@ export const preparedGetCandidates = db.query.candidates
     },
   })
   .prepare();
+//
+// export const preparedGetParticipantsStatistic = db.query.participants
+//   .findMany({
+//     columns: {
+//       id: false,
+//     },
+//   })
+//   .prepare();

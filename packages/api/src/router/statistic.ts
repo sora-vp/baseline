@@ -1,6 +1,7 @@
 import type { TRPCRouterRecord } from "@trpc/server";
 
 import {
+  preparedGetAllParticipants,
   preparedGetAttendedAndVoted,
   preparedGetCandidateCountsOnly,
   preparedGetGraphicalData,
@@ -40,9 +41,25 @@ export const statisticRouter = {
     };
   }),
 
-  // dataReportMutation: adminProcedure.mutation(async ({ ctx }) => {
-  //   return {
-  //     success: true,
-  //   };
-  // }),
+  dataReportMutation: adminProcedure.mutation(async () => {
+    const candidates = await preparedGetGraphicalData.execute();
+    const participants = await preparedGetAllParticipants.execute();
+
+    if (candidates.length < 0)
+      throw new TRPCError({
+        code: "NOT_FOUND",
+        message: "Tidak ada data kandidat!",
+      });
+
+    if (participants.length < 0)
+      throw new TRPCError({
+        code: "NOT_FOUND",
+        message: "Tidak ada data peserta pemilihan!",
+      });
+
+    return {
+      participants,
+      candidates: candidates.map((c) => [c.name, c.counter]),
+    };
+  }),
 } satisfies TRPCRouterRecord;
