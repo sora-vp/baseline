@@ -49,7 +49,14 @@ const constant = {
     "D17",
     "C18",
     "D18",
-    "E18",
+    "C19",
+    "D19",
+    "E19",
+    "C21",
+    "D21",
+    "E21",
+    "C22",
+    "D22",
   ],
 
   // > ([5]).flatMap(n => (["B", "C"].map(a => `${a}${n}`)))
@@ -65,10 +72,14 @@ const constant = {
     "D10",
     "E10",
     "F10",
+
+    "C17",
     "C18",
+    "C19",
     "D19",
     "E19",
     "C22",
+    "D22",
   ],
 
   // > ([10]).flatMap(n => (["C", "D", "E", "F"].map(a => `${a}${n}`)))
@@ -77,6 +88,10 @@ const constant = {
     "C2",
     "C3",
     "C5",
+
+    "F5",
+    "F6",
+    "F7",
 
     "C10",
     "D10",
@@ -98,7 +113,18 @@ const constant = {
 
     "D17",
     "D18",
+
+    "C19",
+    "D19",
+    "E19",
+    "C21",
+    "D21",
+    "E21",
+
+    "D22",
   ],
+
+  candidateNeedBorder: ["E1", "F1", "G1", "H1", "G2", "H2"],
 } as const;
 
 const conditionalFormatRules = (
@@ -250,6 +276,7 @@ export function overviewWorksheetWorker(ws: ExcelJS.Worksheet) {
   ws.mergeCells("C19:C20");
   ws.mergeCells("D19:D20");
   ws.mergeCells("E19:E20");
+  ws.mergeCells("D22:E22");
 
   const h1 = ws.getCell("C2");
   h1.value = "RINGKASAN HASIL AKHIR";
@@ -276,6 +303,7 @@ export function overviewWorksheetWorker(ws: ExcelJS.Worksheet) {
   };
 
   ws.getRow(4).height = 25.5;
+  ws.getRow(21).height = 33;
 
   /**
    * Tabel pertama yang memuat keterangan
@@ -306,28 +334,10 @@ export function overviewWorksheetWorker(ws: ExcelJS.Worksheet) {
   ws.getCell("F5").value = {
     formula: "MAX(TabelKandidat[Banyaknya Pemilih])",
   };
-
-  // Formula bantu, karena kalau jadi satu bakalan ada bug penambahan bug @
-  // Rumus asli: IFNA(INDEX(TabelKandidat[Banyaknya Pemilih];MATCH(1;FIND(TRUE;COUNTIF(TabelKandidat[Banyaknya Pemilih];TabelKandidat[Banyaknya Pemilih])>1);0));0)
-  ws.getCell("I5").value = "Tabel bantu";
-  ws.getCell("I6").value = {
-    formula:
-      "_xlfn.COUNTIF(TabelKandidat[Banyaknya Pemilih], TabelKandidat[Banyaknya Pemilih])>1",
-  };
   ws.getCell("F6").value = {
-    formula: "IFNA(MATCH(1, _xlfn.FIND(TRUE, I6#, 0)), 0)",
+    formula:
+      "_xlfn.IFNA(INDEX(TabelKandidat[Banyaknya Pemilih],MATCH(1,FIND(TRUE,COUNTIF(TabelKandidat[Banyaknya Pemilih],TabelKandidat[Banyaknya Pemilih])>1),0)),0)",
   };
-
-  // ws.getCell("F6").value = {
-  //   formula: "",
-  //   // "MATCH(1, FIND(TRUE, COUNTIF(TabelKandidat[Banyaknya Pemilih], TabelKandidat[Banyaknya Pemilih])>1), 0)",
-  //   // "_xlfn.IFNA( _xlfn.INDEX(TabelKandidat[Banyaknya Pemilih], _xlfn.MATCH(1, _xlfn.FIND(TRUE, _xlfn.COUNTIF(TabelKandidat[Banyaknya Pemilih], TabelKandidat[Banyaknya Pemilih]) > 1), 0)), 0)",
-  // };
-  // ws.getCell("F6").value = {
-  //   formula: "",
-  //   // "MATCH(1, FIND(TRUE, COUNTIF(TabelKandidat[Banyaknya Pemilih], TabelKandidat[Banyaknya Pemilih])>1), 0)",
-  //   // "_xlfn.IFNA( _xlfn.INDEX(TabelKandidat[Banyaknya Pemilih], _xlfn.MATCH(1, _xlfn.FIND(TRUE, _xlfn.COUNTIF(TabelKandidat[Banyaknya Pemilih], TabelKandidat[Banyaknya Pemilih]) > 1), 0)), 0)",
-  // };
 
   ws.getCell("F7").value = {
     formula: 'IF(NOT(F5=F6), "TIDAK MENGULANG", "MENGULANG")',
@@ -409,7 +419,7 @@ export function overviewWorksheetWorker(ws: ExcelJS.Worksheet) {
    * karena akan melakukan pengecekan apakah suara lebih dari yang diperhitungkan
    */
   ws.getCell("C17").value = "Sigma hitungan kandidat";
-  ws.getCell("C18").value = "Status suara";
+  ws.getCell("C18").value = "Status suara sesuai?";
 
   ws.getCell("D17").value = {
     formula: "SUM(TabelKandidat[Banyaknya Pemilih])",
@@ -426,9 +436,45 @@ export function overviewWorksheetWorker(ws: ExcelJS.Worksheet) {
   ws.getCell("D19").value = "Dengan perolehan suara";
   ws.getCell("E19").value = "Dengan durasi pemilihan";
 
-  ws.getCell("C22").value = "Dengan durasi pemilihan";
-  ws.getCell("C23").value = {
+  ws.getCell("C21").value = {
     formula:
-      'IF(AND(D11="YA";D12="YA";D13="YA";D14="YA";D18="YA";D17<=C6);IF(F7="TIDAK MENGULANG";"SUARA SAH";"SAH DENGAN RONDE SELANJUTNYA");"SUARA TIDAK SAH")',
+      '_xlfn.IF(D18="YA",INDEX(TabelKandidat[Nama],MATCH(F5,TabelKandidat[Banyaknya Pemilih],0)),"---")',
   };
+  ws.getCell("D21").value = {
+    formula: '_xlfn.IF(D18="YA",CONCAT(F5," Suara"),"---")',
+  };
+  ws.getCell("E21").value = {
+    formula:
+      '_xlfn.IF(D18="YA",MAX(FILTER(TabelPartisipan[Waktu Memilih],TabelPartisipan[Waktu Memilih]<>""))-MIN(FILTER(TabelPartisipan[Waktu Kehadiran],TabelPartisipan[Waktu Kehadiran]<>"")),"---")',
+  };
+  ws.getCell("E21").numFmt = "dd:hh:mm:ss";
+
+  ws.getCell("C22").value = "Status suara";
+  ws.getCell("D22").value = {
+    formula:
+      'IF(AND(D11="YA",D12="YA",D13="YA",D14="YA",D18="YA",D17<=C6),IF(F7="TIDAK MENGULANG","SUARA SAH","SAH DENGAN RONDE SELANJUTNYA"),"SUARA TIDAK SAH")',
+  };
+
+  ws.addConditionalFormatting({
+    ref: "D22",
+    rules: [
+      ...conditionalFormatRules(false, "SUARA SAH", "SUARA TIDAK SAH"),
+      {
+        type: "containsText",
+        operator: "containsText",
+        priority: 1,
+        text: "SAH DENGAN RONDE SELANJUTNYA",
+        style: {
+          font: {
+            color: { argb: "9E6500" },
+          },
+          fill: {
+            type: "pattern",
+            pattern: "solid",
+            bgColor: { argb: "FFEB9C" },
+          },
+        },
+      },
+    ],
+  });
 }
