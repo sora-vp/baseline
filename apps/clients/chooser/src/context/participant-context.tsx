@@ -11,7 +11,7 @@ import { api } from "@/utils/api";
 import { motion } from "framer-motion";
 import { Navigate } from "react-router-dom";
 
-import { useKeyboardWebsocket } from "./keyboard-websocket";
+import { useHardwareWebsocket } from "./hardware-websocket";
 
 export interface IParticipantContext {
   name: string | null;
@@ -30,7 +30,7 @@ export const ParticipantProvider = ({
 }: {
   children: React.ReactNode;
 }) => {
-  const { wsEnabled, lastMessage } = useKeyboardWebsocket();
+  const { subscribe } = useHardwareWebsocket();
 
   const [qrId, setQrId] = useState<string | null>(null);
   const [votedSuccessfully, setVoted] = useState(false);
@@ -50,10 +50,9 @@ export const ParticipantProvider = ({
   );
 
   useEffect(() => {
-    if (wsEnabled && lastMessage) {
-      // Precheck before consuming command
-      if (lastMessage.startsWith("SORA-KEYBIND-")) {
-        const actualCommand = lastMessage.replace("SORA-KEYBIND-", "");
+    const unsubHardware = subscribe((message) => {
+      if (message.startsWith("SORA-KEYBIND-")) {
+        const actualCommand = message.replace("SORA-KEYBIND-", "");
 
         switch (actualCommand) {
           case "RELOAD": {
@@ -69,14 +68,12 @@ export const ParticipantProvider = ({
           }
         }
       }
-    }
-  }, [
-    qrId,
-    participantQuery.isFetched,
-    participantQuery.data,
-    wsEnabled,
-    lastMessage,
-  ]);
+
+      return () => {
+        unsubHardware();
+      };
+    });
+  }, [qrId, participantQuery.isFetched, participantQuery.data]);
 
   const propsValue = useMemo(() => {
     if (!qrId)

@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
-import { useKeyboardWebsocket } from "@/context/keyboard-websocket";
+import { useHardwareWebsocket } from "@/context/hardware-websocket";
 import { useParticipant } from "@/context/participant-context";
 import { api } from "@/utils/api";
 import { Navigate } from "react-router-dom";
@@ -10,24 +10,21 @@ import { MainScanner } from "./main-scanner";
 
 export function ScannerComponent() {
   const { qrId, setQRCode } = useParticipant();
-  const { wsEnabled, lastMessage, setLastMessage } = useKeyboardWebsocket();
+  const { subscribe } = useHardwareWebsocket();
 
   const [isQrInvalid, setInvalidQr] = useState(false);
 
   const participantAttended =
     api.clientConsumer.checkParticipantAttended.useMutation({
       onSuccess() {
-        setLastMessage(null);
-
         setQRCode(participantAttended.variables!);
       },
     });
 
   useEffect(() => {
-    if (wsEnabled && lastMessage) {
-      // Precheck before consuming command
-      if (lastMessage.startsWith("SORA-KEYBIND-")) {
-        const actualCommand = lastMessage.replace("SORA-KEYBIND-", "");
+    const unsubHardware = subscribe((message) => {
+      if (message.startsWith("SORA-KEYBIND-")) {
+        const actualCommand = message.replace("SORA-KEYBIND-", "");
 
         switch (actualCommand) {
           case "RELOAD": {
@@ -37,8 +34,12 @@ export function ScannerComponent() {
           }
         }
       }
-    }
-  }, [isQrInvalid, participantAttended.isError, wsEnabled, lastMessage]);
+    });
+
+    return () => {
+      unsubHardware();
+    };
+  }, [isQrInvalid, participantAttended.isError]);
 
   const setIsQrValid = useCallback(
     (invalid: boolean) => setInvalidQr(invalid),

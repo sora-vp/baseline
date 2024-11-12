@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { UniversalError } from "@/components/universal-error";
-import { useKeyboardWebsocket } from "@/context/keyboard-websocket";
+import { useHardwareWebsocket } from "@/context/hardware-websocket";
 import { ensureQRIDExist, useParticipant } from "@/context/participant-context";
 import { env } from "@/env";
 import { api } from "@/utils/api";
@@ -91,7 +91,7 @@ const CurrentParticipantInfo = (props: { isSuccess?: boolean }) => {
 
 function VotePage() {
   const { qrId, setQRCode, setVotedSuccessfully } = useParticipant();
-  const { wsEnabled, lastMessage, setLastMessage } = useKeyboardWebsocket();
+  const { subscribe } = useHardwareWebsocket();
 
   const successTimeout = useAtomValue(successTimeoutAtom);
 
@@ -116,9 +116,6 @@ function VotePage() {
       setAlertOpen(false);
       setID(null);
     },
-    onSettled() {
-      setLastMessage(null);
-    },
   });
 
   const candidateName = useMemo(
@@ -141,8 +138,6 @@ function VotePage() {
   const chooseCandidate = useCallback(() => {
     if (!cannotPushKey) {
       if (qrId && currentID && alertOpen) {
-        setLastMessage(null);
-
         upvoteCandidate.mutate({
           id: currentID,
           qrId,
@@ -176,7 +171,6 @@ function VotePage() {
           if (!upvoteCandidate.isPending) {
             setID(null);
             setAlertOpen(false);
-            setLastMessage(null);
           }
 
           break;
@@ -228,17 +222,15 @@ function VotePage() {
   }, [upvoteCandidate.isPending, alertOpen, triggerOpen, chooseCandidate]);
 
   useEffect(() => {
-    if (wsEnabled && lastMessage) {
-      // Precheck before consuming command
-      if (lastMessage.startsWith("SORA-KEYBIND-")) {
-        const actualCommand = lastMessage.replace("SORA-KEYBIND-", "");
+    const unsubHardware = subscribe((message) => {
+      if (message.startsWith("SORA-KEYBIND-")) {
+        const actualCommand = message.replace("SORA-KEYBIND-", "");
 
         switch (actualCommand) {
           case "ESC": {
             if (!upvoteCandidate.isPending) {
               setID(null);
               setAlertOpen(false);
-              setLastMessage(null);
             }
 
             break;
@@ -288,15 +280,17 @@ function VotePage() {
           }
         }
       }
-    }
+    });
+
+    return () => {
+      unsubHardware();
+    };
   }, [
     upvoteCandidate.isPending,
     candidateList.errorUpdateCount,
     alertOpen,
     triggerOpen,
     chooseCandidate,
-    wsEnabled,
-    lastMessage,
   ]);
 
   useEffect(() => {
@@ -443,7 +437,6 @@ function VotePage() {
         open={alertOpen || (upvoteCandidate.isPending && !!qrId)}
         onOpenChange={() => {
           setAlertOpen((prev) => !prev);
-          setLastMessage(null);
         }}
       >
         <AlertDialogContent

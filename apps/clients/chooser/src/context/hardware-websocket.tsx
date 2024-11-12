@@ -3,8 +3,7 @@ import {
   useCallback,
   useContext,
   useEffect,
-  useMemo,
-  useState,
+  useRef,
 } from "react";
 import { defaultWSPortAtom, enableWSConnectionAtom } from "@/utils/atom";
 import { useAtomValue } from "jotai";
@@ -12,28 +11,31 @@ import useWebSocket, { ReadyState } from "react-use-websocket";
 
 import { toast } from "@sora-vp/ui/toast";
 
-export interface IKeyboardWebsocket {
+export type THardwareWebsocketCallback = (message: string) => void;
+
+export interface IHardwareWebsocket {
   wsEnabled: boolean;
-  lastMessage: string | null;
-  setLastMessage: (msg: string | null) => void;
+  subscribe(callbacK: THardwareWebsocketCallback): () => void;
 }
 
-export const KeyboardWebsocketContext = createContext<IKeyboardWebsocket>(
-  {} as IKeyboardWebsocket,
+export const HardwareWebsocketContext = createContext<IHardwareWebsocket>(
+  {} as IHardwareWebsocket,
 );
 
-export const KeyboardWebsocketProvider = ({
+export const HardwareWebsocketProvider = ({
   children,
 }: {
   children: React.ReactNode;
 }) => {
-  const [lastMessage, setLastMessageState] =
-    useState<IKeyboardWebsocket["lastMessage"]>(null);
+  const currentSubscriberIdRef = useRef<number>(0);
+  const subscribersRef = useRef<Map<number, THardwareWebsocketCallback>>(
+    new Map(),
+  );
 
   const wsPortNumber = useAtomValue(defaultWSPortAtom);
   const wsEnabled = useAtomValue(enableWSConnectionAtom);
 
-  const { lastMessage: libLastMessage, readyState } = useWebSocket<string>(
+  const { lastMessage, readyState } = useWebSocket<string>(
     wsEnabled ? `ws://127.0.0.1:${wsPortNumber}/ws` : null,
     {
       share: true,
@@ -47,23 +49,23 @@ export const KeyboardWebsocketProvider = ({
     },
   );
 
-  const setLastMessage = useCallback(
-    (msg: IKeyboardWebsocket["lastMessage"]) => setLastMessageState(msg),
-    [],
-  );
+  const subscribe = useCallback((callback: THardwareWebsocketCallback) => {
+    const id = currentSubscriberIdRef.current;
+    subscribersRef.current.set(id, callback);
+    currentSubscriberIdRef.current++;
 
-  const contextValue = useMemo(
-    () => ({
-      wsEnabled,
-      lastMessage,
-      setLastMessage,
-    }),
-    [wsEnabled, lastMessage],
-  );
+    return () => {
+      subscribersRef.current.delete(id);
+    };
+  }, []);
 
   useEffect(() => {
-    if (libLastMessage) setLastMessageState(libLastMessage.data);
-  }, [libLastMessage]);
+    if (lastMessage) {
+      Array.from(subscribersRef.current).forEach(([, callback]) => {
+        callback(lastMessage.data);
+      });
+    }
+  }, [lastMessage]);
 
   useEffect(() => {
     if (wsEnabled) {
@@ -96,11 +98,16 @@ export const KeyboardWebsocketProvider = ({
   }, [readyState, wsEnabled]);
 
   return (
-    <KeyboardWebsocketContext.Provider value={contextValue}>
+    <HardwareWebsocketContext.Provider
+      value={{
+        wsEnabled,
+        subscribe,
+      }}
+    >
       {children}
-    </KeyboardWebsocketContext.Provider>
+    </HardwareWebsocketContext.Provider>
   );
 };
 
-export const useKeyboardWebsocket = () =>
-  useContext(KeyboardWebsocketContext) as IKeyboardWebsocket;
+export const useHardwareWebsocket = () =>
+  useContext(HardwareWebsocketContext) as IHardwareWebsocket;
