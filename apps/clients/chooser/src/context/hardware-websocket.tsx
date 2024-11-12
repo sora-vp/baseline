@@ -1,4 +1,10 @@
-import { createContext, useContext, useEffect, useRef } from "react";
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useRef,
+} from "react";
 import { defaultWSPortAtom, enableWSConnectionAtom } from "@/utils/atom";
 import { useAtomValue } from "jotai";
 import useWebSocket, { ReadyState } from "react-use-websocket";
@@ -43,7 +49,7 @@ export const HardwareWebsocketProvider = ({
     },
   );
 
-  const subscribe = (callback: THardwareWebsocketCallback) => {
+  const subscribe = useCallback((callback: THardwareWebsocketCallback) => {
     const id = currentSubscriberIdRef.current;
     subscribersRef.current.set(id, callback);
     currentSubscriberIdRef.current++;
@@ -51,11 +57,11 @@ export const HardwareWebsocketProvider = ({
     return () => {
       subscribersRef.current.delete(id);
     };
-  };
+  }, []);
 
   useEffect(() => {
     if (lastMessage) {
-      Array.from(subscribersRef.current).forEach(([_, callback]) => {
+      Array.from(subscribersRef.current).forEach(([, callback]) => {
         callback(lastMessage.data);
       });
     }
