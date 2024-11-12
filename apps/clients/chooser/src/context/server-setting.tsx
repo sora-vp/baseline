@@ -4,7 +4,7 @@ import { api } from "@/utils/api";
 import { motion } from "framer-motion";
 import { Loader } from "lucide-react";
 
-import { useKeyboardWebsocket } from "./keyboard-websocket";
+import { useHardwareWebsocket } from "./hardware-websocket";
 import { useParticipant } from "./participant-context";
 
 interface ISettingContext {
@@ -20,7 +20,7 @@ export const ServerSettingProvider = ({
 }: {
   children: React.ReactNode;
 }) => {
-  const { wsEnabled, lastMessage } = useKeyboardWebsocket();
+  const { subscribe } = useHardwareWebsocket();
   const { qrId, setQRCode } = useParticipant();
 
   const [errorMessage, setErrorMessage] = useState("");
@@ -31,10 +31,9 @@ export const ServerSettingProvider = ({
   });
 
   useEffect(() => {
-    if (wsEnabled && lastMessage) {
-      // Precheck before consuming command
-      if (lastMessage.startsWith("SORA-KEYBIND-")) {
-        const actualCommand = lastMessage.replace("SORA-KEYBIND-", "");
+    const unsubHardware = subscribe((message) => {
+      if (message.startsWith("SORA-KEYBIND-")) {
+        const actualCommand = message.replace("SORA-KEYBIND-", "");
 
         switch (actualCommand) {
           case "RELOAD": {
@@ -44,8 +43,12 @@ export const ServerSettingProvider = ({
           }
         }
       }
-    }
-  }, [settingsQuery.errorUpdateCount, wsEnabled, lastMessage]);
+    });
+
+    return () => {
+      unsubHardware();
+    };
+  }, [settingsQuery.errorUpdateCount]);
 
   useEffect(() => {
     if (settingsQuery.error) setErrorMessage(settingsQuery.error.message);

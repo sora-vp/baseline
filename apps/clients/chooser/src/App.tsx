@@ -11,7 +11,7 @@ import superjson from "superjson";
 
 import { ClientNotFound } from "@sora-vp/ui/client-not-found";
 
-import { KeyboardWebsocketProvider } from "./context/keyboard-websocket";
+import { HardwareWebsocketProvider } from "./context/hardware-websocket";
 import { env } from "./env";
 
 const router = createBrowserRouter([
@@ -78,13 +78,13 @@ export default function App() {
   return (
     <api.Provider client={trpcClient} queryClient={queryClient}>
       <QueryClientProvider client={queryClient}>
-        <KeyboardWebsocketProvider>
+        <HardwareWebsocketProvider>
           <ParticipantProvider>
             <ServerSettingProvider>
               <RouterProvider router={router} />
             </ServerSettingProvider>
           </ParticipantProvider>
-        </KeyboardWebsocketProvider>
+        </HardwareWebsocketProvider>
       </QueryClientProvider>
     </api.Provider>
   );
