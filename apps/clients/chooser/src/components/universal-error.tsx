@@ -48,7 +48,9 @@ export function UniversalError(props: {
           className="flex flex-col items-center"
         >
           <p>Pesan Error:</p>
-          <pre className="w-full border p-2 font-mono">{}</pre>
+          <pre className="w-full border p-2 font-mono">
+            {props.errorMessage}
+          </pre>
         </motion.div>
       ) : null}
 
