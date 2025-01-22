@@ -2400,7 +2400,7 @@ __metadata:
     tailwindcss: "npm:^3.4.4"
     typescript: "npm:^5.4.5"
     typescript-eslint: "npm:^7.14.1"
-    vite: "npm:^5.3.6"
+    vite: "npm:^5.4.12"
     zod: "npm:^3.23.8"
   languageName: unknown
   linkType: soft
@@ -2448,7 +2448,7 @@ __metadata:
     tailwindcss: "npm:^3.4.4"
     typescript: "npm:^5.4.5"
     typescript-eslint: "npm:^7.14.1"
-    vite: "npm:^5.3.6"
+    vite: "npm:^5.4.12"
     zod: "npm:^3.23.8"
   languageName: unknown
   linkType: soft
@@ -11302,9 +11302,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"vite@npm:^5.3.6":
-  version: 5.4.8
-  resolution: "vite@npm:5.4.8"
+"vite@npm:^5.4.12":
+  version: 5.4.14
+  resolution: "vite@npm:5.4.14"
   dependencies:
     esbuild: "npm:^0.21.3"
     fsevents: "npm:~2.3.3"
@@ -11341,7 +11341,7 @@ __metadata:
       optional: true
   bin:
     vite: bin/vite.js
-  checksum: 10c0/af70af6d6316a3af71f44ebe3ab343bd66450d4157af73af3b32239e1b6ec43ff6f651d7cc4193b21ed3bff2e9356a3de9e96aee53857f39922e4a2d9fad75a1
+  checksum: 10c0/8842933bd70ca6a98489a0bb9c8464bec373de00f9a97c8c7a4e64b24d15c88bfaa8c1acb38a68c3e5eb49072ffbccb146842c2d4edcdd036a9802964cffe3d1
   languageName: node
   linkType: hard
 
