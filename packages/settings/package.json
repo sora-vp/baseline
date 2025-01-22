@@ -7,6 +7,10 @@
     ".": {
       "types": "./dist/index.d.ts",
       "default": "./src/index.ts"
+    },
+    "./manager": {
+      "types": "./dist/SettingsManager.d.ts",
+      "default": "./src/SettingsManager.ts"
     }
   },
   "license": "MIT",
