@@ -6,7 +6,7 @@ import {
   preparedGetAttendedAndVoted,
   preparedGetCandidateCountsOnly,
   preparedGetGraphicalData,
-} from "@sora-vp/db";
+} from "@sora-vp/db/client";
 
 import { adminProcedure } from "../trpc";
 

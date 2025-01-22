@@ -2,14 +2,13 @@ import type { TRPCRouterRecord } from "@trpc/server";
 import { TRPCError } from "@trpc/server";
 import amqp from "amqplib";
 
+import { eq, sql } from "@sora-vp/db";
 import {
-  eq,
   preparedGetCandidates,
   preparedGetParticipantAttended,
   preparedGetParticipantStatus,
-  schema,
-  sql,
-} from "@sora-vp/db";
+} from "@sora-vp/db/client";
+import schema from "@sora-vp/db/schema";
 import settings, { canAttendNow } from "@sora-vp/settings";
 import { candidate, participant } from "@sora-vp/validators";
 

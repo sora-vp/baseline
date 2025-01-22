@@ -11,7 +11,7 @@ import { initTRPC, TRPCError } from "@trpc/server";
 import superjson from "superjson";
 import { ZodError } from "zod";
 
-import { db } from "@sora-vp/db";
+import { db } from "@sora-vp/db/client";
 
 /**
  * 1. CONTEXT

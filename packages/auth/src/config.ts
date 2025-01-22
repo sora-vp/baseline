@@ -3,7 +3,7 @@ import bcrypt from "bcrypt";
 import { CredentialsSignin } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 
-import { preparedGetUserByEmail } from "@sora-vp/db";
+import { preparedGetUserByEmail } from "@sora-vp/db/client";
 
 class UnexpectedLoginError extends CredentialsSignin {
   code = "Terjadi kesalahan yang terduga, mohon coba lagi nanti.";

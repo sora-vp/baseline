@@ -8,6 +8,10 @@
       "types": "./dist/index.d.ts",
       "default": "./src/index.ts"
     },
+    "./client": {
+      "types": "./dist/client.d.ts",
+      "default": "./src/client.ts"
+    },
     "./schema": {
       "types": "./dist/schema/main.d.ts",
       "default": "./src/schema/main.ts"
