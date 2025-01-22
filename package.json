@@ -26,13 +26,13 @@
   },
   "devDependencies": {
     "@sora-vp/prettier-config": "*",
-    "@turbo/gen": "^1.13.3",
-    "prettier": "^3.2.5",
-    "turbo": "^2.0.3",
-    "typescript": "^5.4.5"
+    "@turbo/gen": "^1.13.4",
+    "prettier": "^3.4.2",
+    "turbo": "^2.3.3",
+    "typescript": "^5.6.3"
   },
   "prettier": "@sora-vp/prettier-config",
-  "packageManager": "yarn@4.2.2",
+  "packageManager": "yarn@4.6.0",
   "workspaces": [
     "apps/clients/*",
     "apps/processor",

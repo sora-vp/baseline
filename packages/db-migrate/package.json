@@ -21,21 +21,21 @@
     "with-env": "dotenv -e ../../.env --"
   },
   "dependencies": {
-    "@t3-oss/env-core": "^0.10.1",
-    "drizzle-orm": "^0.30.10",
-    "mysql2": "^3.9.8",
-    "zod": "^3.23.8"
+    "@t3-oss/env-core": "^0.11.1",
+    "drizzle-orm": "^0.38.4",
+    "mysql2": "^3.12.0",
+    "zod": "^3.24.1"
   },
   "devDependencies": {
     "@sora-vp/eslint-config": "*",
     "@sora-vp/prettier-config": "*",
     "@sora-vp/tsconfig": "*",
-    "dotenv-cli": "^7.4.1",
-    "drizzle-kit": "^0.20.18",
-    "eslint": "^9.6.0",
-    "prettier": "^3.2.5",
-    "tsup": "^8.1.0",
-    "typescript": "^5.4.5"
+    "dotenv-cli": "^7.4.4",
+    "drizzle-kit": "^0.30.2",
+    "eslint": "^9.18.0",
+    "prettier": "^3.4.2",
+    "tsup": "^8.3.5",
+    "typescript": "^5.6.3"
   },
   "prettier": "@sora-vp/prettier-config"
 }
