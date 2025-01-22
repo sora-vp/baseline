@@ -146,6 +146,7 @@ export const clientRouter = {
                 correlationId,
                 (msg) => {
                   if (!msg) {
+                    // eslint-disable-next-line @typescript-eslint/prefer-promise-reject-errors
                     reject(
                       "Publisher has been cancelled or channel has been closed.",
                     );

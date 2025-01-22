@@ -43,7 +43,7 @@
     "@sora-vp/tailwind-config": "*",
     "@sora-vp/tsconfig": "*",
     "@types/react": "^18.3.18",
-    "eslint": "^9.18.0",
+    "eslint": "^9.12.0",
     "prettier": "^3.4.2",
     "react": "^18.3.1",
     "tailwindcss": "^3.4.17",

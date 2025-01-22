@@ -60,7 +60,8 @@ export const authConfig = {
             name: user.name,
             email: user.email,
           };
-        } catch (_) {
+          // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        } catch (err: unknown) {
           throw new UnexpectedLoginError();
         }
       },
