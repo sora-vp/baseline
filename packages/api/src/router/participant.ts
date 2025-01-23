@@ -6,7 +6,7 @@ import {
   preparedGetAllParticipants,
   preparedGetExcelParticipants,
 } from "@sora-vp/db/client";
-import schema from "@sora-vp/db/schema";
+import * as schema from "@sora-vp/db/schema";
 import { canAttendNow } from "@sora-vp/settings";
 import { participant } from "@sora-vp/validators";
 

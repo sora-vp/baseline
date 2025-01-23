@@ -2,7 +2,7 @@ import type { TRPCRouterRecord } from "@trpc/server";
 import { TRPCError } from "@trpc/server";
 
 import { and, eq, not, sql } from "@sora-vp/db";
-import schema from "@sora-vp/db/schema";
+import * as schema from "@sora-vp/db/schema";
 import { admin } from "@sora-vp/validators";
 
 import { adminProcedure } from "../trpc";

@@ -8,7 +8,7 @@ import mime from "mime-types";
 
 import { eq } from "@sora-vp/db";
 import { preparedAdminGetCandidates } from "@sora-vp/db/client";
-import schema from "@sora-vp/db/schema";
+import * as schema from "@sora-vp/db/schema";
 import { randomFileName } from "@sora-vp/id-generator";
 import { canVoteNow } from "@sora-vp/settings";
 import { candidate } from "@sora-vp/validators";

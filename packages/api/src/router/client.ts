@@ -8,7 +8,7 @@ import {
   preparedGetParticipantAttended,
   preparedGetParticipantStatus,
 } from "@sora-vp/db/client";
-import schema from "@sora-vp/db/schema";
+import * as schema from "@sora-vp/db/schema";
 import settings, { canAttendNow } from "@sora-vp/settings";
 import { candidate, participant } from "@sora-vp/validators";
 

@@ -3,7 +3,7 @@ import { TRPCError } from "@trpc/server";
 import bcrypt from "bcrypt";
 
 import { countUserTable, preparedGetUserByEmail } from "@sora-vp/db/client";
-import schema from "@sora-vp/db/schema";
+import * as schema from "@sora-vp/db/schema";
 import { auth as authValidator } from "@sora-vp/validators";
 
 import { publicProcedure } from "../trpc";
