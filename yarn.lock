@@ -2228,9 +2228,9 @@ __metadata:
     eslint: "npm:^9.12.0"
     eslint-plugin-react-hooks: "npm:^5.0.0"
     eslint-plugin-react-refresh: "npm:^0.4.18"
-    framer-motion: "npm:^12.0.1"
     jotai: "npm:^2.11.1"
     lucide-react: "npm:^0.473.0"
+    motion: "npm:^12.0.1"
     non.geist: "npm:^1.0.4"
     postcss: "npm:^8.5.1"
     prettier: "npm:^3.4.2"
@@ -2275,9 +2275,9 @@ __metadata:
     eslint: "npm:^9.12.0"
     eslint-plugin-react-hooks: "npm:^5.0.0"
     eslint-plugin-react-refresh: "npm:^0.4.18"
-    framer-motion: "npm:^12.0.1"
     jotai: "npm:^2.11.1"
     lucide-react: "npm:^0.473.0"
+    motion: "npm:^12.0.1"
     non.geist: "npm:^1.0.4"
     postcss: "npm:^8.5.1"
     prettier: "npm:^3.4.2"
@@ -8299,6 +8299,27 @@ __metadata:
   version: 12.0.0
   resolution: "motion-utils@npm:12.0.0"
   checksum: 10c0/ca6cc7542d00afab011130fcd940e5f5a412b21a4eaeb17c0a497dcb86de311dda90741eeca7de1276cc8c1dff7ac1e6a8df1e8cebb1191a2c43bfe8368dc70b
+  languageName: node
+  linkType: hard
+
+"motion@npm:^12.0.1":
+  version: 12.0.1
+  resolution: "motion@npm:12.0.1"
+  dependencies:
+    framer-motion: "npm:^12.0.1"
+    tslib: "npm:^2.4.0"
+  peerDependencies:
+    "@emotion/is-prop-valid": "*"
+    react: ^18.0.0 || ^19.0.0
+    react-dom: ^18.0.0 || ^19.0.0
+  peerDependenciesMeta:
+    "@emotion/is-prop-valid":
+      optional: true
+    react:
+      optional: true
+    react-dom:
+      optional: true
+  checksum: 10c0/38589ac118354a2d7c40833c01cbe49db3e45f1adcc532fe7144a6ab86d6a8ad58e6d8b6246261e5854c3f8942c2d4ae72ed495013951b71677edf7f1e53e3d1
   languageName: node
   linkType: hard
 

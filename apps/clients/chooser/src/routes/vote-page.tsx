@@ -5,9 +5,9 @@ import { ensureQRIDExist, useParticipant } from "@/context/participant-context";
 import { env } from "@/env";
 import { api } from "@/utils/api";
 import { successTimeoutAtom } from "@/utils/atom";
-import { motion } from "framer-motion";
 import { useAtomValue } from "jotai";
 import { Loader2 } from "lucide-react";
+import { motion } from "motion/react";
 
 import { cn } from "@sora-vp/ui";
 import {

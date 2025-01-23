@@ -8,7 +8,7 @@ import {
 } from "react";
 import { UniversalError } from "@/components/universal-error";
 import { api } from "@/utils/api";
-import { motion } from "framer-motion";
+import { motion } from "motion/react";
 import { Navigate } from "react-router-dom";
 
 import { useHardwareWebsocket } from "./hardware-websocket";

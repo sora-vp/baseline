@@ -1,5 +1,5 @@
 import { useEffect, useRef } from "react";
-import { motion } from "framer-motion";
+import { motion } from "motion/react";
 import QrScanner from "qr-scanner";
 
 import { validateId } from "@sora-vp/id-generator";

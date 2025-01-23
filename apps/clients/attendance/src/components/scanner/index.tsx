@@ -1,9 +1,9 @@
 import { useCallback, useState } from "react";
 import { api } from "@/utils/api";
 import { successTimeoutAtom } from "@/utils/atom";
-import { motion } from "framer-motion";
 import { useAtomValue } from "jotai";
 import { Loader, RotateCcw } from "lucide-react";
+import { motion } from "motion/react";
 
 import { Button } from "@sora-vp/ui/button";
 import { Separator } from "@sora-vp/ui/separator";

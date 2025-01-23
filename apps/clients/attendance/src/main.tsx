@@ -8,7 +8,7 @@ import "non.geist/mono";
 import "@fontsource-variable/noto-sans-sundanese";
 import "./index.css";
 
-import { AnimatePresence } from "framer-motion";
+import { AnimatePresence } from "motion/react";
 
 import { Toaster } from "@sora-vp/ui/toast";
 
