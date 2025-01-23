@@ -45,6 +45,8 @@ export function MainScanner({
     return () => {
       qrScanner.destroy();
     };
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (

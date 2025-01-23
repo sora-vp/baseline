@@ -43,7 +43,7 @@ export const ParticipantProvider = ({
     },
   );
 
-  const setQRCode = useCallback((qr: string | null) => setQrId(qr), []);
+  const setQRCode = useCallback((qr: string | null) => setQrId(qr), [setQrId]);
   const setVotedSuccessfully = useCallback(
     (success: boolean) => setVoted(success),
     [],
@@ -73,6 +73,8 @@ export const ParticipantProvider = ({
         unsubHardware();
       };
     });
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [qrId, participantQuery.isFetched, participantQuery.data]);
 
   const propsValue = useMemo(() => {
@@ -92,7 +94,7 @@ export const ParticipantProvider = ({
       setQRCode,
       setVotedSuccessfully,
     };
-  }, [qrId, participantQuery.data]);
+  }, [setQRCode, setVotedSuccessfully, qrId, participantQuery.data]);
 
   if (
     !!qrId &&

@@ -48,6 +48,8 @@ export const ServerSettingProvider = ({
     return () => {
       unsubHardware();
     };
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [settingsQuery.errorUpdateCount]);
 
   useEffect(() => {
@@ -77,7 +79,7 @@ export const ServerSettingProvider = ({
     return {
       canVote,
     };
-  }, [settingsQuery.data]);
+  }, [setQRCode, qrId, settingsQuery.data]);
 
   if (settingsQuery.errorUpdateCount > 0)
     return (

@@ -13,12 +13,6 @@ export default tseslint.config(
     plugins: {
       "react-refresh": reactRefresh,
     },
-    rules: {
-      "react-refresh/only-export-components": [
-        "warn",
-        { allowConstantExport: true },
-      ],
-    },
   },
   eslint.configs.recommended,
   ...tseslint.configs.recommended,

@@ -144,7 +144,7 @@ function VotePage() {
         });
       }
     }
-  }, [currentID, qrId, alertOpen, cannotPushKey]);
+  }, [upvoteCandidate, currentID, qrId, alertOpen, cannotPushKey]);
 
   const triggerOpen = useCallback(
     (candidateIndex: number) => {
@@ -285,7 +285,10 @@ function VotePage() {
     return () => {
       unsubHardware();
     };
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
+    upvoteCandidate.isError,
     upvoteCandidate.isPending,
     candidateList.errorUpdateCount,
     alertOpen,
