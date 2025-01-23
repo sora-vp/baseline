@@ -5,9 +5,9 @@ import { ensureQRIDExist, useParticipant } from "@/context/participant-context";
 import { env } from "@/env";
 import { api } from "@/utils/api";
 import { successTimeoutAtom } from "@/utils/atom";
-import { motion } from "framer-motion";
 import { useAtomValue } from "jotai";
 import { Loader2 } from "lucide-react";
+import { motion } from "motion/react";
 
 import { cn } from "@sora-vp/ui";
 import {
@@ -144,7 +144,7 @@ function VotePage() {
         });
       }
     }
-  }, [currentID, qrId, alertOpen, cannotPushKey]);
+  }, [upvoteCandidate, currentID, qrId, alertOpen, cannotPushKey]);
 
   const triggerOpen = useCallback(
     (candidateIndex: number) => {
@@ -285,7 +285,10 @@ function VotePage() {
     return () => {
       unsubHardware();
     };
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
+    upvoteCandidate.isError,
     upvoteCandidate.isPending,
     candidateList.errorUpdateCount,
     alertOpen,

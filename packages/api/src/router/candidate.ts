@@ -6,7 +6,9 @@ import type { TRPCRouterRecord } from "@trpc/server";
 import { TRPCError } from "@trpc/server";
 import mime from "mime-types";
 
-import { eq, preparedAdminGetCandidates, schema } from "@sora-vp/db";
+import { eq } from "@sora-vp/db";
+import { preparedAdminGetCandidates } from "@sora-vp/db/client";
+import * as schema from "@sora-vp/db/schema";
 import { randomFileName } from "@sora-vp/id-generator";
 import { canVoteNow } from "@sora-vp/settings";
 import { candidate } from "@sora-vp/validators";

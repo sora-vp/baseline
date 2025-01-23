@@ -1,6 +1,6 @@
 import { EventEmitter } from "events";
 
-interface AppSettings {
+export interface AppSettings {
   startTime: Date | null;
   endTime: Date | null;
   canVote: boolean | null;
@@ -8,7 +8,7 @@ interface AppSettings {
   canLogin: boolean | null;
 }
 
-interface ReturnedValues {
+export interface ReturnedValues {
   startTime: Date | null;
   endTime: Date | null;
   canVote: boolean;
@@ -16,11 +16,11 @@ interface ReturnedValues {
   canLogin: boolean;
 }
 
-interface UpdateEventMap {
+export interface UpdateEventMap {
   update: ReturnedValues;
 }
 
-type ExtractValues<T> = T extends unknown ? T[keyof T] : never;
+export type ExtractValues<T> = T extends unknown ? T[keyof T] : never;
 
 export class SettingsManager extends EventEmitter {
   private settingsMap: Map<keyof AppSettings, ExtractValues<AppSettings>>;

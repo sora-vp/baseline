@@ -6,7 +6,11 @@ import { settings as settingsSchema } from "@sora-vp/validators";
 import { adminProcedure } from "../trpc";
 
 export const settingsRouter = {
-  getSettings: adminProcedure.query(() => settings.getSettings()),
+  getSettings: adminProcedure.query(() => {
+    const currentSettings = settings.getSettings();
+
+    return currentSettings;
+  }),
 
   getCanLoginStatus: adminProcedure.query(() => {
     const { canLogin } = settings.getSettings();

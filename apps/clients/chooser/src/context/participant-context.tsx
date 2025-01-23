@@ -8,7 +8,7 @@ import {
 } from "react";
 import { UniversalError } from "@/components/universal-error";
 import { api } from "@/utils/api";
-import { motion } from "framer-motion";
+import { motion } from "motion/react";
 import { Navigate } from "react-router-dom";
 
 import { useHardwareWebsocket } from "./hardware-websocket";
@@ -43,7 +43,7 @@ export const ParticipantProvider = ({
     },
   );
 
-  const setQRCode = useCallback((qr: string | null) => setQrId(qr), []);
+  const setQRCode = useCallback((qr: string | null) => setQrId(qr), [setQrId]);
   const setVotedSuccessfully = useCallback(
     (success: boolean) => setVoted(success),
     [],
@@ -73,6 +73,8 @@ export const ParticipantProvider = ({
         unsubHardware();
       };
     });
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [qrId, participantQuery.isFetched, participantQuery.data]);
 
   const propsValue = useMemo(() => {
@@ -92,7 +94,7 @@ export const ParticipantProvider = ({
       setQRCode,
       setVotedSuccessfully,
     };
-  }, [qrId, participantQuery.data]);
+  }, [setQRCode, setVotedSuccessfully, qrId, participantQuery.data]);
 
   if (
     !!qrId &&

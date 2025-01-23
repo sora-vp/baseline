@@ -39,6 +39,8 @@ export function ScannerComponent() {
     return () => {
       unsubHardware();
     };
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isQrInvalid, participantAttended.isError]);
 
   const setIsQrValid = useCallback(

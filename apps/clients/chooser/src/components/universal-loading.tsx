@@ -1,5 +1,5 @@
-import { motion } from "framer-motion";
 import { Loader } from "lucide-react";
+import { motion } from "motion/react";
 
 export function UniversalLoading(props: {
   title: string;

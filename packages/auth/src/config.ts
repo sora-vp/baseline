@@ -3,7 +3,7 @@ import bcrypt from "bcrypt";
 import { CredentialsSignin } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 
-import { preparedGetUserByEmail } from "@sora-vp/db";
+import { preparedGetUserByEmail } from "@sora-vp/db/client";
 
 class UnexpectedLoginError extends CredentialsSignin {
   code = "Terjadi kesalahan yang terduga, mohon coba lagi nanti.";
@@ -60,7 +60,8 @@ export const authConfig = {
             name: user.name,
             email: user.email,
           };
-        } catch (_) {
+          // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        } catch (err: unknown) {
           throw new UnexpectedLoginError();
         }
       },

@@ -1,7 +1,7 @@
 import { drizzle } from "drizzle-orm/mysql2";
 import mysql from "mysql2/promise";
 
-import * as schema from "@sora-vp/db/schema/main";
+import * as schema from "@sora-vp/db/schema";
 
 import { env } from "./env";
 

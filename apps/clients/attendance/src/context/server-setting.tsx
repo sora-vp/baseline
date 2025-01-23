@@ -1,7 +1,7 @@
 import { createContext, useContext, useEffect, useMemo, useState } from "react";
 import { api } from "@/utils/api";
-import { motion } from "framer-motion";
 import { Loader, RotateCcw } from "lucide-react";
+import { motion } from "motion/react";
 
 import { Button } from "@sora-vp/ui/button";
 

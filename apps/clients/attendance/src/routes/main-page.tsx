@@ -1,6 +1,6 @@
 import { ScannerComponent } from "@/components/scanner";
 import { useServerSetting } from "@/context/server-setting";
-import { motion } from "framer-motion";
+import { motion } from "motion/react";
 
 export default function MainPage() {
   const { canAttend } = useServerSetting();

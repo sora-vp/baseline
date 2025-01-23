@@ -1,12 +1,12 @@
 import type { TRPCRouterRecord } from "@trpc/server";
 import { TRPCError } from "@trpc/server";
 
+import { eq } from "@sora-vp/db";
 import {
-  eq,
   preparedGetAllParticipants,
   preparedGetExcelParticipants,
-  schema,
-} from "@sora-vp/db";
+} from "@sora-vp/db/client";
+import * as schema from "@sora-vp/db/schema";
 import { canAttendNow } from "@sora-vp/settings";
 import { participant } from "@sora-vp/validators";
 

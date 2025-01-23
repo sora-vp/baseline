@@ -1,8 +1,8 @@
 import { createContext, useContext, useEffect, useMemo, useState } from "react";
 import { UniversalError } from "@/components/universal-error";
 import { api } from "@/utils/api";
-import { motion } from "framer-motion";
 import { Loader } from "lucide-react";
+import { motion } from "motion/react";
 
 import { useHardwareWebsocket } from "./hardware-websocket";
 import { useParticipant } from "./participant-context";
@@ -48,6 +48,8 @@ export const ServerSettingProvider = ({
     return () => {
       unsubHardware();
     };
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [settingsQuery.errorUpdateCount]);
 
   useEffect(() => {
@@ -77,7 +79,7 @@ export const ServerSettingProvider = ({
     return {
       canVote,
     };
-  }, [settingsQuery.data]);
+  }, [setQRCode, qrId, settingsQuery.data]);
 
   if (settingsQuery.errorUpdateCount > 0)
     return (
