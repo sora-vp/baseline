@@ -30,8 +30,8 @@ export const viewport: Viewport = {
 export default async function RootLayout(props: { children: React.ReactNode }) {
   const isLoggedIn = await auth();
 
-  const layout = cookies().get("react-resizable-panels:layout");
-  const collapsed = cookies().get("react-resizable-panels:collapsed");
+  const layout = (await cookies()).get("react-resizable-panels:layout");
+  const collapsed = (await cookies()).get("react-resizable-panels:collapsed");
 
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   const defaultLayout = layout ? JSON.parse(layout.value) : undefined;
