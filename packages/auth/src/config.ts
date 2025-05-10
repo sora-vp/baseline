@@ -5,17 +5,12 @@ import CredentialsProvider from "next-auth/providers/credentials";
 
 import { preparedGetUserByEmail } from "@sora-vp/db/client";
 
-class UnexpectedLoginError extends CredentialsSignin {
-  code = "Terjadi kesalahan yang terduga, mohon coba lagi nanti.";
-}
-class UserNotFound extends CredentialsSignin {
-  code = "Pengguna tidka ditemukan!";
-}
 class InvalidLoginError extends CredentialsSignin {
-  code = "Mohon masukan email dan kata sandi!";
-}
-class InvalidUserOrPassword extends CredentialsSignin {
-  code = "Email atau kata sandi salah!";
+  code = "custom";
+  constructor(message: string) {
+    super(message);
+    this.code = message;
+  }
 }
 
 declare module "next-auth" {
@@ -41,20 +36,20 @@ export const authConfig = {
       async authorize(credentials) {
         try {
           if (!credentials.email || !credentials.password)
-            throw new InvalidLoginError();
+            throw new Error("Mohon masukan email dan kata sandi!");
 
           const user = await preparedGetUserByEmail.execute({
             email: credentials.email,
           });
 
-          if (!user) throw new UserNotFound();
+          if (!user) throw new Error("Pengguna tidak ditemukan!");
 
           const isValidPassword = await bcrypt.compare(
             credentials.password as string,
             user.password,
           );
 
-          if (!isValidPassword) throw new InvalidUserOrPassword();
+          if (!isValidPassword) throw new Error("Email atau kata sandi salah!");
 
           return {
             name: user.name,
@@ -62,7 +57,7 @@ export const authConfig = {
           };
           // eslint-disable-next-line @typescript-eslint/no-unused-vars
         } catch (err: unknown) {
-          throw new UnexpectedLoginError();
+          throw new InvalidLoginError((err as { message: string }).message);
         }
       },
     }),
