@@ -30,10 +30,12 @@ export function useDebounce<Func extends SomeFunction>(
   func: Func,
   delay = 1000,
 ) {
-  const timer = useRef<Timer>();
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+  const timer = useRef<Timer>(null!);
 
   useEffect(() => {
     return () => {
+      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
       if (!timer.current) return;
       clearTimeout(timer.current);
     };

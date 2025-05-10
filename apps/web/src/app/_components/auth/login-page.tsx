@@ -48,8 +48,9 @@ export function LoginComponent() {
     });
 
     if (loginResult?.error) {
-      console.log(loginResult);
-      toast.error("Gagal login", { description: "Email atau password salah!" });
+      toast.error("Gagal login", {
+        description: loginResult.code as unknown as string,
+      });
 
       return;
     }

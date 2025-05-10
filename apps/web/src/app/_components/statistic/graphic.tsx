@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo } from "react";
+import { Fragment, useMemo } from "react";
 import ExcelJS from "exceljs";
 import { FileBarChart, LoaderPinwheel } from "lucide-react";
 import { useTheme } from "next-themes";
@@ -209,7 +209,7 @@ export function Graphic() {
                     ) : (
                       <>
                         {percentageData.map((data) => (
-                          <>
+                          <Fragment key={data.idx}>
                             {data.idx > 0 ? (
                               <>
                                 <span className="text-xl"> - </span>
@@ -224,7 +224,7 @@ export function Graphic() {
                                 <rt>{data.count}</rt>
                               </ruby>
                             )}
-                          </>
+                          </Fragment>
                         ))}
                         {" ."}
                       </>
