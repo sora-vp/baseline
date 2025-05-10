@@ -20,7 +20,7 @@
     "typecheck": "tsc --noEmit --emitDeclarationOnly false"
   },
   "dependencies": {
-    "nanoid": "^5.0.9"
+    "nanoid": "^5.1.0"
   },
   "devDependencies": {
     "@sora-vp/eslint-config": "*",
