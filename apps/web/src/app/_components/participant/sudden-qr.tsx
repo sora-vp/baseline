@@ -30,7 +30,7 @@ export function useDebounce<Func extends SomeFunction>(
   func: Func,
   delay = 1000,
 ) {
-  const timer = useRef<Timer>();
+  const timer = useRef<Timer>(null!);
 
   useEffect(() => {
     return () => {
